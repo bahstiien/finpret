@@ -2,10 +2,10 @@ import { expect, test } from "@playwright/test";
 
 test("la page d'accueil s'affiche en français", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle("Menu de la semaine");
+  await expect(page).toHaveTitle(/^Fin Prêt/);
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Une session le dimanche");
-  await expect(page.getByRole("link", { name: "Se connecter" })).toHaveAttribute("href", "/login");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Le dimanche, tu cuisines.");
+  await expect(page.getByRole("link", { name: "Se connecter" }).first()).toHaveAttribute("href", "/login");
 });
 
 test("aucun défilement horizontal", async ({ page }) => {
