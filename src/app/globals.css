@@ -24,6 +24,16 @@
   --peach: #ffe3d6;
   --peach-ink: #a33a12;
   --chip: #f1f0f5;
+
+  /* Jetons du design system Fin Prêt (design-system/tokens.json) utilisés par la page d'accueil. */
+  --violet-soft: #ece7ff;
+  --violet-strong: #4b2fc9;
+  --nav: #17151f;
+  --on-nav: #ffffff;
+  --green-soft: #e2f5e6;
+  --green-ink: #17633a;
+  --green-strong: #17803f;
+  --cream-ink: #7a5a00;
 }
 
 /* TODO(spec): teintes douces du mode sombre estimées d'après la maquette Stock ; à affiner en M11. */
@@ -43,6 +53,14 @@
     --peach: #3d2419;
     --peach-ink: #f5a582;
     --chip: #2a2635;
+    --violet-soft: #2a2345;
+    --violet-strong: #c4b5fd;
+    --nav: #0b0a10;
+    --on-nav: #f3f1f8;
+    --green-soft: #183324;
+    --green-ink: #86efac;
+    --green-strong: #4ade80;
+    --cream-ink: #ffd86b;
   }
 }
 
@@ -61,6 +79,43 @@
   --peach: #3d2419;
   --peach-ink: #f5a582;
   --chip: #2a2635;
+  --violet-soft: #2a2345;
+  --violet-strong: #c4b5fd;
+  --nav: #0b0a10;
+  --on-nav: #f3f1f8;
+  --green-soft: #183324;
+  --green-ink: #86efac;
+  --green-strong: #4ade80;
+  --cream-ink: #ffd86b;
+}
+
+/*
+ * Zone qui reste en mode clair quel que soit le thème : bandeaux de marque violets
+ * et maquettes d'écrans de la page d'accueil.
+ */
+.theme-light {
+  color-scheme: light;
+  --bg: #f4f3f8;
+  --surface: #ffffff;
+  --ink: #17151f;
+  --muted: #6b6878;
+  --line: #eceaf2;
+  --blue-soft: #dcebff;
+  --blue-ink: #1f4e8c;
+  --pink-soft: #ffe6ec;
+  --pink-ink: #a3264a;
+  --yellow-soft: #fff6d6;
+  --peach: #ffe3d6;
+  --peach-ink: #a33a12;
+  --chip: #f1f0f5;
+  --violet-soft: #ece7ff;
+  --violet-strong: #4b2fc9;
+  --nav: #17151f;
+  --on-nav: #ffffff;
+  --green-soft: #e2f5e6;
+  --green-ink: #17633a;
+  --green-strong: #17803f;
+  --cream-ink: #7a5a00;
 }
 
 @custom-variant dark {
@@ -91,6 +146,14 @@
   --color-peach: var(--peach);
   --color-peach-ink: var(--peach-ink);
   --color-chip: var(--chip);
+  --color-violet-soft: var(--violet-soft);
+  --color-violet-strong: var(--violet-strong);
+  --color-nav: var(--nav);
+  --color-on-nav: var(--on-nav);
+  --color-green-soft: var(--green-soft);
+  --color-green-ink: var(--green-ink);
+  --color-green-strong: var(--green-strong);
+  --color-cream-ink: var(--cream-ink);
 
   --font-display: var(--font-gabarito), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
@@ -120,5 +183,35 @@
   :focus-visible {
     outline: 3px solid var(--violet);
     outline-offset: 2px;
+  }
+}
+
+/* Page d'accueil : le minuteur « Prêt ! » pulse doucement ; tout s'arrête si l'appareil le demande. */
+@keyframes finpret-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.timer-ready {
+  animation: finpret-pulse 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer-ready {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
