@@ -5,7 +5,7 @@
 import pg from "pg";
 import { buildCatalogRows, validateSeed } from "../src/engine/catalog";
 import { rawSeed } from "../src/engine/catalog/seed-files";
-import { loadEnvLocal, requireEnv } from "./lib/env.mjs";
+import { loadEnvLocal, pgSsl, requireEnv } from "./lib/env.mjs";
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -32,10 +32,8 @@ if (dryRun) {
 }
 
 loadEnvLocal();
-const client = new pg.Client({
-  connectionString: requireEnv("SUPABASE_DB_URL"),
-  ssl: { rejectUnauthorized: false },
-});
+const connectionString = requireEnv("SUPABASE_DB_URL");
+const client = new pg.Client({ connectionString, ssl: pgSsl(connectionString) });
 await client.connect();
 
 try {

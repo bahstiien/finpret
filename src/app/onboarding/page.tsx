@@ -1,28 +1,38 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { CreateHouseholdForm } from "@/components/settings/CreateHouseholdForm";
-import { Card, CenteredPage, Logo } from "@/components/ui/Card";
+import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import { fr } from "@/i18n/fr";
-import { getHouseholds, requireUser } from "@/server/session";
+import { onboardingDefaults } from "@/lib/onboarding";
+import { createClient } from "@/lib/supabase/server";
+import { getActiveHousehold, getProfile, requireUser } from "@/server/session";
 
-export const metadata: Metadata = { title: fr.household.createTitle };
+export const metadata: Metadata = { title: fr.onboarding.title };
 
-// M1 : seule l'étape « Foyer » existe ; l'assistant complet en 5 étapes arrive en M4 (§5).
+/** Assistant en 5 étapes (§5) : pour un nouveau compte, ou un foyer créé mais pas encore paramétré. */
 export default async function OnboardingPage() {
-  await requireUser("/onboarding");
-  if ((await getHouseholds()).length > 0) redirect("/app");
+  const user = await requireUser("/onboarding");
+  const supabase = await createClient();
+  const household = await getActiveHousehold();
+  if (household) {
+    const { data } = await supabase
+      .from("households")
+      .select("onboarded_at, name")
+      .eq("id", household.id)
+      .single();
+    if (data?.onboarded_at || household.role !== "admin") redirect("/app");
+  }
+  const [profile, ingredients] = await Promise.all([
+    getProfile(),
+    supabase.from("ingredients").select("key, label").neq("aisle", "base").order("label"),
+  ]);
+  // Le nom par défaut du profil est la partie locale de l'e-mail : on ne le propose pas comme prénom.
+  const displayName = profile?.display_name ?? "";
+  const initial = onboardingDefaults(displayName === user.email?.split("@")[0] ? "" : displayName);
+  if (household) initial.household.name = household.name;
 
   return (
-    <CenteredPage>
-      <Logo />
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black">{fr.household.createTitle}</h1>
-        <p className="text-muted">{fr.household.createLead}</p>
-      </div>
-      <Card>
-        <CreateHouseholdForm />
-      </Card>
-      <p className="text-sm text-muted">{fr.household.joinHint}</p>
-    </CenteredPage>
+    <main>
+      <OnboardingWizard initial={initial} ingredients={ingredients.data ?? []} />
+    </main>
   );
 }

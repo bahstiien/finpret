@@ -6,8 +6,9 @@ import {
   supabaseConfigured,
   uniqueEmail,
 } from "./helpers/auth";
+import { completeOnboarding } from "./helpers/onboarding";
 
-// Parcours du jalon M1 : nécessite un Supabase (projet hébergé de développement ou local en CI) et .env.local.
+// Parcours des jalons M1 et M4 : nécessite un Supabase (projet hébergé de développement ou local en CI) et .env.local.
 test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
 // Un seul navigateur suffit : ces parcours testent le serveur et la base, pas la mise en page.
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
@@ -23,24 +24,38 @@ test("le formulaire envoie le lien de connexion", async ({ page }) => {
   await submitLoginForm(page, uniqueEmail("formulaire"));
 });
 
-test("connexion par lien magique, création du foyer, invitation et adhésion", async ({ browser }) => {
+test("premier menu après l'onboarding (§5)", async ({ page }) => {
+  await page.goto("/login");
+  await signInFromLoginPage(page, uniqueEmail("onboarding"));
+  await completeOnboarding(page, "Les Dupont");
+  // 4 plats de batch (dîner + déjeuner du lendemain) et une soupe sur 2 soirs : 10 repas.
+  const recap = page.getByTestId("onboarding-recap");
+  await expect(recap).toContainText("10");
+  await expect(recap).toContainText("repas prévus");
+  await page.getByRole("link", { name: "Voir mon menu" }).click();
+  await expect(page).toHaveURL(/\/app$/);
+  await expect(page.getByTestId("active-household")).toHaveText("Les Dupont");
+  await expect(page.getByTestId("summary-meals")).toHaveText("10");
+  await expect(page.getByTestId("week-summary")).toContainText("Session");
+  await expect(page.getByTestId("week-summary")).toContainText("Articles à acheter");
+  await expect(page.getByText("Administrateur")).toBeVisible();
+});
+
+test("connexion par lien magique, invitation et adhésion ; le paramétrage reste à l'administrateur", async ({
+  browser,
+}) => {
   const adminEmail = uniqueEmail("admin");
   const guestEmail = uniqueEmail("invite");
 
-  // 1. L'administrateur se connecte et crée son foyer.
+  // 1. L'administrateur se connecte et configure son foyer.
   const admin = await (await browser.newContext()).newPage();
   await admin.goto("/login");
   await signInFromLoginPage(admin, adminEmail);
-  await expect(admin).toHaveURL(/\/onboarding$/);
-  await admin.getByLabel("Nom du foyer").fill("Les Martin");
-  await admin.getByRole("button", { name: "Créer le foyer" }).click();
-  await expect(admin).toHaveURL(/\/app$/);
-  await expect(admin.getByTestId("active-household")).toHaveText("Les Martin");
-  await expect(admin.getByText("Administrateur")).toBeVisible();
+  await completeOnboarding(admin, "Les Martin");
 
-  // 2. Il crée une invitation « Membre ».
-  await admin.getByRole("link", { name: "Réglages du foyer" }).click();
-  await admin.getByLabel("Rôle de la personne invitée").selectOption("member");
+  // 2. Il invite une personne en lecture seule.
+  await admin.goto("/settings/household");
+  await admin.getByLabel("Rôle de la personne invitée").selectOption("viewer");
   await admin.getByLabel(/E-mail/).fill(guestEmail);
   await admin.getByRole("button", { name: "Créer le lien" }).click();
   const link = await admin.getByLabel("Lien à envoyer").inputValue();
@@ -57,7 +72,8 @@ test("connexion par lien magique, création du foyer, invitation et adhésion", 
   await guest.getByRole("button", { name: "Rejoindre le foyer" }).click();
   await expect(guest).toHaveURL(/\/app$/);
   await expect(guest.getByTestId("active-household")).toHaveText("Les Martin");
-  await expect(guest.getByText("Membre", { exact: true })).toBeVisible();
+  await expect(guest.getByText("Lecture seule", { exact: true })).toBeVisible();
+  await expect(guest.getByTestId("summary-meals")).toHaveText("10");
 
   // 4. L'invitation a servi : elle n'est plus en attente et le lien est refusé.
   await admin.reload();
@@ -66,22 +82,51 @@ test("connexion par lien magique, création du foyer, invitation et adhésion", 
   await third.goto(link);
   await expect(third.getByRole("alert").filter({ hasText: "déjà servi" })).toBeVisible();
 
-  // 5. Un membre ne gère pas les invitations.
-  await guest.goto("/settings/household");
-  await expect(guest.getByText("Seul un administrateur peut gérer")).toBeVisible();
-  await expect(guest.getByRole("button", { name: "Créer le lien" })).toHaveCount(0);
+  // 5. Lecture seule : seule la section Profil est accessible (§6).
+  for (const section of ["/settings", "/settings/household", "/settings/menu", "/settings/data"]) {
+    await guest.goto(section);
+    await expect(guest).toHaveURL(/\/settings\/profile$/);
+  }
+  await expect(guest.getByRole("navigation", { name: "Réglages" }).getByRole("link")).toHaveText(["Profil"]);
+  const exported = await guest.request.get("/settings/data/export");
+  expect(exported.status()).toBe(403);
+});
+
+test("un réglage s'enregistre tout seul et peut s'appliquer à la semaine préparée (§6)", async ({ page }) => {
+  await page.goto("/login");
+  await signInFromLoginPage(page, uniqueEmail("reglages"));
+  await completeOnboarding(page, "Réglages");
+  await page.goto("/settings/menu");
+  await page.getByRole("button", { name: "Soirs légers : plus" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Enregistré" })).toBeVisible();
+  await expect(page.getByText(/Appliquer ce changement à la semaine du/)).toBeVisible();
+  await page.getByRole("button", { name: "Appliquer à cette semaine" }).click();
+  await expect(page.getByText("Semaine recomposée avec tes nouveaux réglages.")).toBeVisible({
+    timeout: 30_000,
+  });
+  await page.goto("/app");
+  await expect(page.getByTestId("summary-meals")).toHaveText("10");
+
+  // L'export des données du foyer est disponible pour l'administrateur ; la semaine a été recomposée :
+  // 3 soirs légers = la soupe sur 2 soirs et 1 soir simple (2 soirs légers auparavant, tous en soupe).
+  const exported = await page.request.get("/settings/data/export");
+  expect(exported.ok()).toBe(true);
+  const body = await exported.json();
+  expect(body.household.name).toBe("Réglages");
+  expect(body.settings.menu.light).toBe(3);
+  expect(body.weeks).toHaveLength(1);
+  expect(body.weeks[0].plan.soup.days).toHaveLength(2);
+  expect(body.weeks[0].plan.simples).toHaveLength(1);
 });
 
 test("le dernier administrateur ne peut pas quitter son foyer", async ({ page }) => {
   await page.goto("/login");
   await signInFromLoginPage(page, uniqueEmail("solo"));
-  await page.getByLabel("Nom du foyer").fill("Solo");
-  await page.getByRole("button", { name: "Créer le foyer" }).click();
-  await expect(page).toHaveURL(/\/app$/);
-  await page.goto("/settings/household");
+  await completeOnboarding(page, "Solo");
+  await page.goto("/settings/profile");
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Quitter ce foyer" }).click();
   // Le message d'erreur, et non l'annonceur de route de Next.js (lui aussi role="alert").
   await expect(page.getByRole("alert").filter({ hasText: "au moins un administrateur" })).toBeVisible();
-  await expect(page).toHaveURL(/\/settings\/household$/);
+  await expect(page).toHaveURL(/\/settings\/profile$/);
 });

@@ -23,26 +23,6 @@ async function rememberOnDevice(householdId: string) {
   });
 }
 
-export type FormState = { error?: string };
-
-export async function createHousehold(_prev: FormState, formData: FormData): Promise<FormState> {
-  await requireUser("/onboarding");
-  const parsed = z
-    .string()
-    .trim()
-    .min(1)
-    .max(60)
-    .safeParse(formData.get("name") ?? "");
-  if (!parsed.success) return { error: fr.household.nameInvalid };
-
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("create_household", { p_name: parsed.data });
-  if (error) return { error: toUserMessage(error) };
-  await rememberOnDevice(data);
-  // TODO(M4) : enchaîner sur l'assistant d'onboarding complet (§5).
-  redirect("/app");
-}
-
 export async function acceptInvitation(token: string): Promise<ActionResult> {
   await requireUser(`/join/${token}`);
   const parsed = z

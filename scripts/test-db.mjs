@@ -5,7 +5,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import pg from "pg";
-import { loadEnvLocal, requireEnv } from "./lib/env.mjs";
+import { loadEnvLocal, pgSsl, requireEnv } from "./lib/env.mjs";
 import { reportTap } from "./lib/pgtap.mjs";
 
 loadEnvLocal();
@@ -15,7 +15,7 @@ const dir = join(process.cwd(), "supabase/tests/database");
 let failures = 0;
 for (const file of readdirSync(dir).sort()) {
   console.log(`\n# ${file}`);
-  const client = new pg.Client({ connectionString, ssl: { rejectUnauthorized: false } });
+  const client = new pg.Client({ connectionString, ssl: pgSsl(connectionString) });
   await client.connect();
   try {
     failures += reportTap(await client.query(readFileSync(join(dir, file), "utf8")));

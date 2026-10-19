@@ -13,3 +13,8 @@ export function requireEnv(name) {
   }
   return value;
 }
+
+/** SSL pour une base distante (Supabase hébergé), pas pour la base locale de la CI. */
+export function pgSsl(connectionString) {
+  return /@(localhost|127\.0\.0\.1)[:/]/.test(connectionString) ? false : { rejectUnauthorized: false };
+}

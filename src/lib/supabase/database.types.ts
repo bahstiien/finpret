@@ -8,9 +8,22 @@ export type Database = {
   public: {
     Tables: {
       households: {
-        Row: { id: string; name: string; created_by: string | null; created_at: string };
+        Row: {
+          id: string;
+          name: string;
+          created_by: string | null;
+          created_at: string;
+          timezone: string;
+          alternating_from: string | null;
+          onboarded_at: string | null;
+        };
         Insert: never;
-        Update: { name?: string };
+        Update: {
+          name?: string;
+          timezone?: string;
+          alternating_from?: string | null;
+          onboarded_at?: string | null;
+        };
         Relationships: [];
       };
       memberships: {
@@ -97,6 +110,100 @@ export type Database = {
           diet?: string | null;
           archived?: boolean;
         };
+        Relationships: [];
+      };
+      household_settings: {
+        Row: {
+          household_id: string;
+          version: number;
+          diet: Json;
+          menu: Json;
+          session: Json;
+          shopping: Json;
+          equipment: Json;
+          updated_at: string;
+        };
+        Insert: {
+          household_id: string;
+          version?: number;
+          diet: Json;
+          menu: Json;
+          session: Json;
+          shopping: Json;
+          equipment: Json;
+        };
+        Update: {
+          version?: number;
+          diet?: Json;
+          menu?: Json;
+          session?: Json;
+          shopping?: Json;
+          equipment?: Json;
+        };
+        Relationships: [];
+      };
+      presence_rules: {
+        Row: {
+          member_id: string;
+          weekday: number;
+          meal: "lunch" | "dinner";
+          present: boolean;
+          week_parity: "all" | "A" | "B";
+        };
+        Insert: {
+          member_id: string;
+          weekday: number;
+          meal: "lunch" | "dinner";
+          present: boolean;
+          week_parity?: "all" | "A" | "B";
+        };
+        Update: { present?: boolean };
+        Relationships: [];
+      };
+      weeks: {
+        Row: {
+          id: string;
+          household_id: string;
+          start_date: string;
+          status: "draft" | "active" | "done";
+          plan: Json;
+          pasta_need: number | null;
+          pantry_done: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          household_id: string;
+          start_date: string;
+          status: "draft" | "active" | "done";
+          plan: Json;
+          pasta_need?: number | null;
+          pantry_done?: boolean;
+        };
+        Update: {
+          status?: "draft" | "active" | "done";
+          plan?: Json;
+          pasta_need?: number | null;
+          pantry_done?: boolean;
+        };
+        Relationships: [];
+      };
+      ratings: {
+        Row: { household_id: string; recipe_id: string; value: number };
+        Insert: { household_id: string; recipe_id: string; value: number };
+        Update: { value?: number };
+        Relationships: [];
+      };
+      pantry: {
+        Row: { household_id: string; ingredient_key: string; qty: number | null; updated_at: string };
+        Insert: { household_id: string; ingredient_key: string; qty: number | null };
+        Update: { qty?: number | null };
+        Relationships: [];
+      };
+      freezer: {
+        Row: { id: string; household_id: string; recipe_id: string; portions: number; frozen_at: string };
+        Insert: { household_id: string; recipe_id: string; portions: number; frozen_at?: string };
+        Update: { portions?: number; frozen_at?: string };
         Relationships: [];
       };
       aisles: {

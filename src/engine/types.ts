@@ -54,6 +54,8 @@ export type MenuSettings = {
   skip: string[];
   /** Goûter de la semaine. */
   cake: boolean;
+  /** Objectif « minimum de repas végétariens » parmi les plats de batch (0 = règle du prototype : 1 dès 4 plats). */
+  minVeg: number;
 };
 
 export const DEFAULT_MENU_SETTINGS: MenuSettings = {
@@ -67,6 +69,7 @@ export const DEFAULT_MENU_SETTINGS: MenuSettings = {
   noRepeatWeeks: 3,
   skip: [],
   cake: true,
+  minVeg: 0,
 };
 
 export type Diet = "omnivore" | "flexitarien" | "vegetarien" | "pescetarien";
@@ -78,6 +81,8 @@ export type DietRules = {
   allergens: string[];
   /** Ingrédients refusés. */
   refused: string[];
+  /** Objectif « protéines minimales par repas » (g par portion adulte), pour les repas. */
+  minProtein?: number;
 };
 
 export const NO_DIET_RULES: DietRules = { diet: "omnivore", allergens: [], refused: [] };
@@ -106,6 +111,8 @@ export type WeekPlan = {
   guests?: Record<string, Guests>;
   locked?: string[];
   pantryDone?: boolean;
+  /** Repas de la réserve déjà décomptés du congélateur (clôture de la semaine). */
+  bankConsumed?: boolean;
 };
 
 export type Equipment = {

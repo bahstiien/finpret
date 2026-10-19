@@ -20,7 +20,10 @@ export function SectionTitle({
 }) {
   return (
     <div className={`flex max-w-2xl flex-col gap-3 ${className}`}>
-      <h2 id={id} className="text-[28px] leading-[1.15] font-extrabold tracking-[-0.01em] sm:text-4xl lg:text-[44px]">
+      <h2
+        id={id}
+        className="text-[28px] leading-[1.15] font-extrabold tracking-[-0.01em] sm:text-4xl lg:text-[44px]"
+      >
         {nb(title)}
       </h2>
       {lead && <p className="text-base text-muted sm:text-lg">{nb(lead)}</p>}

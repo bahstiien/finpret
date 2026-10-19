@@ -88,7 +88,15 @@ export function buildSession(input: SessionInput): Session {
     };
   }
 
-  const hasOven = items.some((it) => it.blocks.some((b) => b.mode === "four"));
+  // Appareil réellement utilisé : sans air fryer, ces étapes passent au four ; sans blender chauffant ni
+  // micro-ondes, sur les plaques.
+  const modeOf = (mode: string) =>
+    mode === "airfryer" && !equipment.airfryer
+      ? "four"
+      : (mode === "blender" && !equipment.blender) || (mode === "micro" && !equipment.microwave)
+        ? "feu"
+        : mode;
+  const hasOven = items.some((it) => it.blocks.some((b) => modeOf(b.mode) === "four"));
   const racks = Math.max(1, equipment.ovenRacks);
 
   // Ingrédients de la session, sans ceux servis uniquement le jour du repas (jj).
@@ -125,7 +133,9 @@ export function buildSession(input: SessionInput): Session {
       where: t.setup.where,
       tasks: [
         hasOven ? t.setup.preheat(racks) : t.setup.noOven,
-        ...(items.some((it) => it.blocks.some((b) => b.mode === "airfryer")) ? [t.setup.airfryer] : []),
+        ...(items.some((it) => it.blocks.some((b) => modeOf(b.mode) === "airfryer"))
+          ? [t.setup.airfryer]
+          : []),
         t.setup.wash,
         t.setup.boxes,
       ],
@@ -166,7 +176,7 @@ export function buildSession(input: SessionInput): Session {
       const b = it.blocks[ptr[i]!]!;
       let e = Math.max(time, b.wait === false ? 0 : ready[i]!);
       let g = -1;
-      const pool = res[b.mode];
+      const pool = res[modeOf(b.mode)];
       if (pool) {
         g = pool.indexOf(Math.min(...pool));
         e = Math.max(e, pool[g]!);
@@ -183,9 +193,10 @@ export function buildSession(input: SessionInput): Session {
     time = e + b.active;
     active += b.active;
     ready[i] = Math.max(ready[i]!, end);
-    if (g >= 0) res[b.mode]![g] = end;
+    const mode = modeOf(b.mode);
+    if (g >= 0) res[mode]![g] = end;
     const label =
-      b.mode === "four" ? t.where.oven(g + 1) : b.mode === "feu" ? t.where.burner(g + 1) : where[b.mode]!;
+      mode === "four" ? t.where.oven(g + 1) : mode === "feu" ? t.where.burner(g + 1) : where[mode]!;
     const minutes = b.passive || 0;
     steps.push({
       start: e,

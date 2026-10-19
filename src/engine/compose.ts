@@ -55,6 +55,7 @@ export function completeMains(list: readonly Main[], st: ComposeState, s: MenuSe
     fits(list, st, s) &&
     list.filter((r) => r.comfort).length === st.needCm &&
     (n < 4 || list.some((r) => r.p === "veg")) &&
+    list.filter((r) => r.p === "veg").length >= Math.min(s.minVeg ?? 0, n) &&
     list.filter((r) => r.pasta).length >= Math.min(pastaNeedOf(st, s), n - 1)
   );
 }

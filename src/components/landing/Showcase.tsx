@@ -21,7 +21,10 @@ export function Showcase() {
             const item = s.items[i];
             if (!item) return null;
             return (
-              <li key={item.title} className={`flex flex-col gap-6 overflow-hidden rounded-card pt-6 sm:pt-8 ${tone}`}>
+              <li
+                key={item.title}
+                className={`flex flex-col gap-6 overflow-hidden rounded-card pt-6 sm:pt-8 ${tone}`}
+              >
                 <div className="flex flex-col gap-2 px-6 sm:px-8">
                   <p className={`text-sm font-bold tracking-[0.06em] uppercase ${kicker}`}>{item.kicker}</p>
                   <h3 className="text-2xl leading-tight font-extrabold">{nb(item.title)}</h3>

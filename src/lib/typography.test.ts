@@ -11,9 +11,7 @@ describe("nb", () => {
   });
 
   it("lie les nombres à leur unité", () => {
-    expect(nb("200 g de pâtes, 25 min à 200 °C, 10 repas")).toBe(
-      "200 g de pâtes, 25 min à 200 °C, 10 repas",
-    );
+    expect(nb("200 g de pâtes, 25 min à 200 °C, 10 repas")).toBe("200 g de pâtes, 25 min à 200 °C, 10 repas");
   });
 
   it("lie les heures et les minutes", () => {

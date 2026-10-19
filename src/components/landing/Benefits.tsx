@@ -25,7 +25,9 @@ export function Benefits() {
                 <span className="grid size-12 place-items-center rounded-[14px] bg-surface text-ink">
                   <Icon name={tone.icon} className="size-6" />
                 </span>
-                <p className={`text-sm font-bold tracking-[0.06em] uppercase ${tone.kicker}`}>{item.kicker}</p>
+                <p className={`text-sm font-bold tracking-[0.06em] uppercase ${tone.kicker}`}>
+                  {item.kicker}
+                </p>
                 <h3 className="text-2xl leading-tight font-extrabold">{nb(item.title)}</h3>
                 <p className="text-lg leading-snug font-bold">{nb(item.quote)}</p>
                 <p className="text-base">{nb(item.text)}</p>

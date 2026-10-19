@@ -47,15 +47,22 @@ export function createEnv(options: {
   random: () => number;
   diet?: DietRules;
   bonus?: Record<string, number>;
+  /** Types de goûter retenus (réglage « Goûter de la semaine ») ; tous si absent. */
+  cakeTypes?: readonly string[];
 }): Env {
   const allow = <R extends { ing: Record<string, number> }>(r: R) =>
     !options.diet || dietAllows(options.diet, r);
+  const minProtein = options.diet?.minProtein ?? 0;
+  const meal = <R extends { ing: Record<string, number>; m: readonly number[] }>(r: R) =>
+    allow(r) && (r.m[1] ?? 0) >= minProtein;
   const lib: Library = {
     ...options.lib,
-    mains: options.lib.mains.filter(allow),
-    soups: options.lib.soups.filter(allow),
-    simples: options.lib.simples.filter(allow),
-    cakes: options.lib.cakes.filter(allow),
+    mains: options.lib.mains.filter(meal),
+    soups: options.lib.soups.filter(meal),
+    simples: options.lib.simples.filter(meal),
+    cakes: options.lib.cakes.filter(
+      (c) => allow(c) && (!options.cakeTypes || options.cakeTypes.includes(c.t)),
+    ),
   };
   return {
     lib,

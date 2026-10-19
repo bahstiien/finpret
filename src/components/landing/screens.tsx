@@ -18,7 +18,9 @@ const days = [
 
 function Origin({ code }: { code: string }) {
   return (
-    <span className="rounded-[5px] border border-ink/40 px-1 py-px text-[9px] leading-none font-bold">{code}</span>
+    <span className="rounded-[5px] border border-ink/40 px-1 py-px text-[9px] leading-none font-bold">
+      {code}
+    </span>
   );
 }
 
@@ -99,7 +101,9 @@ export function MenuScreen() {
               <Icon name="snowflake" className="size-[18px]" />
             </span>
             <p className="mt-4 text-[10px] font-semibold">Avant de dormir</p>
-            <p className="font-display text-[15px] leading-tight font-extrabold">Sors le chili du congélateur</p>
+            <p className="font-display text-[15px] leading-tight font-extrabold">
+              Sors le chili du congélateur
+            </p>
           </div>
         </div>
       </div>
@@ -160,7 +164,9 @@ export function WeekScreen() {
       </div>
 
       <div className="mt-3 rounded-[22px] bg-violet p-4 text-white">
-        <p className="font-display text-[17px] leading-tight font-extrabold">Samedi et dimanche soir à remplir</p>
+        <p className="font-display text-[17px] leading-tight font-extrabold">
+          Samedi et dimanche soir à remplir
+        </p>
         <p className="mt-1 text-[11px] font-bold">Cuisiné le jour même</p>
         <span className="mt-3 flex h-10 items-center justify-center gap-1.5 rounded-pill bg-white text-[12px] font-bold text-[#17151f]">
           <Icon name="sparkle" className="size-4" /> Suggérer des idées
@@ -279,7 +285,9 @@ export function SessionScreen() {
             <Icon name="fridge" className="size-3.5" /> Four, grille 1
           </span>
         </div>
-        <p className="mt-3 font-display text-[22px] leading-tight font-black text-ink">Enfourne la butternut</p>
+        <p className="mt-3 font-display text-[22px] leading-tight font-black text-ink">
+          Enfourne la butternut
+        </p>
         <div className="mt-3 rounded-[18px] bg-surface px-3 text-ink">
           {[
             { t: "Cubes de 2 cm", done: true },
@@ -294,7 +302,9 @@ export function SessionScreen() {
               >
                 {task.done && <Icon name="check" className="size-3" />}
               </span>
-              <span className={`text-[12px] font-bold ${task.done ? "text-muted line-through" : ""}`}>{task.t}</span>
+              <span className={`text-[12px] font-bold ${task.done ? "text-muted line-through" : ""}`}>
+                {task.t}
+              </span>
             </div>
           ))}
         </div>

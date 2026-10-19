@@ -17,7 +17,7 @@ export function ActionForm({
   variant = "outline",
   ariaLabel,
 }: {
-  action: (formData: FormData) => Promise<ActionResult | void>;
+  action: (formData: FormData) => Promise<ActionResult<unknown> | void>;
   fields: Record<string, string>;
   label: string;
   confirm?: string;

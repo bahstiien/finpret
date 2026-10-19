@@ -21,7 +21,7 @@
     "test:db": "node scripts/test-db.mjs",
     "test:db:lite": "node scripts/test-db-lite.mjs",
     "db:types": "node scripts/supabase-remote.mjs types",
-    "env:supabase": "supabase status -o env --override-name api.url=NEXT_PUBLIC_SUPABASE_URL --override-name auth.anon_key=NEXT_PUBLIC_SUPABASE_ANON_KEY --override-name auth.service_role_key=SUPABASE_SERVICE_ROLE_KEY",
+    "env:supabase": "supabase status -o env --override-name api.url=NEXT_PUBLIC_SUPABASE_URL --override-name auth.anon_key=NEXT_PUBLIC_SUPABASE_ANON_KEY --override-name auth.service_role_key=SUPABASE_SERVICE_ROLE_KEY --override-name db.url=SUPABASE_DB_URL",
     "test:db:ci": "supabase test db",
     "db:push": "node scripts/supabase-remote.mjs push",
     "db:push:dry": "node scripts/supabase-remote.mjs push:dry"

@@ -30,6 +30,7 @@ jobs:
       - run: pnpm exec supabase start --exclude studio,imgproxy,vector,logflare,edge-runtime,supavisor
       - run: pnpm test:db:ci
       - run: pnpm --silent env:supabase > .env.local
+      - run: pnpm seed
 
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
