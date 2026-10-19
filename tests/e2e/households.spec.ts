@@ -1,7 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/mailbox";
+import {
+  canSendLoginEmail,
+  signInFromLoginPage,
+  submitLoginForm,
+  supabaseConfigured,
+  uniqueEmail,
+} from "./helpers/auth";
 
-// Parcours du jalon M1 : nécessite Supabase local (`pnpm exec supabase start`) et .env.local.
+// Parcours du jalon M1 : nécessite un Supabase (projet hébergé de développement ou local en CI) et .env.local.
 test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
 // Un seul navigateur suffit : ces parcours testent le serveur et la base, pas la mise en page.
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
@@ -9,6 +15,12 @@ test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 test("une page de l'application demande une connexion", async ({ page }) => {
   await page.goto("/app/shopping");
   await expect(page).toHaveURL(/\/login\?next=%2Fapp%2Fshopping$/);
+});
+
+test("le formulaire envoie le lien de connexion", async ({ page }) => {
+  test.skip(!canSendLoginEmail, "envoi d'e-mails limité sur le projet hébergé : vérifié en CI");
+  await page.goto("/login");
+  await submitLoginForm(page, uniqueEmail("formulaire"));
 });
 
 test("connexion par lien magique, création du foyer, invitation et adhésion", async ({ browser }) => {
@@ -52,7 +64,7 @@ test("connexion par lien magique, création du foyer, invitation et adhésion", 
   await expect(admin.getByText("Aucune invitation en attente.")).toBeVisible();
   const third = await (await browser.newContext()).newPage();
   await third.goto(link);
-  await expect(third.getByRole("alert")).toContainText("déjà servi");
+  await expect(third.getByRole("alert").filter({ hasText: "déjà servi" })).toBeVisible();
 
   // 5. Un membre ne gère pas les invitations.
   await guest.goto("/settings/household");
@@ -65,8 +77,11 @@ test("le dernier administrateur ne peut pas quitter son foyer", async ({ page })
   await signInFromLoginPage(page, uniqueEmail("solo"));
   await page.getByLabel("Nom du foyer").fill("Solo");
   await page.getByRole("button", { name: "Créer le foyer" }).click();
+  await expect(page).toHaveURL(/\/app$/);
   await page.goto("/settings/household");
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Quitter ce foyer" }).click();
-  await expect(page.getByRole("alert")).toContainText("au moins un administrateur");
+  // Le message d'erreur, et non l'annonceur de route de Next.js (lui aussi role="alert").
+  await expect(page.getByRole("alert").filter({ hasText: "au moins un administrateur" })).toBeVisible();
+  await expect(page).toHaveURL(/\/settings\/household$/);
 });

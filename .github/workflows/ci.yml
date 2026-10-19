@@ -28,7 +28,7 @@ jobs:
 
       # Supabase local (Docker) : migrations, tests RLS pgTAP, puis variables pour l'application.
       - run: pnpm exec supabase start --exclude studio,imgproxy,vector,logflare,edge-runtime,supavisor
-      - run: pnpm test:db
+      - run: pnpm test:db:ci
       - run: pnpm --silent env:supabase > .env.local
 
       - run: pnpm build
