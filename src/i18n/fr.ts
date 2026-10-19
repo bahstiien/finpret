@@ -1,4 +1,6 @@
 /** Textes de l'interface (CLAUDE.md, règle 5) : tutoiement, ton chaleureux et direct. */
+import { engineFr } from "./engine";
+
 export const fr = {
   app: {
     name: "Menu de la semaine",
@@ -104,6 +106,8 @@ export const fr = {
     invitation_expired: "Cette invitation a expiré.",
     invitation_used: "Cette invitation a déjà servi.",
   },
+  /** Textes produits par le moteur (session, rangement). */
+  engine: engineFr,
 } as const;
 
 export type Messages = typeof fr;
