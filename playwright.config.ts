@@ -1,4 +1,8 @@
+import { existsSync } from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
+
+// Mêmes variables que l'application (URL et clé Supabase locales).
+if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 const PORT = 3100;
 

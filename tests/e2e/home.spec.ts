@@ -5,7 +5,7 @@ test("la page d'accueil s'affiche en français", async ({ page }) => {
   await expect(page).toHaveTitle("Menu de la semaine");
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Une session le dimanche");
-  await expect(page.getByRole("button", { name: "Se connecter" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Se connecter" })).toHaveAttribute("href", "/login");
 });
 
 test("aucun défilement horizontal", async ({ page }) => {

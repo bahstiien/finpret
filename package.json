@@ -17,7 +17,11 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
-    "seed": "node scripts/seed.mjs"
+    "seed": "node scripts/seed.mjs",
+    "test:db": "supabase test db",
+    "test:db:lite": "node scripts/test-db-lite.mjs",
+    "db:types": "supabase gen types typescript --local --schema public > src/lib/supabase/database.types.ts",
+    "env:supabase": "supabase status -o env --override-name api.url=NEXT_PUBLIC_SUPABASE_URL --override-name auth.anon_key=NEXT_PUBLIC_SUPABASE_ANON_KEY --override-name auth.service_role_key=SUPABASE_SERVICE_ROLE_KEY"
   },
   "dependencies": {
     "@serwist/next": "^9.5.13",
@@ -30,6 +34,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "@electric-sql/pglite-pgtap": "^0.0.11",
     "@eslint/eslintrc": "^3.3.7",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.3.3",

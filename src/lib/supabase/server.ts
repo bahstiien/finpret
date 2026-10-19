@@ -2,12 +2,14 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { publicEnv } from "@/lib/env";
+import type { Database } from "./database.types";
 
 /** Client Supabase côté serveur (composants serveur, actions, route handlers), lié à la session de l'utilisateur. */
 export async function createClient() {
-  const env = publicEnv();
+  // Lire les cookies d'abord : la route devient dynamique avant toute autre vérification.
   const cookieStore = await cookies();
-  return createServerClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+  const env = publicEnv();
+  return createServerClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll: (toSet) => {

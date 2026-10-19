@@ -12,7 +12,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -21,9 +21,16 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
+      - run: pnpm lint --max-warnings 0
       - run: pnpm typecheck
       - run: pnpm test
+      - run: pnpm test:db:lite
+
+      # Supabase local (Docker) : migrations, tests RLS pgTAP, puis variables pour l'application.
+      - run: pnpm exec supabase start --exclude studio,imgproxy,vector,logflare,edge-runtime,supavisor
+      - run: pnpm test:db
+      - run: pnpm --silent env:supabase > .env.local
+
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
