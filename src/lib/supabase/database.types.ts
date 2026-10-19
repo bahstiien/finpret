@@ -99,6 +99,89 @@ export type Database = {
         };
         Relationships: [];
       };
+      aisles: {
+        Row: { key: string; label: string; position: number };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      ingredients: {
+        Row: {
+          key: string;
+          label: string;
+          unit: "g" | "ml" | "pc" | "boite" | "cs" | "cc";
+          aisle: string;
+          forms: Json;
+          half: boolean;
+          allergens: string[];
+          seasonal: boolean;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      packs: {
+        Row: { ingredient_key: string; sizes: number[]; label: string; tolerance: number };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      ingredient_synonyms: {
+        Row: { synonym: string; ingredient_key: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
+      recipes: {
+        Row: {
+          id: string;
+          kind: "main" | "soup" | "simple" | "cake" | "breakfast";
+          data: Json;
+          name: string | null;
+          origin: string | null;
+          protein: "volaille" | "boeuf" | "porc" | "poisson" | "veg" | null;
+          months: number[] | null;
+          /** null = inconnu : un filtre de régime doit écarter la recette. */
+          diet_tags: string[] | null;
+          /** null = inconnu : un filtre d'allergène doit écarter la recette. */
+          allergens: string[] | null;
+          is_active: boolean;
+          household_id: string | null;
+          source_url: string | null;
+          source_name: string | null;
+          imported_by: string | null;
+          status: "draft" | "validated";
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          kind: "main" | "soup" | "simple" | "cake" | "breakfast";
+          data: Json;
+          household_id: string;
+          origin?: string | null;
+          protein?: "volaille" | "boeuf" | "porc" | "poisson" | "veg" | null;
+          months?: number[] | null;
+          diet_tags?: string[] | null;
+          allergens?: string[] | null;
+          is_active?: boolean;
+          source_url?: string | null;
+          source_name?: string | null;
+          imported_by?: string | null;
+          status?: "draft" | "validated";
+        };
+        Update: {
+          kind?: "main" | "soup" | "simple" | "cake" | "breakfast";
+          data?: Json;
+          origin?: string | null;
+          protein?: "volaille" | "boeuf" | "porc" | "poisson" | "veg" | null;
+          months?: number[] | null;
+          diet_tags?: string[] | null;
+          allergens?: string[] | null;
+          is_active?: boolean;
+          status?: "draft" | "validated";
+        };
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {

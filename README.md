@@ -14,6 +14,7 @@ PWA multi-foyers de planification de repas et de batch cooking. Spécification :
 pnpm install
 cp .env.example .env.local        # puis complète les valeurs du projet Supabase de développement
 pnpm db:push                      # applique supabase/migrations au projet hébergé
+pnpm seed                         # importe seed/*.json (catalogue) ; --dry-run pour valider sans écrire
 pnpm dev                          # http://localhost:3000
 ```
 

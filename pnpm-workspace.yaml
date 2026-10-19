@@ -2,6 +2,7 @@ allowBuilds:
   unrs-resolver: true
   sharp: true
   supabase: true
+  esbuild: true
 
 # eslint-config-next charge ses plugins depuis la racine du projet.
 publicHoistPattern:
