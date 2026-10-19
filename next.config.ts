@@ -9,6 +9,9 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  // Build de production à part : `next build` (hook pre-push, Playwright) ne se bat pas
+  // avec un `next dev` déjà lancé sur .next.
+  distDir: process.env.NODE_ENV === "production" ? ".next-build" : ".next",
   reactStrictMode: true,
   poweredByHeader: false,
 };

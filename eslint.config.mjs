@@ -8,6 +8,7 @@ const config = [
   {
     ignores: [
       ".next/**",
+      ".next-build/**",
       "node_modules/**",
       "public/sw.js",
       "public/swe-worker-*.js",

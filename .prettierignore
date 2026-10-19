@@ -4,6 +4,7 @@ docs/
 pnpm-lock.yaml
 public/sw.js
 .next/
+.next-build/
 CLAUDE.md
 PROMPT_DEMARRAGE.md
 README.md
