@@ -1,0 +1,1505 @@
+[
+ {
+  "id": "veloute_butternut",
+  "n": "Velouté butternut-lentilles corail, skyr et pain complet",
+  "s": "Velouté butternut-lentilles",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   545,
+   29,
+   80,
+   10
+  ],
+  "d": "Velouté épais cuit et mixé au blender chauffant, lentilles corail pour les protéines.",
+  "ing": {
+   "butternut": 800,
+   "lentillescorail": 200,
+   "oignon": 1,
+   "laitcoco": 200,
+   "cumin": 1,
+   "huile": 1,
+   "skyr": 300,
+   "pain": 8
+  },
+  "prepMin": 8,
+  "prep": [
+   "Épluche et coupe {butternut} de butternut en cubes. Émince {oignon}. Rince {lentillescorail} de lentilles corail."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : la moitié de la butternut, de l'oignon et des lentilles, 1 c.c. de cumin, sel, et de l'eau jusqu'au trait maximum. Lance le programme soupe veloutée (ou 25 min de cuisson puis mixage)."
+    ]
+   },
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Verse la première fournée dans une casserole. Recommence avec la seconde moitié des ingrédients.",
+     "Ajoute {laitcoco} de lait de coco en fin de cuisson, puis rectifie l'assaisonnement."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe et sers avec {skyr} de skyr et {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "soupe_lentilles",
+  "n": "Soupe lentilles corail, carotte et cumin",
+  "s": "Soupe lentilles-carotte",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   480,
+   24,
+   64,
+   10
+  ],
+  "d": "Soupe orange douce au cumin, prête en une fournée de blender par soir.",
+  "ing": {
+   "lentillescorail": 200,
+   "carotte": 4,
+   "oignon": 1,
+   "cumin": 2,
+   "laitcoco": 200,
+   "huile": 1,
+   "citron": 0.5,
+   "skyr": 200,
+   "pain": 8
+  },
+  "prepMin": 6,
+  "prep": [
+   "Épluche et coupe {carotte} en rondelles. Émince {oignon}. Rince {lentillescorail} de lentilles corail."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : la moitié des carottes, de l'oignon et des lentilles, 1 c.c. de cumin, sel, et de l'eau jusqu'au trait maximum. Lance le programme soupe veloutée."
+    ]
+   },
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Verse la première fournée dans une casserole. Recommence avec le reste.",
+     "Ajoute {laitcoco} de lait de coco et le jus d'½ citron, rectifie l'assaisonnement."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe et sers avec {skyr} de skyr et {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "veloute_poireau",
+  "n": "Velouté poireaux, pommes de terre et haricots blancs",
+  "s": "Velouté poireaux",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   400,
+   18,
+   56,
+   10
+  ],
+  "d": "Le classique de l'hiver, épaissi aux haricots blancs pour les protéines.",
+  "ing": {
+   "poireau": 3,
+   "pommedeterre": 300,
+   "haricotsblancs": 1,
+   "bouillon": 1,
+   "huile": 1,
+   "emmental": 60,
+   "pain": 8
+  },
+  "prepMin": 8,
+  "prep": [
+   "Lave et émince {poireau}. Épluche et coupe {pommedeterre} de pommes de terre en cubes. Égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : la moitié des légumes et des haricots, ½ cube de bouillon et de l'eau jusqu'au trait maximum. Lance le programme soupe veloutée."
+    ]
+   },
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Verse la première fournée dans une casserole et recommence avec le reste. Rectifie l'assaisonnement."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe, parsème {emmental} d'emmental et sers avec {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "veloute_choufleur",
+  "n": "Velouté chou-fleur et pois chiches croustillants",
+  "s": "Velouté chou-fleur",
+  "p": "veg",
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   430,
+   19,
+   51,
+   14
+  ],
+  "d": "Velouté au cumin, pois chiches rôtis à l'air fryer pour le croquant.",
+  "ing": {
+   "choufleur": 800,
+   "poischiches": 1,
+   "oignon": 1,
+   "lait": 300,
+   "cumin": 2,
+   "huile": 2,
+   "parmesan": 30,
+   "pain": 8
+  },
+  "prepMin": 6,
+  "prep": [
+   "Détaille {choufleur} de chou-fleur en bouquets. Émince {oignon}. Égoutte et sèche {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : la moitié du chou-fleur et de l'oignon, la moitié de {lait} de lait, 1 c.c. de cumin, sel, et de l'eau jusqu'au trait maximum. Lance le programme soupe veloutée."
+    ]
+   },
+   {
+    "mode": "airfryer",
+    "active": 2,
+    "passive": 15,
+    "wait": false,
+    "a": [
+     "Mélange les pois chiches avec 1 c.s. d'huile, 1 c.c. de cumin et du sel. Air fryer 15 min à 190 °C, en secouant 2 fois. Garde-les dans une boîte à part, hors du frigo."
+    ]
+   },
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Verse la première fournée dans une casserole et recommence avec le reste."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir, pois chiches à part",
+  "jj": "Réchauffe, ajoute les pois chiches et {parmesan} de parmesan, sers avec {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "minestrone",
+  "n": "Minestrone aux petites pâtes et haricots blancs",
+  "s": "Minestrone",
+  "p": "veg",
+  "pasta": true,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "cz": true,
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   300,
+   15,
+   40,
+   7
+  ],
+  "d": "Soupe de légumes d'été, petites pâtes cuites dans la soupe au moment de servir.",
+  "ing": {
+   "courgette": 2,
+   "carotte": 2,
+   "oignon": 1,
+   "ail": 2,
+   "tomates": 1,
+   "haricotsblancs": 1,
+   "bouillon": 1,
+   "huile": 1,
+   "patescompletes": 120,
+   "parmesan": 40
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {courgette} et {carotte} en petits dés. Émince {oignon} et hache 2 gousses d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon, l'ail et les légumes 5 min dans 1 c.s. d'huile.",
+     "Ajoute {tomates} de tomates concassées, {haricotsblancs} de haricots blancs égouttés, {bouillon} et 1,2 l d'eau. Mijote 20 min."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir, sans pâtes",
+  "jj": "Réchauffe, ajoute {patescompletes} de petites pâtes et laisse cuire 8 min dans la soupe. Sers avec {parmesan} de parmesan.",
+  "o": "it"
+ },
+ {
+  "id": "veloute_courgette",
+  "n": "Velouté courgette et tartines jambon-emmental",
+  "s": "Velouté courgette",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "cz": true,
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   425,
+   26,
+   35,
+   12
+  ],
+  "d": "Velouté de courgette au fromage frais, tartines gratinées à l'air fryer au moment du repas.",
+  "ing": {
+   "courgette": 4,
+   "oignon": 1,
+   "bouillon": 1,
+   "fromageblanc": 200,
+   "huile": 1,
+   "jambon": 4,
+   "emmental": 80,
+   "pain": 8
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {courgette} en rondelles et émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : les courgettes, l'oignon, {bouillon} et de l'eau jusqu'au trait maximum. Lance le programme soupe veloutée. Fais 2 fournées si le bol est trop plein."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Ajoute {fromageblanc} de fromage blanc et mixe au mixeur plongeant."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Monte {pain} avec {jambon} de jambon et {emmental} d'emmental, 5 min à l'air fryer à 190 °C. Sers avec le velouté réchauffé.",
+  "o": "fr"
+ },
+ {
+  "id": "soupe_potimarron",
+  "n": "Velouté de potimarron et tartines au chèvre",
+  "s": "Velouté potimarron",
+  "p": "veg",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   395,
+   14,
+   48,
+   15
+  ],
+  "d": "Potimarron cuit avec la peau, tartines gratinées à l'air fryer au moment du repas.",
+  "ing": {
+   "potimarron": 900,
+   "oignon": 1,
+   "bouillon": 1,
+   "laitcoco": 150,
+   "huile": 1,
+   "chevre": 120,
+   "pain": 8
+  },
+  "prepMin": 6,
+  "prep": [
+   "Épépine et coupe {potimarron} de potimarron en cubes, sans l'éplucher. Émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : la moitié du potimarron et de l'oignon, ½ cube de bouillon et de l'eau jusqu'au trait maximum. Programme soupe veloutée."
+    ]
+   },
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Verse la première fournée dans une casserole et recommence avec le reste. Ajoute {laitcoco} de lait de coco."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Tartines : {pain} avec {chevre} de chèvre, 5 min à l'air fryer à 190 °C. Sers avec le velouté réchauffé.",
+  "o": "fr"
+ },
+ {
+  "id": "pois_casses",
+  "n": "Soupe de pois cassés, carottes et lardons",
+  "s": "Soupe pois cassés",
+  "p": "porc",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   410,
+   27,
+   56,
+   6
+  ],
+  "d": "Soupe rassasiante et riche en protéines végétales.",
+  "ing": {
+   "poiscasses": 300,
+   "carotte": 2,
+   "oignon": 1,
+   "bouillon": 1,
+   "lardons": 100,
+   "pain": 4
+  },
+  "prepMin": 4,
+  "prep": [
+   "Rince {poiscasses} de pois cassés, coupe {carotte} en rondelles et émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 45,
+    "a": [
+     "Dans une cocotte : pois cassés, carottes, oignon, {bouillon} et 1,5 l d'eau. Mijote 45 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais dorer {lardons} de lardons sans matière grasse et garde-les à part."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe la soupe au mixeur plongeant et rectifie l'assaisonnement."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir, lardons à part",
+  "jj": "Réchauffe, ajoute les lardons et sers avec {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "gaspacho",
+  "n": "Gaspacho et tartines houmous-feta",
+  "s": "Gaspacho",
+  "p": "veg",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "m": [
+   500,
+   16,
+   45,
+   25
+  ],
+  "d": "Soupe froide mixée au blender, sans cuisson.",
+  "ing": {
+   "tomatefraiche": 10,
+   "concombre": 1,
+   "poivron": 1,
+   "oignon": 1,
+   "ail": 1,
+   "huile": 2,
+   "houmous": 200,
+   "feta": 100,
+   "pain": 8
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe grossièrement {tomatefraiche}, {concombre} et {poivron}. Épluche {oignon} et 1 gousse d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 5,
+    "passive": 0,
+    "a": [
+     "Au blender, sans chauffer : les légumes, l'ail, 2 c.s. d'huile et du sel. Mixe 1 min, en 2 fois si besoin. Réserve au frais."
+    ]
+   }
+  ],
+  "box": "1 bouteille ou bocal par soir",
+  "jj": "Tartines : {pain} avec {houmous} de houmous et {feta} de feta. Sers le gaspacho bien frais.",
+  "o": "es"
+ },
+ {
+  "id": "veloute_asperges",
+  "n": "Velouté d'asperges vertes et œufs mollets",
+  "s": "Velouté asperges",
+  "p": "veg",
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   350,
+   22,
+   42,
+   8
+  ],
+  "d": "Velouté printanier, œuf mollet cuit minute pour les protéines.",
+  "ing": {
+   "asperges": 800,
+   "pommedeterre": 200,
+   "oignon": 1,
+   "bouillon": 1,
+   "fromageblanc": 200,
+   "oeufs": 4,
+   "pain": 8
+  },
+  "prepMin": 6,
+  "prep": [
+   "Casse le bout dur de {asperges} d'asperges et coupe-les en tronçons. Épluche {pommedeterre} de pommes de terre, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : les asperges, les pommes de terre, l'oignon, {bouillon} et de l'eau jusqu'au trait maximum. Programme soupe veloutée, en 2 fournées si besoin."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Ajoute {fromageblanc} de fromage blanc et mixe au mixeur plongeant."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Cuis {oeufs} 6 min pour des œufs mollets, sers avec le velouté réchauffé et {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "veloute_petitspois",
+  "n": "Velouté petits pois-menthe et dés de jambon",
+  "s": "Velouté petits pois",
+  "p": "porc",
+  "months": [
+   5,
+   6,
+   7
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   385,
+   26,
+   52,
+   5
+  ],
+  "d": "Doux et sucré, très apprécié des enfants.",
+  "ing": {
+   "petitspois": 600,
+   "pommedeterre": 200,
+   "oignon": 1,
+   "bouillon": 1,
+   "fromageblanc": 150,
+   "jambon": 4,
+   "pain": 8
+  },
+  "prepMin": 4,
+  "prep": [
+   "Épluche et coupe {pommedeterre} de pommes de terre, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : {petitspois} de petits pois surgelés, les pommes de terre, l'oignon, {bouillon} et de l'eau jusqu'au trait maximum. Programme soupe veloutée. Ajoute quelques feuilles de menthe si tu en as."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Ajoute {fromageblanc} de fromage blanc et mixe au mixeur plongeant."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe, ajoute {jambon} de jambon en dés et sers avec {pain}.",
+  "o": "fr"
+ },
+ {
+  "id": "ramen",
+  "n": "Ramen express au poulet et œuf mollet",
+  "s": "Ramen au poulet",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   455,
+   38,
+   50,
+   9
+  ],
+  "d": "Bouillon soja-gingembre, poulet effiloché, nouilles cuites dans le bol au moment du repas.",
+  "ing": {
+   "poulet": 400,
+   "bouillon": 2,
+   "soja": 4,
+   "gingembre": 1,
+   "ail": 2,
+   "champignons": 200,
+   "carotte": 2,
+   "oeufs": 4,
+   "nouillesramen": 250
+  },
+  "prepMin": 5,
+  "prep": [
+   "Râpe le gingembre et 2 gousses d'ail. Émince {champignons} de champignons et coupe {carotte} en fine julienne."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 20,
+    "a": [
+     "Dans une grande casserole : 1,5 l d'eau, {bouillon}, 4 c.s. de soja, le gingembre et l'ail. Ajoute {poulet} de blanc de poulet entier et frémis 20 min."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 4,
+    "passive": 0,
+    "a": [
+     "Sors le poulet et effiloche-le à la fourchette. Remets-le dans le bouillon avec les champignons et les carottes, hors du feu."
+    ]
+   }
+  ],
+  "box": "1 boîte de bouillon garni par soir",
+  "jj": "Porte le bouillon à ébullition, cuis-y {nouillesramen} de nouilles selon le paquet. Ajoute {oeufs} mollets, cuits 6 min, coupés en deux.",
+  "o": "jp"
+ },
+ {
+  "id": "harira",
+  "n": "Harira : soupe tomate, lentilles et pois chiches",
+  "s": "Harira",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   520,
+   24,
+   76,
+   8
+  ],
+  "d": "La soupe marocaine du ramadan, épaisse et parfumée au ras el hanout.",
+  "ing": {
+   "lentillescorail": 150,
+   "poischiches": 1,
+   "tomates": 2,
+   "oignon": 1,
+   "carotte": 1,
+   "raselhanout": 2,
+   "bouillon": 1,
+   "huile": 1,
+   "citron": 1,
+   "patescompletes": 60,
+   "pain": 8
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon} et coupe {carotte} en petits dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 30,
+    "a": [
+     "Fais revenir l'oignon et la carotte 5 min dans 1 c.s. d'huile avec 2 c.c. de ras el hanout.",
+     "Ajoute {lentillescorail} de lentilles corail, {poischiches} de pois chiches égouttés, {tomates} de tomates concassées, {bouillon} et 1,5 l d'eau. Mijote 30 min."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Réchauffe, ajoute {patescompletes} de vermicelles ou de petites pâtes 5 min, un filet de citron, et sers avec {pain}.",
+  "o": "ma"
+ },
+ {
+  "id": "tom_kha",
+  "n": "Soupe thaï coco-poulet et champignons",
+  "s": "Soupe thaï coco",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   340,
+   28,
+   35,
+   9
+  ],
+  "d": "Inspirée du tom kha gai : lait de coco, gingembre et citron.",
+  "ing": {
+   "poulet": 400,
+   "laitcoco": 400,
+   "bouillon": 1,
+   "champignons": 250,
+   "gingembre": 1,
+   "citron": 1,
+   "soja": 2,
+   "riz": 160
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {poulet} de poulet en fines lamelles, émince {champignons} de champignons et coupe le gingembre en lamelles."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 15,
+    "a": [
+     "Dans une casserole : {laitcoco} de lait de coco, 800 ml d'eau, {bouillon} et le gingembre. Porte à frémissement.",
+     "Ajoute le poulet et les champignons, 15 min à petit feu. Hors du feu : le jus d'1 citron et 2 c.s. de soja."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Réchauffe sans faire bouillir et sers avec {riz} de riz.",
+  "o": "th"
+ },
+ {
+  "id": "chicken_noodle",
+  "o": "us",
+  "n": "Soupe de poulet aux petites pâtes",
+  "s": "Soupe poulet-pâtes",
+  "p": "volaille",
+  "pasta": true,
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   380,
+   32,
+   42,
+   6
+  ],
+  "d": "Le bouillon de poulet réconfortant, petites pâtes cuites au moment.",
+  "ing": {
+   "poulet": 400,
+   "carotte": 3,
+   "oignon": 1,
+   "bouillon": 2,
+   "herbes": 1,
+   "patescompletes": 150
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {carotte} en rondelles et émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Dans une casserole : 1,5 l d'eau, {bouillon}, les légumes, les herbes et {poulet} de poulet entier. Frémis 25 min.",
+     "Effiloche le poulet et remets-le dans le bouillon."
+    ]
+   }
+  ],
+  "box": "1 boîte de bouillon par soir",
+  "jj": "Porte à ébullition et cuis-y {patescompletes} de petites pâtes 8 min."
+ },
+ {
+  "id": "veloute_champi",
+  "o": "fr",
+  "n": "Velouté de champignons et croûtons",
+  "s": "Velouté de champignons",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   380,
+   18,
+   46,
+   13
+  ],
+  "d": "Doux et crémeux, il plaît à toute la famille.",
+  "ing": {
+   "champignons": 600,
+   "pommedeterre": 200,
+   "oignon": 1,
+   "bouillon": 1,
+   "lait": 300,
+   "pain": 8,
+   "emmental": 60
+  },
+  "prepMin": 5,
+  "prep": [
+   "Émince {champignons} de champignons et {oignon}, coupe {pommedeterre} de pommes de terre en dés."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : champignons, oignon, pommes de terre, {bouillon}, {lait} de lait et de l'eau jusqu'au trait. Programme soupe veloutée, en 2 fois si besoin."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Croûtons : {pain} en dés avec {emmental} d'emmental, 5 min à l'air fryer."
+ },
+ {
+  "id": "zuppa_fagioli",
+  "o": "it",
+  "n": "Soupe de haricots blancs à l'italienne",
+  "s": "Zuppa di fagioli",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   480,
+   24,
+   66,
+   12
+  ],
+  "d": "Épaisse et rustique, avec du parmesan et un filet d'huile d'olive.",
+  "ing": {
+   "haricotsblancs": 2,
+   "carotte": 2,
+   "tomates": 1,
+   "oignon": 1,
+   "ail": 2,
+   "herbes": 1,
+   "huile": 2,
+   "parmesan": 40,
+   "pain": 8
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {carotte} en dés, émince {oignon}, hache 2 gousses d'ail. Égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Fais revenir les légumes dans 1 c.s. d'huile, ajoute les haricots, {tomates} de tomates, les herbes et 1 l d'eau. Mijote 25 min.",
+     "Mixe la moitié au mixeur plongeant pour épaissir."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Réchauffe et sers avec {parmesan} de parmesan, un filet d'huile et {pain}."
+ },
+ {
+  "id": "pho",
+  "o": "vn",
+  "n": "Pho express aux boulettes de bœuf",
+  "s": "Pho express",
+  "p": "boeuf",
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   430,
+   30,
+   48,
+   12
+  ],
+  "d": "Bouillon parfumé gingembre-cannelle, nouilles de riz cuites au moment.",
+  "ing": {
+   "boeuf": 400,
+   "bouillon": 2,
+   "gingembre": 1,
+   "cannelle": 1,
+   "soja": 3,
+   "oignon": 1,
+   "citron": 1,
+   "nouillesriz": 200
+  },
+  "prepMin": 8,
+  "prep": [
+   "Forme des petites boulettes avec {boeuf} de bœuf haché, sel et poivre. Coupe le gingembre en lamelles et {oignon} en deux."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Dans une casserole : 1,5 l d'eau, {bouillon}, le gingembre, l'oignon, 1 bâton ou 1 c.c. de cannelle et 3 c.s. de soja. Frémis 15 min.",
+     "Ajoute les boulettes 10 min."
+    ]
+   }
+  ],
+  "box": "1 boîte de bouillon et boulettes par soir",
+  "jj": "Fais tremper {nouillesriz} de nouilles de riz, ajoute le bouillon brûlant et un filet de citron."
+ },
+ {
+  "id": "radis_veloute",
+  "o": "fr",
+  "n": "Velouté de fanes de radis et tartines radis-beurre",
+  "s": "Velouté de fanes de radis",
+  "p": "veg",
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   330,
+   12,
+   48,
+   10
+  ],
+  "d": "Rien ne se perd : les fanes en soupe, les radis en tartines.",
+  "ing": {
+   "radis": 2,
+   "pommedeterre": 300,
+   "oignon": 1,
+   "bouillon": 1,
+   "fromageblanc": 150,
+   "pain": 8,
+   "beurre": 20
+  },
+  "prepMin": 6,
+  "prep": [
+   "Lave {radis} et sépare les fanes des radis. Coupe {pommedeterre} de pommes de terre en dés."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : les fanes, les pommes de terre, {oignon}, {bouillon} et de l'eau. Programme soupe veloutée."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Ajoute {fromageblanc} de fromage blanc et mixe."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, radis à part",
+  "jj": "Tartines : {pain}, un peu de beurre et les radis en rondelles."
+ },
+ {
+  "id": "minestrone_printemps",
+  "o": "it",
+  "pasta": true,
+  "n": "Minestrone de printemps asperges-fèves",
+  "s": "Minestrone de printemps",
+  "p": "veg",
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   340,
+   18,
+   50,
+   7
+  ],
+  "d": "Asperges, fèves et petits pois dans un bouillon léger.",
+  "ing": {
+   "asperges": 300,
+   "petitspois": 200,
+   "feves": 200,
+   "carotte": 2,
+   "oignon": 1,
+   "bouillon": 2,
+   "patescompletes": 120,
+   "parmesan": 40
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {asperges} d'asperges et {carotte} en tronçons, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Dans une cocotte : 1,5 l d'eau, {bouillon}, oignon et carottes, 10 min. Ajoute asperges, {feves} de fèves et {petitspois} de petits pois, 10 min."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir, sans pâtes",
+  "jj": "Réchauffe et cuis-y {patescompletes} de petites pâtes 8 min. Parmesan ({parmesan})."
+ },
+ {
+  "id": "soupe_froide_concombre",
+  "o": "gr",
+  "n": "Soupe froide concombre-skyr et tartines au thon",
+  "s": "Soupe froide concombre",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8
+  ],
+  "fridge": 2,
+  "freeze": false,
+  "m": [
+   420,
+   38,
+   40,
+   12
+  ],
+  "d": "Façon tzatziki à boire, sans cuisson.",
+  "ing": {
+   "concombre": 3,
+   "skyr": 500,
+   "ail": 1,
+   "citron": 1,
+   "huile": 1,
+   "pain": 8,
+   "thon": 2
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {concombre} en morceaux et épluche 1 gousse d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 4,
+    "passive": 0,
+    "a": [
+     "Au blender, sans chauffer : concombres, ail, {skyr} de skyr, le jus d'1 citron, 1 c.s. d'huile, sel. Réserve au frais."
+    ]
+   }
+  ],
+  "box": "1 bouteille par soir",
+  "jj": "Tartines : {pain} et {thon} de thon émietté au citron."
+ },
+ {
+  "id": "garbure",
+  "o": "fr",
+  "n": "Garbure express chou-haricots-lardons",
+  "s": "Garbure",
+  "p": "porc",
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   450,
+   23,
+   56,
+   13
+  ],
+  "d": "La soupe paysanne du Sud-Ouest, épaisse et rassasiante.",
+  "ing": {
+   "chou": 0.5,
+   "haricotsblancs": 2,
+   "carotte": 3,
+   "pommedeterre": 300,
+   "lardons": 100,
+   "bouillon": 2,
+   "oignon": 1,
+   "pain": 8
+  },
+  "prepMin": 8,
+  "prep": [
+   "Émince {chou}, coupe {carotte} et {pommedeterre} de pommes de terre en dés, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 35,
+    "a": [
+     "Fais dorer {lardons} de lardons et l'oignon, ajoute tous les légumes, {haricotsblancs} de haricots blancs, {bouillon} et 1,5 l d'eau. Mijote 35 min."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Réchauffe et sers avec {pain}."
+ },
+ {
+  "id": "v_soupe_pois_casses",
+  "o": "fr",
+  "n": "Soupe de pois cassés végétarienne et pain grillé",
+  "s": "Pois cassés végé",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   450,
+   27,
+   70,
+   5
+  ],
+  "d": "Épaisse et rassasiante, un trait de skyr au service.",
+  "ing": {
+   "poiscasses": 300,
+   "carotte": 2,
+   "oignon": 1,
+   "bouillon": 1,
+   "skyr": 200,
+   "pain": 8
+  },
+  "prepMin": 4,
+  "prep": [
+   "Rince {poiscasses} de pois cassés, coupe {carotte} en rondelles, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 45,
+    "a": [
+     "Dans une cocotte : pois cassés, légumes, {bouillon} et 1,5 l d'eau. Mijote 45 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe au mixeur plongeant."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Réchauffe et sers avec {skyr} de skyr et {pain} grillées."
+ },
+ {
+  "id": "v_veloute_lentilles_tomate",
+  "o": "fr",
+  "n": "Velouté lentilles corail-tomate et feta",
+  "s": "Velouté lentilles-tomate",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   470,
+   24,
+   66,
+   11
+  ],
+  "d": "Doux et orangé, feta émiettée au service.",
+  "ing": {
+   "lentillescorail": 200,
+   "tomates": 2,
+   "oignon": 1,
+   "carotte": 1,
+   "cumin": 1,
+   "laitcoco": 150,
+   "pain": 8,
+   "feta": 100
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon}, coupe {carotte} en rondelles, rince {lentillescorail} de lentilles."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : lentilles, légumes, {tomates} de tomates, 1 c.c. de cumin et de l'eau jusqu'au trait. Programme soupe veloutée, en 2 fois si besoin."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Ajoute {laitcoco} de lait de coco au réchauffage, sers avec {feta} de feta et {pain}."
+ },
+ {
+  "id": "v_soupe_mexicaine",
+  "o": "mx",
+  "n": "Soupe mexicaine haricots rouges-maïs, tortillas gratinées",
+  "s": "Soupe mexicaine",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   470,
+   25,
+   66,
+   12
+  ],
+  "d": "Épaisse et parfumée, avec des chips de tortilla au fromage.",
+  "ing": {
+   "haricotsrouges": 2,
+   "mais": 1,
+   "tomates": 1,
+   "oignon": 1,
+   "cumin": 2,
+   "paprika": 1,
+   "bouillon": 1,
+   "skyr": 150,
+   "tortilla": 4,
+   "emmental": 60
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon}, égoutte {haricotsrouges} de haricots et {mais} de maïs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon avec le cumin et le paprika, ajoute haricots, maïs, {tomates} de tomates, {bouillon} et 800 ml d'eau. Mijote 20 min, mixe la moitié."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Tortillas : {tortilla} parsemées de {emmental} d'emmental, 5 min à l'air fryer. Sers avec {skyr} de skyr."
+ },
+ {
+  "id": "v_soupe_pc_oeuf",
+  "o": "ma",
+  "n": "Soupe de pois chiches au cumin et œuf poché",
+  "s": "Soupe pois chiches-œuf",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   420,
+   23,
+   48,
+   14
+  ],
+  "d": "Inspirée du lablabi tunisien, citron et cumin.",
+  "ing": {
+   "poischiches": 2,
+   "carotte": 2,
+   "oignon": 1,
+   "cumin": 2,
+   "bouillon": 1,
+   "citron": 1,
+   "oeufs": 4,
+   "pain": 4,
+   "huile": 1
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon}, coupe {carotte} en dés, égoutte {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Fais revenir oignon, carottes et 2 c.c. de cumin dans 1 c.s. d'huile, ajoute pois chiches, {bouillon} et 1 l d'eau. Mijote 20 min, citron à la fin."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Réchauffe, poche {oeufs} dans la soupe 4 min et sers avec {pain}."
+ },
+ {
+  "id": "v_minestrone_hiver",
+  "o": "it",
+  "pasta": true,
+  "n": "Minestrone aux haricots et petites pâtes",
+  "s": "Minestrone aux haricots",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   420,
+   20,
+   62,
+   9
+  ],
+  "d": "Version toute saison aux carottes et pommes de terre.",
+  "ing": {
+   "haricotsblancs": 2,
+   "carotte": 2,
+   "pommedeterre": 300,
+   "oignon": 1,
+   "tomates": 1,
+   "bouillon": 2,
+   "patescompletes": 120,
+   "parmesan": 40,
+   "huile": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {carotte} et {pommedeterre} de pommes de terre en dés, émince {oignon}, égoutte {haricotsblancs} de haricots."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Fais revenir les légumes dans 1 c.s. d'huile, ajoute haricots, {tomates} de tomates, {bouillon} et 1,5 l d'eau. Mijote 25 min."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir, sans pâtes",
+  "jj": "Réchauffe, cuis-y {patescompletes} de petites pâtes 8 min et sers avec {parmesan} de parmesan."
+ },
+ {
+  "id": "v_soupe_lentilles_vertes",
+  "o": "fr",
+  "n": "Soupe de lentilles vertes et croûtons au fromage",
+  "s": "Soupe lentilles vertes",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   470,
+   26,
+   72,
+   9
+  ],
+  "d": "Rustique et nourrissante, mixée à moitié.",
+  "ing": {
+   "lentillesvertes": 200,
+   "pommedeterre": 300,
+   "carotte": 2,
+   "oignon": 1,
+   "bouillon": 1,
+   "pain": 8,
+   "emmental": 60
+  },
+  "prepMin": 5,
+  "prep": [
+   "Rince {lentillesvertes} de lentilles, coupe les légumes en dés ({pommedeterre} de pommes de terre, {carotte}, {oignon})."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 30,
+    "a": [
+     "Dans une cocotte : lentilles, légumes, {bouillon} et 1,5 l d'eau. Mijote 30 min, mixe la moitié."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Croûtons : {pain} en dés avec {emmental} d'emmental, 5 min à l'air fryer."
+ },
+ {
+  "id": "v_veloute_feves",
+  "o": "fr",
+  "n": "Velouté fèves-petits pois et œuf mollet",
+  "s": "Velouté fèves",
+  "p": "veg",
+  "months": [
+   5,
+   6,
+   7
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   430,
+   26,
+   56,
+   9
+  ],
+  "d": "Le velouté vert du printemps, très doux.",
+  "ing": {
+   "feves": 400,
+   "petitspois": 300,
+   "oignon": 1,
+   "bouillon": 1,
+   "fromageblanc": 150,
+   "oeufs": 4,
+   "pain": 8
+  },
+  "prepMin": 3,
+  "prep": [
+   "Émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : {feves} de fèves, {petitspois} de petits pois, l'oignon, {bouillon} et de l'eau. Programme soupe veloutée."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Ajoute {fromageblanc} de fromage blanc et mixe."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe et sers avec {oeufs} mollets et {pain}."
+ },
+ {
+  "id": "v_veloute_brocoli",
+  "o": "fr",
+  "n": "Velouté de brocoli au fromage frais et croûtons",
+  "s": "Velouté de brocoli",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   400,
+   24,
+   48,
+   12
+  ],
+  "d": "Velouté vert onctueux, croûtons à l'emmental.",
+  "ing": {
+   "brocoli": 700,
+   "pommedeterre": 200,
+   "oignon": 1,
+   "bouillon": 1,
+   "fromageblanc": 200,
+   "emmental": 60,
+   "pain": 8
+  },
+  "prepMin": 4,
+  "prep": [
+   "Détaille {brocoli} de brocoli, coupe {pommedeterre} de pommes de terre en dés, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Dans le blender chauffant : brocoli, pommes de terre, oignon, {bouillon} et de l'eau. Programme soupe veloutée, en 2 fois si besoin."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Ajoute {fromageblanc} de fromage blanc et mixe."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Croûtons : {pain} en dés avec {emmental} d'emmental, 5 min à l'air fryer."
+ }
+]

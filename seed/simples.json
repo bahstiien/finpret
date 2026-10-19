@@ -1,0 +1,1173 @@
+[
+ {
+  "id": "croque",
+  "n": "Croque-madame à l'air fryer et salade verte",
+  "s": "Croque-madame",
+  "m": [
+   465,
+   27,
+   29,
+   24
+  ],
+  "ing": {
+   "painmie": 8,
+   "jambon": 4,
+   "emmental": 120,
+   "oeufs": 4,
+   "salade": 1
+  },
+  "steps": [
+   "Monte {painmie} en croques avec {jambon} de jambon et {emmental} d'emmental.",
+   "Cuis-les 8 min à 190 °C dans l'air fryer, en 2 fournées si besoin.",
+   "Cuis {oeufs} au plat, pose-les sur les croques et sers avec {salade}."
+  ],
+  "o": "fr"
+ },
+ {
+  "id": "omelette",
+  "n": "Omelette champignons-emmental, pain et salade",
+  "s": "Omelette champignons",
+  "m": [
+   455,
+   25,
+   17,
+   30
+  ],
+  "ing": {
+   "oeufs": 10,
+   "champignons": 300,
+   "emmental": 60,
+   "salade": 1,
+   "huile": 1,
+   "pain": 4
+  },
+  "steps": [
+   "Poêle {champignons} de champignons émincés 6 min dans 1 c.s. d'huile.",
+   "Bats {oeufs}, verse sur les champignons, ajoute {emmental} d'emmental et cuis 4 min à feu doux.",
+   "Sers avec {salade} et {pain}."
+  ],
+  "o": "fr"
+ },
+ {
+  "id": "pates_fraiches",
+  "n": "Pâtes fraîches ricotta-épinards, parmesan et salade",
+  "s": "Pâtes fraîches ricotta-épinards",
+  "pasta": true,
+  "m": [
+   425,
+   15,
+   47,
+   19
+  ],
+  "ing": {
+   "patesfraiches": 500,
+   "parmesan": 40,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {patesfraiches} de pâtes fraîches selon le paquet, 2 à 4 min.",
+   "Égoutte, ajoute un filet d'huile d'olive et {parmesan} de parmesan. Pas de sel : la farce est assaisonnée.",
+   "Sers avec {salade}."
+  ],
+  "o": "it"
+ },
+ {
+  "id": "galettes",
+  "n": "Galettes de sarrasin complètes et salade",
+  "s": "Galettes complètes",
+  "m": [
+   425,
+   26,
+   25,
+   23
+  ],
+  "ing": {
+   "galette": 4,
+   "jambon": 4,
+   "oeufs": 4,
+   "emmental": 120,
+   "salade": 1
+  },
+  "steps": [
+   "Chauffe une galette à la poêle, casse un œuf au centre, ajoute 1 tranche de jambon et un peu d'emmental.",
+   "Replie les bords et cuis 4 min à couvert. Répète pour {galette} au total.",
+   "Sers avec {salade}."
+  ],
+  "o": "fr"
+ },
+ {
+  "id": "quesadillas",
+  "n": "Quesadillas haricots rouges-fromage à l'air fryer",
+  "s": "Quesadillas",
+  "m": [
+   490,
+   24,
+   46,
+   21
+  ],
+  "ing": {
+   "tortilla": 8,
+   "haricotsrouges": 1,
+   "emmental": 150,
+   "cumin": 1,
+   "skyr": 150,
+   "salade": 1
+  },
+  "steps": [
+   "Écrase {haricotsrouges} de haricots rouges égouttés avec 1 c.c. de cumin et du sel.",
+   "Étale sur la moitié de {tortilla}, ajoute {emmental} d'emmental, referme avec les autres tortillas.",
+   "Air fryer 6 min à 190 °C, en plusieurs fournées. Coupe en triangles, sers avec {skyr} de skyr et {salade}."
+  ],
+  "o": "mx"
+ },
+ {
+  "id": "pizza",
+  "n": "Pizza maison jambon-champignons et salade",
+  "s": "Pizza maison",
+  "m": [
+   595,
+   32,
+   68,
+   18
+  ],
+  "ing": {
+   "pizza": 2,
+   "passata": 200,
+   "jambon": 4,
+   "champignons": 200,
+   "mozzarella": 250,
+   "salade": 1
+  },
+  "steps": [
+   "Préchauffe le four à 240 °C.",
+   "Étale {pizza}, puis {passata} de passata, {jambon} de jambon, {champignons} de champignons émincés et {mozzarella} de mozzarella.",
+   "Enfourne 12 min et sers avec {salade}."
+  ],
+  "o": "it"
+ },
+ {
+  "id": "salade_nicoise",
+  "n": "Salade niçoise complète",
+  "s": "Salade niçoise",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   480,
+   35,
+   30,
+   24
+  ],
+  "ing": {
+   "tomatefraiche": 4,
+   "haricotsverts": 300,
+   "oeufs": 6,
+   "thon": 2,
+   "pommedeterre": 400,
+   "huile": 3,
+   "moutarde": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre en dés 10 min au micro-ondes et {haricotsverts} de haricots verts 8 min à l'eau.",
+   "Cuis {oeufs} 10 min, écale-les.",
+   "Assemble {salade}, {tomatefraiche}, {thon} de thon, les légumes et les œufs. Vinaigrette : 3 c.s. d'huile, 1 c.s. de moutarde."
+  ],
+  "o": "fr"
+ },
+ {
+  "id": "oeufs_saumon",
+  "n": "Œufs brouillés, saumon fumé et tartines",
+  "s": "Œufs brouillés-saumon",
+  "m": [
+   470,
+   33,
+   28,
+   24
+  ],
+  "ing": {
+   "oeufs": 8,
+   "saumonfume": 150,
+   "pain": 8,
+   "salade": 1
+  },
+  "steps": [
+   "Fais griller {pain}.",
+   "Brouille {oeufs} à feu doux en remuant sans arrêt, retire-les quand ils sont encore crémeux.",
+   "Sers avec {saumonfume} de saumon fumé et {salade}."
+  ],
+  "o": "fr"
+ },
+ {
+  "id": "tartines_chevre",
+  "n": "Tartines chèvre-miel gratinées et salade",
+  "s": "Tartines chèvre-miel",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "m": [
+   420,
+   18,
+   45,
+   18
+  ],
+  "ing": {
+   "pain": 8,
+   "chevre": 200,
+   "miel": 2,
+   "salade": 1
+  },
+  "steps": [
+   "Garnis {pain} de rondelles de chèvre ({chevre} au total) et d'un filet de miel.",
+   "Air fryer 5 min à 190 °C.",
+   "Sers avec {salade}."
+  ],
+  "o": "fr"
+ },
+ {
+  "id": "pates_pesto",
+  "n": "Pâtes au pesto et mozzarella",
+  "s": "Pâtes pesto-mozzarella",
+  "pasta": true,
+  "m": [
+   620,
+   30,
+   56,
+   31
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "pesto": 1,
+   "mozzarella": 250,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Mélange avec {pesto} et un peu d'eau de cuisson, ajoute {mozzarella} de mozzarella en dés.",
+   "Sers avec {salade}."
+  ],
+  "o": "it"
+ },
+ {
+  "id": "riz_saute",
+  "n": "Riz sauté aux œufs, petits pois et jambon",
+  "s": "Riz sauté",
+  "m": [
+   520,
+   28,
+   70,
+   13
+  ],
+  "ing": {
+   "riz": 240,
+   "oeufs": 4,
+   "petitspois": 300,
+   "jambon": 4,
+   "soja": 2,
+   "huile": 2
+  },
+  "steps": [
+   "Cuis {riz} de riz, ou utilise un reste de riz froid.",
+   "Dans une grande poêle, 2 c.s. d'huile, {petitspois} de petits pois surgelés 4 min, puis le riz et {jambon} de jambon en dés.",
+   "Pousse sur le côté, brouille {oeufs}, mélange le tout avec 2 c.s. de soja."
+  ],
+  "o": "cn"
+ },
+ {
+  "id": "burger",
+  "comfort": true,
+  "n": "Burger maison et frites à l'air fryer",
+  "s": "Burger maison",
+  "m": [
+   680,
+   43,
+   78,
+   20
+  ],
+  "ing": {
+   "steak": 4,
+   "painburger": 4,
+   "cheddar": 80,
+   "oignon": 1,
+   "salade": 1,
+   "pommedeterre": 800,
+   "huile": 1
+  },
+  "steps": [
+   "Frites : coupe {pommedeterre} de pommes de terre en bâtonnets, 1 c.s. d'huile, sel, 20 min à 200 °C dans l'air fryer en secouant 2 fois.",
+   "Cuis {steak} 3 min par face à la poêle, ajoute {cheddar} de cheddar dessus la dernière minute.",
+   "Toaste {painburger}, monte avec la salade, l'oignon en rondelles et tes sauces préférées."
+  ],
+  "o": "us"
+ },
+ {
+  "id": "nuggets",
+  "comfort": true,
+  "n": "Nuggets de poulet maison et frites à l'air fryer",
+  "s": "Nuggets maison",
+  "m": [
+   560,
+   40,
+   64,
+   13
+  ],
+  "ing": {
+   "poulet": 500,
+   "chapelure": 60,
+   "oeufs": 1,
+   "farine": 30,
+   "pommedeterre": 800,
+   "huile": 2,
+   "salade": 1
+  },
+  "steps": [
+   "Coupe {poulet} de poulet en morceaux, passe-les dans {farine} de farine, {oeufs} battu, puis {chapelure} de chapelure.",
+   "Frites : {pommedeterre} de pommes de terre en bâtonnets, 1 c.s. d'huile, 20 min à 200 °C à l'air fryer.",
+   "Nuggets badigeonnés d'huile, 10 min à 200 °C à l'air fryer. Sers avec {salade}."
+  ],
+  "o": "us"
+ },
+ {
+  "id": "carbonara",
+  "comfort": true,
+  "n": "Pâtes à la carbonara, la vraie",
+  "s": "Carbonara",
+  "pasta": true,
+  "m": [
+   500,
+   29,
+   52,
+   17
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "lardons": 150,
+   "oeufs": 4,
+   "parmesan": 60
+  },
+  "steps": [
+   "Fais dorer {lardons} de lardons sans matière grasse.",
+   "Bats {oeufs} avec {parmesan} de parmesan et beaucoup de poivre.",
+   "Cuis {patescompletes} de pâtes, égoutte en gardant un peu d'eau. Hors du feu, mélange pâtes, lardons et œufs avec 2 c.s. d'eau de cuisson : la sauce doit être crémeuse, pas cuite."
+  ],
+  "o": "it"
+ },
+ {
+  "id": "fajitas",
+  "comfort": true,
+  "n": "Fajitas poulet-poivrons",
+  "s": "Fajitas",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "m": [
+   560,
+   43,
+   52,
+   18
+  ],
+  "ing": {
+   "poulet": 500,
+   "poivron": 2,
+   "oignon": 1,
+   "tortilla": 8,
+   "paprika": 2,
+   "cumin": 1,
+   "skyr": 150,
+   "emmental": 80,
+   "huile": 1
+  },
+  "steps": [
+   "Coupe {poulet} de poulet, {poivron} et {oignon} en lanières.",
+   "Poêle à feu vif 8 min dans 1 c.s. d'huile avec 2 c.c. de paprika et 1 c.c. de cumin.",
+   "Garnis {tortilla} chauffées avec la garniture, {skyr} de skyr et {emmental} d'emmental."
+  ],
+  "o": "mx"
+ },
+ {
+  "id": "fish_chips",
+  "comfort": true,
+  "n": "Fish and chips à l'air fryer",
+  "s": "Fish and chips",
+  "m": [
+   520,
+   36,
+   66,
+   10
+  ],
+  "ing": {
+   "cabillaud": 500,
+   "chapelure": 60,
+   "oeufs": 1,
+   "farine": 30,
+   "pommedeterre": 800,
+   "huile": 2,
+   "skyr": 150,
+   "citron": 1
+  },
+  "steps": [
+   "Frites : {pommedeterre} de pommes de terre en bâtonnets, 1 c.s. d'huile, 20 min à 200 °C à l'air fryer.",
+   "Coupe {cabillaud} de cabillaud en morceaux, passe-les dans {farine} de farine, {oeufs} battu, puis {chapelure} de chapelure. Air fryer 10 min à 200 °C.",
+   "Sauce : {skyr} de skyr, jus de citron, sel et poivre."
+  ],
+  "o": "uk"
+ },
+ {
+  "id": "raclette",
+  "comfort": true,
+  "n": "Raclette maison et salade",
+  "s": "Raclette",
+  "months": [
+   11,
+   12,
+   1,
+   2
+  ],
+  "m": [
+   725,
+   41,
+   44,
+   42
+  ],
+  "ing": {
+   "pommedeterre": 1000,
+   "raclette": 500,
+   "jambon": 4,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min à la vapeur, ou 12 min au micro-ondes dans un plat couvert.",
+   "Sans appareil à raclette : dispose {raclette} de fromage sur une plaque, 5 min au four à 220 °C jusqu'à ce qu'il coule.",
+   "Sers avec {jambon} de jambon et {salade}."
+  ],
+  "o": "ch"
+ },
+ {
+  "id": "shakshuka",
+  "n": "Shakshuka aux œufs, feta et pain",
+  "s": "Shakshuka",
+  "m": [
+   465,
+   24,
+   36,
+   22
+  ],
+  "ing": {
+   "tomates": 2,
+   "oignon": 1,
+   "ail": 2,
+   "cumin": 1,
+   "paprika": 1,
+   "oeufs": 8,
+   "feta": 100,
+   "pain": 8,
+   "huile": 1
+  },
+  "steps": [
+   "Fais revenir {oignon} émincé et 2 gousses d'ail dans 1 c.s. d'huile avec 1 c.c. de cumin et 1 c.c. de paprika.",
+   "Ajoute {tomates} de tomates concassées, mijote 8 min. Creuse des puits, casse-y {oeufs} et couvre 6 min.",
+   "Parsème {feta} de feta et sers avec {pain}."
+  ],
+  "o": "tn"
+ },
+ {
+  "id": "okonomiyaki",
+  "n": "Okonomiyaki : galette japonaise au chou et jambon",
+  "s": "Okonomiyaki",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   400,
+   24,
+   32,
+   19
+  ],
+  "ing": {
+   "chou": 0.5,
+   "farine": 150,
+   "oeufs": 4,
+   "jambon": 4,
+   "emmental": 60,
+   "huile": 2,
+   "soja": 2
+  },
+  "steps": [
+   "Émince très finement {chou}. Mélange avec {farine} de farine, {oeufs}, 150 ml d'eau, {jambon} de jambon en lanières et {emmental} d'emmental.",
+   "Cuis des galettes épaisses à la poêle huilée, 4 min par face à feu moyen.",
+   "Sers avec un filet de soja, et de la mayonnaise si tu en as."
+  ],
+  "o": "jp"
+ },
+ {
+  "id": "tacos",
+  "n": "Tacos de bœuf, haricots rouges et crème",
+  "s": "Tacos de bœuf",
+  "m": [
+   500,
+   41,
+   48,
+   15
+  ],
+  "ing": {
+   "boeuf": 400,
+   "tortilla": 8,
+   "haricotsrouges": 1,
+   "oignon": 1,
+   "cumin": 2,
+   "paprika": 1,
+   "salade": 1,
+   "skyr": 150,
+   "emmental": 80
+  },
+  "steps": [
+   "Fais dorer {boeuf} de bœuf haché avec {oignon} émincé, 2 c.c. de cumin et 1 c.c. de paprika. Ajoute {haricotsrouges} de haricots rouges égouttés, 3 min.",
+   "Chauffe {tortilla} à la poêle sèche.",
+   "Garnis de viande, de salade, de {emmental} d'emmental et de {skyr} de skyr."
+  ],
+  "o": "mx"
+ },
+ {
+  "id": "tortilla_patatas",
+  "o": "es",
+  "n": "Tortilla espagnole et salade",
+  "s": "Tortilla espagnole",
+  "m": [
+   460,
+   20,
+   40,
+   24
+  ],
+  "ing": {
+   "oeufs": 8,
+   "pommedeterre": 600,
+   "oignon": 1,
+   "huile": 3,
+   "salade": 1
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en fines tranches et {oignon} en lamelles, cuis-les 12 min à la poêle dans 3 c.s. d'huile.",
+   "Verse {oeufs} battus, cuis 6 min à feu doux, retourne à l'aide d'une assiette, 3 min de plus.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "wraps_poulet",
+  "o": "us",
+  "n": "Wraps au poulet grillé, carotte et sauce skyr",
+  "s": "Wraps poulet",
+  "m": [
+   470,
+   40,
+   46,
+   12
+  ],
+  "ing": {
+   "poulet": 400,
+   "tortilla": 8,
+   "carotte": 2,
+   "salade": 1,
+   "skyr": 150,
+   "paprika": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Coupe {poulet} de poulet en lamelles, poêle-les 6 min avec 1 c.c. de paprika et 1 c.s. d'huile.",
+   "Râpe {carotte}.",
+   "Garnis {tortilla} de poulet, carotte, salade et {skyr} de skyr, puis roule."
+  ]
+ },
+ {
+  "id": "aglio_olio",
+  "o": "it",
+  "pasta": true,
+  "n": "Spaghetti aglio e olio et œuf mollet",
+  "s": "Spaghetti aglio e olio",
+  "m": [
+   540,
+   24,
+   62,
+   21
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "ail": 4,
+   "huile": 3,
+   "parmesan": 40,
+   "oeufs": 4
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes et {oeufs} 6 min à part.",
+   "Fais dorer 4 gousses d'ail en lamelles dans 3 c.s. d'huile à feu doux.",
+   "Mélange pâtes, huile à l'ail et {parmesan} de parmesan, sers avec les œufs mollets."
+  ]
+ },
+ {
+  "id": "gnocchis_tomate",
+  "o": "it",
+  "n": "Gnocchis poêlés, sauce tomate et mozzarella",
+  "s": "Gnocchis tomate-mozza",
+  "m": [
+   520,
+   22,
+   82,
+   10
+  ],
+  "ing": {
+   "gnocchis": 800,
+   "passata": 400,
+   "mozzarella": 250,
+   "origan": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Poêle {gnocchis} de gnocchis 6 min dans 1 c.s. d'huile.",
+   "Ajoute {passata} de passata et l'origan, 3 min.",
+   "Ajoute {mozzarella} de mozzarella en morceaux, couvre 2 min."
+  ]
+ },
+ {
+  "id": "oeufs_cocotte",
+  "o": "fr",
+  "n": "Œufs cocotte au jambon et mouillettes",
+  "s": "Œufs cocotte",
+  "m": [
+   450,
+   30,
+   30,
+   23
+  ],
+  "ing": {
+   "oeufs": 8,
+   "jambon": 4,
+   "creme": 100,
+   "emmental": 40,
+   "pain": 8
+  },
+  "steps": [
+   "Répartis {jambon} de jambon en dés dans des ramequins, casse 2 œufs dans chacun ({oeufs} au total).",
+   "Ajoute un peu de {creme} de crème et {emmental} d'emmental, 10 min au four à 180 °C.",
+   "Sers avec {pain} en mouillettes."
+  ]
+ },
+ {
+  "id": "poelee_gnocchis",
+  "o": "fr",
+  "comfort": true,
+  "n": "Poêlée de gnocchis, champignons et lardons",
+  "s": "Poêlée de gnocchis",
+  "m": [
+   560,
+   24,
+   76,
+   18
+  ],
+  "ing": {
+   "gnocchis": 800,
+   "champignons": 300,
+   "lardons": 150,
+   "oignon": 1,
+   "parmesan": 30
+  },
+  "steps": [
+   "Fais dorer {lardons} de lardons et {oignon} émincé, ajoute {champignons} de champignons 5 min.",
+   "Ajoute {gnocchis} de gnocchis, poêle 6 min à feu vif.",
+   "Parsème {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "yakisoba",
+  "o": "jp",
+  "n": "Nouilles sautées aux œufs et légumes (yakisoba)",
+  "s": "Yakisoba",
+  "m": [
+   500,
+   20,
+   70,
+   15
+  ],
+  "ing": {
+   "nouillesramen": 300,
+   "oeufs": 4,
+   "carotte": 2,
+   "champignons": 200,
+   "soja": 3,
+   "huile": 2
+  },
+  "steps": [
+   "Cuis {nouillesramen} de nouilles, égoutte.",
+   "Saute {carotte} en julienne et {champignons} de champignons 5 min dans 2 c.s. d'huile, pousse sur le côté et brouille {oeufs}.",
+   "Ajoute les nouilles et 3 c.s. de soja, 2 min à feu vif."
+  ]
+ },
+ {
+  "id": "rosti",
+  "o": "ch",
+  "n": "Rösti et œuf au plat",
+  "s": "Rösti et œuf",
+  "m": [
+   430,
+   18,
+   42,
+   20
+  ],
+  "ing": {
+   "pommedeterre": 800,
+   "oeufs": 4,
+   "emmental": 60,
+   "huile": 2,
+   "salade": 1
+  },
+  "steps": [
+   "Râpe {pommedeterre} de pommes de terre, presse-les et mélange avec {emmental} d'emmental, sel.",
+   "Forme des galettes, cuis-les 6 min par face dans 2 c.s. d'huile.",
+   "Ajoute {oeufs} au plat et sers avec {salade}."
+  ]
+ },
+ {
+  "id": "asperges_oeufs",
+  "o": "fr",
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "n": "Asperges rôties, œufs mollets et jambon",
+  "s": "Asperges et œufs mollets",
+  "m": [
+   430,
+   30,
+   32,
+   19
+  ],
+  "ing": {
+   "asperges": 600,
+   "oeufs": 6,
+   "jambon": 4,
+   "pain": 8,
+   "huile": 1,
+   "parmesan": 20
+  },
+  "steps": [
+   "Asperges {asperges} avec 1 c.s. d'huile, 10 min à l'air fryer à 200 °C.",
+   "Cuis {oeufs} 6 min, écale-les.",
+   "Sers avec {jambon} de jambon, {parmesan} de parmesan et {pain} en mouillettes."
+  ]
+ },
+ {
+  "id": "tartines_radis",
+  "o": "fr",
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "n": "Tartines radis, fromage frais et œuf dur",
+  "s": "Tartines radis",
+  "m": [
+   380,
+   22,
+   40,
+   13
+  ],
+  "ing": {
+   "radis": 1,
+   "pain": 8,
+   "fromageblanc": 200,
+   "oeufs": 4,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {oeufs} 10 min.",
+   "Tartine {pain} de {fromageblanc} de fromage blanc égoutté, salé et poivré.",
+   "Ajoute {radis} en rondelles et les œufs en tranches. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "galette_epinards",
+  "o": "fr",
+  "months": [
+   3,
+   4,
+   5,
+   6
+  ],
+  "n": "Galettes de sarrasin épinards-chèvre",
+  "s": "Galettes épinards-chèvre",
+  "m": [
+   430,
+   24,
+   26,
+   24
+  ],
+  "ing": {
+   "galette": 4,
+   "epinards": 300,
+   "chevre": 150,
+   "oeufs": 4,
+   "salade": 1
+  },
+  "steps": [
+   "Fais tomber {epinards} d'épinards 2 min à la poêle.",
+   "Garnis chaque galette d'épinards, de chèvre ({chevre} au total) et d'un œuf ({oeufs} au total), replie les bords, 4 min à couvert.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "salade_pates",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "n": "Salade de pâtes tomates-mozzarella-pesto",
+  "s": "Salade de pâtes",
+  "m": [
+   580,
+   26,
+   64,
+   24
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "tomatefraiche": 4,
+   "mozzarella": 250,
+   "pesto": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes, rince-les à l'eau froide.",
+   "Mélange avec {pesto}, {tomatefraiche} en dés et {mozzarella} de mozzarella.",
+   "Sers frais."
+  ]
+ },
+ {
+  "id": "bruschetta",
+  "o": "it",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "n": "Bruschettas tomate, mozzarella et jambon",
+  "s": "Bruschettas",
+  "m": [
+   470,
+   28,
+   42,
+   20
+  ],
+  "ing": {
+   "pain": 8,
+   "tomatefraiche": 4,
+   "mozzarella": 250,
+   "jambon": 4,
+   "huile": 2,
+   "herbes": 1
+  },
+  "steps": [
+   "Fais griller {pain}.",
+   "Garnis de {tomatefraiche} en dés, d'huile et d'herbes, puis de {mozzarella} de mozzarella.",
+   "5 min à l'air fryer à 190 °C, ajoute {jambon} de jambon."
+  ]
+ },
+ {
+  "id": "v_burger",
+  "o": "us",
+  "comfort": true,
+  "n": "Burger végétarien haricots-avoine et frites",
+  "s": "Burger végétarien",
+  "m": [
+   640,
+   26,
+   90,
+   19
+  ],
+  "ing": {
+   "haricotsrouges": 1,
+   "flocons": 60,
+   "oeufs": 1,
+   "cheddar": 80,
+   "painburger": 4,
+   "salade": 1,
+   "pommedeterre": 800,
+   "huile": 2,
+   "cumin": 1
+  },
+  "steps": [
+   "Écrase {haricotsrouges} de haricots, mélange avec {flocons} de flocons, {oeufs}, 1 c.c. de cumin et du sel. Forme 4 steaks.",
+   "Frites : {pommedeterre} de pommes de terre en bâtonnets, 1 c.s. d'huile, 20 min à 200 °C à l'air fryer. Poêle les steaks 4 min par face.",
+   "Monte les burgers avec {cheddar} de cheddar, salade et {painburger} toastés."
+  ]
+ },
+ {
+  "id": "v_omelette_feta",
+  "o": "gr",
+  "n": "Omelette épinards-feta et pain",
+  "s": "Omelette épinards-feta",
+  "m": [
+   430,
+   30,
+   16,
+   27
+  ],
+  "ing": {
+   "oeufs": 8,
+   "epinardssurg": 300,
+   "feta": 150,
+   "pain": 4,
+   "huile": 1
+  },
+  "steps": [
+   "Fais revenir {epinardssurg} d'épinards surgelés 5 min dans 1 c.s. d'huile.",
+   "Verse {oeufs} battus, ajoute {feta} de feta, cuis 4 min à feu doux.",
+   "Sers avec {pain}."
+  ]
+ },
+ {
+  "id": "v_croque_champi",
+  "o": "fr",
+  "n": "Croque-monsieur champignons-emmental",
+  "s": "Croque champignons",
+  "m": [
+   460,
+   24,
+   44,
+   20
+  ],
+  "ing": {
+   "painmie": 8,
+   "champignons": 200,
+   "emmental": 150,
+   "oeufs": 2,
+   "salade": 1
+  },
+  "steps": [
+   "Poêle {champignons} de champignons émincés 6 min.",
+   "Monte {painmie} en croques avec les champignons et {emmental} d'emmental, badigeonne d'{oeufs} battus.",
+   "8 min à l'air fryer à 190 °C, sers avec {salade}."
+  ]
+ },
+ {
+  "id": "v_tartines_houmous",
+  "o": "lb",
+  "n": "Tartines houmous, œufs mollets et carottes râpées",
+  "s": "Tartines houmous-œufs",
+  "m": [
+   470,
+   25,
+   46,
+   20
+  ],
+  "ing": {
+   "pain": 8,
+   "houmous": 200,
+   "oeufs": 6,
+   "carotte": 2,
+   "citron": 0.5
+  },
+  "steps": [
+   "Cuis {oeufs} 6 min, écale-les.",
+   "Râpe {carotte} avec un filet de citron.",
+   "Tartine {pain} de {houmous} de houmous, ajoute carottes et œufs coupés en deux."
+  ]
+ },
+ {
+  "id": "v_galettes_champi",
+  "o": "fr",
+  "n": "Galettes de sarrasin œuf-emmental-champignons",
+  "s": "Galettes champignons",
+  "m": [
+   430,
+   25,
+   28,
+   22
+  ],
+  "ing": {
+   "galette": 4,
+   "oeufs": 4,
+   "emmental": 120,
+   "champignons": 200,
+   "salade": 1
+  },
+  "steps": [
+   "Poêle {champignons} de champignons émincés.",
+   "Garnis chaque galette d'un œuf, de champignons et d'emmental ({emmental} au total), replie, 4 min à couvert.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "v_gnocchis_epinards",
+  "o": "it",
+  "n": "Gnocchis poêlés, épinards à la ricotta",
+  "s": "Gnocchis épinards-ricotta",
+  "m": [
+   520,
+   22,
+   78,
+   13
+  ],
+  "ing": {
+   "gnocchis": 800,
+   "epinardssurg": 300,
+   "ricotta": 250,
+   "parmesan": 30,
+   "ail": 1
+  },
+  "steps": [
+   "Poêle {gnocchis} de gnocchis 6 min.",
+   "Ajoute {epinardssurg} d'épinards et l'ail, 4 min.",
+   "Hors du feu, ajoute {ricotta} de ricotta et {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "v_pizza_blanche",
+  "o": "it",
+  "n": "Pizza blanche ricotta-champignons et salade",
+  "s": "Pizza blanche",
+  "m": [
+   620,
+   28,
+   74,
+   22
+  ],
+  "ing": {
+   "pizza": 2,
+   "ricotta": 250,
+   "champignons": 200,
+   "mozzarella": 125,
+   "salade": 1
+  },
+  "steps": [
+   "Préchauffe le four à 240 °C.",
+   "Étale {pizza}, tartine de {ricotta} de ricotta, ajoute {champignons} de champignons émincés et {mozzarella} de mozzarella.",
+   "Enfourne 12 min, sers avec {salade}."
+  ]
+ },
+ {
+  "id": "v_burritos",
+  "o": "mx",
+  "n": "Burritos œufs brouillés, haricots et fromage",
+  "s": "Burritos végétariens",
+  "m": [
+   520,
+   30,
+   52,
+   20
+  ],
+  "ing": {
+   "tortilla": 8,
+   "oeufs": 6,
+   "haricotsrouges": 1,
+   "emmental": 80,
+   "salade": 1
+  },
+  "steps": [
+   "Réchauffe {haricotsrouges} de haricots égouttés et écrase-les.",
+   "Brouille {oeufs} à feu doux.",
+   "Garnis {tortilla} de haricots, œufs, {emmental} d'emmental et salade, roule."
+  ]
+ },
+ {
+  "id": "v_riz_saute",
+  "o": "in",
+  "n": "Riz sauté aux œufs, petits pois et carottes au curry",
+  "s": "Riz sauté au curry",
+  "m": [
+   500,
+   22,
+   70,
+   14
+  ],
+  "ing": {
+   "riz": 240,
+   "oeufs": 5,
+   "petitspois": 300,
+   "carotte": 2,
+   "curry": 1,
+   "huile": 2
+  },
+  "steps": [
+   "Cuis {riz} de riz, ou utilise un reste froid.",
+   "Saute {carotte} en dés et {petitspois} de petits pois 5 min dans 2 c.s. d'huile avec 1 c.s. de curry.",
+   "Ajoute le riz, pousse sur le côté, brouille {oeufs} et mélange."
+  ]
+ },
+ {
+  "id": "v_salade_lentilles",
+  "o": "fr",
+  "n": "Salade tiède de lentilles, feta et œuf mollet",
+  "s": "Salade lentilles-feta",
+  "m": [
+   520,
+   31,
+   44,
+   22
+  ],
+  "ing": {
+   "lentillesvertes": 250,
+   "feta": 150,
+   "oeufs": 4,
+   "carotte": 2,
+   "moutarde": 1,
+   "huile": 3,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {lentillesvertes} de lentilles 20 min et {oeufs} 6 min.",
+   "Vinaigrette : 3 c.s. d'huile, 1 c.s. de moutarde.",
+   "Mélange lentilles tièdes, {carotte} râpées, {feta} de feta, salade et vinaigrette, ajoute les œufs."
+  ]
+ },
+ {
+  "id": "v_salade_pates_feves",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   5,
+   6,
+   7
+  ],
+  "n": "Salade de pâtes fèves, feta et menthe",
+  "s": "Salade pâtes-fèves",
+  "m": [
+   560,
+   26,
+   70,
+   19
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "feves": 300,
+   "feta": 150,
+   "citron": 1,
+   "huile": 2
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes et {feves} de fèves (4 min), rince à l'eau froide.",
+   "Mélange avec {feta} de feta, le jus d'1 citron, 2 c.s. d'huile et de la menthe si tu en as.",
+   "Sers frais."
+  ]
+ }
+]

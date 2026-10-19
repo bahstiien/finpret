@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens de la refonte v2 (SPEC §11).
+ * Le thème suit le système ; `data-theme="light" | "dark"` sur <html> force un choix manuel.
+ */
+:root {
+  color-scheme: light;
+  --bg: #f4f3f8;
+  --surface: #ffffff;
+  --ink: #17151f;
+  --muted: #6b6878;
+  --line: #eceaf2;
+
+  --violet: #7a5af8;
+  --banana: #ffd23f;
+  --green: #1fa85a;
+
+  --blue-soft: #dcebff;
+  --blue-ink: #1f4e8c;
+  --pink-soft: #ffe6ec;
+  --pink-ink: #a3264a;
+  --yellow-soft: #fff6d6;
+  --peach: #ffe3d6;
+  --peach-ink: #a33a12;
+  --chip: #f1f0f5;
+}
+
+/* TODO(spec): teintes douces du mode sombre estimées d'après la maquette Stock ; à affiner en M11. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121019;
+    --surface: #1e1b27;
+    --ink: #f3f1f8;
+    --muted: #a6a2b4;
+    --line: #2c2838;
+    --blue-soft: #1d2b44;
+    --blue-ink: #a9c8f5;
+    --pink-soft: #3a1d29;
+    --pink-ink: #f5a3bb;
+    --yellow-soft: #352d14;
+    --peach: #3d2419;
+    --peach-ink: #f5a582;
+    --chip: #2a2635;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121019;
+  --surface: #1e1b27;
+  --ink: #f3f1f8;
+  --muted: #a6a2b4;
+  --line: #2c2838;
+  --blue-soft: #1d2b44;
+  --blue-ink: #a9c8f5;
+  --pink-soft: #3a1d29;
+  --pink-ink: #f5a3bb;
+  --yellow-soft: #352d14;
+  --peach: #3d2419;
+  --peach-ink: #f5a582;
+  --chip: #2a2635;
+}
+
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-violet: var(--violet);
+  --color-banana: var(--banana);
+  --color-green: var(--green);
+  --color-blue-soft: var(--blue-soft);
+  --color-blue-ink: var(--blue-ink);
+  --color-pink-soft: var(--pink-soft);
+  --color-pink-ink: var(--pink-ink);
+  --color-yellow-soft: var(--yellow-soft);
+  --color-peach: var(--peach);
+  --color-peach-ink: var(--peach-ink);
+  --color-chip: var(--chip);
+
+  --font-display: var(--font-gabarito), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 28px;
+  --radius-sheet: 32px;
+  --radius-pill: 999px;
+
+  --shadow-float: 0 8px 24px rgb(23 21 31 / 0.12);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+  :focus-visible {
+    outline: 3px solid var(--violet);
+    outline-offset: 2px;
+  }
+}

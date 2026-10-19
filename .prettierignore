@@ -1,0 +1,9 @@
+reference/
+seed/
+docs/
+pnpm-lock.yaml
+public/sw.js
+.next/
+CLAUDE.md
+PROMPT_DEMARRAGE.md
+README.md

@@ -1,0 +1,227 @@
+[
+ {
+  "t": "sucre",
+  "n": "Porridge banane et beurre de cacahuète",
+  "d": "Flocons d'avoine cuits au lait, banane en rondelles, 1 c.s. de beurre de cacahuète.",
+  "m": [
+   430,
+   16
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Skyr, flocons d'avoine et {fruit}",
+  "d": "Un bol de skyr, 3 c.s. de flocons, le fruit de saison et un filet de miel.",
+  "m": [
+   350,
+   22
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Pancakes banane-œuf",
+  "d": "1 banane écrasée et 2 œufs, cuits à la poêle. Avec du skyr.",
+  "m": [
+   360,
+   20
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Overnight oats pomme-cannelle",
+  "d": "Préparés la veille : flocons, lait, skyr, pomme râpée et cannelle.",
+  "m": [
+   400,
+   17
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Tartines complètes, fromage blanc et {fruit}",
+  "d": "2 tranches de pain complet, fromage blanc, fruit de saison en lamelles.",
+  "m": [
+   380,
+   18
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Gâteau banane maison et yaourt",
+  "d": "Une tranche du gâteau du dimanche, un yaourt nature et un fruit.",
+  "m": [
+   340,
+   12
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Œufs brouillés et pain complet",
+  "d": "2 œufs brouillés, 1 tranche de pain complet, tomate en été ou crudités.",
+  "m": [
+   390,
+   21
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Tartine saumon fumé et fromage frais",
+  "d": "Pain complet, fromage frais, saumon fumé et concombre ou citron.",
+  "m": [
+   370,
+   24
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Bowl salé skyr, œuf dur et herbes",
+  "d": "Skyr nature, herbes, poivre, un œuf dur et une tranche de pain grillé.",
+  "m": [
+   340,
+   28
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Tartines houmous et œuf mollet",
+  "d": "Pain complet, houmous, œuf mollet et quelques graines.",
+  "m": [
+   420,
+   19
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Cottage cheese, pain grillé et jambon",
+  "d": "Un pot de cottage cheese, 1 tranche de jambon, pain complet grillé.",
+  "m": [
+   360,
+   30
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Omelette aux champignons express",
+  "d": "2 œufs, champignons poêlés, un peu d'emmental. Prête en 6 min.",
+  "m": [
+   330,
+   22
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Pudding de chia au lait et {fruit}",
+  "d": "Préparé la veille : 3 c.s. de chia dans du lait, fruit de saison au matin.",
+  "m": [
+   360,
+   14
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Smoothie vert banane, épinards et skyr",
+  "d": "Au blender : banane, poignée d'épinards, skyr, lait. Avec une tartine complète.",
+  "m": [
+   380,
+   20
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Pain perdu léger au four",
+  "d": "Pain complet trempé dans œuf et lait, 12 min à l'air fryer. Avec du fromage blanc.",
+  "m": [
+   420,
+   21
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Muesli maison, lait et noix",
+  "d": "Flocons d'avoine, noix concassées, raisins secs et lait froid.",
+  "m": [
+   410,
+   15
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Galette de sarrasin, compote et skyr",
+  "d": "Une galette réchauffée, compote sans sucre ajouté et une cuillère de skyr.",
+  "m": [
+   390,
+   18
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Yaourt grec, compote tiède et noix",
+  "d": "Compote pomme-poire tiède sur un yaourt grec, noix concassées.",
+  "m": [
+   350,
+   16
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Porridge cacao-banane au skyr",
+  "d": "Flocons cuits au lait avec 1 c.c. de cacao, banane et skyr pour les protéines.",
+  "m": [
+   420,
+   22
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Muffins aux œufs, épinards et feta",
+  "d": "Préparés le dimanche : 6 œufs, épinards, feta, 20 min au four. 2 muffins par personne.",
+  "m": [
+   300,
+   22
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Galette de sarrasin œuf-fromage",
+  "d": "Pour le week-end : galette, œuf au plat, emmental et une poignée de salade.",
+  "m": [
+   420,
+   24
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Avocado toast et œuf poché",
+  "d": "Pain complet, ½ avocat écrasé au citron, œuf poché et poivre.",
+  "m": [
+   440,
+   18
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Croque complet express",
+  "d": "Pain de mie complet, jambon et emmental, 6 min à l'air fryer.",
+  "m": [
+   400,
+   26
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Wrap œuf brouillé et jambon",
+  "d": "Tortilla, 2 œufs brouillés, 1 tranche de jambon et quelques feuilles de salade.",
+  "m": [
+   410,
+   27
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Tartine ricotta, tomate ou concombre",
+  "d": "Pain complet, ricotta, tomate en été ou concombre, sel et poivre.",
+  "m": [
+   330,
+   16
+  ]
+ }
+]

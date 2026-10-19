@@ -1,0 +1,844 @@
+{
+ "poulet": {
+  "l": "Blanc de poulet",
+  "u": "g",
+  "c": "viande"
+ },
+ "boeuf": {
+  "l": "Bœuf haché 5 % MG",
+  "u": "g",
+  "c": "viande"
+ },
+ "dinde": {
+  "l": "Haché de dinde",
+  "u": "g",
+  "c": "viande"
+ },
+ "jambon": {
+  "l": "Jambon blanc découenné",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "tranche",
+   "tranches"
+  ],
+  "c": "viande"
+ },
+ "oeufs": {
+  "l": "Œufs",
+  "u": "pc",
+  "n": [
+   "œuf",
+   "œufs"
+  ],
+  "c": "frais"
+ },
+ "feta": {
+  "l": "Feta",
+  "u": "g",
+  "c": "frais"
+ },
+ "emmental": {
+  "l": "Emmental râpé",
+  "u": "g",
+  "c": "frais"
+ },
+ "parmesan": {
+  "l": "Parmesan râpé",
+  "u": "g",
+  "c": "frais"
+ },
+ "skyr": {
+  "l": "Skyr nature",
+  "u": "g",
+  "c": "frais"
+ },
+ "fromageblanc": {
+  "l": "Fromage blanc",
+  "u": "g",
+  "c": "frais"
+ },
+ "yaourt": {
+  "l": "Yaourt nature",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "pot",
+   "pots"
+  ],
+  "c": "frais"
+ },
+ "cottage": {
+  "l": "Cottage cheese",
+  "u": "g",
+  "c": "frais"
+ },
+ "mozzarella": {
+  "l": "Mozzarella light",
+  "u": "g",
+  "c": "frais"
+ },
+ "ricotta": {
+  "l": "Ricotta",
+  "u": "g",
+  "c": "frais"
+ },
+ "patesfraiches": {
+  "l": "Pâtes fraîches ricotta-épinards (Lustucru)",
+  "u": "g",
+  "c": "frais"
+ },
+ "galette": {
+  "l": "Galettes de sarrasin",
+  "u": "pc",
+  "n": [
+   "galette de sarrasin",
+   "galettes de sarrasin"
+  ],
+  "c": "frais"
+ },
+ "pain": {
+  "l": "Pain complet (tranches)",
+  "u": "pc",
+  "n": [
+   "tranche de pain complet",
+   "tranches de pain complet"
+  ],
+  "c": "boulangerie"
+ },
+ "painmie": {
+  "l": "Pain de mie complet (tranches)",
+  "u": "pc",
+  "n": [
+   "tranche de pain de mie",
+   "tranches de pain de mie"
+  ],
+  "c": "boulangerie"
+ },
+ "salade": {
+  "l": "Salade verte",
+  "u": "pc",
+  "n": [
+   "salade verte",
+   "salades vertes"
+  ],
+  "c": "legumes"
+ },
+ "tortilla": {
+  "l": "Tortillas de blé",
+  "u": "pc",
+  "n": [
+   "tortilla",
+   "tortillas"
+  ],
+  "c": "epicerie"
+ },
+ "haricotsblancs": {
+  "l": "Haricots blancs",
+  "u": "boite",
+  "s": " de 400 g",
+  "c": "epicerie"
+ },
+ "bouillon": {
+  "l": "Bouillon de légumes",
+  "u": "pc",
+  "n": [
+   "cube de bouillon",
+   "cubes de bouillon"
+  ],
+  "showN": true,
+  "c": "base"
+ },
+ "patebrisee": {
+  "l": "Pâte brisée",
+  "u": "pc",
+  "n": [
+   "pâte brisée",
+   "pâtes brisées"
+  ],
+  "c": "frais"
+ },
+ "gnocchis": {
+  "l": "Gnocchis",
+  "u": "g",
+  "c": "frais"
+ },
+ "courgette": {
+  "l": "Courgettes",
+  "u": "pc",
+  "n": [
+   "courgette",
+   "courgettes"
+  ],
+  "c": "legumes"
+ },
+ "banane": {
+  "l": "Bananes bien mûres",
+  "u": "pc",
+  "n": [
+   "banane bien mûre",
+   "bananes bien mûres"
+  ],
+  "c": "legumes"
+ },
+ "citron": {
+  "l": "Citrons",
+  "u": "pc",
+  "half": true,
+  "n": [
+   "citron",
+   "citrons"
+  ],
+  "c": "legumes"
+ },
+ "poivron": {
+  "l": "Poivrons rouges",
+  "u": "pc",
+  "n": [
+   "poivron rouge",
+   "poivrons rouges"
+  ],
+  "c": "legumes"
+ },
+ "carotte": {
+  "l": "Carottes",
+  "u": "pc",
+  "n": [
+   "carotte",
+   "carottes"
+  ],
+  "c": "legumes"
+ },
+ "epinards": {
+  "l": "Épinards frais",
+  "u": "g",
+  "c": "legumes"
+ },
+ "pommedeterre": {
+  "l": "Pommes de terre",
+  "u": "g",
+  "c": "legumes"
+ },
+ "butternut": {
+  "l": "Butternut",
+  "u": "g",
+  "c": "legumes"
+ },
+ "choufleur": {
+  "l": "Chou-fleur",
+  "u": "g",
+  "c": "legumes"
+ },
+ "brocoli": {
+  "l": "Brocoli",
+  "u": "g",
+  "c": "legumes"
+ },
+ "champignons": {
+  "l": "Champignons de Paris",
+  "u": "g",
+  "c": "legumes"
+ },
+ "poireau": {
+  "l": "Poireaux",
+  "u": "pc",
+  "n": [
+   "poireau",
+   "poireaux"
+  ],
+  "c": "legumes"
+ },
+ "persil": {
+  "l": "Persil plat",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "bouquet",
+   "bouquets"
+  ],
+  "c": "legumes"
+ },
+ "gingembre": {
+  "l": "Gingembre frais",
+  "u": "pc",
+  "n": [
+   "morceau de gingembre",
+   "morceaux de gingembre"
+  ],
+  "c": "legumes"
+ },
+ "edamame": {
+  "l": "Edamame écossés",
+  "u": "g",
+  "c": "surgeles"
+ },
+ "lentillescorail": {
+  "l": "Lentilles corail",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "lentillesvertes": {
+  "l": "Lentilles vertes",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "poischiches": {
+  "l": "Pois chiches",
+  "u": "boite",
+  "s": " de 400 g",
+  "c": "epicerie"
+ },
+ "haricotsrouges": {
+  "l": "Haricots rouges",
+  "u": "boite",
+  "s": " de 400 g",
+  "c": "epicerie"
+ },
+ "tomates": {
+  "l": "Tomates concassées",
+  "u": "boite",
+  "s": " de 400 g",
+  "c": "epicerie"
+ },
+ "thon": {
+  "l": "Thon au naturel",
+  "u": "boite",
+  "s": " de 140 g égoutté",
+  "c": "epicerie"
+ },
+ "passata": {
+  "l": "Passata",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "laitcoco": {
+  "l": "Lait de coco light",
+  "u": "ml",
+  "c": "epicerie"
+ },
+ "quinoa": {
+  "l": "Quinoa",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "boulgour": {
+  "l": "Boulgour",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "semoule": {
+  "l": "Semoule",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "beurrecacahuete": {
+  "l": "Beurre de cacahuète",
+  "u": "cs",
+  "c": "epicerie"
+ },
+ "amande": {
+  "l": "Poudre d'amande",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "pateslasagnes": {
+  "l": "Feuilles de lasagnes complètes",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "patescompletes": {
+  "l": "Pâtes complètes",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "riz": {
+  "l": "Riz",
+  "u": "g",
+  "c": "base"
+ },
+ "oignon": {
+  "l": "Oignons",
+  "u": "pc",
+  "n": [
+   "oignon",
+   "oignons"
+  ],
+  "c": "base"
+ },
+ "ail": {
+  "l": "Ail",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "gousse",
+   "gousses"
+  ],
+  "c": "base"
+ },
+ "farine": {
+  "l": "Farine",
+  "u": "g",
+  "c": "base"
+ },
+ "sucre": {
+  "l": "Sucre",
+  "u": "g",
+  "c": "base"
+ },
+ "levure": {
+  "l": "Levure chimique",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "sachet",
+   "sachets"
+  ],
+  "c": "base"
+ },
+ "chapelure": {
+  "l": "Chapelure",
+  "u": "g",
+  "c": "base"
+ },
+ "lait": {
+  "l": "Lait",
+  "u": "ml",
+  "c": "base"
+ },
+ "huile": {
+  "l": "Huile d'olive",
+  "u": "cs",
+  "c": "base"
+ },
+ "huileneutre": {
+  "l": "Huile neutre",
+  "u": "g",
+  "c": "base"
+ },
+ "soja": {
+  "l": "Sauce soja",
+  "u": "cs",
+  "c": "base"
+ },
+ "curry": {
+  "l": "Curry doux",
+  "u": "cs",
+  "c": "base"
+ },
+ "cumin": {
+  "l": "Cumin",
+  "u": "cc",
+  "c": "base"
+ },
+ "paprika": {
+  "l": "Paprika",
+  "u": "cc",
+  "c": "base"
+ },
+ "cannelle": {
+  "l": "Cannelle",
+  "u": "cc",
+  "c": "base"
+ },
+ "herbes": {
+  "l": "Herbes de Provence",
+  "u": "cc",
+  "c": "base"
+ },
+ "origan": {
+  "l": "Origan",
+  "u": "cc",
+  "c": "base"
+ },
+ "aubergine": {
+  "l": "Aubergines",
+  "u": "pc",
+  "n": [
+   "aubergine",
+   "aubergines"
+  ],
+  "c": "legumes"
+ },
+ "tomatefraiche": {
+  "l": "Tomates",
+  "u": "pc",
+  "n": [
+   "tomate",
+   "tomates"
+  ],
+  "c": "legumes"
+ },
+ "haricotsverts": {
+  "l": "Haricots verts",
+  "u": "g",
+  "c": "legumes"
+ },
+ "asperges": {
+  "l": "Asperges vertes",
+  "u": "g",
+  "c": "legumes"
+ },
+ "potimarron": {
+  "l": "Potimarron",
+  "u": "g",
+  "c": "legumes"
+ },
+ "endive": {
+  "l": "Endives",
+  "u": "pc",
+  "n": [
+   "endive",
+   "endives"
+  ],
+  "c": "legumes"
+ },
+ "concombre": {
+  "l": "Concombres",
+  "u": "pc",
+  "n": [
+   "concombre",
+   "concombres"
+  ],
+  "c": "legumes"
+ },
+ "petitspois": {
+  "l": "Petits pois surgelés",
+  "u": "g",
+  "c": "surgeles"
+ },
+ "lardons": {
+  "l": "Lardons allumettes",
+  "u": "g",
+  "c": "viande"
+ },
+ "saumon": {
+  "l": "Pavés de saumon",
+  "u": "g",
+  "c": "viande"
+ },
+ "saucisse": {
+  "l": "Saucisses fumées",
+  "u": "pc",
+  "n": [
+   "saucisse fumée",
+   "saucisses fumées"
+  ],
+  "c": "viande"
+ },
+ "paleron": {
+  "l": "Paleron de bœuf",
+  "u": "g",
+  "c": "viande"
+ },
+ "poiscasses": {
+  "l": "Pois cassés",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "chevre": {
+  "l": "Bûche de chèvre",
+  "u": "g",
+  "c": "frais"
+ },
+ "saumonfume": {
+  "l": "Saumon fumé",
+  "u": "g",
+  "c": "frais"
+ },
+ "pizza": {
+  "l": "Pâtes à pizza",
+  "u": "pc",
+  "n": [
+   "pâte à pizza",
+   "pâtes à pizza"
+  ],
+  "c": "frais"
+ },
+ "houmous": {
+  "l": "Houmous",
+  "u": "g",
+  "c": "frais"
+ },
+ "pesto": {
+  "l": "Pesto",
+  "u": "pc",
+  "n": [
+   "pot de pesto",
+   "pots de pesto"
+  ],
+  "showN": true,
+  "c": "epicerie"
+ },
+ "moutarde": {
+  "l": "Moutarde",
+  "u": "cs",
+  "c": "base"
+ },
+ "miel": {
+  "l": "Miel",
+  "u": "cs",
+  "c": "base"
+ },
+ "raselhanout": {
+  "l": "Ras el hanout",
+  "u": "cc",
+  "c": "base"
+ },
+ "reblochon": {
+  "l": "Reblochon",
+  "u": "pc",
+  "n": [
+   "reblochon",
+   "reblochons"
+  ],
+  "c": "frais"
+ },
+ "creme": {
+  "l": "Crème fraîche légère",
+  "u": "ml",
+  "c": "frais"
+ },
+ "cheddar": {
+  "l": "Cheddar râpé",
+  "u": "g",
+  "c": "frais"
+ },
+ "raclette": {
+  "l": "Fromage à raclette",
+  "u": "g",
+  "c": "frais"
+ },
+ "beurre": {
+  "l": "Beurre",
+  "u": "g",
+  "c": "base"
+ },
+ "biere": {
+  "l": "Bière brune",
+  "u": "ml",
+  "c": "epicerie"
+ },
+ "steak": {
+  "l": "Steaks hachés 5 %",
+  "u": "pc",
+  "n": [
+   "steak haché",
+   "steaks hachés"
+  ],
+  "c": "viande"
+ },
+ "cabillaud": {
+  "l": "Dos de cabillaud",
+  "u": "g",
+  "c": "viande"
+ },
+ "painburger": {
+  "l": "Pains à burger",
+  "u": "pc",
+  "n": [
+   "pain à burger",
+   "pains à burger"
+  ],
+  "c": "boulangerie"
+ },
+ "chou": {
+  "l": "Chou blanc",
+  "u": "pc",
+  "half": true,
+  "n": [
+   "chou blanc",
+   "choux blancs"
+  ],
+  "c": "legumes"
+ },
+ "garammasala": {
+  "l": "Garam masala",
+  "u": "cc",
+  "c": "base"
+ },
+ "cacahuetes": {
+  "l": "Cacahuètes non salées",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "nouillesriz": {
+  "l": "Nouilles de riz",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "nouillesramen": {
+  "l": "Nouilles ramen",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "painpita": {
+  "l": "Pains pita",
+  "u": "pc",
+  "n": [
+   "pain pita",
+   "pains pita"
+  ],
+  "c": "boulangerie"
+ },
+ "patefeuilletee": {
+  "l": "Pâte feuilletée",
+  "u": "pc",
+  "n": [
+   "pâte feuilletée",
+   "pâtes feuilletées"
+  ],
+  "c": "frais"
+ },
+ "epinardssurg": {
+  "l": "Épinards surgelés",
+  "u": "g",
+  "c": "surgeles"
+ },
+ "mais": {
+  "l": "Maïs",
+  "u": "boite",
+  "s": " de 300 g",
+  "c": "epicerie"
+ },
+ "cuisse": {
+  "l": "Cuisses de poulet",
+  "u": "pc",
+  "n": [
+   "cuisse de poulet",
+   "cuisses de poulet"
+  ],
+  "c": "viande"
+ },
+ "echine": {
+  "l": "Échine de porc",
+  "u": "g",
+  "c": "viande"
+ },
+ "rizrond": {
+  "l": "Riz rond (risotto)",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "agneau": {
+  "l": "Épaule d'agneau désossée",
+  "u": "g",
+  "c": "viande"
+ },
+ "feves": {
+  "l": "Fèves (fraîches ou surgelées)",
+  "u": "g",
+  "c": "legumes"
+ },
+ "radis": {
+  "l": "Radis",
+  "u": "pc",
+  "n": [
+   "botte de radis",
+   "bottes de radis"
+  ],
+  "c": "legumes"
+ },
+ "haricotsnoirs": {
+  "l": "Haricots noirs",
+  "u": "boite",
+  "s": " de 400 g",
+  "c": "epicerie"
+ },
+ "tahini": {
+  "l": "Purée de sésame (tahini)",
+  "u": "cs",
+  "c": "epicerie"
+ },
+ "abricotssecs": {
+  "l": "Abricots secs",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "chocolat": {
+  "l": "Chocolat noir pâtissier",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "pomme": {
+  "l": "Pommes",
+  "u": "pc",
+  "n": [
+   "pomme",
+   "pommes"
+  ],
+  "c": "legumes"
+ },
+ "poire": {
+  "l": "Poires",
+  "u": "pc",
+  "n": [
+   "poire",
+   "poires"
+  ],
+  "c": "legumes"
+ },
+ "fruitsrouges": {
+  "l": "Fruits rouges (frais ou surgelés)",
+  "u": "g",
+  "c": "legumes"
+ },
+ "flocons": {
+  "l": "Flocons d'avoine",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "cacao": {
+  "l": "Cacao non sucré",
+  "u": "cs",
+  "c": "epicerie"
+ },
+ "levureboul": {
+  "l": "Levure boulangère sèche",
+  "u": "pc",
+  "n": [
+   "sachet de levure boulangère",
+   "sachets de levure boulangère"
+  ],
+  "showN": true,
+  "c": "epicerie"
+ },
+ "raisinssecs": {
+  "l": "Raisins secs",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "pruneaux": {
+  "l": "Pruneaux dénoyautés",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "coco": {
+  "l": "Noix de coco râpée",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "rhubarbe": {
+  "l": "Rhubarbe",
+  "u": "g",
+  "c": "legumes"
+ },
+ "fraises": {
+  "l": "Fraises",
+  "u": "g",
+  "c": "legumes"
+ },
+ "orange": {
+  "l": "Oranges",
+  "u": "pc",
+  "n": [
+   "orange",
+   "oranges"
+  ],
+  "c": "legumes"
+ },
+ "abricots": {
+  "l": "Abricots",
+  "u": "g",
+  "c": "legumes"
+ }
+}

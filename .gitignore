@@ -1,0 +1,35 @@
+# Dépendances
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Service worker généré par Serwist
+public/sw.js
+public/sw.js.map
+public/swe-worker-*.js
+
+# Tests
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+
+# Divers
+.DS_Store
+Thumbs.db
+*.log

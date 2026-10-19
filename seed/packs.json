@@ -1,0 +1,151 @@
+{
+ "passata": {
+  "s": [
+   500,
+   700
+  ],
+  "l": "bouteille"
+ },
+ "fromageblanc": {
+  "s": [
+   500
+  ],
+  "l": "pot"
+ },
+ "cottage": {
+  "s": [
+   200
+  ],
+  "l": "pot",
+  "tol": 0.5
+ },
+ "ricotta": {
+  "s": [
+   250
+  ],
+  "l": "pot",
+  "tol": 0.5
+ },
+ "mozzarella": {
+  "s": [
+   125
+  ],
+  "l": "boule",
+  "tol": 0.5
+ },
+ "creme": {
+  "s": [
+   200
+  ],
+  "l": "brique",
+  "tol": 0.5
+ },
+ "feta": {
+  "s": [
+   200
+  ],
+  "l": "paquet",
+  "tol": 0.4
+ },
+ "lardons": {
+  "s": [
+   150
+  ],
+  "l": "barquette",
+  "tol": 0.4
+ },
+ "boeuf": {
+  "s": [
+   250,
+   500
+  ],
+  "l": "barquette"
+ },
+ "patescompletes": {
+  "s": [
+   500
+  ],
+  "l": "paquet"
+ },
+ "gnocchis": {
+  "s": [
+   500
+  ],
+  "l": "paquet"
+ },
+ "champignons": {
+  "s": [
+   250,
+   500
+  ],
+  "l": "barquette"
+ },
+ "epinards": {
+  "s": [
+   500
+  ],
+  "l": "sachet"
+ },
+ "lentillescorail": {
+  "s": [
+   500
+  ],
+  "l": "sachet"
+ },
+ "lentillesvertes": {
+  "s": [
+   500
+  ],
+  "l": "sachet"
+ },
+ "laitcoco": {
+  "s": [
+   200,
+   400
+  ],
+  "l": "boîte"
+ },
+ "saumon": {
+  "s": [
+   125
+  ],
+  "l": "pavé",
+  "tol": 0.4
+ },
+ "amande": {
+  "s": [
+   125
+  ],
+  "l": "sachet"
+ },
+ "chocolat": {
+  "s": [
+   100
+  ],
+  "l": "tablette"
+ },
+ "houmous": {
+  "s": [
+   200
+  ],
+  "l": "pot"
+ },
+ "nouillesramen": {
+  "s": [
+   250
+  ],
+  "l": "paquet"
+ },
+ "nouillesriz": {
+  "s": [
+   200
+  ],
+  "l": "paquet"
+ },
+ "rizrond": {
+  "s": [
+   500
+  ],
+  "l": "paquet"
+ }
+}
