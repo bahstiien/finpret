@@ -29,6 +29,13 @@ const PATHS = {
     "M2 21h4V9H2zm20-11a2 2 0 0 0-2-2h-6.3l1-4.6v-.3a1.5 1.5 0 0 0-.4-1L13.2 1 6.6 7.6A2 2 0 0 0 6 9v10a2 2 0 0 0 2 2h9a2 2 0 0 0 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7z",
   thumbDown:
     "M22 3h-4v12h4zM2 14a2 2 0 0 0 2 2h6.3l-1 4.6v.3c0 .4.2.8.4 1l1.1 1.1 6.6-6.6A2 2 0 0 0 18 15V5a2 2 0 0 0-2-2H7a2 2 0 0 0-1.8 1.2l-3 7.1L2 12z",
+  // Série et passeport (SPEC_PROGRES §5) : Material Symbols Rounded, remplis.
+  streak:
+    "M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-8.2 15.1L6.9 14.2l1.4-1.4 2.5 2.5 5.1-5.1 1.4 1.4zM19 8H5V6h14z",
+  pause: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m-1 14H9V8h2zm4 0h-2V8h2z",
+  passport:
+    "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m-1 17.9A8 8 0 0 1 4 12c0-.6.1-1.2.2-1.8L9 15v1a2 2 0 0 0 2 2zm6.9-2.5A2 2 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.4a8 8 0 0 1 2.9 12.8",
+  share: "M16 5 14.6 6.4 13 4.8V15h-2V4.8L9.4 6.4 8 5l4-4zm4 5v11H4V10h4v2H6v7h12v-7h-2v-2z",
 } as const;
 
 export type IconName = keyof typeof PATHS;

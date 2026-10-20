@@ -7,30 +7,44 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { type ActionResult } from "@/server/errors";
 import { trackEvent } from "@/server/events";
-import { cancelPause, finishSession, type FinishResult, planPause } from "@/server/progress";
+import { cancelPause, finishSession, planPause } from "@/server/progress";
 import { createProgressStore } from "@/server/progress-store";
+import { loadProgressView } from "@/server/progress-view";
 import { requireHousehold } from "@/server/session";
 
 const uuid = z.uuid();
 const monday = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
+export type SessionDoneResult = {
+  /** Réglage du compte : faux = rien à afficher. */
+  visible: boolean;
+  /** Série actuelle après cette session. */
+  current: number;
+};
+
+const NOTHING: SessionDoneResult = { visible: false, current: 0 };
+
 /**
  * Fin de session : `done_at`, recettes cuisinées, tampons, série (SPEC_PROGRES §3, §4). La semaine doit appartenir au
  * foyer actif, vérifié avec le client de l'utilisateur (RLS) avant toute écriture avec la clé de service.
- * Renvoie le palier et les tampons à célébrer ; rien si la lecture seule (viewer).
+ * Les tampons et le palier inscrits sont célébrés ensuite par la feuille globale (`CelebrationHost`).
  */
-export async function finishSessionAction(weekId: string): Promise<FinishResult> {
-  const empty: FinishResult = { milestone: null, stamps: [] };
-  if (!uuid.safeParse(weekId).success) return empty;
+export async function finishSessionAction(weekId: string): Promise<SessionDoneResult> {
+  if (!uuid.safeParse(weekId).success) return NOTHING;
   const { user, household } = await requireHousehold("/app/session");
-  if (household.role === "viewer") return empty;
+  if (household.role === "viewer") return NOTHING;
   const supabase = await createClient();
-  const { data } = await supabase.from("weeks").select("id").eq("id", weekId).eq("household_id", household.id).maybeSingle();
-  if (!data) return empty;
+  const { data } = await supabase
+    .from("weeks")
+    .select("id")
+    .eq("id", weekId)
+    .eq("household_id", household.id)
+    .maybeSingle();
+  if (!data) return NOTHING;
   await trackEvent("session_done", { userId: user.id, householdId: household.id, dedupeKey: weekId });
-  const result = await finishSession(createProgressStore(), { householdId: household.id, weekId });
-  revalidatePath("/app");
-  return result;
+  await finishSession(createProgressStore(), { householdId: household.id, weekId });
+  const view = await loadProgressView(household.id, user.id, { passport: false });
+  return { visible: view.visible, current: view.streak.current };
 }
 
 const PAUSE_ERRORS = {
@@ -67,7 +81,11 @@ export async function markAchievementsSeen(keys: string[]): Promise<void> {
   if (!parsed.success || parsed.data.length === 0) return;
   const { household } = await requireHousehold("/app");
   const supabase = await createClient();
-  const { data } = await supabase.from("achievements").select("kind, key").eq("household_id", household.id).is("seen_at", null);
+  const { data } = await supabase
+    .from("achievements")
+    .select("kind, key")
+    .eq("household_id", household.id)
+    .is("seen_at", null);
   const wanted = new Set(parsed.data);
   const rows = (data ?? []).filter((a) => wanted.has(`${a.kind}:${a.key}`));
   if (rows.length === 0) return;

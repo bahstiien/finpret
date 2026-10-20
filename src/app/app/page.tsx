@@ -3,6 +3,8 @@ import { type CanteenEntry, MenuScreen, type PickerOption } from "@/components/m
 import { canteenDays, duplicateGroups } from "@/engine/canteen";
 import { isRemoved, slotMap } from "@/engine/week";
 import { createClient } from "@/lib/supabase/server";
+import { StreakTile } from "@/components/progress/StreakTile";
+import { loadProgressView } from "@/server/progress-view";
 import { NoWeek } from "@/components/menu/NoWeek";
 import { eligible } from "@/engine/season";
 import { monthOf } from "@/engine/compose";
@@ -20,7 +22,7 @@ export const metadata: Metadata = { title: fr.nav.menu };
 
 /** Onglet Menu (§8.1). `?week=next` affiche la semaine suivante déjà préparée. */
 export default async function MenuPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
-  const { household } = await requireHousehold("/app");
+  const { user: authUser, household } = await requireHousehold("/app");
   const [ctx, profile, user, params] = await Promise.all([
     loadHouseholdContext(household.id),
     getProfile(),
@@ -135,8 +137,10 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
     }
   }
 
+  const progress = await loadProgressView(household.id, authUser.id, { passport: false });
   return (
-    <MenuScreen
+    <>
+      <MenuScreen
       header={header}
       view={view}
       canEdit={canEdit}
@@ -153,6 +157,8 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
         nextStart,
         canPrepareNext: isCurrent && !next && canPrepareNext(today),
       }}
-    />
+      />
+      {progress.visible && <StreakTile streak={progress.streak} />}
+    </>
   );
 }

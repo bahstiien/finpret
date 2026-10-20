@@ -57,11 +57,13 @@ export function seasonOf(isoDate: string): { season: Season; year: number; key: 
 }
 
 export function isSeasonalIn(cook: Pick<CookRecord, "months" | "variantMonths">, month: number): boolean {
-  if (cook.months && cook.months.length > 0 && cook.months.length < 12 && cook.months.includes(month)) return true;
+  if (cook.months && cook.months.length > 0 && cook.months.length < 12 && cook.months.includes(month))
+    return true;
   return (cook.variantMonths ?? []).some((m) => m.includes(month));
 }
 
-const counts = (c: CookRecord) => c.isGlobal && (c.kind === "main" || c.kind === "soup" || c.kind === "simple");
+const counts = (c: CookRecord) =>
+  c.isGlobal && (c.kind === "main" || c.kind === "soup" || c.kind === "simple");
 
 export function countryStamps(cooks: CookRecord[]): CountryStamp[] {
   const map = new Map<string, CountryStamp>();
@@ -74,8 +76,8 @@ export function countryStamps(cooks: CookRecord[]): CountryStamp[] {
   return [...map.values()];
 }
 
-/** Clés de saison (`2027-autumn`) ayant au moins 6 recettes de saison différentes. */
-export function seasonStamps(cooks: CookRecord[]): string[] {
+/** Nombre de recettes de saison différentes cuisinées par saison (`2027-autumn`). */
+export function seasonCounts(cooks: CookRecord[]): Map<string, number> {
   const bySeason = new Map<string, Set<string>>();
   for (const c of cooks) {
     if (!counts(c)) continue;
@@ -84,7 +86,12 @@ export function seasonStamps(cooks: CookRecord[]): string[] {
     const key = seasonOf(c.cookedOn).key;
     bySeason.set(key, (bySeason.get(key) ?? new Set()).add(c.recipeId));
   }
-  return [...bySeason].filter(([, ids]) => ids.size >= SEASON_STAMP_THRESHOLD).map(([k]) => k);
+  return new Map([...bySeason].map(([k, ids]) => [k, ids.size]));
+}
+
+/** Clés de saison (`2027-autumn`) ayant au moins 6 recettes de saison différentes. */
+export function seasonStamps(cooks: CookRecord[]): string[] {
+  return [...seasonCounts(cooks)].filter(([, n]) => n >= SEASON_STAMP_THRESHOLD).map(([k]) => k);
 }
 
 export interface NewAchievement {
@@ -95,7 +102,8 @@ export interface NewAchievement {
 /** Tampons gagnés par `cooks` absents de `existing` (clés `country:jp`, `season:2027-autumn`). */
 export function newAchievements(cooks: CookRecord[], existing: Set<string>): NewAchievement[] {
   const out: NewAchievement[] = [];
-  for (const s of countryStamps(cooks)) if (!existing.has(`country:${s.code}`)) out.push({ kind: "country", key: s.code });
+  for (const s of countryStamps(cooks))
+    if (!existing.has(`country:${s.code}`)) out.push({ kind: "country", key: s.code });
   for (const k of seasonStamps(cooks)) if (!existing.has(`season:${k}`)) out.push({ kind: "season", key: k });
   return out;
 }

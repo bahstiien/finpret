@@ -28,7 +28,12 @@ export function createProgressStore(db = createAdminClient()): ProgressStore {
         .maybeSingle();
       fail(error);
       return data
-        ? { id: data.id, householdId: data.household_id, startDate: data.start_date, plan: data.plan as unknown as WeekPlan }
+        ? {
+            id: data.id,
+            householdId: data.household_id,
+            startDate: data.start_date,
+            plan: data.plan as unknown as WeekPlan,
+          }
         : null;
     },
 
@@ -41,7 +46,11 @@ export function createProgressStore(db = createAdminClient()): ProgressStore {
         .lte("start_date", to)
         .order("start_date");
       fail(error);
-      return (data ?? []).map((w) => ({ id: w.id, startDate: w.start_date, plan: w.plan as unknown as WeekPlan }));
+      return (data ?? []).map((w) => ({
+        id: w.id,
+        startDate: w.start_date,
+        plan: w.plan as unknown as WeekPlan,
+      }));
     },
 
     async setDoneAt(weekId, at) {
@@ -52,7 +61,11 @@ export function createProgressStore(db = createAdminClient()): ProgressStore {
         .eq("week_id", weekId)
         .is("done_at", null);
       fail(error);
-      const { data, error: readError } = await db.from("sessions").select("done_at").eq("week_id", weekId).maybeSingle();
+      const { data, error: readError } = await db
+        .from("sessions")
+        .select("done_at")
+        .eq("week_id", weekId)
+        .maybeSingle();
       fail(readError);
       return data?.done_at ? new Date(data.done_at) : at;
     },
@@ -102,7 +115,10 @@ export function createProgressStore(db = createAdminClient()): ProgressStore {
     },
 
     async achievements(householdId) {
-      const { data, error } = await db.from("achievements").select("kind, key").eq("household_id", householdId);
+      const { data, error } = await db
+        .from("achievements")
+        .select("kind, key")
+        .eq("household_id", householdId);
       fail(error);
       return data ?? [];
     },

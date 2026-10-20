@@ -5,7 +5,7 @@
 
 export type NotificationKind = "dinner" | "thaw" | "shopping" | "session";
 /** Notifications hors planning horaire : menus de cantine publiés, fin d'essai (SPEC_JANVIER §8). */
-export type ExtraKind = "canteen_published" | "trial_ending";
+export type ExtraKind = "canteen_published" | "trial_ending" | "streak_paused";
 
 export type NotificationPrefs = {
   push: boolean;
@@ -107,3 +107,14 @@ export const NOTIFICATION_URL: Record<NotificationKind | "test", string> = {
   session: "/app/session",
   test: "/app",
 };
+
+/**
+ * Information « pause automatique » (SPEC_PROGRES §3.7) : le jeudi, à partir de 9 h locales, pour la semaine dont la
+ * fenêtre vient de se clore (son lundi est celui de la semaine courante). Jamais de relance pour une série.
+ */
+export function autoPausedNoticeDue(weekStart: string, local: LocalTime): boolean {
+  if (local.weekday !== 4 || local.minutes < 9 * 60) return false;
+  const [y = 0, m = 1, d = 1] = local.date.split("-").map(Number);
+  const monday = new Date(Date.UTC(y, m - 1, d - 3)).toISOString().slice(0, 10);
+  return weekStart === monday;
+}

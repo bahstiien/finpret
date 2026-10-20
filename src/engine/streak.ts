@@ -47,9 +47,25 @@ const addDays = (iso: string, days: number): string => {
   return d.toISOString().slice(0, 10);
 };
 
+const isoWeekday = (iso: string) => ((new Date(`${iso}T12:00:00Z`).getUTCDay() + 6) % 7) + 1;
+
+/**
+ * Lundi de la semaine dont la fenêtre de session contient `today` : du lundi au mercredi, la semaine en cours ;
+ * du jeudi au dimanche, la suivante (sa session a lieu le dimanche).
+ */
+export function activeWeekStart(today: string): string {
+  const wd = isoWeekday(today);
+  return wd <= 3 ? addDays(today, 1 - wd) : addDays(today, 8 - wd);
+}
+
 /** Date locale (`YYYY-MM-DD`) d'un instant dans un fuseau IANA. */
 export function localDate(instant: Date, timeZone: string): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(instant);
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(instant);
 }
 
 /** Fenêtre de session : du jeudi précédent 00:00 au mercredi 23:59 locaux (§3.1). */
@@ -105,6 +121,7 @@ export function computeStreak(
     currentWeek,
     pausesLeftThisQuarter: Math.max(0, PAUSES_PER_QUARTER - used),
     nextMilestone: nextMilestoneAfter(run),
-    reachedMilestone: current.sessionDone && isMilestone(run) && !alreadyCelebrated.includes(run) ? run : null,
+    reachedMilestone:
+      current.sessionDone && isMilestone(run) && !alreadyCelebrated.includes(run) ? run : null,
   };
 }

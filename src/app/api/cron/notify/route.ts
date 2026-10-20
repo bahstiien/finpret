@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { type NextRequest, NextResponse } from "next/server";
 import { runNotifications } from "@/server/notify";
 import { createNotifyDeps } from "@/server/notify-deps";
+import { runStreakPausedNotifications } from "@/server/streak-notify";
 import { runTrialEnding } from "@/server/trial-ending";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +21,8 @@ export async function GET(request: NextRequest) {
   if (Number.isNaN(now.getTime())) return NextResponse.json({ error: "at" }, { status: 400 });
   const summary = await runNotifications(createNotifyDeps(request.nextUrl.origin), now);
   const trial = await runTrialEnding(request.nextUrl.origin, now);
-  return NextResponse.json({ ...summary, trialEnding: trial });
+  const streakPaused = await runStreakPausedNotifications(request.nextUrl.origin, now);
+  return NextResponse.json({ ...summary, trialEnding: trial, streakPaused });
 }
 
 export const POST = GET;

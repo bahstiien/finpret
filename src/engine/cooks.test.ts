@@ -5,12 +5,32 @@ import type { WeekPlan } from "./types";
 const plan = (over: Partial<WeekPlan> = {}): WeekPlan => ({
   start: "2027-02-08",
   groups: [
-    { id: "g1", meals: [{ day: 1, meal: "dinner" }, { day: 2, meal: "lunch" }] },
-    { id: "g2", meals: [{ day: 2, meal: "dinner" }, { day: 3, meal: "lunch" }] },
+    {
+      id: "g1",
+      meals: [
+        { day: 1, meal: "dinner" },
+        { day: 2, meal: "lunch" },
+      ],
+    },
+    {
+      id: "g2",
+      meals: [
+        { day: 2, meal: "dinner" },
+        { day: 3, meal: "lunch" },
+      ],
+    },
   ],
   soup: { id: "s1", days: [3, 4] },
   simples: [{ day: 5, id: "p1" }],
-  bank: [], doubles: [], banked: false, removed: [], skip: [], cake: "", cm: 0, cs: 0, pastaNeed: 0,
+  bank: [],
+  doubles: [],
+  banked: false,
+  removed: [],
+  skip: [],
+  cake: "",
+  cm: 0,
+  cs: 0,
+  pastaNeed: 0,
   ...over,
 });
 

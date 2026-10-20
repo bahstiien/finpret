@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 import { SessionProvider, type SessionRow } from "@/components/session/SessionProvider";
 import { TimerBar } from "@/components/session/TimerBar";
+import { CelebrationHost } from "@/components/progress/CelebrationHost";
 import { AppNav } from "@/components/ui/AppNav";
 import { ToastProvider } from "@/components/ui/Toast";
+import { loadCelebrations } from "@/server/progress-view";
 import { loadHouseholdContext } from "@/server/household-context";
 import { requireHousehold } from "@/server/session";
 import { createClient } from "@/lib/supabase/server";
@@ -10,7 +12,7 @@ import { currentAndNext } from "@/server/weeks";
 
 /** Onglets de l'application (§10) : il faut une session, un foyer configuré, et la navigation. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const { household } = await requireHousehold("/app");
+  const { user, household } = await requireHousehold("/app");
   const ctx = await loadHouseholdContext(household.id);
   if (!ctx.onboardedAt && household.role === "admin") redirect("/onboarding");
   const { current, next } = currentAndNext(ctx);
@@ -30,6 +32,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         .eq("week_id", week.id)
         .maybeSingle()
     : { data: null };
+  const celebrations = await loadCelebrations(household.id, user.id);
   return (
     <ToastProvider>
       <SessionProvider
@@ -46,6 +49,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <TimerBar />
           </div>
           <main className="flex flex-col gap-5">{children}</main>
+          {celebrations && <CelebrationHost data={celebrations} />}
         </div>
       </SessionProvider>
     </ToastProvider>

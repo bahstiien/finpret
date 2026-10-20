@@ -1,9 +1,21 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { countryLabel, isIsoRegion, newAchievements, normalizeOrigin, seasonOf, type CookRecord } from "./passport";
+import {
+  countryLabel,
+  isIsoRegion,
+  newAchievements,
+  normalizeOrigin,
+  seasonOf,
+  type CookRecord,
+} from "./passport";
 
 const cook = (o: Partial<CookRecord>): CookRecord => ({
-  recipeId: "r1", cookedOn: "2027-03-14", kind: "main", origin: "jp", isGlobal: true, ...o,
+  recipeId: "r1",
+  cookedOn: "2027-03-14",
+  kind: "main",
+  origin: "jp",
+  isGlobal: true,
+  ...o,
 });
 
 describe("passeport", () => {
@@ -22,10 +34,13 @@ describe("passeport", () => {
   });
 
   it("tampon de saison à 6 recettes de saison différentes", () => {
-    const mk = (i: number, on: string) => cook({ recipeId: `s${i}`, origin: null, cookedOn: on, months: [9, 10, 11] });
+    const mk = (i: number, on: string) =>
+      cook({ recipeId: `s${i}`, origin: null, cookedOn: on, months: [9, 10, 11] });
     const five = [1, 2, 3, 4, 5].map((i) => mk(i, "2027-09-20"));
     expect(newAchievements(five, new Set())).toEqual([]);
-    expect(newAchievements([...five, mk(6, "2027-11-07")], new Set())).toEqual([{ kind: "season", key: "2027-autumn" }]);
+    expect(newAchievements([...five, mk(6, "2027-11-07")], new Set())).toEqual([
+      { kind: "season", key: "2027-autumn" },
+    ]);
     expect(newAchievements([...five, mk(5, "2027-10-01")], new Set())).toEqual([]); // même recette
   });
 

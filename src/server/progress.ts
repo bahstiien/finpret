@@ -28,26 +28,21 @@ export interface ProgressStore {
   weeksBetween(householdId: string, from: string, to: string): Promise<StoredWeek[]>;
   /** Pose `done_at` s'il est vide ; renvoie la valeur finale (la première est conservée). */
   setDoneAt(weekId: string, at: Date): Promise<Date>;
-  upsertCooks(
-    householdId: string,
-    weekId: string,
-    cooks: PlannedCook[],
-    backfilled: boolean,
-  ): Promise<void>;
+  upsertCooks(householdId: string, weekId: string, cooks: PlannedCook[], backfilled: boolean): Promise<void>;
   cookRecords(householdId: string): Promise<CookRecord[]>;
   achievements(householdId: string): Promise<{ kind: string; key: string }[]>;
   insertAchievements(householdId: string, rows: NewAchievementRow[]): Promise<void>;
   streakWeeks(householdId: string): Promise<StoredStreakWeek[]>;
   /** `overwrite` : remplace une ligne existante (pause planifiée devenue `done`) ; sinon ne touche pas à l'existante. */
-  putStreakWeek(
-    householdId: string,
-    row: StoredStreakWeek,
-    options: { overwrite: boolean },
-  ): Promise<void>;
+  putStreakWeek(householdId: string, row: StoredStreakWeek, options: { overwrite: boolean }): Promise<void>;
   removeStreakWeek(householdId: string, weekStart: string): Promise<void>;
   /** Foyers à traiter : une semaine fin prête dans l'historique, ou une semaine au plan depuis `sinceWeek`. */
   householdsToClose(sinceWeek: string): Promise<string[]>;
-  track(name: EventName, householdId: string, props: Record<string, string | number | boolean | null>): Promise<void>;
+  track(
+    name: EventName,
+    householdId: string,
+    props: Record<string, string | number | boolean | null>,
+  ): Promise<void>;
 }
 
 const celebrated = (rows: { kind: string; key: string }[]) =>
@@ -59,18 +54,25 @@ export async function grantAchievements(
   householdId: string,
   options: { seen?: boolean } = {},
 ): Promise<{ kind: "country" | "season"; key: string }[]> {
-  const [records, existing] = await Promise.all([store.cookRecords(householdId), store.achievements(householdId)]);
+  const [records, existing] = await Promise.all([
+    store.cookRecords(householdId),
+    store.achievements(householdId),
+  ]);
   const fresh = newAchievements(records, new Set(existing.map((a) => `${a.kind}:${a.key}`)));
   if (fresh.length === 0) return [];
   await store.insertAchievements(
     householdId,
     fresh.map((a) => ({ ...a, seen: options.seen ?? false })),
   );
-  if (!options.seen) for (const a of fresh) await store.track("stamp_earned", householdId, { kind: a.kind, key: a.key });
+  if (!options.seen)
+    for (const a of fresh) await store.track("stamp_earned", householdId, { kind: a.kind, key: a.key });
   return fresh;
 }
 
-export type FinishResult = { milestone: number | null; stamps: { kind: "country" | "season"; key: string }[] };
+export type FinishResult = {
+  milestone: number | null;
+  stamps: { kind: "country" | "season"; key: string }[];
+};
 
 /**
  * Fin de session (§3.1, §4.3) : pose `done_at` (première valeur conservée), inscrit les plats de batch et la soupe,
@@ -91,7 +93,10 @@ export async function finishSession(
 
   let milestone: number | null = null;
   if (isInSessionWindow(doneAt, week.startDate, tz)) {
-    const [history, ach] = await Promise.all([store.streakWeeks(input.householdId), store.achievements(input.householdId)]);
+    const [history, ach] = await Promise.all([
+      store.streakWeeks(input.householdId),
+      store.achievements(input.householdId),
+    ]);
     const existing = history.find((w) => w.weekStart === week.startDate);
     if (existing?.outcome !== "done") {
       await store.putStreakWeek(
@@ -122,7 +127,13 @@ export function lastClosableWeek(today: string): string {
   return isoWeekday(today) >= 4 ? monday : addDays(monday, -7);
 }
 
-export type CloseSummary = { households: number; closed: number; paused: number; missed: number; cooks: number };
+export type CloseSummary = {
+  households: number;
+  closed: number;
+  paused: number;
+  missed: number;
+  cooks: number;
+};
 
 /**
  * Clôture horaire (§3.4) pour un foyer : écrit le résultat de chaque semaine dont la fenêtre est close, puis inscrit les
@@ -139,7 +150,10 @@ export async function closeHousehold(
   const today = todayIn(tz, now);
   const limit = lastClosableWeek(today);
   const rows = await store.streakWeeks(householdId);
-  const firstDone = rows.filter((r) => r.outcome === "done").map((r) => r.weekStart).sort()[0];
+  const firstDone = rows
+    .filter((r) => r.outcome === "done")
+    .map((r) => r.weekStart)
+    .sort()[0];
 
   if (firstDone) {
     const plans = new Map(
@@ -210,7 +224,8 @@ export async function closeDueWeeks(store: ProgressStore, now = new Date()): Pro
   return total;
 }
 
-export type PauseResult = { ok: true } | { ok: false; reason: "past" | "too_far" | "no_token" | "closed" | "not_planned" };
+export type PauseResult =
+  { ok: true } | { ok: false; reason: "past" | "too_far" | "no_token" | "closed" | "not_planned" };
 
 /** Pause planifiée : de la semaine suivante à 8 semaines plus tard, avec un jeton du trimestre de la semaine (§3.2). */
 export async function planPause(
@@ -220,11 +235,13 @@ export async function planPause(
   const tz = await store.timezone(input.householdId);
   const today = todayIn(tz, input.now ?? new Date());
   const thisMonday = mondayOf(today);
-  if (isoWeekday(input.weekStart) !== 1 || input.weekStart <= thisMonday) return { ok: false, reason: "past" };
+  if (isoWeekday(input.weekStart) !== 1 || input.weekStart <= thisMonday)
+    return { ok: false, reason: "past" };
   if (input.weekStart > addDays(thisMonday, 8 * 7)) return { ok: false, reason: "too_far" };
   const rows = await store.streakWeeks(input.householdId);
   if (rows.some((r) => r.weekStart === input.weekStart)) return { ok: true }; // déjà posée
-  if (pausesUsedInQuarter(rows, input.weekStart) >= PAUSES_PER_QUARTER) return { ok: false, reason: "no_token" };
+  if (pausesUsedInQuarter(rows, input.weekStart) >= PAUSES_PER_QUARTER)
+    return { ok: false, reason: "no_token" };
   await store.putStreakWeek(
     input.householdId,
     { weekStart: input.weekStart, outcome: "paused", source: "planned", closedAt: null },

@@ -66,7 +66,8 @@ export function createEnv(options: {
   };
   // Recettes supprimées par le foyer : retirées du tirage, mais encore lisibles par les semaines qui les contiennent.
   const retired = new Set(options.lib.retired ?? []);
-  const active = <R extends { id: string }>(list: R[]) => (retired.size ? list.filter((r) => !retired.has(r.id)) : list);
+  const active = <R extends { id: string }>(list: R[]) =>
+    retired.size ? list.filter((r) => !retired.has(r.id)) : list;
   const lib: Library = {
     ...options.lib,
     mains: active(filtered.mains),

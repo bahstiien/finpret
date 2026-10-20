@@ -23,7 +23,7 @@ export const metadata: Metadata = { title: fr.nav.discover };
 export default async function DiscoverPage({
   searchParams,
 }: {
-  searchParams: Promise<{ open?: string; plan?: string }>;
+  searchParams: Promise<{ open?: string; plan?: string; origin?: string }>;
 }) {
   const params = await searchParams;
   const { household } = await requireHousehold("/app/discover");
@@ -57,7 +57,11 @@ export default async function DiscoverPage({
     };
   };
 
-  const describe = (r: { ing: Record<string, number>; sv?: { ing: Record<string, number> }[]; p?: Protein }) => {
+  const describe = (r: {
+    ing: Record<string, number>;
+    sv?: { ing: Record<string, number> }[];
+    p?: Protein;
+  }) => {
     const keys = allIngredientKeys(r);
     const allergens = recipeAllergens(keys, false);
     const blocked = rules.allergens.filter((a) => (allergens as string[]).includes(a));
@@ -93,6 +97,7 @@ export default async function DiscoverPage({
     description: "d" in r ? r.d : null,
     flag: flagOf(r.o),
     region: originOf(r.o)?.region ?? null,
+    origin: r.o ?? null,
     seasonal: eligible(env, r, month),
     months: r.months ?? null,
     kcal: r.m[0],
@@ -112,6 +117,7 @@ export default async function DiscoverPage({
     description: `${c.tm} · ${c.parts}. ${c.kid}`,
     flag: null,
     region: null,
+    origin: null,
     seasonal: !c.months || c.months.includes(month),
     months: c.months ?? null,
     kcal: c.m[0],
@@ -152,6 +158,7 @@ export default async function DiscoverPage({
       canEdit={household.role !== "viewer"}
       openId={params.open ?? null}
       openPlan={params.plan === "1"}
+      initialOrigin={/^[a-z]{2}$/.test(params.origin ?? "") ? (params.origin ?? null) : null}
       hasRestrictions={
         rules.allergens.length > 0 ||
         rules.refused.length > 0 ||

@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { countryLabel } from "@/engine/passport";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { Flag } from "@/components/menu/Flag";
 import { useMenuAction } from "@/components/menu/useMenuAction";
 import { Button } from "@/components/ui/Button";
 import { ChipToggle } from "@/components/ui/Controls";
 import { SelectField } from "@/components/ui/Field";
+import { Icon } from "@/components/ui/Icon";
 import { Sheet } from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
 import { fr } from "@/i18n/fr";
@@ -27,6 +29,8 @@ export type DiscoverRecipe = {
   description: string | null;
   flag: FlagData;
   region: string | null;
+  /** Code pays de la recette (filtre du passeport des saveurs). */
+  origin: string | null;
   seasonal: boolean;
   months: number[] | null;
   kcal: number;
@@ -74,6 +78,7 @@ export function DiscoverScreen({
   canEdit,
   openId,
   openPlan,
+  initialOrigin,
 }: {
   recipes: DiscoverRecipe[];
   breakfasts: Breakfast[];
@@ -84,10 +89,13 @@ export function DiscoverScreen({
   /** Lien direct vers une recette (après un import) ; `openPlan` ouvre aussi « Mettre au menu ». */
   openId: string | null;
   openPlan: boolean;
+  /** `?origin=jp` : catalogue filtré sur un pays (tampon vide du passeport). */
+  initialOrigin: string | null;
 }) {
   const [segment, setSegment] = useState<"recipes" | "breakfasts">("recipes");
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("");
+  const [origin, setOrigin] = useState(initialOrigin ?? "");
   const [kind, setKind] = useState("");
   const [seasonal, setSeasonal] = useState(false);
   const [favorites, setFavorites] = useState(false);
@@ -110,13 +118,14 @@ export function DiscoverScreen({
         (showAll || !r.excluded) &&
         (!q || normalize(r.name).includes(q) || r.ingredients.some((i) => normalize(i).includes(q))) &&
         (!region || r.region === region) &&
+        (!origin || r.origin === origin) &&
         (!kind || r.kind === kind) &&
         (!seasonal || r.seasonal) &&
         (!favorites || r.favorite) &&
         (!mine || r.imported) &&
         (!vegetarian || r.diets.includes("vegetarien")),
     );
-  }, [recipes, query, region, kind, seasonal, favorites, mine, vegetarian, showAll]);
+  }, [recipes, query, region, origin, kind, seasonal, favorites, mine, vegetarian, showAll]);
 
   const bfList = breakfasts.filter(
     (b) => !query.trim() || normalize(b.name).includes(normalize(query.trim())),
@@ -167,6 +176,17 @@ export function DiscoverScreen({
 
       {segment === "recipes" ? (
         <>
+          {origin && (
+            <button
+              type="button"
+              onClick={() => setOrigin("")}
+              data-testid="origin-chip"
+              className="inline-flex min-h-11 items-center gap-2 self-start rounded-pill bg-violet-soft px-4 font-bold text-violet-strong"
+            >
+              {t.originChip(countryLabel(origin))}
+              <Icon name="close" className="size-4" label={t.clearOrigin} />
+            </button>
+          )}
           <div className="flex flex-wrap items-end gap-3">
             <SelectField
               id="region"

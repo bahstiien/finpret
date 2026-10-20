@@ -731,6 +731,8 @@ export const fr = {
     segmentLabels: { recipes: "Recettes", breakfasts: "Petits-déjeuners" },
     search: "Chercher une recette, un ingrédient…",
     region: "Région",
+    originChip: (country: string) => `Pays : ${country}`,
+    clearOrigin: "Retirer le filtre pays",
     type: "Type",
     all: "Toutes",
     kinds: { main: "Plat de batch", soup: "Soupe", simple: "Soir simple", cake: "Goûter" },
@@ -1137,7 +1139,10 @@ export const fr = {
       discover: "Voir les recettes",
       seeAll: "Tout le passeport",
     },
-    settings: { visible: "Afficher la série et le passeport" },
+    settings: {
+      visible: "Afficher la série et le passeport",
+      streakPaused: "Me prévenir quand ma série est mise en pause",
+    },
     close: "Fermer",
     empty: "Ta série démarre à ta première session terminée.",
     errors: {

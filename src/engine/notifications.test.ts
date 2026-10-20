@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dueNotifications, localTime, type NotificationPrefs } from "./notifications";
+import { autoPausedNoticeDue, dueNotifications, localTime, type NotificationPrefs } from "./notifications";
 
 const PREFS: NotificationPrefs = {
   push: true,
@@ -59,5 +59,17 @@ describe("rappels dus dans la fenêtre de 15 min", () => {
     const b = dueNotifications(PREFS, SCHEDULE, at("2026-10-20T15:40:00Z"));
     expect(a).toEqual([{ kind: "dinner", day: "2026-10-20" }]);
     expect(b).toEqual(a);
+  });
+});
+
+describe("autoPausedNoticeDue", () => {
+  const at = (iso: string) => localTime(new Date(iso), "Europe/Paris");
+  it("jeudi à partir de 9 h pour la semaine qui vient de se clore", () => {
+    expect(autoPausedNoticeDue("2027-02-08", at("2027-02-11T08:30:00Z"))).toBe(true); // jeudi 9 h 30 locales
+    expect(autoPausedNoticeDue("2027-02-08", at("2027-02-11T07:30:00Z"))).toBe(false); // 8 h 30 locales
+  });
+  it("pas un autre jour, pas une autre semaine", () => {
+    expect(autoPausedNoticeDue("2027-02-08", at("2027-02-12T09:00:00Z"))).toBe(false); // vendredi
+    expect(autoPausedNoticeDue("2027-02-01", at("2027-02-11T09:00:00Z"))).toBe(false);
   });
 });
