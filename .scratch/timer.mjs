@@ -1,0 +1,16 @@
+process.loadEnvFile(".env.local");
+const { createClient } = await import("@supabase/supabase-js");
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const admin = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+const email = `e2e-timer-${Date.now()}@example.com`, password = "Tm-" + Math.random().toString(36).slice(2) + "A1!";
+const { data: u } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
+const c = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+await c.auth.signInWithPassword({ email, password });
+const { data: hid } = await c.rpc("create_household", { p_name: "T" });
+const { data: w } = await c.from("weeks").insert({ household_id: hid, start_date: "2027-03-01", status: "draft", plan: {} }).select("id").single();
+console.log("ensure", (await c.rpc("session_ensure", { p_week: w.id, p_sig: "s" })).error);
+console.log("start", (await c.rpc("session_start", { p_week: w.id })).error);
+console.log("timer", JSON.stringify((await c.rpc("session_start_timer", { p_week: w.id, p_id: crypto.randomUUID(), p_label: "Curry · plaque 1", p_minutes: 25, p_step: 3 })).error));
+console.log((await c.from("sessions").select("timers").eq("week_id", w.id).single()).data);
+await admin.from("households").delete().eq("id", hid);
+await admin.auth.admin.deleteUser(u.user.id);

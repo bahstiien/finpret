@@ -236,6 +236,20 @@ export type Database = {
         Update: { checked?: boolean; label?: string | null; qty_text?: string | null; aisle?: string };
         Relationships: [];
       };
+      sessions: {
+        Row: {
+          week_id: string;
+          household_id: string;
+          started_at: string | null;
+          current_step: number;
+          tasks_done: Json;
+          timers: Json;
+          updated_at: string;
+        };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       aisles: {
         Row: { key: string; label: string; position: number };
         Insert: never;
@@ -334,6 +348,18 @@ export type Database = {
         }[];
       };
       is_household_member: { Args: { hid: string }; Returns: boolean };
+      session_ensure: {
+        Args: { p_week: string; p_sig: string };
+        Returns: Database["public"]["Tables"]["sessions"]["Row"];
+      };
+      session_start: { Args: { p_week: string }; Returns: undefined };
+      session_set_step: { Args: { p_week: string; p_step: number }; Returns: undefined };
+      session_set_task: { Args: { p_week: string; p_key: string; p_done: boolean }; Returns: undefined };
+      session_start_timer: {
+        Args: { p_week: string; p_id: string; p_label: string; p_minutes: number; p_step: number };
+        Returns: undefined;
+      };
+      session_timer: { Args: { p_week: string; p_id: string; p_action: string }; Returns: undefined };
       household_role_of: { Args: { hid: string }; Returns: Database["public"]["Enums"]["household_role"] };
     };
     Enums: { household_role: "admin" | "member" | "viewer" };
