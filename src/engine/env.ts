@@ -101,7 +101,7 @@ export function effectiveSettings<S extends { proteinCaps: Record<string, number
 export const allowed = (env: Env, r: { id: string }) => env.ignoreDislike || env.ratings[r.id] !== -1;
 export const isFav = (env: Env, r: { id: string } | undefined | null) => !!r && env.ratings[r.id] === 1;
 /** Recette du monde : origine autre que la France. */
-export const isWorld = (r: { o?: string } | null | undefined) => !!r && !!r.o && r.o !== "fr";
+export const isWorld = (r: { o?: string | null } | null | undefined) => !!r && !!r.o && r.o !== "fr";
 
 /** Recette d'un repas de la réserve (plat de batch ou soupe). */
 export const bankRecipe = (env: Env, id: string) => env.mainById.get(id) ?? env.soupById.get(id);

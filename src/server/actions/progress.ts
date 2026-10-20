@@ -1,0 +1,100 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { fr } from "@/i18n/fr";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+import { type ActionResult } from "@/server/errors";
+import { trackEvent } from "@/server/events";
+import { cancelPause, finishSession, type FinishResult, planPause } from "@/server/progress";
+import { createProgressStore } from "@/server/progress-store";
+import { requireHousehold } from "@/server/session";
+
+const uuid = z.uuid();
+const monday = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+
+/**
+ * Fin de session : `done_at`, recettes cuisinées, tampons, série (SPEC_PROGRES §3, §4). La semaine doit appartenir au
+ * foyer actif, vérifié avec le client de l'utilisateur (RLS) avant toute écriture avec la clé de service.
+ * Renvoie le palier et les tampons à célébrer ; rien si la lecture seule (viewer).
+ */
+export async function finishSessionAction(weekId: string): Promise<FinishResult> {
+  const empty: FinishResult = { milestone: null, stamps: [] };
+  if (!uuid.safeParse(weekId).success) return empty;
+  const { user, household } = await requireHousehold("/app/session");
+  if (household.role === "viewer") return empty;
+  const supabase = await createClient();
+  const { data } = await supabase.from("weeks").select("id").eq("id", weekId).eq("household_id", household.id).maybeSingle();
+  if (!data) return empty;
+  await trackEvent("session_done", { userId: user.id, householdId: household.id, dedupeKey: weekId });
+  const result = await finishSession(createProgressStore(), { householdId: household.id, weekId });
+  revalidatePath("/app");
+  return result;
+}
+
+const PAUSE_ERRORS = {
+  past: fr.progress.errors.pausePast,
+  too_far: fr.progress.errors.pauseTooFar,
+  no_token: fr.progress.errors.pauseNoToken,
+  closed: fr.progress.errors.pauseClosed,
+  not_planned: fr.progress.errors.pauseNotPlanned,
+} as const;
+
+export async function planPauseAction(weekStart: string): Promise<ActionResult> {
+  if (!monday.safeParse(weekStart).success) return { ok: false, error: fr.errors.generic };
+  const { household } = await requireHousehold("/app/progress");
+  if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
+  const r = await planPause(createProgressStore(), { householdId: household.id, weekStart });
+  revalidatePath("/app/progress");
+  return r.ok ? { ok: true, data: undefined } : { ok: false, error: PAUSE_ERRORS[r.reason] };
+}
+
+export async function cancelPauseAction(weekStart: string): Promise<ActionResult> {
+  if (!monday.safeParse(weekStart).success) return { ok: false, error: fr.errors.generic };
+  const { household } = await requireHousehold("/app/progress");
+  if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
+  const r = await cancelPause(createProgressStore(), { householdId: household.id, weekStart });
+  revalidatePath("/app/progress");
+  return r.ok ? { ok: true, data: undefined } : { ok: false, error: PAUSE_ERRORS[r.reason] };
+}
+
+const seenSchema = z.array(z.string().regex(/^(streak|country|season):[a-z0-9-]{1,20}$/)).max(40);
+
+/** Marque des tampons ou paliers comme vus (clés `country:jp`) : une seule célébration par tampon. */
+export async function markAchievementsSeen(keys: string[]): Promise<void> {
+  const parsed = seenSchema.safeParse(keys);
+  if (!parsed.success || parsed.data.length === 0) return;
+  const { household } = await requireHousehold("/app");
+  const supabase = await createClient();
+  const { data } = await supabase.from("achievements").select("kind, key").eq("household_id", household.id).is("seen_at", null);
+  const wanted = new Set(parsed.data);
+  const rows = (data ?? []).filter((a) => wanted.has(`${a.kind}:${a.key}`));
+  if (rows.length === 0) return;
+  const admin = createAdminClient();
+  for (const a of rows) {
+    await admin
+      .from("achievements")
+      .update({ seen_at: new Date().toISOString() })
+      .eq("household_id", household.id)
+      .eq("kind", a.kind)
+      .eq("key", a.key)
+      .is("seen_at", null);
+  }
+}
+
+const viewSchema = z.discriminatedUnion("name", [
+  z.object({ name: z.literal("progress_viewed"), from: z.enum(["tile", "profile", "session"]) }),
+  z.object({ name: z.literal("empty_stamp_tapped"), origin: z.string().regex(/^[a-z]{2}$/) }),
+  z.object({ name: z.literal("progress_hidden") }),
+  z.object({ name: z.literal("progress_shown") }),
+]);
+
+/** Événements d'interface du passeport (SPEC_PROGRES §7), un par compte et clic. */
+export async function recordProgressEvent(input: unknown): Promise<void> {
+  const parsed = viewSchema.safeParse(input);
+  if (!parsed.success) return;
+  const { user, household } = await requireHousehold("/app");
+  const { name, ...props } = parsed.data;
+  await trackEvent(name, { userId: user.id, householdId: household.id, props });
+}

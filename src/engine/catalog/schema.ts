@@ -64,7 +64,7 @@ const batchBase = {
   n: z.string().min(1),
   s: z.string().min(1),
   d: z.string().min(1),
-  o: country,
+  o: country.nullable(),
   p: z.enum(PROTEINS),
   fridge: z.number().int().nonnegative(),
   freeze: z.boolean(),

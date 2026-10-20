@@ -21,6 +21,7 @@
     "tokens": "node scripts/tokens.mjs",
     "tokens:check": "node scripts/tokens.mjs --check",
     "seed": "tsx scripts/seed.ts",
+    "backfill:progress": "tsx scripts/backfill-progress.ts",
     "test:db": "node scripts/test-db.mjs",
     "test:db:lite": "node scripts/test-db-lite.mjs",
     "db:types": "node scripts/supabase-remote.mjs types",

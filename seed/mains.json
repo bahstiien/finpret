@@ -189,7 +189,7 @@
   ],
   "box": "quinoa, poulet et edamame, sauce à part",
   "jj": "Ajoute la sauce et {carotte} râpée au moment de manger.",
-  "o": "as"
+  "o": null
  },
  {
   "id": "chili",
@@ -4009,7 +4009,7 @@
  },
  {
   "id": "shepherd_vege",
-  "o": "uk",
+  "o": "gb",
   "grp": "parmentier",
   "n": "Shepherd's pie végétarien lentilles-champignons",
   "s": "Shepherd's pie végé",

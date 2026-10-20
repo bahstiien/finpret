@@ -605,6 +605,7 @@ export const fr = {
     shopping: "Courses",
     stock: "Stock",
     session: "Session",
+    account: "Mon compte",
   },
   menuView: {
     labels: {
@@ -1069,6 +1070,84 @@ export const fr = {
       shopping: "articles à acheter",
       cta: "Voir mon menu",
     },
+  },
+  // Série de semaines fin prêtes et passeport des saveurs (SPEC_PROGRES §8).
+  progress: {
+    title: "Nos progrès",
+    nav: "Nos progrès",
+    streak: {
+      label: "Série",
+      weeks: (n: number) => (n <= 1 ? `${n} semaine fin prête` : `${n} semaines fin prêtes`),
+      best: (n: number) => `Meilleure série : ${n} semaines`,
+      next: (n: number) => `Prochain palier : ${n} semaines`,
+      currentTodo: "Cette semaine : session à venir",
+      currentDone: "Cette semaine : fin prête",
+      currentPaused: "Cette semaine : en pause",
+      currentNeutral: "Cette semaine : rien à préparer",
+      sessionDone: (n: number) =>
+        n <= 1 ? "Ta première semaine fin prête. Bien joué." : `${n} semaines fin prêtes d’affilée.`,
+      pausesLeft: (n: number) =>
+        n === 0
+          ? "Plus de pause ce trimestre"
+          : n === 1
+            ? "1 pause disponible ce trimestre"
+            : `${n} pauses disponibles ce trimestre`,
+      planPause: "Planifier une pause",
+      planPauseHelp: "Vacances, déplacement, semaine chargée : ta série t’attend.",
+      cancelPause: "Annuler la pause",
+      pauseWeek: (label: string) => `Semaine du ${label}`,
+      pausePlanned: "Pause posée",
+      noPauseLeft: "Plus de jeton ce trimestre",
+      autoPausedPush: "Pas de session la semaine dernière : on a mis ta série en pause. Elle t’attend.",
+      reset: "Nouvelle série. Ta meilleure reste enregistrée.",
+      milestoneTitle: (n: number) => `${n} semaines fin prêtes`,
+      milestoneBody: (meals: number) =>
+        `${meals} repas préparés le dimanche. Ça mérite d’être partagé.`,
+      share: "Partager",
+      shareTitle: "Mes semaines fin prêtes",
+      frise: "Les 12 dernières semaines",
+      weekState: {
+        done: "fin prête",
+        paused: "en pause",
+        neutral: "rien à préparer",
+        missed: "sans session",
+        todo: "à venir",
+      },
+      tile: (n: number) => (n <= 1 ? "1 semaine" : `${n} semaines`),
+    },
+    passport: {
+      title: "Passeport des saveurs",
+      countries: (n: number, total: number) => `${n} pays sur ${total}`,
+      count: (n: number, total: number) => `${n} sur ${total}`,
+      newStamp: (label: string) => `Nouveau tampon : ${label}`,
+      newStamps: "Nouveaux tampons",
+      emptyHint: (label: string) => `Découvre une recette : ${label}`,
+      seasonRule: "6 recettes de saison différentes dans la saison",
+      seasons: { winter: "Hiver", spring: "Printemps", summer: "Été", autumn: "Automne" },
+      seasonLabel: (season: string, year: number) => `${season} ${year}`,
+      cooked: "Déjà cuisinées",
+      remaining: "À découvrir",
+      none: "Aucune pour l’instant",
+      earnedLabel: (label: string, n: number, total: number) =>
+        `${label}, tampon obtenu, ${n} recette${n > 1 ? "s" : ""} sur ${total}`,
+      emptyLabel: (label: string, total: number) => `${label}, tampon à gagner, ${total} recette${total > 1 ? "s" : ""}`,
+      seasonEarnedLabel: (label: string) => `${label}, tampon obtenu`,
+      seasonProgressLabel: (label: string, n: number) => `${label}, ${n} recette${n > 1 ? "s" : ""} de saison sur 6`,
+      seasonProgress: (n: number) => `${n} sur 6`,
+      discover: "Voir les recettes",
+      seeAll: "Tout le passeport",
+    },
+    settings: { visible: "Afficher la série et le passeport" },
+    close: "Fermer",
+    empty: "Ta série démarre à ta première session terminée.",
+    errors: {
+      pausePast: "Choisis une semaine à venir.",
+      pauseTooFar: "Tu peux poser une pause jusqu’à 8 semaines à l’avance.",
+      pauseNoToken: "Plus de pause disponible ce trimestre.",
+      pauseClosed: "Cette pause est déjà passée.",
+      pauseNotPlanned: "Il n’y a pas de pause à annuler sur cette semaine.",
+    },
+    toasts: { paused: "Pause posée. Ta série t’attend.", cancelled: "Pause annulée." },
   },
 } as const;
 

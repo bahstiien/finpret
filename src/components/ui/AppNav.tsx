@@ -20,8 +20,19 @@ const TABS: { href: string; label: keyof typeof fr.nav; icon: IconName }[] = [
 export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
   const pathname = usePathname();
   const isActive = (href: string) => (href === "/app" ? pathname === "/app" : pathname.startsWith(href));
+  const accountActive = pathname.startsWith("/settings");
   return (
     <>
+      <div className="flex justify-end min-[900px]:hidden">
+        <Link
+          href="/settings"
+          aria-label={fr.nav.account}
+          aria-current={accountActive ? "page" : undefined}
+          className="grid size-11 place-items-center rounded-full bg-surface text-ink hover:bg-chip"
+        >
+          <Icon name="user" />
+        </Link>
+      </div>
       <nav
         aria-label={fr.nav.label}
         className="fixed inset-x-3 bottom-3 z-40 rounded-pill bg-nav p-2 shadow-float min-[900px]:hidden"
@@ -87,6 +98,16 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
               </li>
             );
           })}
+          <li className="ml-auto">
+            <Link
+              href="/settings"
+              aria-current={accountActive ? "page" : undefined}
+              className="flex min-h-12 items-center gap-2 rounded-pill bg-surface px-5 font-bold text-ink hover:bg-chip"
+            >
+              <Icon name="user" className="size-5" />
+              {fr.nav.account}
+            </Link>
+          </li>
         </ul>
       </nav>
     </>

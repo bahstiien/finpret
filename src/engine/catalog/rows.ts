@@ -76,7 +76,7 @@ export function buildCatalogRows(seed: Seed): CatalogRows {
     kind: RecipeKind,
     r: {
       id: string;
-      o?: string;
+      o?: string | null;
       months?: number[];
       ing: Record<string, number>;
       sv?: { ing: Record<string, number> }[];

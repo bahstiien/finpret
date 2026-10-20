@@ -649,13 +649,75 @@ export type Database = {
           week_id: string;
           household_id: string;
           started_at: string | null;
+          done_at: string | null;
           current_step: number;
           tasks_done: Json;
           timers: Json;
           updated_at: string;
         };
         Insert: never;
+        Update: { done_at?: string | null };
+        Relationships: [];
+      };
+      streak_weeks: {
+        Row: {
+          household_id: string;
+          week_start: string;
+          outcome: "done" | "paused" | "neutral" | "missed";
+          source: "auto" | "planned" | "admin" | null;
+          closed_at: string | null;
+        };
+        Insert: {
+          household_id: string;
+          week_start: string;
+          outcome: "done" | "paused" | "neutral" | "missed";
+          source?: "auto" | "planned" | "admin" | null;
+          closed_at?: string | null;
+        };
+        Update: {
+          outcome?: "done" | "paused" | "neutral" | "missed";
+          source?: "auto" | "planned" | "admin" | null;
+          closed_at?: string | null;
+        };
+        Relationships: [];
+      };
+      recipe_cooks: {
+        Row: {
+          id: number;
+          household_id: string;
+          recipe_id: string;
+          week_id: string | null;
+          kind: "main" | "soup" | "simple";
+          cooked_on: string;
+          backfilled: boolean;
+        };
+        Insert: {
+          household_id: string;
+          recipe_id: string;
+          week_id?: string | null;
+          kind: "main" | "soup" | "simple";
+          cooked_on: string;
+          backfilled?: boolean;
+        };
         Update: never;
+        Relationships: [];
+      };
+      achievements: {
+        Row: {
+          household_id: string;
+          kind: "streak" | "country" | "season";
+          key: string;
+          achieved_at: string;
+          seen_at: string | null;
+        };
+        Insert: {
+          household_id: string;
+          kind: "streak" | "country" | "season";
+          key: string;
+          achieved_at?: string;
+          seen_at?: string | null;
+        };
+        Update: { seen_at?: string | null };
         Relationships: [];
       };
       aisles: {

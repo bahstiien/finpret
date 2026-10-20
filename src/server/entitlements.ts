@@ -21,6 +21,7 @@ export type Feature =
   | "shopping"
   | "session"
   | "discover"
+  | "progress"
   | "menu.swap"
   | "menu.move"
   | "menu.guests"
@@ -47,7 +48,7 @@ export function tierOf(offer: HouseholdOffer, now: Date = new Date()): Tier {
   return "free";
 }
 
-const ALWAYS: readonly Feature[] = ["menu.generate", "shopping", "session", "discover"];
+const ALWAYS: readonly Feature[] = ["menu.generate", "shopping", "session", "discover", "progress"];
 const PAID_ONLY: readonly Feature[] = ["menu.move", "menu.guests", "pantry", "notifications.meals", "print"];
 /** D12 : cantine et alerte doublon gratuites pour les foyers rattachés à une association. */
 const ASSOCIATION_FREE: readonly Feature[] = ["canteen", "canteen.alert"];
