@@ -15,7 +15,9 @@ import { importsThisMonth, MAX_IMPORTS_PER_MONTH } from "@/server/asso-quota";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { sendAssociationReceived } from "@/server/emails";
 import { trackEvent } from "@/server/events";
+import { encryptIban, ibanLast4, normalizeIban } from "@/server/iban";
 import { requireUser } from "@/server/session";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 const t = fr.asso;
 
@@ -377,4 +379,23 @@ export async function publishAllDrafts(_prev: MenuState, formData: FormData): Pr
   }
   revalidateMenus();
   return { ok: t.menus.publishedMsg(dates.length) };
+}
+
+// ---------------------------------------------------------------------------
+// IBAN (saisi après validation, chiffré, jamais renvoyé en clair)
+// ---------------------------------------------------------------------------
+
+export async function saveIbanAction(_prev: SimpleState, formData: FormData): Promise<SimpleState> {
+  const association = await requireManager();
+  if (association.status !== "approved") return { error: t.statements.ibanLocked };
+  const iban = normalizeIban(String(formData.get("iban") ?? ""));
+  if (!iban) return { error: t.statements.ibanInvalid };
+  // Colonnes verrouillées pour les comptes : écriture par la clé de service, après contrôle du responsable.
+  const { error } = await createAdminClient()
+    .from("associations")
+    .update({ iban_encrypted: encryptIban(iban), iban_last4: ibanLast4(iban) })
+    .eq("id", association.id);
+  if (error) return { error: t.statements.ibanFailed };
+  revalidatePath("/asso/releves");
+  return { ok: t.statements.ibanSaved };
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { IbanForm } from "@/components/asso/IbanForm";
 import { fr } from "@/i18n/fr";
 import { createClient } from "@/lib/supabase/server";
 import { requireManager } from "@/server/asso-session";
@@ -22,9 +23,11 @@ export default async function StatementsPage() {
     <>
       <h1 className="text-4xl font-black">{t.title}</h1>
       <p className="text-muted">{t.lead}</p>
-      <p className="rounded-card bg-surface p-5">
-        {association.ibanLast4 ? `${t.iban} : •••• ${association.ibanLast4}` : t.ibanMissing}
-      </p>
+      {association.status === "approved" ? (
+        <IbanForm last4={association.ibanLast4} />
+      ) : (
+        <p className="rounded-card bg-surface p-5">{t.ibanMissing}</p>
+      )}
       <section className="rounded-card bg-surface p-5" aria-label={t.title}>
         {!data?.length && <p className="text-muted">{t.none}</p>}
         <ul className="flex flex-col divide-y divide-line">

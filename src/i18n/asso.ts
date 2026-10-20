@@ -159,6 +159,13 @@ export const assoFr = {
     none: "Aucun relevé pour l'instant.",
     iban: "IBAN enregistré",
     ibanMissing: "Votre IBAN sera demandé après la validation de votre association.",
+    ibanLabel: "IBAN de l'association",
+    ibanHint: "Il est chiffré et ne sera plus affiché en entier. Il sert uniquement aux virements trimestriels.",
+    ibanSave: "Enregistrer l'IBAN",
+    ibanSaved: "IBAN enregistré.",
+    ibanInvalid: "Cet IBAN n'est pas valide : vérifiez la saisie.",
+    ibanLocked: "L'IBAN se saisit une fois l'association validée.",
+    ibanFailed: "L'IBAN n'a pas pu être enregistré.",
   },
 };
 
