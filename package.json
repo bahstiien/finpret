@@ -17,6 +17,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
+    "stripe:setup": "node scripts/stripe-setup.mjs",
     "tokens": "node scripts/tokens.mjs",
     "tokens:check": "node scripts/tokens.mjs --check",
     "seed": "tsx scripts/seed.ts",
@@ -30,6 +31,8 @@
     "audit:lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.1",
     "@react-pdf/renderer": "^4.9.0",
     "@sentry/nextjs": "^11.8.0",
     "@serwist/next": "^9.5.13",
@@ -40,6 +43,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "server-only": "^0.0.1",
+    "stripe": "^23.0.0",
     "unpdf": "1.3.2",
     "web-push": "3.6.7",
     "zod": "^4.6.7"

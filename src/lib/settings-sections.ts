@@ -6,6 +6,7 @@ export const ADMIN_SECTIONS = [
   "session",
   "shopping",
   "canteen",
+  "subscription",
   "data",
   "profile",
 ] as const;

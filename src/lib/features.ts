@@ -20,6 +20,8 @@ export const FEATURES = {
   sharedSession: false,
   /** Écriture hors ligne des courses avec rejeu (REPORTÉ) ; la lecture hors ligne reste active. */
   offlineWrites: false,
+  /** Rappels « courses prêtes » et « début de session » (REPORTÉ) : seuls dîner, décongélation, menus publiés et fin d'essai partent. */
+  shoppingSessionNotifications: false,
   /** Cantine saisie par enfant ou par lien (M10) : remplacée par les menus d'école publiés par l'association. */
   householdCanteen: true,
 } as const;

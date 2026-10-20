@@ -13,6 +13,7 @@ import { MAX_PDF_BYTES, menusFromText, pdfText } from "@/server/canteen-import";
 import { notifyCanteenPublished } from "@/server/canteen-notify";
 import { importsThisMonth, MAX_IMPORTS_PER_MONTH } from "@/server/asso-quota";
 import { type ActionResult, toUserMessage } from "@/server/errors";
+import { sendAssociationReceived } from "@/server/emails";
 import { trackEvent } from "@/server/events";
 import { requireUser } from "@/server/session";
 
@@ -88,6 +89,7 @@ export async function createAssociationAction(_prev: SignupState, formData: Form
     });
     if (!error) {
       await trackEvent("asso_signup_started", { userId: user.id, props: { stage: "created" } });
+      await sendAssociationReceived(parsed.data.email, parsed.data.name).catch(() => null);
       revalidatePath("/asso", "layout");
       redirect("/asso");
     }

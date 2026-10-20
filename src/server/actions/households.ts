@@ -8,6 +8,7 @@ import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/server";
 import { can } from "@/server/entitlements";
+import { sendHouseholdInvitation } from "@/server/emails";
 import { loadOffer } from "@/server/entitlements-load";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { ACTIVE_HOUSEHOLD_COOKIE, getHouseholds, requireUser } from "@/server/session";
@@ -94,7 +95,14 @@ export async function createInvitation(_prev: InviteState, formData: FormData): 
     .select("token")
     .single();
   if (error) return { error: toUserMessage(error) };
-  // TODO(M9) : envoi de l'invitation par e-mail quand le fournisseur d'e-mails sera branché.
+  if (parsed.data.email) {
+    const { data: h } = await supabase
+      .from("households")
+      .select("name")
+      .eq("id", parsed.data.householdId)
+      .maybeSingle();
+    await sendHouseholdInvitation(parsed.data.email, h?.name ?? "ton foyer", data.token).catch(() => null);
+  }
   revalidatePath("/settings/household");
   return { token: data.token };
 }

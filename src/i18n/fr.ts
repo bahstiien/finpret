@@ -393,6 +393,7 @@ export const fr = {
       session: "Session",
       shopping: "Courses",
       canteen: "Cantine",
+      subscription: "Abonnement",
       notifications: "Notifications",
       data: "Données",
       profile: "Profil",

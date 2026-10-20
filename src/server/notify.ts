@@ -10,6 +10,7 @@ import {
   type NotificationPrefs,
 } from "@/engine/notifications";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 
 /**
  * Envoi des rappels (§12) : appelé toutes les 15 min par le planificateur. Pour chaque compte dont l'heure
@@ -83,6 +84,7 @@ export async function runNotifications(deps: NotifyDeps, now = new Date()) {
   for (const r of await deps.recipients()) {
     const local = localTime(now, r.timezone);
     for (const { kind, day } of dueNotifications(r.prefs, r.schedule, local)) {
+      if (!FEATURES.shoppingSessionNotifications && (kind === "shopping" || kind === "session")) continue;
       summary.due++;
       const cacheKey = `${r.householdId}:${kind}:${day}`;
       if (!contentCache.has(cacheKey)) contentCache.set(cacheKey, deps.content(r.householdId, kind, local));

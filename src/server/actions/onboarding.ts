@@ -11,6 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 import { toUserMessage } from "@/server/errors";
 import { ACTIVE_HOUSEHOLD_COOKIE, getActiveHousehold, requireUser } from "@/server/session";
 import { approvedAssociation, attachHousehold } from "@/server/associations";
+import { sendWelcome } from "@/server/emails";
 import { trackEvent } from "@/server/events";
 import { generateAndStore } from "@/server/weeks";
 import { fr } from "@/i18n/fr";
@@ -130,6 +131,8 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     .eq("id", householdId);
 
   await trackEvent("onboarding_done", { userId: user.id, householdId });
+  if (user.email)
+    await sendWelcome(user.email, user.id, input.household.members[0]?.name ?? "").catch(() => null);
 
   // Heures de notification du compte (le consentement aux notifications se donne plus tard, §4).
   await supabase

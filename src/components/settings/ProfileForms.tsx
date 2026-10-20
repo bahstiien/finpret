@@ -7,6 +7,7 @@ import { FormMessage, TextField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
 import type { NotificationSettings } from "@/lib/settings";
 import type { ActionResult } from "@/server/errors";
+import { FEATURES } from "@/lib/features";
 import { removePushSubscription, savePushSubscription, sendTestNotification } from "@/server/actions/push";
 import { saveNotifications, saveProfile, signOutOtherDevices } from "@/server/actions/settings";
 import { SaveStatus, useAutosave } from "./Autosave";
@@ -49,7 +50,10 @@ async function subscribeDevice(): Promise<string | null> {
     const registration = await navigator.serviceWorker.ready;
     const sub =
       (await registration.pushManager.getSubscription()) ??
-      (await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidKey(publicKey) }));
+      (await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapidKey(publicKey),
+      }));
     const res = await savePushSubscription(sub.toJSON(), navigator.userAgent);
     return res.ok ? null : res.error;
   } catch {
@@ -97,7 +101,11 @@ export function NotificationsForm({ initial }: { initial: NotificationSettings }
         label={t.email}
         checked={v.email}
         onChange={(email) =>
-          update((d) => ({ ...d, email, consentAt: email ? (d.consentAt ?? new Date().toISOString()) : d.consentAt }))
+          update((d) => ({
+            ...d,
+            email,
+            consentAt: email ? (d.consentAt ?? new Date().toISOString()) : d.consentAt,
+          }))
         }
       />
       {(["dinner", "thaw"] as const).map((k) => (
@@ -120,16 +128,20 @@ export function NotificationsForm({ initial }: { initial: NotificationSettings }
           )}
         </div>
       ))}
-      <Toggle
-        label={t.shoppingReady}
-        checked={v.shoppingReady}
-        onChange={(shoppingReady) => update((d) => ({ ...d, shoppingReady }))}
-      />
-      <Toggle
-        label={t.sessionStart}
-        checked={v.sessionStart}
-        onChange={(sessionStart) => update((d) => ({ ...d, sessionStart }))}
-      />
+      {FEATURES.shoppingSessionNotifications && (
+        <>
+          <Toggle
+            label={t.shoppingReady}
+            checked={v.shoppingReady}
+            onChange={(shoppingReady) => update((d) => ({ ...d, shoppingReady }))}
+          />
+          <Toggle
+            label={t.sessionStart}
+            checked={v.sessionStart}
+            onChange={(sessionStart) => update((d) => ({ ...d, sessionStart }))}
+          />
+        </>
+      )}
       {v.push && (
         <Button
           type="button"
@@ -139,7 +151,9 @@ export function NotificationsForm({ initial }: { initial: NotificationSettings }
           onClick={() =>
             startTransition(async () => {
               const res = await sendTestNotification();
-              setMessage(res.ok ? { tone: "success", text: res.data.message } : { tone: "error", text: res.error });
+              setMessage(
+                res.ok ? { tone: "success", text: res.data.message } : { tone: "error", text: res.error },
+              );
             })
           }
         >

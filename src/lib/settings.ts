@@ -109,6 +109,8 @@ export const notificationsSchema = z.object({
   sessionStart: z.boolean().default(true),
   /** Date du consentement explicite aux notifications (RGPD). */
   consentAt: z.string().nullable().default(null),
+  /** E-mails de fin d'essai et d'information : faux après un clic sur « Se désinscrire ». */
+  marketingEmails: z.boolean().default(true),
 });
 
 export type DietSettings = z.infer<typeof dietSchema>;
