@@ -5,13 +5,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/server";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { ACTIVE_HOUSEHOLD_COOKIE, getHouseholds, requireUser } from "@/server/session";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 const uuid = z.uuid();
-const role = z.enum(["admin", "member", "viewer"]);
+const role = z.enum(["admin", "member", "viewer"]).refine((r) => FEATURES.viewerRole || r !== "viewer");
 
 async function rememberOnDevice(householdId: string) {
   (await cookies()).set(ACTIVE_HOUSEHOLD_COOKIE, householdId, {

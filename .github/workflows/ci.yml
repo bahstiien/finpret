@@ -13,6 +13,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      HAS_SUPABASE: ${{ secrets.SUPABASE_DEV_URL != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -21,20 +23,36 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm tokens:check
       - run: pnpm lint --max-warnings 0
       - run: pnpm typecheck
       - run: pnpm test
+      # Tests RLS pgTAP sur PGlite (Postgres en WebAssembly) : ni Docker ni projet distant.
       - run: pnpm test:db:lite
 
-      # Supabase local (Docker) : migrations, tests RLS pgTAP, puis variables pour l'application.
-      - run: pnpm exec supabase start --exclude studio,imgproxy,vector,logflare,edge-runtime,supavisor
-      - run: pnpm test:db:ci
-      - run: pnpm --silent env:supabase > .env.local
-      - run: pnpm seed
+      # Parcours de bout en bout : projet Supabase hébergé de DÉVELOPPEMENT (secrets du dépôt), jamais Docker.
+      # Sans secrets (branches de forks), la construction et les tests Playwright sont sautés.
+      - name: Variables de l'environnement de test
+        if: env.HAS_SUPABASE == 'true'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_DEV_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_DEV_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_DEV_SERVICE_ROLE_KEY }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DEV_DB_URL }}
+        run: |
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY"
+            echo "SUPABASE_DB_URL=$SUPABASE_DB_URL"
+          } > .env.local
 
       - run: pnpm build
+        if: env.HAS_SUPABASE == 'true'
       - run: pnpm exec playwright install --with-deps chromium
+        if: env.HAS_SUPABASE == 'true'
       - run: pnpm test:e2e
+        if: env.HAS_SUPABASE == 'true'
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

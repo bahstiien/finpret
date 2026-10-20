@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const css = readFileSync(new URL("../../src/app/globals.css", import.meta.url), "utf8");
+const css =
+  readFileSync(new URL("../../src/styles/tokens.css", import.meta.url), "utf8") +
+  readFileSync(new URL("../../src/app/globals.css", import.meta.url), "utf8");
 
 /** Valeur d'un token dans le premier bloc qui commence par `selector`. */
 function tokenIn(selector: string, name: string): string | undefined {

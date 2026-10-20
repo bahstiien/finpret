@@ -811,6 +811,7 @@ export const fr = {
     progress: (done: number, total: number) => `${done} / ${total} articles`,
     offline: (n: number) =>
       `Hors ligne : tu peux continuer à cocher.${n ? ` ${n} modification${n > 1 ? "s" : ""} en attente.` : ""}`,
+    offlineReadOnly: "Hors ligne : tu peux consulter la liste, mais pas la modifier. Reconnecte-toi pour cocher.",
     syncing: (n: number) => `Synchronisation : ${n} modification${n > 1 ? "s" : ""} en attente…`,
     addLabel: "Article à ajouter",
     addPlaceholder: "Ajouter un article…",

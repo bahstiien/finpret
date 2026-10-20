@@ -10,6 +10,8 @@ import { toDietRules, toEquipment, toMenuSettings } from "@/lib/settings";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { loadLibrary } from "./catalog";
+import { trackEvent } from "./events";
+import { getUser } from "./session";
 import {
   type HouseholdContext,
   loadHouseholdContext,
@@ -224,6 +226,11 @@ export async function generateAndStore(householdId: string, start: string): Prom
   if (error) return { ok: false, reason: error.code === "42501" ? "forbidden" : "impossible" };
   await syncShoppingItems(ctx, freshEnv, { id: data.id, plan });
   const summary = await summarize(ctx, plan, freshEnv);
+  await trackEvent("week_generated", {
+    userId: (await getUser())?.id,
+    householdId,
+    props: { week: start, regenerated: Boolean(existing) },
+  });
   return { ok: true, week: plan, weekId: data.id, summary, dislikesIgnored: res.dislikesIgnored };
 }
 

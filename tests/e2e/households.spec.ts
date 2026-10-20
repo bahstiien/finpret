@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { FEATURES } from "../../src/lib/features";
 import {
   canSendLoginEmail,
   signInFromLoginPage,
@@ -55,7 +56,9 @@ test("connexion par lien magique, invitation et adhésion ; le paramétrage rest
 
   // 2. Il invite une personne en lecture seule.
   await admin.goto("/settings/household");
-  await admin.getByLabel("Rôle de la personne invitée").selectOption("viewer");
+  await admin
+    .getByLabel("Rôle de la personne invitée")
+    .selectOption(FEATURES.viewerRole ? "viewer" : "member");
   await admin.getByLabel(/E-mail/).fill(guestEmail);
   await admin.getByRole("button", { name: "Créer le lien" }).click();
   const link = await admin.getByLabel("Lien à envoyer").inputValue();
@@ -72,7 +75,7 @@ test("connexion par lien magique, invitation et adhésion ; le paramétrage rest
   await guest.getByRole("button", { name: "Rejoindre le foyer" }).click();
   await expect(guest).toHaveURL(/\/app$/);
   await expect(guest.getByTestId("week-title")).toContainText("Semaine du");
-  await expect(guest.getByRole("button", { name: /^Changer / })).toHaveCount(0); // lecture seule
+  if (FEATURES.viewerRole) await expect(guest.getByRole("button", { name: /^Changer / })).toHaveCount(0); // lecture seule
   await expect(guest.getByTestId("summary-meals")).toHaveText("10");
 
   // 4. L'invitation a servi : elle n'est plus en attente et le lien est refusé.
@@ -82,14 +85,18 @@ test("connexion par lien magique, invitation et adhésion ; le paramétrage rest
   await third.goto(link);
   await expect(third.getByRole("alert").filter({ hasText: "déjà servi" })).toBeVisible();
 
-  // 5. Lecture seule : seule la section Profil est accessible (§6).
-  for (const section of ["/settings", "/settings/household", "/settings/menu", "/settings/data"]) {
-    await guest.goto(section);
-    await expect(guest).toHaveURL(/\/settings\/profile$/);
+  if (FEATURES.viewerRole) {
+    // 5. Lecture seule : seule la section Profil est accessible (§6).
+    for (const section of ["/settings", "/settings/household", "/settings/menu", "/settings/data"]) {
+      await guest.goto(section);
+      await expect(guest).toHaveURL(/\/settings\/profile$/);
+    }
+    await expect(guest.getByRole("navigation", { name: "Réglages" }).getByRole("link")).toHaveText([
+      "Profil",
+    ]);
+    const exported = await guest.request.get("/settings/data/export");
+    expect(exported.status()).toBe(403);
   }
-  await expect(guest.getByRole("navigation", { name: "Réglages" }).getByRole("link")).toHaveText(["Profil"]);
-  const exported = await guest.request.get("/settings/data/export");
-  expect(exported.status()).toBe(403);
 });
 
 test("un réglage s'enregistre tout seul et peut s'appliquer à la semaine préparée (§6)", async ({ page }) => {

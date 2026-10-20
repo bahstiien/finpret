@@ -12,6 +12,7 @@ import { Sheet } from "@/components/ui/Sheet";
 import { useToast } from "@/components/ui/Toast";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
+import { FEATURES } from "@/lib/features";
 import { deleteImportedRecipe } from "@/server/actions/imports";
 import { setCakeAction, setWeekendAction } from "@/server/actions/menu";
 import type { Flag as FlagData } from "@/server/menu-view";
@@ -98,7 +99,8 @@ export function DiscoverScreen({
   );
 
   useEffect(() => {
-    if (openId) document.querySelector(`[data-testid="recipe-${openId}"]`)?.scrollIntoView({ block: "center" });
+    if (openId)
+      document.querySelector(`[data-testid="recipe-${openId}"]`)?.scrollIntoView({ block: "center" });
   }, [openId]);
 
   const list = useMemo(() => {
@@ -124,7 +126,7 @@ export function DiscoverScreen({
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-4xl font-black">{fr.nav.discover}</h1>
-        {canEdit && (
+        {canEdit && FEATURES.recipeImport && (
           <Link
             href="/app/discover/import"
             className="inline-flex min-h-11 items-center gap-2 rounded-pill bg-banana px-6 font-bold text-[#17151F]"
@@ -236,7 +238,9 @@ export function DiscoverScreen({
         <ul className="grid gap-3 min-[900px]:grid-cols-2">
           {bfList.map((b) => (
             <li key={b.id} className="flex flex-col gap-1 rounded-card bg-surface p-5">
-              <span className="text-xs font-bold text-violet-strong uppercase">{t.breakfastTypes[b.type]}</span>
+              <span className="text-xs font-bold text-violet-strong uppercase">
+                {t.breakfastTypes[b.type]}
+              </span>
               <b className="text-lg">{b.name}</b>
               <p className="text-muted">{b.description}</p>
               <p className="text-sm font-semibold">{t.macros(b.kcal, b.protein)}</p>
@@ -341,7 +345,7 @@ function RecipeCard({
             {t.plan}
           </Button>
         )}
-        {canEdit && r.imported && (
+        {canEdit && FEATURES.recipeImport && r.imported && (
           <>
             <Link
               href={`/app/discover/import?edit=${r.id}`}

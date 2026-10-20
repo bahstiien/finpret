@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { FormMessage } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import type { HouseholdRole } from "@/lib/supabase/database.types";
 import { changeRole } from "@/server/actions/households";
 
@@ -45,7 +46,10 @@ export function RoleSelect({
         }}
         className="min-h-11 rounded-pill border-2 border-line bg-surface px-4 font-semibold"
       >
-        {(["admin", "member", "viewer"] as const).map((r) => (
+        {(FEATURES.viewerRole || role === "viewer"
+          ? (["admin", "member", "viewer"] as const)
+          : (["admin", "member"] as const)
+        ).map((r) => (
           <option key={r} value={r}>
             {fr.roles[r]}
           </option>

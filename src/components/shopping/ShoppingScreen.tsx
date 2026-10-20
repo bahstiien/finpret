@@ -7,8 +7,10 @@ import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
 import { baseAisle, guessAisle, shoppingText } from "@/engine/shopping";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { enqueue, loadQueue, type NewItem, type QueuedOp, saveQueue } from "@/lib/offline-queue";
 import { createClient } from "@/lib/supabase/client";
+import { recordWeekEvent } from "@/server/actions/events";
 
 const t = fr.shopping;
 
@@ -62,6 +64,7 @@ export function ShoppingScreen({
   const [qty, setQty] = useState("");
   const queue = useRef<QueuedOp[]>([]);
   const flushing = useRef(false);
+  const checkedSent = useRef(false);
 
   const apply = useCallback(
     (op: QueuedOp) => {
@@ -120,13 +123,19 @@ export function ShoppingScreen({
 
   const run = useCallback(
     (op: QueuedOp) => {
+      // Écriture hors ligne REPORTÉE (SPEC_JANVIER) : la liste reste consultable, les modifications attendent le réseau.
+      if (!FEATURES.offlineWrites && !navigator.onLine) return toast(t.offlineReadOnly, "error");
+      if (op.op === "check" && op.checked && !checkedSent.current) {
+        checkedSent.current = true;
+        void recordWeekEvent("shopping_checked", weekId);
+      }
       apply(op);
       queue.current = enqueue(queue.current, op);
       saveQueue(weekId, queue.current);
       setPending(queue.current.length);
       void flush();
     },
-    [apply, flush, weekId],
+    [apply, flush, weekId, toast],
   );
 
   // File laissée par une visite précédente hors ligne, état réseau, temps réel.
@@ -325,7 +334,7 @@ export function ShoppingScreen({
             className="rounded-2xl bg-yellow-soft px-4 py-2 text-sm font-semibold"
             data-testid="offline"
           >
-            {online ? t.syncing(pending) : t.offline(pending)}
+            {online ? t.syncing(pending) : FEATURES.offlineWrites ? t.offline(pending) : t.offlineReadOnly}
           </p>
         )}
       </header>

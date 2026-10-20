@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/server";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
@@ -66,6 +67,7 @@ export async function setPantry(key: string, qty: number | null | "remove"): Pro
 }
 
 export async function adjustFreezer(id: string, delta: number): Promise<Result> {
+  if (!FEATURES.freezerAndLeftovers) return { ok: false, error: fr.errors.forbidden };
   const household = await editor();
   if (!household) return { ok: false, error: fr.errors.forbidden };
   if (!z.uuid().safeParse(id).success || ![-1, 1].includes(delta))
@@ -84,6 +86,7 @@ export async function adjustFreezer(id: string, delta: number): Promise<Result> 
 }
 
 export async function addToFreezer(recipeId: string, portions: number): Promise<Result> {
+  if (!FEATURES.freezerAndLeftovers) return { ok: false, error: fr.errors.forbidden };
   const household = await editor();
   if (!household) return { ok: false, error: fr.errors.forbidden };
   if (!recipeId || !Number.isInteger(portions) || portions < 1 || portions > 20) {
@@ -100,6 +103,7 @@ export async function addToFreezer(recipeId: string, portions: number): Promise<
 
 /** « Mettre à jour le garde-manger » après la session : restes des contenants ajoutés, épuisés retirés. */
 export async function updatePantryAfterSession(weekId: string): Promise<Result> {
+  if (!FEATURES.freezerAndLeftovers) return { ok: false, error: fr.errors.forbidden };
   const household = await editor();
   if (!household) return { ok: false, error: fr.errors.forbidden };
   const ctx = await loadHouseholdContext(household.id);
@@ -115,6 +119,7 @@ export async function updatePantryAfterSession(weekId: string): Promise<Result> 
 
 /** Ranger les plats doublés dans la réserve du congélateur (dernière étape de la session). */
 export async function bankDoublesAction(weekId: string): Promise<Result> {
+  if (!FEATURES.freezerAndLeftovers) return { ok: false, error: fr.errors.forbidden };
   const household = await editor();
   if (!household) return { ok: false, error: fr.errors.forbidden };
   const ctx = await loadHouseholdContext(household.id);

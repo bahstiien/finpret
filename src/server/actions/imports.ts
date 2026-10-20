@@ -9,6 +9,7 @@ import { BUILTIN_SYNONYMS, householdIngredientKey } from "@/engine/import/match"
 import { type ImportForm, importFormSchema, toRecipe } from "@/engine/import/to-recipe";
 import { siteName } from "@/engine/import/url";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { loadLibrary } from "@/server/catalog";
@@ -21,6 +22,7 @@ import { requireHousehold } from "@/server/session";
 const t = fr.recipeImport;
 
 async function editor() {
+  if (!FEATURES.recipeImport) return null;
   const { household } = await requireHousehold("/app/discover/import");
   return household.role === "viewer" ? null : household;
 }
@@ -95,12 +97,18 @@ export async function analyzeImport(rawUrl: string): Promise<AnalyzeResult> {
     .from("recipe_imports")
     .update({ status: "parsed", method, raw_ingredients: recipe.ingredients.slice(0, 60) })
     .eq("id", row.id);
-  return { ok: true, data: { importId: row.id, draft, method, rewritten: steps.length > 0, quality: quality(draft.lines) } };
+  return {
+    ok: true,
+    data: { importId: row.id, draft, method, rewritten: steps.length > 0, quality: quality(draft.lines) },
+  };
 }
 
 const saveSchema = z.object({
   importId: z.uuid().nullable(),
-  editId: z.string().regex(/^imp_[a-z0-9]+$/).nullable(),
+  editId: z
+    .string()
+    .regex(/^imp_[a-z0-9]+$/)
+    .nullable(),
   form: importFormSchema,
   plan: z.boolean(),
 });

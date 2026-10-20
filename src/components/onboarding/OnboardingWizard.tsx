@@ -8,13 +8,17 @@ import { FormMessage, SelectField, TextField } from "@/components/ui/Field";
 import { ALLERGENS } from "@/engine/catalog/allergens";
 import { dur } from "@/engine/format";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import type { OnboardingInput } from "@/lib/onboarding";
 import { DIETS } from "@/lib/settings";
 import { completeOnboarding } from "@/server/actions/onboarding";
 
 const t = fr.onboarding;
-const STEPS = ["household", "diet", "rhythm", "equipment", "habits"] as const;
-type Step = (typeof STEPS)[number];
+type Step = "household" | "diet" | "rhythm" | "equipment" | "habits";
+// SPEC_JANVIER : 4 étapes ; « habitudes » reste disponible derrière le drapeau (valeurs par défaut sinon).
+const STEPS: readonly Step[] = FEATURES.onboardingHabits
+  ? ["household", "diet", "rhythm", "equipment", "habits"]
+  : ["household", "diet", "rhythm", "equipment"];
 type Update = (fn: (draft: OnboardingInput) => OnboardingInput) => void;
 
 export function OnboardingWizard({
@@ -183,13 +187,15 @@ function HouseholdStep({ data, update }: { data: OnboardingInput; update: Update
           ))}
         </div>
       </fieldset>
-      <Toggle
-        label={s.alternating}
-        hint={s.alternatingHint}
-        checked={data.household.alternating.enabled}
-        onChange={(v) => update((d) => ((d.household.alternating.enabled = v), d))}
-      />
-      {data.household.alternating.enabled && (
+      {FEATURES.alternatingCustody && (
+        <Toggle
+          label={s.alternating}
+          hint={s.alternatingHint}
+          checked={data.household.alternating.enabled}
+          onChange={(v) => update((d) => ((d.household.alternating.enabled = v), d))}
+        />
+      )}
+      {FEATURES.alternatingCustody && data.household.alternating.enabled && (
         <TextField
           id="alternating-from"
           type="date"

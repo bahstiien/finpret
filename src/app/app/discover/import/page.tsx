@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ImportScreen } from "@/components/discover/ImportScreen";
 import { fromRecipe } from "@/engine/import/to-recipe";
 import { urlFromShare } from "@/engine/import/url";
 import { ORIGINS } from "@/engine/origins";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/server";
 import { loadLibrary } from "@/server/catalog";
 import { requireHousehold } from "@/server/session";
@@ -15,6 +16,7 @@ type Params = { url?: string; text?: string; title?: string; edit?: string };
 
 /** Import d'une recette par lien (§8.8) ; aussi cible de partage du téléphone (`share_target`) et modification. */
 export default async function ImportPage({ searchParams }: { searchParams: Promise<Params> }) {
+  if (!FEATURES.recipeImport) notFound();
   const params = await searchParams;
   const { household } = await requireHousehold("/app/discover/import");
   if (household.role === "viewer") redirect("/app/discover");

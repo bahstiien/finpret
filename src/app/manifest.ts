@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -21,10 +22,14 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     // Cible de partage pour l'import de recettes par lien (SPEC §8.8).
-    share_target: {
-      action: "/app/discover/import",
-      method: "GET",
-      params: { title: "title", text: "text", url: "url" },
-    },
+    ...(FEATURES.recipeImport
+      ? {
+          share_target: {
+            action: "/app/discover/import",
+            method: "GET" as const,
+            params: { title: "title", text: "text", url: "url" },
+          },
+        }
+      : {}),
   };
 }

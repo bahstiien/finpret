@@ -1,9 +1,14 @@
 import { expect, test } from "@playwright/test";
 import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
+import { FEATURES } from "../../src/lib/features";
 
 // §8.8 Import de recette par lien. Les pages sont des fixtures servies sous https://recettes.test/<nom>.
 test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(
+  !FEATURES.recipeImport,
+  "Import de recettes REPORTÉ (SPEC_JANVIER) : drapeau FEATURES.recipeImport",
+);
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 test("import d'une recette Marmiton, validation, puis affichage dans Découvrir", async ({ page }) => {
@@ -34,7 +39,9 @@ test("import d'une recette Marmiton, validation, puis affichage dans Découvrir"
   await expect(page.getByText("Texte de démonstration")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Ajouter une étape" }).click();
-  await page.getByRole("textbox", { name: "Étape 1", exact: true }).fill("Fais dorer le poulet, ajoute les légumes et laisse mijoter 45 min.");
+  await page
+    .getByRole("textbox", { name: "Étape 1", exact: true })
+    .fill("Fais dorer le poulet, ajoute les légumes et laisse mijoter 45 min.");
   await page.getByRole("button", { name: "Ajouter à mes recettes" }).click();
 
   await expect(page).toHaveURL(/\/app\/discover\?open=imp_/, { timeout: 20_000 });

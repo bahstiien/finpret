@@ -98,6 +98,19 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      events: {
+        Row: {
+          id: number;
+          user_id: string | null;
+          household_id: string | null;
+          name: string;
+          props: Json;
+          created_at: string;
+        };
+        Insert: { user_id?: string | null; household_id?: string | null; name: string; props?: Json };
+        Update: never;
+        Relationships: [];
+      };
       user_settings: {
         Row: { user_id: string; notifications: Json };
         Insert: never;

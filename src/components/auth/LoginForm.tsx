@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FormMessage, TextField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { type LoginState, signInWithEmail, signInWithProvider } from "@/server/actions/auth";
 
 const t = fr.login;
@@ -43,7 +44,7 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
         <span className="h-px flex-1 bg-line" />
       </div>
 
-      {(["apple", "google"] as const).map((provider) => (
+      {(FEATURES.appleSignIn ? (["apple", "google"] as const) : (["google"] as const)).map((provider) => (
         <form key={provider} action={signInWithProvider}>
           <input type="hidden" name="provider" value={provider} />
           <input type="hidden" name="next" value={next} />

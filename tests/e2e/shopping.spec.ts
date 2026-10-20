@@ -1,4 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
+import { FEATURES } from "../../src/lib/features";
 import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
@@ -60,31 +61,41 @@ test("courses partagées : temps réel, ajouts simultanés, hors ligne", async (
   await expect(item(a, "Café")).toContainText("ajouté par");
   await expect(progressA).toHaveText(`1 / ${total + 2} articles`);
 
-  // 3. Hors ligne puis reconnexion sans perte.
-  await bContext.setOffline(true);
-  await expect(b.getByTestId("offline")).toContainText("Hors ligne");
-  const second = b
-    .getByTestId("shopping-item")
-    .filter({ hasNotText: firstName })
-    .filter({ hasNotText: "Lessive" })
-    .filter({ hasNotText: "Café" })
-    .first();
-  const secondName = (await second.locator("span.font-semibold").innerText()).trim();
-  await second.getByRole("checkbox").check();
-  await b.getByLabel("Article à ajouter").fill("Piles");
-  await b.getByRole("button", { name: "Ajouter", exact: true }).click();
-  await expect(b.getByTestId("offline")).toContainText("2 modifications en attente");
-  // Pendant la coupure, l'autre appareil ne voit rien.
-  await a.waitForTimeout(1500);
-  await expect(item(a, "Piles")).toHaveCount(0);
-  await bContext.setOffline(false);
-  await expect(b.getByTestId("offline")).toHaveCount(0, { timeout: 10_000 });
-  await expect(item(a, "Piles")).toBeVisible({ timeout: 5_000 });
-  await expect(item(a, secondName).getByRole("checkbox")).toBeChecked({ timeout: 5_000 });
+  // 3. Hors ligne : écriture avec rejeu REPORTÉE (SPEC_JANVIER) ; la lecture reste possible.
+  if (!FEATURES.offlineWrites) {
+    await bContext.setOffline(true);
+    await expect(b.getByTestId("offline")).toContainText("Hors ligne : tu peux consulter");
+    await expect(item(b, "Lessive")).toBeVisible();
+    await bContext.setOffline(false);
+    return;
+  }
+  {
+    // 3. Hors ligne puis reconnexion sans perte.
+    await bContext.setOffline(true);
+    await expect(b.getByTestId("offline")).toContainText("Hors ligne");
+    const second = b
+      .getByTestId("shopping-item")
+      .filter({ hasNotText: firstName })
+      .filter({ hasNotText: "Lessive" })
+      .filter({ hasNotText: "Café" })
+      .first();
+    const secondName = (await second.locator("span.font-semibold").innerText()).trim();
+    await second.getByRole("checkbox").check();
+    await b.getByLabel("Article à ajouter").fill("Piles");
+    await b.getByRole("button", { name: "Ajouter", exact: true }).click();
+    await expect(b.getByTestId("offline")).toContainText("2 modifications en attente");
+    // Pendant la coupure, l'autre appareil ne voit rien.
+    await a.waitForTimeout(1500);
+    await expect(item(a, "Piles")).toHaveCount(0);
+    await bContext.setOffline(false);
+    await expect(b.getByTestId("offline")).toHaveCount(0, { timeout: 10_000 });
+    await expect(item(a, "Piles")).toBeVisible({ timeout: 5_000 });
+    await expect(item(a, secondName).getByRole("checkbox")).toBeChecked({ timeout: 5_000 });
 
-  // Après rechargement, rien n'est perdu.
-  await b.reload();
-  await expect(item(b, "Piles")).toBeVisible();
-  await expect(item(b, secondName).getByRole("checkbox")).toBeChecked();
-  await expect(b.getByTestId("shopping-progress")).toHaveText(`2 / ${total + 3} articles`);
+    // Après rechargement, rien n'est perdu.
+    await b.reload();
+    await expect(item(b, "Piles")).toBeVisible();
+    await expect(item(b, secondName).getByRole("checkbox")).toBeChecked();
+    await expect(b.getByTestId("shopping-progress")).toHaveText(`2 / ${total + 3} articles`);
+  }
 });

@@ -1,0 +1,111 @@
+/* Fichier généré par `pnpm tokens` depuis design-system/tokens.json : ne pas modifier à la main. */
+
+/* Le thème suit le système ; data-theme="light" | "dark" sur <html> force un choix manuel. */
+:root {
+  color-scheme: light;
+  --bg: #f4f3f8;
+  --surface: #ffffff;
+  --ink: #17151f;
+  --muted: #6b6878;
+  --line: #eceaf2;
+  --violet: #7a5af8;
+  --banana: #ffd23f;
+  --green: #1fa85a;
+  --blue-soft: #dcebff;
+  --blue-ink: #1f4e8c;
+  --pink-soft: #ffe6ec;
+  --pink-ink: #a3264a;
+  --yellow-soft: #fff6d6;
+  --peach: #ffe3d6;
+  --peach-ink: #a33a12;
+  --chip: #f1f0f5;
+  --violet-soft: #ece7ff;
+  --violet-strong: #4b2fc9;
+  --nav: #17151f;
+  --on-nav: #ffffff;
+  --green-soft: #e2f5e6;
+  --green-ink: #17633a;
+  --green-strong: #17803f;
+  --cream-ink: #7a5a00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121019;
+    --surface: #1e1b27;
+    --ink: #f3f1f8;
+    --muted: #a6a2b4;
+    --line: #2c2838;
+    --blue-soft: #1d2b44;
+    --blue-ink: #a9c8f5;
+    --pink-soft: #3a1d29;
+    --pink-ink: #f5a3bb;
+    --yellow-soft: #352d14;
+    --peach: #3d2419;
+    --peach-ink: #f5a582;
+    --chip: #2a2635;
+    --violet-soft: #2a2345;
+    --violet-strong: #c4b5fd;
+    --nav: #0b0a10;
+    --on-nav: #f3f1f8;
+    --green-soft: #183324;
+    --green-ink: #86efac;
+    --green-strong: #4ade80;
+    --cream-ink: #ffd86b;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121019;
+  --surface: #1e1b27;
+  --ink: #f3f1f8;
+  --muted: #a6a2b4;
+  --line: #2c2838;
+  --blue-soft: #1d2b44;
+  --blue-ink: #a9c8f5;
+  --pink-soft: #3a1d29;
+  --pink-ink: #f5a3bb;
+  --yellow-soft: #352d14;
+  --peach: #3d2419;
+  --peach-ink: #f5a582;
+  --chip: #2a2635;
+  --violet-soft: #2a2345;
+  --violet-strong: #c4b5fd;
+  --nav: #0b0a10;
+  --on-nav: #f3f1f8;
+  --green-soft: #183324;
+  --green-ink: #86efac;
+  --green-strong: #4ade80;
+  --cream-ink: #ffd86b;
+}
+
+/* Zone qui reste en mode clair quel que soit le thème : bandeaux de marque et maquettes d'écrans. */
+.theme-light {
+  color-scheme: light;
+  --bg: #f4f3f8;
+  --surface: #ffffff;
+  --ink: #17151f;
+  --muted: #6b6878;
+  --line: #eceaf2;
+  --violet: #7a5af8;
+  --banana: #ffd23f;
+  --green: #1fa85a;
+  --blue-soft: #dcebff;
+  --blue-ink: #1f4e8c;
+  --pink-soft: #ffe6ec;
+  --pink-ink: #a3264a;
+  --yellow-soft: #fff6d6;
+  --peach: #ffe3d6;
+  --peach-ink: #a33a12;
+  --chip: #f1f0f5;
+  --violet-soft: #ece7ff;
+  --violet-strong: #4b2fc9;
+  --nav: #17151f;
+  --on-nav: #ffffff;
+  --green-soft: #e2f5e6;
+  --green-ink: #17633a;
+  --green-strong: #17803f;
+  --cream-ink: #7a5a00;
+}

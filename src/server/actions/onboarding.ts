@@ -9,6 +9,7 @@ import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { toUserMessage } from "@/server/errors";
 import { ACTIVE_HOUSEHOLD_COOKIE, getActiveHousehold, requireUser } from "@/server/session";
+import { trackEvent } from "@/server/events";
 import { generateAndStore } from "@/server/weeks";
 import { fr } from "@/i18n/fr";
 
@@ -109,6 +110,8 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
           : null,
     })
     .eq("id", householdId);
+
+  await trackEvent("onboarding_done", { userId: user.id, householdId });
 
   // Heures de notification du compte (le consentement aux notifications se donne plus tard, §4).
   await supabase

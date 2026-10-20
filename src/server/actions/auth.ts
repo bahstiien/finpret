@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { safeNext } from "@/lib/redirect";
 import { createClient } from "@/lib/supabase/server";
 
@@ -45,7 +46,10 @@ export async function signInWithEmail(_prev: LoginState, formData: FormData): Pr
   return { status: "sent", email: parsed.data.email };
 }
 
-const oauthSchema = z.object({ provider: z.enum(["apple", "google"]), next: z.string().optional() });
+const oauthSchema = z.object({
+  provider: z.enum(["apple", "google"]).refine((p) => FEATURES.appleSignIn || p !== "apple"),
+  next: z.string().optional(),
+});
 
 /** Connexion Apple ou Google (OAuth). */
 export async function signInWithProvider(formData: FormData) {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Flag } from "@/components/menu/Flag";
 import { useMenuAction } from "@/components/menu/useMenuAction";
 import { IngredientPicker } from "@/components/settings/IngredientPicker";
+import { FEATURES } from "@/lib/features";
 import { Button } from "@/components/ui/Button";
 import { SelectField } from "@/components/ui/Field";
 import { Icon } from "@/components/ui/Icon";
@@ -68,7 +69,7 @@ export function StockScreen({
     <>
       <h1 className="text-4xl font-black">{fr.nav.stock}</h1>
 
-      {week && canEdit && (!week.pantryDone || week.doublesToBank) && (
+      {FEATURES.freezerAndLeftovers && week && canEdit && (!week.pantryDone || week.doublesToBank) && (
         <section className="flex flex-col gap-3 rounded-card bg-yellow-soft p-5">
           <h2 className="text-lg font-extrabold">{t.afterSession(week.start)}</h2>
           <p className="text-sm text-muted">{t.afterSessionHint}</p>
@@ -96,85 +97,90 @@ export function StockScreen({
         </section>
       )}
 
-      <section className="flex flex-col gap-3 rounded-card bg-green-soft p-5 text-ink" data-testid="freezer">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-xl font-extrabold text-green-ink">{t.freezer}</h2>
-          <span className="font-display text-xl font-black text-green-ink">{t.meals(total)}</span>
-        </div>
-        {freezer.length === 0 && <p className="text-sm text-muted">{t.freezerEmpty}</p>}
-        <ul className="flex flex-col gap-2">
-          {freezer.map((f) => (
-            <li key={f.id} className="flex items-center gap-3 rounded-2xl bg-surface/60 p-3">
-              <div className="min-w-0 flex-1">
-                <b className="block leading-tight">
-                  <Flag flag={f.flag} />
-                  {f.name}
-                </b>
-                <span className={`text-sm ${f.tooLong ? "font-semibold text-peach-ink" : "text-muted"}`}>
-                  {f.tooLong ? t.tooLong(f.weeks) : t.frozenOn(f.frozenAt)}
-                </span>
-              </div>
-              {canEdit ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    aria-label={t.less(f.name)}
-                    disabled={pending}
-                    onClick={() => run(() => adjustFreezer(f.id, -1))}
-                    className={`${roundBtn} bg-nav text-on-nav`}
-                  >
-                    −
-                  </button>
-                  <output className="w-6 text-center font-display text-lg font-black">{f.portions}</output>
-                  <button
-                    type="button"
-                    aria-label={t.more(f.name)}
-                    disabled={pending}
-                    onClick={() => run(() => adjustFreezer(f.id, 1))}
-                    className={`${roundBtn} bg-green-strong text-white`}
-                  >
-                    +
-                  </button>
+      {FEATURES.freezerAndLeftovers && (
+        <section
+          className="flex flex-col gap-3 rounded-card bg-green-soft p-5 text-ink"
+          data-testid="freezer"
+        >
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-xl font-extrabold text-green-ink">{t.freezer}</h2>
+            <span className="font-display text-xl font-black text-green-ink">{t.meals(total)}</span>
+          </div>
+          {freezer.length === 0 && <p className="text-sm text-muted">{t.freezerEmpty}</p>}
+          <ul className="flex flex-col gap-2">
+            {freezer.map((f) => (
+              <li key={f.id} className="flex items-center gap-3 rounded-2xl bg-surface/60 p-3">
+                <div className="min-w-0 flex-1">
+                  <b className="block leading-tight">
+                    <Flag flag={f.flag} />
+                    {f.name}
+                  </b>
+                  <span className={`text-sm ${f.tooLong ? "font-semibold text-peach-ink" : "text-muted"}`}>
+                    {f.tooLong ? t.tooLong(f.weeks) : t.frozenOn(f.frozenAt)}
+                  </span>
                 </div>
-              ) : (
-                <span className="font-display text-lg font-black">{f.portions}</span>
-              )}
-            </li>
-          ))}
-        </ul>
-        {canEdit && (
-          <form
-            className="flex flex-wrap items-end gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (addRecipe)
-                run(
-                  () => addToFreezer(addRecipe, 2),
-                  () => setAddRecipe(""),
-                );
-            }}
-          >
-            <SelectField
-              id="freezer-add"
-              label={t.addDish}
-              value={addRecipe}
-              onChange={(e) => setAddRecipe(e.target.value)}
-              className="w-full min-w-0 sm:w-auto sm:flex-1"
+                {canEdit ? (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label={t.less(f.name)}
+                      disabled={pending}
+                      onClick={() => run(() => adjustFreezer(f.id, -1))}
+                      className={`${roundBtn} bg-nav text-on-nav`}
+                    >
+                      −
+                    </button>
+                    <output className="w-6 text-center font-display text-lg font-black">{f.portions}</output>
+                    <button
+                      type="button"
+                      aria-label={t.more(f.name)}
+                      disabled={pending}
+                      onClick={() => run(() => adjustFreezer(f.id, 1))}
+                      className={`${roundBtn} bg-green-strong text-white`}
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  <span className="font-display text-lg font-black">{f.portions}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+          {canEdit && (
+            <form
+              className="flex flex-wrap items-end gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (addRecipe)
+                  run(
+                    () => addToFreezer(addRecipe, 2),
+                    () => setAddRecipe(""),
+                  );
+              }}
             >
-              <option value="">{t.chooseDish}</option>
-              {freezable.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                </option>
-              ))}
-            </SelectField>
-            <Button type="submit" variant="dark" disabled={!addRecipe || pending}>
-              <Icon name="snow" className="size-5" />
-              {t.addTwo}
-            </Button>
-          </form>
-        )}
-      </section>
+              <SelectField
+                id="freezer-add"
+                label={t.addDish}
+                value={addRecipe}
+                onChange={(e) => setAddRecipe(e.target.value)}
+                className="w-full min-w-0 sm:w-auto sm:flex-1"
+              >
+                <option value="">{t.chooseDish}</option>
+                {freezable.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
+                  </option>
+                ))}
+              </SelectField>
+              <Button type="submit" variant="dark" disabled={!addRecipe || pending}>
+                <Icon name="snow" className="size-5" />
+                {t.addTwo}
+              </Button>
+            </form>
+          )}
+        </section>
+      )}
 
       <section className="flex flex-col gap-3 rounded-card bg-surface p-5" data-testid="pantry">
         <h2 className="text-xl font-extrabold">{t.pantry}</h2>

@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { FEATURES } from "../../src/lib/features";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M7 (§8.4) : le garde-manger réduit la liste ; les restes sont ajoutés après la session.
@@ -30,6 +31,8 @@ test("garde-manger, restes après la session et congélateur", async ({ page }) 
   await page.goto("/app/shopping");
   await expect(progress).toHaveText(`0 / ${total - 1} articles`);
   await expect(page.getByTestId("shopping-item").filter({ hasText: name })).toHaveCount(0);
+
+  if (!FEATURES.freezerAndLeftovers) return; // Restes et congélateur REPORTÉS (SPEC_JANVIER).
 
   // Après la session : les restes de contenants entrent au garde-manger.
   await page.goto("/app/stock");

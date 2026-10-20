@@ -8,6 +8,7 @@ import { Pill } from "@/components/ui/Pill";
 import { fmtP } from "@/engine/format";
 import { memberPortion, type Member, type PresenceRule } from "@/engine/portions";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { saveHousehold, saveMember, setPresence } from "@/server/actions/settings";
 import { SaveStatus, useAutosave } from "./Autosave";
 
@@ -43,15 +44,17 @@ export function HouseholdDetailsForm({ initial, timezones }: { initial: Details;
           </option>
         ))}
       </SelectField>
-      <Toggle
-        label={t.alternating}
-        hint={t.alternatingHint}
-        checked={v.alternatingFrom !== null}
-        onChange={(on) =>
-          update((d) => ({ ...d, alternatingFrom: on ? new Date().toISOString().slice(0, 10) : null }))
-        }
-      />
-      {v.alternatingFrom !== null && (
+      {FEATURES.alternatingCustody && (
+        <Toggle
+          label={t.alternating}
+          hint={t.alternatingHint}
+          checked={v.alternatingFrom !== null}
+          onChange={(on) =>
+            update((d) => ({ ...d, alternatingFrom: on ? new Date().toISOString().slice(0, 10) : null }))
+          }
+        />
+      )}
+      {FEATURES.alternatingCustody && v.alternatingFrom !== null && (
         <TextField
           id="alternating-from"
           type="date"

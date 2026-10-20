@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { FEATURES } from "../../src/lib/features";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M8 (§8.5) : session complète, minuteurs persistants entre les onglets, état partagé.
@@ -49,15 +50,18 @@ test("session complète, minuteurs persistants, état partagé entre appareils",
       await page.goto("/app/session");
       await expect(page.getByText(`Étape ${i} sur ${total}`)).toBeVisible();
     }
-    if (i === 2) await expect(other.getByText(`Étape 2 sur ${total}`)).toBeVisible({ timeout: 5_000 });
+    if (i === 2 && FEATURES.sharedSession)
+      await expect(other.getByText(`Étape 2 sur ${total}`)).toBeVisible({ timeout: 5_000 });
     if (i < total) await next.click();
   }
   expect(timerLaunched).toBe(true);
 
   // Dernière étape : ranger les restes au garde-manger.
   await expect(page.getByRole("button", { name: "Session terminée" })).toBeDisabled();
-  await page.getByRole("button", { name: "Mettre à jour le garde-manger" }).click();
-  await expect(page.getByTestId("toast")).toContainText("Garde-manger mis à jour");
+  if (FEATURES.freezerAndLeftovers) {
+    await page.getByRole("button", { name: "Mettre à jour le garde-manger" }).click();
+    await expect(page.getByTestId("toast")).toContainText("Garde-manger mis à jour");
+  }
 
   // Minuteur arrivé à échéance (horloge simulée) : pilule « prêt », puis OK.
   const clockPage = await context.newPage();

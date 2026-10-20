@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FormMessage, SelectField, TextField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { createInvitation, type InviteState } from "@/server/actions/households";
 
 const t = fr.settingsHousehold;
@@ -18,7 +19,10 @@ export function InviteForm({ householdId, householdName }: { householdId: string
       <form action={action} className="flex flex-col gap-4">
         <input type="hidden" name="householdId" value={householdId} />
         <SelectField id="invite-role" name="role" label={t.inviteRole} defaultValue="member">
-          {(["member", "viewer", "admin"] as const).map((r) => (
+          {(FEATURES.viewerRole
+            ? (["member", "viewer", "admin"] as const)
+            : (["member", "admin"] as const)
+          ).map((r) => (
             <option key={r} value={r}>
               {fr.roles[r]} — {fr.roleHints[r]}
             </option>

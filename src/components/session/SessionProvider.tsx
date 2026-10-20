@@ -1,7 +1,9 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/client";
+import { recordWeekEvent } from "@/server/actions/events";
 
 /** État partagé de la session (§8.5) : étape, tâches cochées, minuteurs, synchronisés entre appareils. */
 
@@ -78,6 +80,10 @@ export function SessionProvider({
 
   useEffect(() => {
     if (!weekId) return;
+    const onFocus = () => void reload();
+    window.addEventListener("focus", onFocus);
+    // La synchronisation en direct entre appareils est REPORTÉE (SPEC_JANVIER) : l'état reste relu au retour sur l'onglet.
+    if (!FEATURES.sharedSession) return () => window.removeEventListener("focus", onFocus);
     let cancelled = false;
     const channel = supabase.channel(`session:${weekId}`);
     channel.on(
@@ -96,8 +102,6 @@ export function SessionProvider({
         if (status === "SUBSCRIBED") void reload();
       });
     });
-    const onFocus = () => void reload();
-    window.addEventListener("focus", onFocus);
     return () => {
       cancelled = true;
       window.removeEventListener("focus", onFocus);
@@ -124,7 +128,10 @@ export function SessionProvider({
     canEdit,
     sound,
     vibration,
-    start: () => call(() => supabase.rpc("session_start", { p_week: weekId! })),
+    start: async () => {
+      await call(() => supabase.rpc("session_start", { p_week: weekId! }));
+      void recordWeekEvent("session_started", weekId!);
+    },
     setStep: (step) => {
       setRow((r) => (r ? { ...r, current_step: step } : r));
       return call(() => supabase.rpc("session_set_step", { p_week: weekId!, p_step: step }));
