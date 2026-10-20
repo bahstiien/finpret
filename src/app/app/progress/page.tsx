@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/ui/Layout";
 import { PassportBlock } from "@/components/progress/PassportBlock";
 import { PauseSheet } from "@/components/progress/PauseSheet";
 import { ProgressViewed } from "@/components/progress/ProgressViewed";
@@ -33,7 +34,7 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
   return (
     <>
       <ProgressViewed from={from} />
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
 
       <Card className="flex flex-col gap-5" aria-labelledby="streak-title">
         <h2 id="streak-title" className="sr-only">

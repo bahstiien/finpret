@@ -20,6 +20,7 @@ import { DayProgram } from "./DayProgram";
 import { Flag } from "./Flag";
 import { GuestsSheet, MoveSheet, RecipePickerSheet } from "./Sheets";
 import { useMenuAction } from "./useMenuAction";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.menuScreen;
 
@@ -34,11 +35,17 @@ export type PickerOption = {
   type: string;
 };
 
-export type CanteenEntry = { name: string; text: string; duplicates: string[]; note?: string | null; edited?: boolean };
+export type CanteenEntry = {
+  name: string;
+  text: string;
+  duplicates: string[];
+  note?: string | null;
+  edited?: boolean;
+};
 
 function CanteenBlock({ entry }: { entry: CanteenEntry }) {
   return (
-    <section className="flex flex-col gap-2 rounded-card bg-surface p-5" data-testid="canteen-today">
+    <Card padding="cozy" className="flex flex-col gap-2" data-testid="canteen-today">
       <h3 className="text-sm font-semibold text-muted">{fr.canteen.today(entry.name)}</h3>
       <p className="font-bold">{entry.text}</p>
       {entry.note && <p className="text-sm text-muted">{entry.note}</p>}
@@ -48,11 +55,15 @@ function CanteenBlock({ entry }: { entry: CanteenEntry }) {
         </p>
       )}
       {entry.duplicates.length > 0 && (
-        <p className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink" role="note" data-testid="canteen-duplicate">
+        <p
+          className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink"
+          role="note"
+          data-testid="canteen-duplicate"
+        >
           {fr.canteen.duplicate(entry.duplicates.join(", "))}
         </p>
       )}
-    </section>
+    </Card>
   );
 }
 
@@ -109,11 +120,12 @@ export function MenuScreen({
 
   return (
     <>
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex items-start justify-between gap-4 min-[900px]:items-center">
         <div>
           <p className="text-sm font-semibold text-muted first-letter:uppercase">{header.date}</p>
-          <h1 className="text-4xl font-black [overflow-wrap:anywhere]">
-            {header.greeting}, <span className="break-words">{header.name}</span>
+          <h1 className="text-4xl font-black tracking-tight [overflow-wrap:anywhere]">
+            {header.greeting}, <span className="break-words">{header.name}</span>{" "}
+            <span aria-hidden="true">👋</span>
           </h1>
           {tonightName && (
             <p className="text-muted">
@@ -121,13 +133,22 @@ export function MenuScreen({
             </p>
           )}
         </div>
-        <Link
-          href={`/app/print?week=${view.start}`}
-          aria-label={t.print}
-          className="grid size-12 shrink-0 place-items-center rounded-full bg-surface"
-        >
-          <Icon name="print" />
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href={`/app/print?week=${view.start}`}
+            aria-label={t.print}
+            className="grid size-12 place-items-center rounded-full bg-surface hover:bg-chip"
+          >
+            <Icon name="print" />
+          </Link>
+          <Link
+            href="/settings"
+            aria-label={fr.nav.account}
+            className="hidden size-12 place-items-center rounded-full bg-violet font-display text-lg font-black text-white uppercase min-[900px]:grid"
+          >
+            {header.name.charAt(0) || "·"}
+          </Link>
+        </div>
       </header>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -187,7 +208,7 @@ export function MenuScreen({
               ) : null
             }
           />
-          <section className="flex flex-col gap-4 rounded-card bg-violet p-6 text-white">
+          <Card tone="violet" className="flex flex-col gap-4">
             <span className="self-start rounded-pill border border-white/40 px-3 py-1 text-xs font-bold">
               {t.weekend.eyebrow}
             </span>
@@ -217,16 +238,19 @@ export function MenuScreen({
                 {t.weekend.suggest}
               </button>
             )}
-          </section>
+          </Card>
         </div>
       </div>
 
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-3 min-[900px]:rounded-card min-[900px]:bg-surface min-[900px]:p-6">
         <div className="flex items-baseline justify-between">
           <h2 className="text-2xl font-black">{t.dishes}</h2>
           <span className="text-sm text-muted">{t.dishCount(view.dishes.length)}</span>
         </div>
-        <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2" data-testid="dishes">
+        <ul
+          className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 min-[900px]:mx-0 min-[900px]:px-0"
+          data-testid="dishes"
+        >
           {view.dishes.map((d) => (
             <DishCardView
               key={`${d.kind}-${d.index}`}
@@ -452,7 +476,7 @@ function PlanGrid({
 }) {
   const cell = (d: number, m: "lunch" | "dinner") => view.grid.find((c) => c.day === d && c.meal === m)!;
   return (
-    <section className="flex flex-col gap-4 rounded-card bg-surface p-5">
+    <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xl font-extrabold">{t.grid.title}</h2>
         <span className="flex gap-3 text-sm text-muted">
@@ -536,7 +560,7 @@ function PlanGrid({
         </tbody>
       </table>
       {cakeLine}
-    </section>
+    </Card>
   );
 }
 

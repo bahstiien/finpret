@@ -11,6 +11,7 @@ import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { saveHousehold, saveMember, setPresence } from "@/server/actions/settings";
 import { SaveStatus, useAutosave } from "./Autosave";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.settings.household;
 
@@ -23,7 +24,7 @@ export function HouseholdDetailsForm({ initial, timezones }: { initial: Details;
   }, []);
   const { value: v, update, status } = useAutosave(initial, save);
   return (
-    <section className="flex flex-col gap-4 rounded-card bg-surface p-5">
+    <Card padding="cozy" className="flex flex-col gap-4">
       <h2 className="text-xl font-extrabold">{t.details}</h2>
       <TextField
         id="household-name"
@@ -64,7 +65,7 @@ export function HouseholdDetailsForm({ initial, timezones }: { initial: Details;
         />
       )}
       <SaveStatus status={status} />
-    </section>
+    </Card>
   );
 }
 
@@ -129,7 +130,7 @@ export function MembersForm({
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-card bg-surface p-5">
+    <Card padding="cozy" className="flex flex-col gap-4">
       <h2 className="text-xl font-extrabold">{t.members}</h2>
       {error && <FormMessage tone="error">{error}</FormMessage>}
       <ul className="flex flex-col gap-3">
@@ -184,7 +185,7 @@ export function MembersForm({
             />
           </details>
         ))}
-    </section>
+    </Card>
   );
 }
 

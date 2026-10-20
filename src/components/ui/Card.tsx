@@ -1,7 +1,28 @@
 import type { HTMLAttributes } from "react";
 
-export function Card({ className = "", ...props }: HTMLAttributes<HTMLElement>) {
-  return <section className={`rounded-card bg-surface p-6 ${className}`} {...props} />;
+export type CardTone = "surface" | "violet" | "dark" | "yellow" | "blue" | "pink" | "peach" | "green";
+
+const tones: Record<CardTone, string> = {
+  surface: "bg-surface",
+  violet: "bg-violet text-white",
+  dark: "bg-nav text-on-nav",
+  yellow: "bg-yellow-soft",
+  blue: "bg-blue-soft text-blue-ink",
+  pink: "bg-pink-soft text-pink-ink",
+  peach: "bg-peach text-peach-ink",
+  green: "bg-green-soft text-green-ink",
+};
+
+const paddings = { none: "", sm: "p-4", cozy: "p-5", md: "p-6", lg: "p-8" } as const;
+
+/** Surface de base de l'interface : rayon 28 px, quatre teintes douces et deux teintes pleines. */
+export function Card({
+  tone = "surface",
+  padding = "md",
+  className = "",
+  ...props
+}: HTMLAttributes<HTMLElement> & { tone?: CardTone; padding?: keyof typeof paddings }) {
+  return <section className={`rounded-card ${tones[tone]} ${paddings[padding]} ${className}`} {...props} />;
 }
 
 /** Page centrée simple (connexion, création de foyer, invitation). */
@@ -13,11 +34,11 @@ export function CenteredPage({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Logo() {
+export function Logo({ className = "size-12 text-2xl" }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
-      className="grid size-12 place-items-center rounded-2xl bg-violet font-display text-2xl font-black text-white"
+      className={`grid place-items-center rounded-2xl bg-violet font-display font-black text-white ${className}`}
     >
       M
     </span>

@@ -65,17 +65,20 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
           })}
         </ul>
       </nav>
-      <nav aria-label={fr.nav.label} className="hidden min-[900px]:block">
-        <ul className="flex flex-wrap items-center gap-2">
-          <li>
-            <Link
-              href="/app"
-              aria-label={fr.app.name}
-              className="mr-2 grid size-12 place-items-center rounded-2xl bg-violet font-display text-2xl font-black text-white"
-            >
-              M
-            </Link>
-          </li>
+      <nav
+        aria-label={fr.nav.label}
+        className="hidden min-[900px]:sticky min-[900px]:top-4 min-[900px]:flex min-[900px]:h-[calc(100dvh-2rem)] min-[900px]:flex-col min-[900px]:self-start min-[900px]:gap-6 min-[900px]:overflow-y-auto min-[900px]:[scrollbar-width:none] min-[900px]:[&::-webkit-scrollbar]:hidden min-[900px]:rounded-[28px] min-[900px]:bg-nav min-[900px]:p-5 min-[900px]:text-on-nav"
+      >
+        <Link href="/app" className="flex items-center gap-3 px-1 pt-1" aria-label={fr.app.name}>
+          <span
+            aria-hidden="true"
+            className="grid size-11 place-items-center rounded-2xl bg-violet font-display text-2xl font-black text-white"
+          >
+            M
+          </span>
+          <span className="font-display text-2xl font-black">{fr.app.name}</span>
+        </Link>
+        <ul className="flex flex-col gap-1.5">
           {TABS.map((tab) => {
             const active = isActive(tab.href);
             return (
@@ -83,14 +86,14 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
                 <Link
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex min-h-12 items-center gap-2 rounded-pill px-5 font-bold ${
-                    active ? "bg-ink text-surface" : "bg-surface text-ink hover:bg-chip"
+                  className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors ${
+                    active ? "bg-banana text-[#17151F]" : "text-on-nav/80 hover:bg-white/10 hover:text-on-nav"
                   }`}
                 >
                   <Icon name={tab.icon} className="size-5" />
-                  {fr.nav[tab.label]}
+                  <span className="flex-1">{fr.nav[tab.label]}</span>
                   {tab.label === "shopping" && shoppingLeft > 0 && (
-                    <span className="rounded-pill bg-pink-soft px-2 text-sm text-pink-ink">
+                    <span className="grid min-w-6 place-items-center rounded-full bg-peach px-1.5 text-sm font-bold text-peach-ink">
                       {shoppingLeft}
                     </span>
                   )}
@@ -98,17 +101,31 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
               </li>
             );
           })}
-          <li className="ml-auto">
-            <Link
-              href="/settings"
-              aria-current={accountActive ? "page" : undefined}
-              className="flex min-h-12 items-center gap-2 rounded-pill bg-surface px-5 font-bold text-ink hover:bg-chip"
-            >
-              <Icon name="user" className="size-5" />
-              {fr.nav.account}
-            </Link>
-          </li>
         </ul>
+        <div className="mt-auto flex flex-col gap-4">
+          <div className="rounded-[24px] bg-banana p-4 text-[#17151F] [@media(max-height:820px)]:hidden">
+            <p className="font-display text-lg leading-tight font-black">{fr.nav.sessionPromo}</p>
+            <Link
+              href="/app/session"
+              className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-pill bg-[#17151F] px-4 text-sm font-bold text-white"
+            >
+              <Icon name="timer" className="size-4" />
+              {fr.nav.session}
+            </Link>
+          </div>
+          <Link
+            href="/settings"
+            aria-current={accountActive ? "page" : undefined}
+            className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors ${
+              accountActive
+                ? "bg-banana text-[#17151F]"
+                : "text-on-nav/80 hover:bg-white/10 hover:text-on-nav"
+            }`}
+          >
+            <Icon name="user" className="size-5" />
+            {fr.nav.account}
+          </Link>
+        </div>
       </nav>
     </>
   );

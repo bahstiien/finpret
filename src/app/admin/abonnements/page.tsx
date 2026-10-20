@@ -1,5 +1,6 @@
 import { formatShort } from "@/lib/dates";
 import { requireAdmin } from "@/server/admin";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Abonnements : répartition par offre et derniers foyers (sans donnée personnelle des membres). */
 export default async function AdminSubscriptionsPage() {
@@ -18,7 +19,7 @@ export default async function AdminSubscriptionsPage() {
   for (const s of subs ?? []) counts[s.plan] = (counts[s.plan] ?? 0) + 1;
   return (
     <>
-      <h1 className="text-4xl font-black">Abonnements</h1>
+      <PageHeader title="Abonnements" />
       <dl className="grid grid-cols-2 gap-3 min-[700px]:grid-cols-4">
         {(["trial", "monthly", "yearly", "free"] as const).map((p) => (
           <div key={p} className="rounded-card bg-surface p-5">

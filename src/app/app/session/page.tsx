@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/ui/Layout";
 import { SessionScreen } from "@/components/session/SessionScreen";
 import { Card } from "@/components/ui/Card";
 import { totals } from "@/engine/quantities";
@@ -22,7 +23,7 @@ export default async function SessionPage() {
   if (!week) {
     return (
       <>
-        <h1 className="text-4xl font-black">{fr.nav.session}</h1>
+        <PageHeader title={fr.nav.session} />
         <Card>
           <p className="text-muted">{fr.session.noWeek}</p>
         </Card>

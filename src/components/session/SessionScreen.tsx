@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/components/ui/Layout";
 import { useEffect, useState } from "react";
 import { useMenuAction } from "@/components/menu/useMenuAction";
 import { Button } from "@/components/ui/Button";
@@ -11,6 +12,7 @@ import { FEATURES } from "@/lib/features";
 import { SessionDoneBanner } from "./SessionDoneBanner";
 import { bankDoublesAction, updatePantryAfterSession } from "@/server/actions/stock";
 import { useSession } from "./SessionProvider";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.session;
 const hhmm = (d: Date) => d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
@@ -82,11 +84,8 @@ export function SessionScreen({
   if (!started) {
     return (
       <>
-        <h1 className="text-4xl font-black">{fr.nav.session}</h1>
-        <section
-          className="flex flex-col gap-4 rounded-card bg-blue-soft p-6 text-blue-ink"
-          data-testid="session-start"
-        >
+        <PageHeader title={fr.nav.session} />
+        <Card tone="blue" className="flex flex-col gap-4" data-testid="session-start">
           <p className="font-semibold">{weekLabel}</p>
           <p className="font-display text-5xl font-black">{dur(total)}</p>
           <p>{t.startCard(steps.length, hhmm(new Date(Date.now() + total * 60000)))}</p>
@@ -102,8 +101,8 @@ export function SessionScreen({
           ) : (
             <p className="text-sm">{t.viewerWait}</p>
           )}
-        </section>
-        <section className="flex flex-col gap-2 rounded-card bg-surface p-5">
+        </Card>
+        <Card padding="cozy" className="flex flex-col gap-2">
           <h2 className="font-extrabold">{t.overview}</h2>
           <ol className="flex flex-col divide-y divide-line">
             {steps.map((s, i) => (
@@ -117,7 +116,7 @@ export function SessionScreen({
               </li>
             ))}
           </ol>
-        </section>
+        </Card>
       </>
     );
   }

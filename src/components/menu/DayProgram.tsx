@@ -7,6 +7,7 @@ import { toggleMealAction } from "@/server/actions/menu";
 import type { MealView, MenuView } from "@/server/menu-view";
 import { Flag } from "./Flag";
 import { useMenuAction } from "./useMenuAction";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.menuScreen;
 
@@ -29,7 +30,7 @@ export function DayProgram({
   onGuests: (m: MealView) => void;
 }) {
   return (
-    <section className="flex flex-col gap-3 rounded-card bg-surface p-5" aria-labelledby="day-program">
+    <Card padding="cozy" className="flex flex-col gap-3" aria-labelledby="day-program">
       <h2 id="day-program" className="flex items-center gap-2 text-xl font-extrabold">
         <Icon name="clock" />
         {isToday ? t.programToday : t.programOf(fr.days[day.day - 1]!)}
@@ -64,7 +65,7 @@ export function DayProgram({
           )}
         </ol>
       )}
-    </section>
+    </Card>
   );
 }
 

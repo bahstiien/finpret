@@ -7,6 +7,7 @@ import { fr } from "@/i18n/fr";
 import { associationByCode } from "@/server/associations";
 import { allow, clientIp } from "@/server/rate-limit";
 import { headers } from "next/headers";
+import { PageHeader } from "@/components/ui/Layout";
 
 export const metadata: Metadata = {
   title: fr.ecole.metaTitle,
@@ -33,7 +34,7 @@ export default async function HowItWorksPage({ params }: { params: Promise<{ cod
   return (
     <main className="mx-auto flex min-h-dvh max-w-xl flex-col gap-6 p-6">
       <p className="text-sm font-bold tracking-wide text-violet uppercase">Fin Prêt</p>
-      <h1 className="text-4xl font-black">{c.title}</h1>
+      <PageHeader title={c.title} />
       <p className="text-lg text-muted">{c.hook}</p>
       <section>
         <h2 className="mb-2 text-xl font-extrabold">{c.stepsTitle}</h2>

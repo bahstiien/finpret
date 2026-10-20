@@ -5,6 +5,8 @@ import { fr } from "@/i18n/fr";
 import { associationByCode } from "@/server/associations";
 import { startWithCode } from "@/server/actions/ecole";
 import { allow, clientIp } from "@/server/rate-limit";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.ecole;
 
@@ -32,16 +34,16 @@ export default async function EcolePage({ params }: { params: Promise<{ code: st
       {active && association ? (
         <>
           <p className="text-sm font-bold tracking-wide text-violet uppercase">{t.eyebrow}</p>
-          <h1 className="text-4xl font-black">{t.title(association.name)}</h1>
+          <PageHeader title={t.title(association.name)} />
           {association.schools.length > 0 && (
             <p className="text-muted">
               {association.schools.map((s) => `${s.name} (${s.city})`).join(" · ")}
             </p>
           )}
-          <section className="rounded-card bg-yellow-soft p-5" aria-label={t.benefitLabel}>
+          <Card tone="yellow" padding="cozy" aria-label={t.benefitLabel}>
             <p className="font-bold">{t.benefit}</p>
             <p className="text-sm text-muted">{t.benefitHint(association.name)}</p>
-          </section>
+          </Card>
           <form action={startWithCode}>
             <input type="hidden" name="code" value={association.code} />
             <Button type="submit" className="w-full">

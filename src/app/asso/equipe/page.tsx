@@ -6,6 +6,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { removeEditor, revokeEditorInvitation } from "@/server/actions/asso";
 import { requireManager } from "@/server/asso-session";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.asso.team;
 
@@ -34,9 +36,9 @@ export default async function TeamPage() {
   );
   return (
     <>
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
       <p className="text-muted">{t.lead}</p>
-      <section className="rounded-card bg-surface p-5" aria-label={t.members}>
+      <Card padding="cozy" aria-label={t.members}>
         <h2 className="mb-3 text-xl font-extrabold">{t.members}</h2>
         <ul className="flex flex-col divide-y divide-line">
           {people.map((m) => (
@@ -55,12 +57,12 @@ export default async function TeamPage() {
             </li>
           ))}
         </ul>
-      </section>
-      <section className="flex flex-col gap-4 rounded-card bg-surface p-5">
+      </Card>
+      <Card padding="cozy" className="flex flex-col gap-4">
         <h2 className="text-xl font-extrabold">{t.invite}</h2>
         <InviteEditorForm />
-      </section>
-      <section className="rounded-card bg-surface p-5" aria-label={t.pending} data-testid="asso-invitations">
+      </Card>
+      <Card padding="cozy" aria-label={t.pending} data-testid="asso-invitations">
         <h2 className="mb-3 text-xl font-extrabold">{t.pending}</h2>
         {!invitations?.length && <p className="text-muted">{t.none}</p>}
         <ul className="flex flex-col divide-y divide-line">
@@ -71,7 +73,7 @@ export default async function TeamPage() {
             </li>
           ))}
         </ul>
-      </section>
+      </Card>
     </>
   );
 }

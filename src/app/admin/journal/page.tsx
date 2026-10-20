@@ -1,4 +1,5 @@
 import { requireAdmin } from "@/server/admin";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Journal des actions du back-office (200 dernières). */
 export default async function AdminAuditPage() {
@@ -10,7 +11,7 @@ export default async function AdminAuditPage() {
     .limit(200);
   return (
     <>
-      <h1 className="text-4xl font-black">Journal</h1>
+      <PageHeader title="Journal" />
       <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5 text-sm">
         {(data ?? []).map((a) => (
           <li key={a.id} className="py-2">

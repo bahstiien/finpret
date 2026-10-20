@@ -1,4 +1,5 @@
 import { requireAdmin } from "@/server/admin";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Accueil du back-office : quelques compteurs. */
 export default async function AdminHome() {
@@ -25,7 +26,7 @@ export default async function AdminHome() {
   ] as const;
   return (
     <>
-      <h1 className="text-4xl font-black">Back-office</h1>
+      <PageHeader title="Back-office" />
       <dl className="grid grid-cols-2 gap-3 min-[700px]:grid-cols-4">
         {cards.map(([label, n]) => (
           <div key={label} className="rounded-card bg-surface p-5">

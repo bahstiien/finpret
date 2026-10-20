@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/ui/Layout";
 import { AssociationCodeForm } from "@/components/billing/CodeForm";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/Field";
@@ -9,6 +10,7 @@ import { createCheckoutSession, createPortalSession } from "@/server/actions/bil
 import { tierOf } from "@/server/entitlements";
 import { loadOffer } from "@/server/entitlements-load";
 import { requireHousehold } from "@/server/session";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.subscription;
 
@@ -54,7 +56,7 @@ export default async function SubscriptionPage({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
       {params.ok && <FormMessage tone="success">{t.success}</FormMessage>}
       {params.code === "ok" && <FormMessage tone="success">{t.codeOk}</FormMessage>}
       {params.code === "locked" && <FormMessage tone="error">{t.codeLocked}</FormMessage>}
@@ -98,19 +100,19 @@ export default async function SubscriptionPage({
         </form>
       )}
 
-      <section className="rounded-card bg-surface p-5" aria-label={t.includedTitle}>
+      <Card padding="cozy" aria-label={t.includedTitle}>
         <h2 className="mb-2 text-lg font-extrabold">{t.includedTitle}</h2>
         <ul className="list-disc pl-5">
           {t.included.map((i) => (
             <li key={i}>{i}</li>
           ))}
         </ul>
-      </section>
+      </Card>
 
       {isAdmin && !hasAssociation && (
-        <section className="rounded-card bg-surface p-5">
+        <Card padding="cozy">
           <AssociationCodeForm />
-        </section>
+        </Card>
       )}
     </div>
   );

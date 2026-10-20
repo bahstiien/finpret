@@ -2,6 +2,7 @@ import { ActionForm } from "@/components/ui/ActionForm";
 import { formatShort } from "@/lib/dates";
 import { markLeadContacted } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Demandes de présentation reçues depuis la landing /associations. */
 export default async function AdminLeadsPage() {
@@ -13,7 +14,7 @@ export default async function AdminLeadsPage() {
     .limit(200);
   return (
     <>
-      <h1 className="text-4xl font-black">Prospects</h1>
+      <PageHeader title="Prospects" />
       <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
         {(data ?? []).map((l) => (
           <li

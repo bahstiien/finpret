@@ -3,6 +3,7 @@ import { formatShort } from "@/lib/dates";
 import { unpublishMenu } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { menuText } from "@/server/school-canteen";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Menus d'école récents : contrôle et dépublication en cas d'erreur. */
 export default async function AdminMenusPage() {
@@ -21,7 +22,7 @@ export default async function AdminMenusPage() {
   const name = new Map((schools ?? []).map((s) => [s.id, s.name]));
   return (
     <>
-      <h1 className="text-4xl font-black">Menus d&apos;école</h1>
+      <PageHeader title="Menus d'école" />
       <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
         {(data ?? []).map((m) => (
           <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 py-3">

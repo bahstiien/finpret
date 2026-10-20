@@ -2,6 +2,7 @@ import { createSchool } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/Field";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Écoles : liste, création, nombre d'associations rattachées. */
 export default async function AdminSchoolsPage() {
@@ -18,7 +19,7 @@ export default async function AdminSchoolsPage() {
   }
   return (
     <>
-      <h1 className="text-4xl font-black">Écoles</h1>
+      <PageHeader title="Écoles" />
       <form action={add} className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-5">
         <TextField id="s-name" name="name" label="Nom" required className="min-w-48 flex-1" />
         <TextField id="s-city" name="city" label="Commune" required className="min-w-40 flex-1" />

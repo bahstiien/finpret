@@ -617,7 +617,7 @@ export const fr = {
     emailOpen: "Ouvrir l'application",
     emailFooter: "Tu reçois cet e-mail parce que tu as activé les rappels par e-mail dans tes réglages.",
   },
-  common: { close: "Fermer", cancel: "Annuler", soon: "Cet onglet arrive bientôt." },
+  common: { close: "Fermer", loading: "Chargement", cancel: "Annuler", soon: "Cet onglet arrive bientôt." },
   nav: {
     label: "Navigation principale",
     menu: "Menu",
@@ -626,6 +626,7 @@ export const fr = {
     stock: "Stock",
     session: "Session",
     account: "Mon compte",
+    sessionPromo: "Prêt pour la session du dimanche ?",
   },
   menuView: {
     labels: {

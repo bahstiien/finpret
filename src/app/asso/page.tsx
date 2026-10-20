@@ -4,6 +4,8 @@ import { StatusBanner } from "@/components/asso/StatusBanner";
 import { fr } from "@/i18n/fr";
 import { requireManager } from "@/server/asso-session";
 import { createClient } from "@/lib/supabase/server";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.asso.dashboard;
 
@@ -35,9 +37,9 @@ export default async function AssoDashboardPage() {
   ];
   return (
     <>
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
       <StatusBanner association={association} />
-      <section className="flex flex-col gap-2 rounded-card bg-surface p-5" aria-label={t.code}>
+      <Card padding="cozy" className="flex flex-col gap-2" aria-label={t.code}>
         <h2 className="text-sm font-semibold text-muted">{t.code}</h2>
         <p className="font-display text-3xl font-black" data-testid="asso-code">
           {association.code}
@@ -47,7 +49,7 @@ export default async function AssoDashboardPage() {
           {association.code}
         </p>
         <CodeForm code={association.code} />
-      </section>
+      </Card>
       <dl className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-3" data-testid="asso-stats">
         {cards.map((c) => (
           <div key={c.label} className="rounded-card bg-surface p-5">
@@ -57,7 +59,7 @@ export default async function AssoDashboardPage() {
         ))}
       </dl>
       <p className="text-sm text-muted">{t.fewerHint}</p>
-      <section className="rounded-card bg-surface p-5" aria-label={t.schools}>
+      <Card padding="cozy" aria-label={t.schools}>
         <h2 className="mb-2 text-lg font-extrabold">{t.schools}</h2>
         <ul className="list-disc pl-5">
           {association.schools.map((s) => (
@@ -66,7 +68,7 @@ export default async function AssoDashboardPage() {
             </li>
           ))}
         </ul>
-      </section>
+      </Card>
     </>
   );
 }

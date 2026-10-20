@@ -18,6 +18,8 @@ import { FEATURES } from "@/lib/features";
 import { deleteImportedRecipe } from "@/server/actions/imports";
 import { setCakeAction, setWeekendAction } from "@/server/actions/menu";
 import type { Flag as FlagData } from "@/server/menu-view";
+import { buttonClass } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.discover;
 
@@ -134,12 +136,9 @@ export function DiscoverScreen({
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-4xl font-black">{fr.nav.discover}</h1>
+        <PageHeader title={fr.nav.discover} />
         {canEdit && FEATURES.recipeImport && (
-          <Link
-            href="/app/discover/import"
-            className="inline-flex min-h-11 items-center gap-2 rounded-pill bg-banana px-6 font-bold text-[#17151F]"
-          >
+          <Link href="/app/discover/import" className={buttonClass()}>
             {t.importCta}
           </Link>
         )}
