@@ -48,9 +48,9 @@ async function resolvesPublic(host: string): Promise<boolean> {
 }
 
 /** Lit le corps en s'arrêtant à `max` octets. */
-async function readLimited(res: Response, max: number): Promise<string | null> {
+async function readLimited(res: Response, max: number): Promise<Buffer | null> {
   const reader = res.body?.getReader();
-  if (!reader) return "";
+  if (!reader) return Buffer.alloc(0);
   const chunks: Uint8Array[] = [];
   let size = 0;
   for (;;) {
@@ -63,18 +63,23 @@ async function readLimited(res: Response, max: number): Promise<string | null> {
     }
     chunks.push(value);
   }
-  return new TextDecoder("utf-8").decode(Buffer.concat(chunks));
+  return Buffer.concat(chunks);
 }
 
-export async function fetchRecipePage(
+type FetchOptions = { fetchImpl?: typeof fetch; timeoutMs?: number };
+type BytesResult = { ok: true; bytes: Buffer; finalUrl: URL } | { ok: false; error: FetchError };
+
+/**
+ * Requête unique vers un site public : IP résolue vérifiée à chaque redirection (3 au plus), délai et taille bornés.
+ * `accept` : page web (recette) ou PDF (menu de la cantine).
+ */
+export async function fetchPublic(
   raw: string,
-  { fetchImpl = fetch, timeoutMs = FETCH_TIMEOUT_MS }: { fetchImpl?: typeof fetch; timeoutMs?: number } = {},
-): Promise<FetchResult> {
+  accept: "html" | "pdf",
+  { fetchImpl = fetch, timeoutMs = FETCH_TIMEOUT_MS }: FetchOptions = {},
+): Promise<BytesResult> {
   const check = checkUrl(raw);
   if (!check.ok) return { ok: false, error: "blocked" };
-  const fromFixture = await fixture(check.url);
-  if (fromFixture) return fromFixture;
-
   const signal = AbortSignal.timeout(timeoutMs);
   let url = check.url;
   try {
@@ -83,7 +88,10 @@ export async function fetchRecipePage(
       const res = await fetchImpl(url, {
         redirect: "manual",
         signal,
-        headers: { "user-agent": USER_AGENT, accept: "text/html,application/xhtml+xml" },
+        headers: {
+          "user-agent": USER_AGENT,
+          accept: accept === "pdf" ? "application/pdf" : "text/html,application/xhtml+xml",
+        },
       });
       if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
         const next = checkUrl(new URL(res.headers.get("location")!, url).toString());
@@ -93,17 +101,27 @@ export async function fetchRecipePage(
       }
       if (!res.ok) return { ok: false, error: "http" };
       const type = res.headers.get("content-type") ?? "";
-      if (type && !/html|xml/i.test(type)) return { ok: false, error: "not_html" };
+      const expected = accept === "pdf" ? /pdf|octet-stream/i : /html|xml/i;
+      if (type && !expected.test(type)) return { ok: false, error: "not_html" };
       if (Number(res.headers.get("content-length") ?? 0) > MAX_BYTES) return { ok: false, error: "too_big" };
-      const html = await readLimited(res, MAX_BYTES);
-      if (html === null) return { ok: false, error: "too_big" };
-      return { ok: true, html, finalUrl: url };
+      const bytes = await readLimited(res, MAX_BYTES);
+      if (bytes === null) return { ok: false, error: "too_big" };
+      return { ok: true, bytes, finalUrl: url };
     }
     return { ok: false, error: "http" };
   } catch (e) {
     if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError")) return { ok: false, error: "timeout" };
     return { ok: false, error: "network" };
   }
+}
+
+export async function fetchRecipePage(raw: string, options: FetchOptions = {}): Promise<FetchResult> {
+  const check = checkUrl(raw);
+  if (!check.ok) return { ok: false, error: "blocked" };
+  const fromFixture = await fixture(check.url);
+  if (fromFixture) return fromFixture;
+  const res = await fetchPublic(raw, "html", options);
+  return res.ok ? { ok: true, html: new TextDecoder("utf-8").decode(res.bytes), finalUrl: res.finalUrl } : res;
 }
 
 // ---------------------------------------------------------------------------
@@ -125,7 +143,7 @@ const stepsSchema = z.object({ steps: z.array(z.string().min(2).max(400)).min(1)
 
 export const llmAvailable = () => !!process.env.ANTHROPIC_API_KEY;
 
-async function callModel(prompt: string, maxTokens = 2000): Promise<unknown> {
+export async function callModel(prompt: string, maxTokens = 2000): Promise<unknown> {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     signal: AbortSignal.timeout(30_000),

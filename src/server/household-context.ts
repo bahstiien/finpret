@@ -44,7 +44,7 @@ export const loadHouseholdContext = cache(async (householdId: string, client?: D
       .single(),
     supabase
       .from("household_settings")
-      .select("diet, menu, session, shopping, equipment")
+      .select("diet, menu, session, shopping, equipment, canteen")
       .eq("household_id", householdId)
       .maybeSingle(),
     supabase

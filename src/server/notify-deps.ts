@@ -88,7 +88,7 @@ async function recipients(db: Db): Promise<Recipient[]> {
   if (!ids.length) return [];
   const [{ data: households }, { data: hs }] = await Promise.all([
     db.from("households").select("id, timezone").in("id", ids),
-    db.from("household_settings").select("household_id, diet, menu, session, shopping, equipment").in("household_id", ids),
+    db.from("household_settings").select("household_id, diet, menu, session, shopping, equipment, canteen").in("household_id", ids),
   ]);
   const tz = new Map((households ?? []).map((h) => [h.id, h.timezone]));
   const schedule = new Map(

@@ -34,6 +34,22 @@ export type PickerOption = {
   type: string;
 };
 
+export type CanteenEntry = { name: string; text: string; duplicates: string[] };
+
+function CanteenBlock({ entry }: { entry: CanteenEntry }) {
+  return (
+    <section className="flex flex-col gap-2 rounded-card bg-surface p-5" data-testid="canteen-today">
+      <h3 className="text-sm font-semibold text-muted">{fr.canteen.today(entry.name)}</h3>
+      <p className="font-bold">{entry.text}</p>
+      {entry.duplicates.length > 0 && (
+        <p className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink" role="note" data-testid="canteen-duplicate">
+          {fr.canteen.duplicate(entry.duplicates.join(", "))}
+        </p>
+      )}
+    </section>
+  );
+}
+
 type Sheet =
   | {
       kind: "guests";
@@ -57,6 +73,7 @@ export function MenuScreen({
   shortcuts,
   childFactor,
   weeks,
+  canteen = {},
 }: {
   header: { date: string; greeting: string; name: string };
   view: MenuView;
@@ -73,6 +90,8 @@ export function MenuScreen({
     nextStart: string;
     canPrepareNext: boolean;
   };
+  /** Cantine des enfants par date (§13), avec les bases en commun avec le dîner. */
+  canteen?: Record<string, CanteenEntry[]>;
 }) {
   const inWeek = view.todayIndex >= 1 && view.todayIndex <= 7;
   const [selected, setSelected] = useState(inWeek ? view.todayIndex : 1);
@@ -138,6 +157,9 @@ export function MenuScreen({
             }
             weekId={view.weekId}
           />
+          {(canteen[day.iso] ?? []).map((c) => (
+            <CanteenBlock key={c.name} entry={c} />
+          ))}
           <Tiles
             day={day}
             isToday={selected === view.todayIndex}

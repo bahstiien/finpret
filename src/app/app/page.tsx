@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
+import { type CanteenEntry, MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
+import { canteenDays, duplicateGroups } from "@/engine/canteen";
+import { isRemoved, slotMap } from "@/engine/week";
+import { createClient } from "@/lib/supabase/server";
 import { NoWeek } from "@/components/menu/NoWeek";
 import { eligible } from "@/engine/season";
 import { monthOf } from "@/engine/compose";
 import { fr } from "@/i18n/fr";
-import { formatLong, timeIn } from "@/lib/dates";
+import { addDays, formatLong, timeIn } from "@/lib/dates";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView, canPrepareNext, flagOf } from "@/server/menu-view";
 import { getProfile, getUser, requireHousehold } from "@/server/session";
@@ -75,6 +78,35 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
   };
   const isCurrent = row === current;
 
+  // Cantine (§13) : menus validés des enfants les jours de cantine, et alerte doublon avec le dîner.
+  const canteen: Record<string, CanteenEntry[]> = {};
+  const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
+  if (kids.length) {
+    const dates = Array.from({ length: 5 }, (_, i) => addDays(row.start_date, i));
+    const supabase = await createClient();
+    const { data: menus } = await supabase
+      .from("canteen_menus")
+      .select("member_id, date, text")
+      .eq("validated", true)
+      .in(
+        "member_id",
+        kids.map((k) => k.id),
+      )
+      .in("date", dates);
+    const slots = slotMap(env, row.plan);
+    for (const m of menus ?? []) {
+      const kid = kids.find((k) => k.id === m.member_id)!;
+      const day = dates.indexOf(m.date) + 1;
+      if (!canteenDays(kid, ctx.presence, row.start_date, ctx.alternatingFrom).includes(day)) continue;
+      const dinner = isRemoved(row.plan, day, "dinner") ? null : (slots[`${day}-dinner`]?.r ?? null);
+      (canteen[m.date] ??= []).push({
+        name: kid.name,
+        text: m.text,
+        duplicates: ctx.settings.canteen.alert ? duplicateGroups(env.lib, m.text, dinner) : [],
+      });
+    }
+  }
+
   return (
     <MenuScreen
       header={header}
@@ -85,6 +117,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
       cakeOptions={cakeOptions}
       shortcuts={shortcuts}
       childFactor={pm.childFactor}
+      canteen={canteen}
       weeks={{
         isCurrent,
         hasNext: !!next && isCurrent,

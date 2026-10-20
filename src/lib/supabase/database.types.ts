@@ -72,6 +72,20 @@ export type Database = {
         Update: { display_name?: string | null; active_household?: string | null };
         Relationships: [];
       };
+      canteen_menus: {
+        Row: {
+          id: string;
+          member_id: string;
+          date: string;
+          text: string;
+          source: "manual" | "pdf" | "url";
+          validated: boolean;
+          updated_at: string;
+        };
+        Insert: { member_id: string; date: string; text: string; source?: "manual" | "pdf" | "url"; validated?: boolean };
+        Update: { text?: string; validated?: boolean; source?: "manual" | "pdf" | "url" };
+        Relationships: [];
+      };
       push_subscriptions: {
         Row: { id: string; user_id: string; endpoint: string; keys: Json; user_agent: string | null; created_at: string };
         Insert: { endpoint: string; keys: Json; user_agent?: string | null; user_id?: string };
@@ -133,6 +147,7 @@ export type Database = {
           session: Json;
           shopping: Json;
           equipment: Json;
+          canteen: Json;
           updated_at: string;
         };
         Insert: {
@@ -143,6 +158,7 @@ export type Database = {
           session: Json;
           shopping: Json;
           equipment: Json;
+          canteen?: Json;
         };
         Update: {
           version?: number;
@@ -151,6 +167,7 @@ export type Database = {
           session?: Json;
           shopping?: Json;
           equipment?: Json;
+          canteen?: Json;
         };
         Relationships: [];
       };

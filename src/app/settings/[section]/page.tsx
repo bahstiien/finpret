@@ -6,13 +6,15 @@ import {
   ProfileNameForm,
   SignOutOthers,
 } from "@/components/settings/ProfileForms";
+import { type CanteenChild, CanteenForm } from "@/components/settings/CanteenForms";
 import { DietForm, MenuForm, SessionForm, ShoppingForm } from "@/components/settings/SectionForms";
 import { ActionForm } from "@/components/ui/ActionForm";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SelectField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
-import { formatShort } from "@/lib/dates";
+import { addDays, formatShort, isoWeekday, mondayOf, todayIn } from "@/lib/dates";
+import { canteenDays } from "@/engine/canteen";
 import { notificationsSchema } from "@/lib/settings";
 import { ADMIN_SECTIONS, type SettingsSection } from "@/lib/settings-sections";
 import { createClient } from "@/lib/supabase/server";
@@ -71,12 +73,44 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
         />
       );
     }
-    case "canteen":
-      return (
-        <Card>
-          <p className="text-muted">{t.canteen.soon}</p>
-        </Card>
-      );
+    case "canteen": {
+      const today = todayIn(ctx.timezone);
+      const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
+      const { data: menus } = kids.length
+        ? await supabase
+            .from("canteen_menus")
+            .select("member_id, date, text, validated")
+            .in(
+              "member_id",
+              kids.map((k) => k.id),
+            )
+            // Menus à venir, et tous les menus importés encore à valider.
+            .or(`and(date.gte.${today},date.lte.${addDays(today, 27)}),validated.eq.false`)
+            .order("date")
+        : { data: [] };
+      const isCanteenDay = (id: string, date: string) =>
+        canteenDays(kids.find((k) => k.id === id)!, ctx.presence, mondayOf(date), ctx.alternatingFrom).includes(
+          isoWeekday(date),
+        );
+      const children: CanteenChild[] = kids.map((k) => {
+        const mine = (menus ?? []).filter((m) => m.member_id === k.id);
+        const dates = Array.from({ length: 14 }, (_, i) => addDays(today, i)).filter((d) => isCanteenDay(k.id, d));
+        return {
+          id: k.id,
+          name: k.name,
+          days: canteenDays(k, ctx.presence, mondayOf(today), ctx.alternatingFrom),
+          upcoming: dates.map((date) => ({
+            date,
+            label: formatShort(date),
+            text: mine.find((m) => m.date === date && m.validated)?.text ?? "",
+          })),
+          pending: mine
+            .filter((m) => !m.validated)
+            .map((m) => ({ date: m.date, label: formatShort(m.date), text: m.text })),
+        };
+      });
+      return <CanteenForm initial={ctx.settings.canteen} kids={children} canEdit />;
+    }
     case "data":
       return (
         <>

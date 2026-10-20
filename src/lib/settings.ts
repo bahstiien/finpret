@@ -93,6 +93,13 @@ export const shoppingSchema = z.object({
   store: z.string().trim().max(60).default(""),
 });
 
+/** Cantine (§6, §13) : alerte doublon et lien des menus par enfant. Les jours de cantine viennent de la présence. */
+export const canteenSchema = z.object({
+  alert: z.boolean().default(true),
+  /** Lien du menu publié (PDF de la mairie…), par enfant. */
+  urls: z.record(z.string(), z.url().max(2000)).default({}),
+});
+
 export const notificationsSchema = z.object({
   push: z.boolean().default(false),
   email: z.boolean().default(false),
@@ -110,6 +117,7 @@ export type SessionSettings = z.infer<typeof sessionSchema>;
 export type EquipmentSettings = z.infer<typeof equipmentSchema>;
 export type ShoppingSettings = z.infer<typeof shoppingSchema>;
 export type NotificationSettings = z.infer<typeof notificationsSchema>;
+export type CanteenSettings = z.infer<typeof canteenSchema>;
 
 export type HouseholdSettings = {
   diet: DietSettings;
@@ -117,6 +125,7 @@ export type HouseholdSettings = {
   session: SessionSettings;
   shopping: ShoppingSettings;
   equipment: EquipmentSettings;
+  canteen: CanteenSettings;
 };
 
 export const SETTINGS_SCHEMAS = {
@@ -125,6 +134,7 @@ export const SETTINGS_SCHEMAS = {
   session: sessionSchema,
   shopping: shoppingSchema,
   equipment: equipmentSchema,
+  canteen: canteenSchema,
 } as const;
 
 export function defaultSettings(): HouseholdSettings {
@@ -134,6 +144,7 @@ export function defaultSettings(): HouseholdSettings {
     session: sessionSchema.parse({}),
     shopping: shoppingSchema.parse({}),
     equipment: equipmentSchema.parse({}),
+    canteen: canteenSchema.parse({}),
   };
 }
 
@@ -152,6 +163,7 @@ export function parseSettings(
     session: read("session"),
     shopping: read("shopping"),
     equipment: read("equipment"),
+    canteen: read("canteen"),
   };
 }
 
