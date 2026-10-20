@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { mondayOf, nextMonday, todayIn } from "@/lib/dates";
 import { type OnboardingInput, onboardingSchema } from "@/lib/onboarding";
 import { defaultSettings, notificationsSchema, SETTINGS_VERSION } from "@/lib/settings";
@@ -9,6 +10,7 @@ import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { toUserMessage } from "@/server/errors";
 import { ACTIVE_HOUSEHOLD_COOKIE, getActiveHousehold, requireUser } from "@/server/session";
+import { approvedAssociation, attachHousehold } from "@/server/associations";
 import { trackEvent } from "@/server/events";
 import { generateAndStore } from "@/server/weeks";
 import { fr } from "@/i18n/fr";
@@ -63,6 +65,22 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     )
     .select("id");
   if (membersError) return { ok: false, error: toUserMessage(membersError) };
+  // Code d'association (cookie fp_asso) : rattachement du foyer, essai de 30 jours, puis enfants reliés à leur école.
+  const jar = await cookies();
+  const association = await approvedAssociation(jar.get(ASSOCIATION_COOKIE)?.value);
+  if (association) {
+    const attached = await attachHousehold(householdId, association.id, user.id);
+    jar.delete(ASSOCIATION_COOKIE);
+    if (attached.ok) {
+      const allowed = new Set(association.schools.map((s) => s.id));
+      const links = input.household.members.flatMap((m, i) =>
+        m.kind === "child" && m.schoolId && allowed.has(m.schoolId) && members[i]
+          ? [{ member_id: members[i].id, school_id: m.schoolId, canteen_days: m.canteenDays }]
+          : [],
+      );
+      if (links.length) await supabase.from("member_schools").insert(links);
+    }
+  }
   const absences = input.rhythm.absences.filter((a) => members[a.member]);
   if (absences.length) {
     const { error } = await supabase.from("presence_rules").insert(

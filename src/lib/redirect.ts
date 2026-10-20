@@ -1,5 +1,5 @@
 /** Routes qui demandent une session. */
-export const PROTECTED_PREFIXES = ["/app", "/onboarding", "/settings"] as const;
+export const PROTECTED_PREFIXES = ["/app", "/onboarding", "/settings", "/asso", "/admin"] as const;
 
 export function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));

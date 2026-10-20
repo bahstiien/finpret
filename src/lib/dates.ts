@@ -49,3 +49,12 @@ const shortDate = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "lon
 export const formatLong = (iso: string) => longDate.format(new Date(`${iso}T12:00:00Z`));
 /** « 15 octobre » */
 export const formatShort = (iso: string) => shortDate.format(new Date(`${iso}T12:00:00Z`));
+
+/** Semaine ISO d'une date : `2027-W01` (le jeudi de la semaine fixe l'année ISO). */
+export function isoWeekKey(iso: string): string {
+  const thursday = addDays(mondayOf(iso), 3);
+  const year = Number(thursday.slice(0, 4));
+  const jan4 = `${year}-01-04`;
+  const week = Math.floor(dayIndex(mondayOf(jan4), mondayOf(thursday)) / 7) + 1;
+  return `${year}-W${String(week).padStart(2, "0")}`;
+}

@@ -7,6 +7,7 @@ import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/server";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
+import { householdCan } from "@/server/entitlements-load";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { applyLeftovers, bankDoubles, currentAndNext, engineEnvFor } from "@/server/weeks";
@@ -50,6 +51,7 @@ const pantrySchema = z.object({
 export async function setPantry(key: string, qty: number | null | "remove"): Promise<Result> {
   const household = await editor();
   if (!household) return { ok: false, error: fr.errors.forbidden };
+  if (!(await householdCan(household.id, "pantry"))) return { ok: false, error: fr.errors.upgrade };
   const parsed = pantrySchema.safeParse({ key, qty });
   if (!parsed.success) return { ok: false, error: fr.errors.generic };
   const supabase = await createClient();

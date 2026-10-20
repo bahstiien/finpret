@@ -9,6 +9,9 @@ export const EVENT_NAMES = [
   "trial_started",
   "subscribed",
   "association_joined",
+  // Compteurs d'offre et quotas (SPEC_JANVIER §4, §5).
+  "menu_swap",
+  "canteen_pdf_import",
   // Acquisition des associations (SPEC_JANVIER §8 bis A).
   "asso_landing_view",
   "asso_simulator_used",

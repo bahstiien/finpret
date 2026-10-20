@@ -5,6 +5,7 @@ import {
   localTime,
   type LocalTime,
   NOTIFICATION_URL,
+  type ExtraKind,
   type NotificationKind,
   type NotificationPrefs,
 } from "@/engine/notifications";
@@ -26,14 +27,14 @@ export type Recipient = {
   schedule: HouseholdSchedule;
 };
 
-export type Payload = { kind: NotificationKind | "test"; title: string; body: string; url: string; day: string };
+export type Payload = { kind: NotificationKind | ExtraKind | "test"; title: string; body: string; url: string; day: string };
 export type Subscription = { id: string; endpoint: string; keys: { p256dh: string; auth: string } };
 
 export type NotifyDeps = {
   recipients: () => Promise<Recipient[]>;
   /** Texte du rappel pour ce foyer, ou null s'il n'y a rien à dire (pas de dîner prévu, rien à décongeler…). */
   content: (householdId: string, kind: NotificationKind, local: LocalTime) => Promise<string | number | null>;
-  claim: (userId: string, kind: NotificationKind, day: string, payload: Payload) => Promise<boolean>;
+  claim: (userId: string, kind: NotificationKind | ExtraKind, day: string, payload: Payload) => Promise<boolean>;
   subscriptions: (userId: string) => Promise<Subscription[]>;
   sendPush: (sub: Subscription, payload: Payload) => Promise<"ok" | "gone" | "error">;
   removeSubscription: (id: string) => Promise<void>;

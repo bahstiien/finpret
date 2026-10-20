@@ -7,6 +7,8 @@ import { z } from "zod";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { createClient } from "@/lib/supabase/server";
+import { can } from "@/server/entitlements";
+import { loadOffer } from "@/server/entitlements-load";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { ACTIVE_HOUSEHOLD_COOKIE, getHouseholds, requireUser } from "@/server/session";
 
@@ -69,6 +71,23 @@ export async function createInvitation(_prev: InviteState, formData: FormData): 
   if (!parsed.success) return { error: fr.errors.generic };
 
   const supabase = await createClient();
+  // Comptes du foyer : 2 en gratuit, 8 en essai ou abonné (les invitations en attente comptent).
+  const [members, pending] = await Promise.all([
+    supabase
+      .from("memberships")
+      .select("user_id", { count: "exact", head: true })
+      .eq("household_id", parsed.data.householdId),
+    supabase
+      .from("invitations")
+      .select("id", { count: "exact", head: true })
+      .eq("household_id", parsed.data.householdId)
+      .is("accepted_at", null)
+      .gt("expires_at", new Date().toISOString()),
+  ]);
+  const used = (members.count ?? 0) + (pending.count ?? 0);
+  if (!can(await loadOffer(parsed.data.householdId), "household.members", { used })) {
+    return { error: fr.errors.members_limit };
+  }
   const { data, error } = await supabase
     .from("invitations")
     .insert({ household_id: parsed.data.householdId, role: parsed.data.role, email: parsed.data.email })

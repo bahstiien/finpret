@@ -21,12 +21,19 @@ const STEPS: readonly Step[] = FEATURES.onboardingHabits
   : ["household", "diet", "rhythm", "equipment"];
 type Update = (fn: (draft: OnboardingInput) => OnboardingInput) => void;
 
+export type SchoolOption = { id: string; name: string; city: string };
+
 export function OnboardingWizard({
   initial,
   ingredients,
+  schools = [],
+  associationName = null,
 }: {
   initial: OnboardingInput;
   ingredients: IngredientOption[];
+  /** Écoles de l'association du code d'inscription (vide sans code valide). */
+  schools?: SchoolOption[];
+  associationName?: string | null;
 }) {
   const [data, setData] = useState(initial);
   const [step, setStep] = useState(0);
@@ -86,7 +93,9 @@ export function OnboardingWizard({
       </div>
 
       <section className="flex flex-col gap-5 rounded-card bg-surface p-5">
-        {current === "household" && <HouseholdStep data={data} update={update} />}
+        {current === "household" && (
+          <HouseholdStep data={data} update={update} schools={schools} associationName={associationName} />
+        )}
         {current === "diet" && <DietStep data={data} update={update} ingredients={ingredients} />}
         {current === "rhythm" && <RhythmStep data={data} update={update} />}
         {current === "equipment" && <EquipmentStep data={data} update={update} />}
@@ -120,8 +129,19 @@ export function OnboardingWizard({
   );
 }
 
-function HouseholdStep({ data, update }: { data: OnboardingInput; update: Update }) {
+function HouseholdStep({
+  data,
+  update,
+  schools,
+  associationName,
+}: {
+  data: OnboardingInput;
+  update: Update;
+  schools: SchoolOption[];
+  associationName: string | null;
+}) {
   const s = t.steps.household;
+  const e = fr.ecole;
   const members = data.household.members;
   return (
     <>
@@ -157,6 +177,47 @@ function HouseholdStep({ data, update }: { data: OnboardingInput; update: Update
                 }
               />
             )}
+            {m.kind === "child" && schools.length > 0 && (
+              <div className="flex w-full flex-col gap-2">
+                <SelectField
+                  id={`member-${i}-school`}
+                  label={`${e.school}${associationName ? ` (${associationName})` : ""}`}
+                  value={m.schoolId ?? ""}
+                  onChange={(ev) =>
+                    update((d) => ((d.household.members[i]!.schoolId = ev.target.value || null), d))
+                  }
+                >
+                  <option value="">{e.noSchool}</option>
+                  {schools.map((sc) => (
+                    <option key={sc.id} value={sc.id}>
+                      {sc.name} ({sc.city})
+                    </option>
+                  ))}
+                </SelectField>
+                <p className="text-sm text-muted">{e.schoolHint}</p>
+                {m.schoolId && (
+                  <div role="group" aria-label={e.canteenDays} className="flex flex-wrap gap-2">
+                    {[1, 2, 3, 4, 5].map((day) => (
+                      <ChipToggle
+                        key={day}
+                        pressed={m.canteenDays.includes(day)}
+                        onToggle={() =>
+                          update((d) => {
+                            const list = d.household.members[i]!.canteenDays;
+                            d.household.members[i]!.canteenDays = list.includes(day)
+                              ? list.filter((x) => x !== day)
+                              : [...list, day].sort();
+                            return d;
+                          })
+                        }
+                      >
+                        {fr.days[day - 1]}
+                      </ChipToggle>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             {members.length > 1 && (
               <button
                 type="button"
@@ -179,7 +240,18 @@ function HouseholdStep({ data, update }: { data: OnboardingInput; update: Update
               variant="outline"
               disabled={members.length >= 10}
               onClick={() =>
-                update((d) => (d.household.members.push({ name: "", kind, birthdate: null }), d))
+                update(
+                  (d) => (
+                    d.household.members.push({
+                      name: "",
+                      kind,
+                      birthdate: null,
+                      schoolId: null,
+                      canteenDays: [1, 2, 4, 5],
+                    }),
+                    d
+                  ),
+                )
               }
             >
               {kind === "adult" ? s.addAdult : s.addChild}

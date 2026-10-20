@@ -1,4 +1,5 @@
 /** Textes de l'interface (CLAUDE.md, règle 5) : tutoiement, ton chaleureux et direct. */
+import { assoFr, subscriptionFr } from "./asso";
 import { engineFr } from "./engine";
 
 export const fr = {
@@ -22,6 +23,26 @@ export const fr = {
     login: "Se connecter",
   },
   /** Page d'accueil publique (finpret.app). Textes passés par `nb()` au rendu pour la typographie française. */
+  /** Page publique d'une association (/ecole/[code]). */
+  ecole: {
+    metaTitle: "Fin Prêt avec ton association de parents",
+    eyebrow: "Un cadeau de ton association de parents",
+    title: (name: string) => `${name} te propose Fin Prêt`,
+    benefitLabel: "Avantage réservé",
+    benefit: "30 jours d'essai gratuit, puis 39,99 € la première année au lieu de 49,99 €.",
+    benefitHint: (name: string) => `Chaque abonnement soutient les projets de ${name}.`,
+    cta: "Préparer ma semaine",
+    howItWorks: "Comment ça marche ?",
+    tooMany: "Trop de demandes. Réessaie dans une minute.",
+    inactiveTitle: "Ce code n'est pas encore actif",
+    inactiveBody:
+      "L'association n'a pas encore été validée. Tu peux déjà essayer Fin Prêt gratuitement pendant 14 jours.",
+    inactiveCta: "Essayer Fin Prêt",
+    school: "École",
+    noSchool: "Pas d'école",
+    schoolHint: "Relie ton enfant à son école pour voir le menu de la cantine.",
+    canteenDays: "Jours de cantine",
+  },
   landing: {
     metaTitle: "Fin Prêt · Le dimanche, tu cuisines. La semaine est fin prête.",
     metaDescription:
@@ -316,14 +337,28 @@ export const fr = {
   errors: {
     generic: "Oups, ça n'a pas marché. Réessaie dans un instant.",
     forbidden: "Tu n'as pas les droits pour faire ça.",
+    members_limit: "Ton foyer a atteint le nombre de comptes de son offre. Passe à l'offre payante pour en ajouter.",
+    upgrade: "Cette option fait partie de l'offre payante. Découvre-la dans Abonnement.",
     last_admin: "Le foyer doit garder au moins un administrateur. Nomme quelqu'un d'autre avant.",
     too_many_households: "Tu fais déjà partie de 5 foyers, c'est le maximum.",
     invitation_not_found: "Cette invitation n'existe pas.",
     invitation_expired: "Cette invitation a expiré.",
     invitation_used: "Cette invitation a déjà servi.",
+    too_many_editors: "L'association a déjà 3 éditeurs de menus.",
+    too_many_associations: "Tu as déjà créé 3 associations aujourd'hui. Réessaie demain.",
+    code_already_changed: "Le code a déjà été modifié une fois.",
+    association_locked: "Cette information ne se modifie pas ici.",
+  },
+  /** Fonction réservée à l'offre payante (SPEC_JANVIER §4). */
+  upgrade: {
+    title: "Cette option fait partie de l'offre payante",
+    body: "Essaie gratuitement ou abonne-toi pour la débloquer.",
+    cta: "Voir l'abonnement",
   },
   /** Textes produits par le moteur (session, rangement). */
   engine: engineFr,
+  asso: assoFr,
+  subscription: subscriptionFr,
   days: ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"],
   daysShort: ["L", "M", "M", "J", "V", "S", "D"],
   daysAbbr: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
@@ -547,6 +582,7 @@ export const fr = {
   },
   canteen: {
     today: (name: string) => `Cantine de ${name}`,
+    edited: "Menu modifié par l'association depuis sa publication.",
     duplicate: (groups: string) =>
       `Même base qu'à la cantine ce midi : ${groups}. Tu peux changer le plat du soir.`,
   },

@@ -20,7 +20,11 @@ import { todayIn } from "@/lib/dates";
 import { toMenuSettings } from "@/lib/settings";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
+import type { Feature } from "@/server/entitlements";
+import { loadOffer, swapsUsed } from "@/server/entitlements-load";
+import { can } from "@/server/entitlements";
 import { type ActionResult, toUserMessage } from "@/server/errors";
+import { trackEvent } from "@/server/events";
 import { type HouseholdContext, loadHouseholdContext } from "@/server/household-context";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
@@ -46,10 +50,20 @@ type Edit = (input: {
   | { error: string }
   | Promise<{ plan: WeekPlan; message: string } | { error: string }>;
 
-async function editWeek(weekId: string, edit: Edit): Promise<ActionResult<{ message: string }>> {
-  const { household } = await requireHousehold("/app");
+async function editWeek(
+  weekId: string,
+  edit: Edit,
+  feature?: Feature,
+): Promise<ActionResult<{ message: string }>> {
+  const { user, household } = await requireHousehold("/app");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
   if (!uuid.safeParse(weekId).success) return { ok: false, error: fr.errors.generic };
+  // Offre gratuite ou payante (SPEC_JANVIER §4) : décidée côté serveur.
+  if (feature) {
+    const used = feature === "menu.swap" ? await swapsUsed(household.id, weekId) : 0;
+    if (!can(await loadOffer(household.id), feature, { used }))
+      return { ok: false, error: fr.errors.upgrade };
+  }
   const ctx = await loadHouseholdContext(household.id);
   const row = ctx.weeks.find((w) => w.id === weekId);
   if (!row) return { ok: false, error: t.weekGone };
@@ -63,6 +77,9 @@ async function editWeek(weekId: string, edit: Edit): Promise<ActionResult<{ mess
     .eq("id", weekId);
   if (error) return { ok: false, error: toUserMessage(error) };
   await syncShoppingItems(ctx, env, { id: weekId, plan: res.plan });
+  if (feature === "menu.swap") {
+    await trackEvent("menu_swap", { userId: user.id, householdId: household.id, props: { week: weekId } });
+  }
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: res.message } };
 }
@@ -76,22 +93,32 @@ const slotLabel = (k: string) => {
   return `${fr.days[Number(d) - 1]} ${fr.meals[m].toLowerCase()}`;
 };
 
-/** « Changer » un plat, la soupe, un soir simple ou un repas de la réserve. */
-export async function swapDish(weekId: string, kind: "main" | "soup" | "simple" | "bank", index: number) {
+type SwapKind = "main" | "soup" | "simple" | "bank";
+
+async function swapWith(weekId: string, kind: SwapKind, index: number, feature?: Feature) {
   if (!["main", "soup", "simple", "bank"].includes(kind) || !Number.isInteger(index)) {
     return { ok: false as const, error: fr.errors.generic };
   }
-  return editWeek(weekId, ({ env, plan, ctx }) => {
-    const res = swap(env, plan, toMenuSettings(ctx.settings), kind, index, ctx.bank);
-    if (!res.ok) return { error: t.swapFailed[res.reason] };
-    return {
-      plan: res.week,
-      message: t.replaced(
-        shortOf(env, res.replaced),
-        res.added.map((id) => shortOf(env, id).toLowerCase()),
-      ),
-    };
-  });
+  return editWeek(
+    weekId,
+    ({ env, plan, ctx }) => {
+      const res = swap(env, plan, toMenuSettings(ctx.settings), kind, index, ctx.bank);
+      if (!res.ok) return { error: t.swapFailed[res.reason] };
+      return {
+        plan: res.week,
+        message: t.replaced(
+          shortOf(env, res.replaced),
+          res.added.map((id) => shortOf(env, id).toLowerCase()),
+        ),
+      };
+    },
+    feature,
+  );
+}
+
+/** « Changer » un plat, la soupe, un soir simple ou un repas de la réserve. */
+export async function swapDish(weekId: string, kind: SwapKind, index: number) {
+  return swapWith(weekId, kind, index, "menu.swap");
 }
 
 /** « Retirer » ou « Remettre » un repas. */
@@ -110,12 +137,16 @@ export async function moveAction(weekId: string, from: string, to: string) {
   if (!slotKey.safeParse(from).success || !slotKey.safeParse(to).success) {
     return { ok: false as const, error: fr.errors.generic };
   }
-  return editWeek(weekId, ({ env, plan }) => {
-    const res = moveSlot(env, plan, from, to);
-    if (!res.ok) return { error: t.moveFailed[res.reason] };
-    const warn = res.warnings.tooLate ? ` ${t.tooLate(shortOf(env, res.warnings.tooLate))}` : "";
-    return { plan: res.week, message: t.moved(slotLabel(from), slotLabel(to)) + warn };
-  });
+  return editWeek(
+    weekId,
+    ({ env, plan }) => {
+      const res = moveSlot(env, plan, from, to);
+      if (!res.ok) return { error: t.moveFailed[res.reason] };
+      const warn = res.warnings.tooLate ? ` ${t.tooLate(shortOf(env, res.warnings.tooLate))}` : "";
+      return { plan: res.week, message: t.moved(slotLabel(from), slotLabel(to)) + warn };
+    },
+    "menu.move",
+  );
 }
 
 /** Créneaux proposés dans la feuille « Déplacer » (même période ; ceux qui créent un conflit de pâtes sont refusés). */
@@ -145,10 +176,14 @@ export async function setGuestsAction(weekId: string, d: number, m: "lunch" | "d
   if (!day.safeParse(d).success || !meal.safeParse(m).success || !parsed.success) {
     return { ok: false as const, error: fr.errors.generic };
   }
-  return editWeek(weekId, ({ plan }) => ({
-    plan: setGuests(plan, d, m, parsed.data),
-    message: t.guestsSaved,
-  }));
+  return editWeek(
+    weekId,
+    ({ plan }) => ({
+      plan: setGuests(plan, d, m, parsed.data),
+      message: t.guestsSaved,
+    }),
+    "menu.guests",
+  );
 }
 
 /** « Doubler » un plat pour la réserve du congélateur. */
@@ -268,7 +303,7 @@ export async function rateAction(weekId: string | null, recipeId: string, value:
     gi >= 0 ? ["main", gi] : p.soup?.id === recipeId ? ["soup", 0] : si >= 0 ? ["simple", si] : null;
   if (!target) return { ok: true as const, data: { message: t.disliked } };
   // Le refus est enregistré : la recherche d'un remplaçant l'exclut désormais.
-  const res = await swapDish(row.id, target[0], target[1]);
+  const res = await swapWith(row.id, target[0], target[1]);
   return res.ok
     ? { ok: true as const, data: { message: t.dislikedReplaced } }
     : { ok: true as const, data: { message: t.dislikedNoReplacement } };

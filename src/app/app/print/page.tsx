@@ -11,6 +11,8 @@ import { addDays, formatLong } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
+import { UpgradeCard } from "@/components/ui/UpgradeCard";
+import { householdCan } from "@/server/entitlements-load";
 import { requireHousehold } from "@/server/session";
 import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 
@@ -22,6 +24,7 @@ const t = fr.print;
 export default async function PrintPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
   const params = await searchParams;
   const { household } = await requireHousehold("/app/print");
+  if (!(await householdCan(household.id, "print"))) return <UpgradeCard />;
   const ctx = await loadHouseholdContext(household.id);
   const { today, current, next } = currentAndNext(ctx);
   const row = ctx.weeks.find((w) => w.start_date === params.week) ?? next ?? current;
@@ -71,7 +74,13 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
       .map((b) => ({ id: b.id ?? "", ...(b.data as { n: string; d: string; t: string }) }))
       .filter((b) => b.t === type);
     const b = list[Math.floor(Math.random() * list.length)];
-    return b ? { id: b.id || breakfastId(b.n), name: b.n.replace("{fruit}", fr.discover.seasonalFruit), description: b.d } : null;
+    return b
+      ? {
+          id: b.id || breakfastId(b.n),
+          name: b.n.replace("{fruit}", fr.discover.seasonalFruit),
+          description: b.d,
+        }
+      : null;
   };
 
   const cake = view.cake ? env.cakeById.get(view.cake.id) : null;
@@ -114,7 +123,9 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
       ? {
           name: cake.n,
           meta: `${cake.tm} · ${cake.parts}`,
-          ingredients: Object.entries(cake.ing).map(([k, q]) => `${env.lib.ingredients[k]?.l ?? k} : ${fmtQ(env.lib, k, q)}`),
+          ingredients: Object.entries(cake.ing).map(
+            ([k, q]) => `${env.lib.ingredients[k]?.l ?? k} : ${fmtQ(env.lib, k, q)}`,
+          ),
           steps: view.cake!.steps,
         }
       : null,

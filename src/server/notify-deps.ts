@@ -5,6 +5,7 @@ import { fr } from "@/i18n/fr";
 import { notificationsSchema, parseSettings } from "@/lib/settings";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Db } from "@/lib/supabase/types";
+import { householdCan } from "@/server/entitlements-load";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
 import type { NotifyDeps, Payload, Recipient, Subscription } from "@/server/notify";
@@ -13,7 +14,9 @@ import { currentAndNext, engineEnvFor } from "@/server/weeks";
 /** Dépendances réelles de l'envoi : base (clé de service), Web Push (VAPID) et e-mail (Resend). */
 
 export const vapidConfigured = () =>
-  !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && !!process.env.VAPID_PRIVATE_KEY && !!process.env.VAPID_SUBJECT;
+  !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY &&
+  !!process.env.VAPID_PRIVATE_KEY &&
+  !!process.env.VAPID_SUBJECT;
 
 export async function sendWebPush(sub: Subscription, payload: Payload): Promise<"ok" | "gone" | "error"> {
   if (!vapidConfigured()) return "error";
@@ -34,7 +37,8 @@ export async function sendWebPush(sub: Subscription, payload: Payload): Promise<
   }
 }
 
-const escapeHtml = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+const escapeHtml = (s: string) =>
+  s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
 export function emailSender(baseUrl: string) {
   return async (to: string, payload: Payload) => {
@@ -69,18 +73,27 @@ async function recipients(db: Db): Promise<Recipient[]> {
   const prefs = new Map<string, NotificationPrefs>();
   for (const row of settings ?? []) {
     const parsed = notificationsSchema.safeParse(row.notifications ?? {});
-    if (parsed.success && parsed.data.consentAt && (parsed.data.push || parsed.data.email)) prefs.set(row.user_id, parsed.data);
+    if (parsed.success && parsed.data.consentAt && (parsed.data.push || parsed.data.email))
+      prefs.set(row.user_id, parsed.data);
   }
   if (!prefs.size) return [];
   const users = [...prefs.keys()];
   const [{ data: profiles }, { data: memberships }] = await Promise.all([
     db.from("profiles").select("user_id, active_household").in("user_id", users),
-    db.from("memberships").select("user_id, household_id, created_at").in("user_id", users).order("created_at"),
+    db
+      .from("memberships")
+      .select("user_id, household_id, created_at")
+      .in("user_id", users)
+      .order("created_at"),
   ]);
   const householdOf = new Map<string, string>();
-  for (const m of memberships ?? []) if (!householdOf.has(m.user_id)) householdOf.set(m.user_id, m.household_id);
+  for (const m of memberships ?? [])
+    if (!householdOf.has(m.user_id)) householdOf.set(m.user_id, m.household_id);
   for (const p of profiles ?? []) {
-    if (p.active_household && (memberships ?? []).some((m) => m.user_id === p.user_id && m.household_id === p.active_household)) {
+    if (
+      p.active_household &&
+      (memberships ?? []).some((m) => m.user_id === p.user_id && m.household_id === p.active_household)
+    ) {
       householdOf.set(p.user_id, p.active_household);
     }
   }
@@ -88,13 +101,19 @@ async function recipients(db: Db): Promise<Recipient[]> {
   if (!ids.length) return [];
   const [{ data: households }, { data: hs }] = await Promise.all([
     db.from("households").select("id, timezone").in("id", ids),
-    db.from("household_settings").select("household_id, diet, menu, session, shopping, equipment, canteen").in("household_id", ids),
+    db
+      .from("household_settings")
+      .select("household_id, diet, menu, session, shopping, equipment, canteen")
+      .in("household_id", ids),
   ]);
   const tz = new Map((households ?? []).map((h) => [h.id, h.timezone]));
   const schedule = new Map(
     (hs ?? []).map((row) => {
       const s = parseSettings(row);
-      return [row.household_id, { sessionDay: s.session.day, sessionTime: s.session.time, shoppingDay: s.shopping.shoppingDay }];
+      return [
+        row.household_id,
+        { sessionDay: s.session.day, sessionTime: s.session.time, shoppingDay: s.shopping.shoppingDay },
+      ];
     }),
   );
   return users.flatMap((userId) => {
@@ -114,6 +133,12 @@ async function recipients(db: Db): Promise<Recipient[]> {
 
 /** Contenu d'un rappel, calculé par le moteur à partir de la semaine du foyer. */
 async function content(db: Db, householdId: string, kind: NotificationKind): Promise<string | number | null> {
+  // Rappels du dîner et de décongélation : offre payante (SPEC_JANVIER §8).
+  if (
+    (kind === "dinner" || kind === "thaw") &&
+    !(await householdCan(householdId, "notifications.meals", {}, db))
+  )
+    return null;
   const ctx = await loadHouseholdContext(householdId, db);
   const { today, current, next } = currentAndNext(ctx);
   if (kind === "shopping") {
@@ -126,13 +151,14 @@ async function content(db: Db, householdId: string, kind: NotificationKind): Pro
       .eq("checked", false);
     return count ?? 0;
   }
-  if (kind === "session") return next ?? current ? 1 : null;
+  if (kind === "session") return (next ?? current) ? 1 : null;
   if (!current) return null;
   const env = await engineEnvFor(ctx, Math.random, db);
   const view = buildMenuView(ctx, env, current, portionModelFor(ctx, current.start_date), today);
   const day = view.days.find((d) => d.iso === today);
   if (!day) return null;
-  if (kind === "dinner") return day.tonight ? day.tonight.charAt(0).toLowerCase() + day.tonight.slice(1) : null;
+  if (kind === "dinner")
+    return day.tonight ? day.tonight.charAt(0).toLowerCase() + day.tonight.slice(1) : null;
   return day.thaw.length ? day.thaw.join(", ") : null;
 }
 

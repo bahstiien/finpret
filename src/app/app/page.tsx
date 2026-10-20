@@ -7,9 +7,12 @@ import { NoWeek } from "@/components/menu/NoWeek";
 import { eligible } from "@/engine/season";
 import { monthOf } from "@/engine/compose";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { addDays, formatLong, timeIn } from "@/lib/dates";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView, canPrepareNext, flagOf } from "@/server/menu-view";
+import { householdCan } from "@/server/entitlements-load";
+import { schoolMenusFor } from "@/server/school-canteen";
 import { getProfile, getUser, requireHousehold } from "@/server/session";
 import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 
@@ -81,28 +84,53 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
   // Cantine (§13) : menus validés des enfants les jours de cantine, et alerte doublon avec le dîner.
   const canteen: Record<string, CanteenEntry[]> = {};
   const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
-  if (kids.length) {
+  // Offre : cantine gratuite pour un foyer rattaché à une association (D12), payante sinon.
+  const [canCanteen, canAlert] = await Promise.all([
+    householdCan(household.id, "canteen"),
+    householdCan(household.id, "canteen.alert"),
+  ]);
+  if (kids.length && canCanteen) {
     const dates = Array.from({ length: 5 }, (_, i) => addDays(row.start_date, i));
-    const supabase = await createClient();
-    const { data: menus } = await supabase
-      .from("canteen_menus")
-      .select("member_id, date, text")
-      .eq("validated", true)
-      .in(
-        "member_id",
-        kids.map((k) => k.id),
-      )
-      .in("date", dates);
     const slots = slotMap(env, row.plan);
+    const dinnerOf = (date: string) => {
+      const day = dates.indexOf(date) + 1;
+      return isRemoved(row.plan, day, "dinner") ? null : (slots[`${day}-dinner`]?.r ?? null);
+    };
+    // Menus publiés par l'association pour l'école de l'enfant : prioritaires sur la saisie du foyer.
+    const school = await schoolMenusFor(kids, dates);
+    const covered = new Set(school.map((m) => `${m.memberId}:${m.date}`));
+    for (const m of school) {
+      (canteen[m.date] ??= []).push({
+        name: m.name,
+        text: m.text,
+        note: m.note,
+        edited: m.edited,
+        duplicates:
+          canAlert && ctx.settings.canteen.alert ? duplicateGroups(env.lib, m.text, dinnerOf(m.date)) : [],
+      });
+    }
+    const supabase = await createClient();
+    const { data: menus } = FEATURES.householdCanteen
+      ? await supabase
+          .from("canteen_menus")
+          .select("member_id, date, text")
+          .eq("validated", true)
+          .in(
+            "member_id",
+            kids.map((k) => k.id),
+          )
+          .in("date", dates)
+      : { data: [] };
     for (const m of menus ?? []) {
       const kid = kids.find((k) => k.id === m.member_id)!;
+      if (covered.has(`${kid.id}:${m.date}`)) continue;
       const day = dates.indexOf(m.date) + 1;
       if (!canteenDays(kid, ctx.presence, row.start_date, ctx.alternatingFrom).includes(day)) continue;
       const dinner = isRemoved(row.plan, day, "dinner") ? null : (slots[`${day}-dinner`]?.r ?? null);
       (canteen[m.date] ??= []).push({
         name: kid.name,
         text: m.text,
-        duplicates: ctx.settings.canteen.alert ? duplicateGroups(env.lib, m.text, dinner) : [],
+        duplicates: canAlert && ctx.settings.canteen.alert ? duplicateGroups(env.lib, m.text, dinner) : [],
       });
     }
   }

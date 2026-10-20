@@ -7,6 +7,10 @@ const KNOWN = [
   "invitation_not_found",
   "invitation_expired",
   "invitation_used",
+  "too_many_editors",
+  "too_many_associations",
+  "code_already_changed",
+  "association_locked",
 ] as const;
 
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: string };

@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import { fr } from "@/i18n/fr";
+import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { onboardingDefaults } from "@/lib/onboarding";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+import { approvedAssociation } from "@/server/associations";
 import { getActiveHousehold, getProfile, requireUser } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.onboarding.title };
@@ -21,6 +24,7 @@ export default async function OnboardingPage() {
       .single();
     if (data?.onboarded_at || household.role !== "admin") redirect("/app");
   }
+  const association = await approvedAssociation((await cookies()).get(ASSOCIATION_COOKIE)?.value);
   const [profile, ingredients] = await Promise.all([
     getProfile(),
     supabase.from("ingredients").select("key, label").neq("aisle", "base").order("label"),
@@ -34,7 +38,12 @@ export default async function OnboardingPage() {
 
   return (
     <main>
-      <OnboardingWizard initial={initial} ingredients={ingredients.data ?? []} />
+      <OnboardingWizard
+        initial={initial}
+        ingredients={ingredients.data ?? []}
+        schools={association?.schools ?? []}
+        associationName={association?.name ?? null}
+      />
     </main>
   );
 }

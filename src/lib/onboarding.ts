@@ -10,6 +10,9 @@ export const onboardingMemberSchema = z
     name: z.string().trim().min(1).max(40),
     kind: z.enum(["adult", "child"]),
     birthdate: isoDate.nullable().default(null),
+    /** École de l'association du foyer (SPEC_JANVIER §3 A) et jours de cantine (1 = lundi). */
+    schoolId: z.uuid().nullable().default(null),
+    canteenDays: z.array(z.number().int().min(1).max(5)).max(5).default([1, 2, 4, 5]),
   })
   .refine((m) => m.kind === "adult" || m.birthdate !== null, { message: "birthdate", path: ["birthdate"] });
 
@@ -55,8 +58,8 @@ export function onboardingDefaults(displayName: string): OnboardingInput {
     household: {
       name: "",
       members: [
-        { name: displayName, kind: "adult", birthdate: null },
-        { name: "", kind: "adult", birthdate: null },
+        { name: displayName, kind: "adult", birthdate: null, schoolId: null, canteenDays: [1, 2, 4, 5] },
+        { name: "", kind: "adult", birthdate: null, schoolId: null, canteenDays: [1, 2, 4, 5] },
       ],
       alternating: { enabled: false, from: null },
     },

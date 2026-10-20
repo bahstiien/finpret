@@ -8,6 +8,8 @@ import { formatShort } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { flagOf } from "@/server/menu-view";
+import { UpgradeCard } from "@/components/ui/UpgradeCard";
+import { householdCan } from "@/server/entitlements-load";
 import { requireHousehold } from "@/server/session";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
 
@@ -16,6 +18,7 @@ export const metadata: Metadata = { title: fr.nav.stock };
 /** Onglet Stock (§8.4) : réserve du congélateur et garde-manger. */
 export default async function StockPage() {
   const { household } = await requireHousehold("/app/stock");
+  if (!(await householdCan(household.id, "pantry"))) return <UpgradeCard />;
   const ctx = await loadHouseholdContext(household.id);
   const env = await engineEnvFor(ctx);
   const { today, current, next } = currentAndNext(ctx);
