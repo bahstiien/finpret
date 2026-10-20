@@ -8,8 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: fr.app.shortName,
     description: fr.app.description,
     lang: "fr",
-    // TODO(M1) : passer à "/app" quand l'onglet Menu existera.
-    start_url: "/",
+    start_url: "/app",
     scope: "/",
     display: "standalone",
     orientation: "portrait-primary",
@@ -21,7 +20,7 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
       { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
-    // Cible de partage pour l'import de recettes par lien (SPEC §8.8, branché en M8b).
+    // Cible de partage pour l'import de recettes par lien (SPEC §8.8).
     share_target: {
       action: "/app/discover/import",
       method: "GET",

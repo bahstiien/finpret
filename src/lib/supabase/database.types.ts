@@ -283,6 +283,57 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      household_ingredients: {
+        Row: {
+          key: string;
+          household_id: string;
+          label: string;
+          unit: "g" | "ml" | "pc" | "boite" | "cs" | "cc";
+          aisle: string;
+          synonyms: string[];
+          created_at: string;
+        };
+        Insert: {
+          key: string;
+          household_id: string;
+          label: string;
+          unit: "g" | "ml" | "pc" | "boite" | "cs" | "cc";
+          aisle: string;
+          synonyms?: string[];
+        };
+        Update: { label?: string; unit?: "g" | "ml" | "pc" | "boite" | "cs" | "cc"; aisle?: string; synonyms?: string[] };
+        Relationships: [];
+      };
+      recipe_imports: {
+        Row: {
+          id: string;
+          household_id: string;
+          url: string;
+          status: "pending" | "parsed" | "failed" | "validated";
+          method: "jsonld" | "microdata" | "llm" | "manual" | null;
+          raw_ingredients: string[] | null;
+          error: string | null;
+          recipe_id: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          household_id: string;
+          url: string;
+          status?: "pending" | "parsed" | "failed" | "validated";
+          method?: "jsonld" | "microdata" | "llm" | "manual" | null;
+          raw_ingredients?: string[] | null;
+          error?: string | null;
+        };
+        Update: {
+          status?: "pending" | "parsed" | "failed" | "validated";
+          method?: "jsonld" | "microdata" | "llm" | "manual" | null;
+          raw_ingredients?: string[] | null;
+          error?: string | null;
+          recipe_id?: string | null;
+        };
+        Relationships: [];
+      };
       recipes: {
         Row: {
           id: string;
@@ -329,6 +380,8 @@ export type Database = {
           diet_tags?: string[] | null;
           allergens?: string[] | null;
           is_active?: boolean;
+          source_url?: string | null;
+          source_name?: string | null;
           status?: "draft" | "validated";
         };
         Relationships: [];

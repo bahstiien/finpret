@@ -80,6 +80,8 @@ const batchBase = {
   cz: z.boolean().optional(),
   pasta: z.literal(true).optional(),
   comfort: z.literal(true).optional(),
+  /** Macros inconnues (recette importée sans nutrition) : `m` vaut alors [0, 0, 0, 0]. */
+  mu: z.literal(true).optional(),
 };
 
 export const mainSchema = z
@@ -105,6 +107,9 @@ export const simpleSchema = z
     months: months.optional(),
     pasta: z.literal(true).optional(),
     comfort: z.literal(true).optional(),
+    mu: z.literal(true).optional(),
+    /** Protéine déclarée (recettes importées) ; déduite des ingrédients pour le catalogue. */
+    p: z.enum(PROTEINS).optional(),
   })
   .strict();
 
@@ -118,6 +123,7 @@ export const cakeSchema = z
     months: months.optional(),
     m: macros4,
     kid: z.string(),
+    mu: z.literal(true).optional(),
     ing: ingredientQuantities,
     steps: z.array(z.string()).min(1),
   })

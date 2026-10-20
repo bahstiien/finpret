@@ -1,14 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { Flag } from "@/components/menu/Flag";
 import { useMenuAction } from "@/components/menu/useMenuAction";
 import { Button } from "@/components/ui/Button";
 import { ChipToggle } from "@/components/ui/Controls";
 import { SelectField } from "@/components/ui/Field";
 import { Sheet } from "@/components/ui/Sheet";
+import { useToast } from "@/components/ui/Toast";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
+import { deleteImportedRecipe } from "@/server/actions/imports";
 import { setCakeAction, setWeekendAction } from "@/server/actions/menu";
 import type { Flag as FlagData } from "@/server/menu-view";
 
@@ -29,6 +33,14 @@ export type DiscoverRecipe = {
   freezes: boolean;
   favorite: boolean;
   imported: boolean;
+  /** Recette du foyer : site d'origine (null si saisie à la main). */
+  source: { name: string | null; url: string | null } | null;
+  /** Au menu de la semaine en cours ou préparée (suppression avec confirmation renforcée). */
+  inWeek: boolean;
+  /** Macros inconnues (import sans nutrition). */
+  macrosUnknown: boolean;
+  /** Contient des ingrédients créés à l'import, sans table d'allergènes. */
+  unverifiedAllergens: boolean;
   ingredients: string[];
   steps: string[];
   allergens: string[];
@@ -58,12 +70,19 @@ export function DiscoverScreen({
   regions,
   week,
   hasRestrictions,
+  canEdit,
+  openId,
+  openPlan,
 }: {
   recipes: DiscoverRecipe[];
   breakfasts: Breakfast[];
   regions: string[];
   week: { id: string; start: string } | null;
   hasRestrictions: boolean;
+  canEdit: boolean;
+  /** Lien direct vers une recette (après un import) ; `openPlan` ouvre aussi « Mettre au menu ». */
+  openId: string | null;
+  openPlan: boolean;
 }) {
   const [segment, setSegment] = useState<"recipes" | "breakfasts">("recipes");
   const [query, setQuery] = useState("");
@@ -73,7 +92,14 @@ export function DiscoverScreen({
   const [favorites, setFavorites] = useState(false);
   const [vegetarian, setVegetarian] = useState(false);
   const [showAll, setShowAll] = useState(false);
-  const [target, setTarget] = useState<DiscoverRecipe | null>(null);
+  const [mine, setMine] = useState(false);
+  const [target, setTarget] = useState<DiscoverRecipe | null>(
+    openPlan && week ? (recipes.find((r) => r.id === openId && !r.excluded) ?? null) : null,
+  );
+
+  useEffect(() => {
+    if (openId) document.querySelector(`[data-testid="recipe-${openId}"]`)?.scrollIntoView({ block: "center" });
+  }, [openId]);
 
   const list = useMemo(() => {
     const q = normalize(query.trim());
@@ -85,9 +111,10 @@ export function DiscoverScreen({
         (!kind || r.kind === kind) &&
         (!seasonal || r.seasonal) &&
         (!favorites || r.favorite) &&
+        (!mine || r.imported) &&
         (!vegetarian || r.diets.includes("vegetarien")),
     );
-  }, [recipes, query, region, kind, seasonal, favorites, vegetarian, showAll]);
+  }, [recipes, query, region, kind, seasonal, favorites, mine, vegetarian, showAll]);
 
   const bfList = breakfasts.filter(
     (b) => !query.trim() || normalize(b.name).includes(normalize(query.trim())),
@@ -95,7 +122,17 @@ export function DiscoverScreen({
 
   return (
     <>
-      <h1 className="text-4xl font-black">{fr.nav.discover}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-4xl font-black">{fr.nav.discover}</h1>
+        {canEdit && (
+          <Link
+            href="/app/discover/import"
+            className="inline-flex min-h-11 items-center gap-2 rounded-pill bg-banana px-6 font-bold text-[#17151F]"
+          >
+            {t.importCta}
+          </Link>
+        )}
+      </div>
       <div
         role="tablist"
         aria-label={t.segments}
@@ -165,6 +202,11 @@ export function DiscoverScreen({
             <ChipToggle pressed={favorites} onToggle={() => setFavorites(!favorites)}>
               {t.favorites}
             </ChipToggle>
+            {recipes.some((r) => r.imported) && (
+              <ChipToggle pressed={mine} onToggle={() => setMine(!mine)}>
+                {t.mine}
+              </ChipToggle>
+            )}
             <ChipToggle pressed={vegetarian} onToggle={() => setVegetarian(!vegetarian)}>
               {t.vegetarian}
             </ChipToggle>
@@ -179,7 +221,14 @@ export function DiscoverScreen({
           </p>
           <ul className="grid gap-3 min-[900px]:grid-cols-2" data-testid="discover-list">
             {list.map((r) => (
-              <RecipeCard key={r.id} recipe={r} canPlan={!!week} onPlan={() => setTarget(r)} />
+              <RecipeCard
+                key={r.id}
+                recipe={r}
+                canPlan={!!week}
+                canEdit={canEdit}
+                open={r.id === openId}
+                onPlan={() => setTarget(r)}
+              />
             ))}
           </ul>
         </>
@@ -203,12 +252,27 @@ export function DiscoverScreen({
 function RecipeCard({
   recipe: r,
   canPlan,
+  canEdit,
+  open,
   onPlan,
 }: {
   recipe: DiscoverRecipe;
   canPlan: boolean;
+  canEdit: boolean;
+  open: boolean;
   onPlan: () => void;
 }) {
+  const router = useRouter();
+  const toast = useToast();
+  const [removing, startRemove] = useTransition();
+  const remove = () => {
+    if (!window.confirm(r.inWeek ? t.confirmRemoveInWeek : t.confirmRemove)) return;
+    startRemove(async () => {
+      const res = await deleteImportedRecipe(r.id);
+      toast(res.ok ? res.data.message : res.error);
+      if (res.ok) router.refresh();
+    });
+  };
   return (
     <li
       className={`flex flex-col gap-2 rounded-card bg-surface p-5 ${r.excluded ? "outline-2 outline-peach-ink" : ""}`}
@@ -223,13 +287,25 @@ function RecipeCard({
           <span className="rounded-pill bg-blue-soft px-2 py-0.5 text-blue-ink">{t.freezes}</span>
         )}
         {r.favorite && <span className="rounded-pill bg-yellow-soft px-2 py-0.5">{t.favorite}</span>}
+        {r.imported && <span className="rounded-pill bg-violet px-2 py-0.5 text-white">{t.mine}</span>}
       </div>
       <b className="text-lg leading-tight">
         <Flag flag={r.flag} />
         {r.name}
       </b>
       {r.description && <p className="text-sm text-muted">{r.description}</p>}
-      <p className="text-sm font-semibold">{t.macros(r.kcal, r.protein)}</p>
+      {!r.macrosUnknown && <p className="text-sm font-semibold">{t.macros(r.kcal, r.protein)}</p>}
+      {r.source && (
+        <p className="text-sm text-muted" data-testid="recipe-source">
+          {r.source.name && r.source.url ? (
+            <a href={r.source.url} target="_blank" rel="noopener noreferrer nofollow" className="underline">
+              {t.source(r.source.name)}
+            </a>
+          ) : (
+            t.manualSource
+          )}
+        </p>
+      )}
       {r.excluded && (
         <p
           className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink"
@@ -238,7 +314,7 @@ function RecipeCard({
           {t.excluded(r.reasons.join(", ") || t.notYourDiet)}
         </p>
       )}
-      <details>
+      <details open={open || undefined}>
         <summary className="min-h-11 cursor-pointer content-center font-semibold">{t.details}</summary>
         <div className="flex flex-col gap-2 pt-2">
           <h3 className="font-extrabold">{t.ingredientsFor4}</h3>
@@ -256,13 +332,34 @@ function RecipeCard({
           {r.allergens.length > 0 && (
             <p className="text-sm text-muted">{t.allergens(r.allergens.join(", "))}</p>
           )}
+          {r.unverifiedAllergens && <p className="text-sm font-semibold">{t.unverifiedAllergens}</p>}
         </div>
       </details>
-      {canPlan && !r.excluded && (
-        <Button type="button" variant="outline" className="self-start" onClick={onPlan}>
-          {t.plan}
-        </Button>
-      )}
+      <div className="flex flex-wrap gap-2">
+        {canPlan && !r.excluded && (
+          <Button type="button" variant="outline" onClick={onPlan}>
+            {t.plan}
+          </Button>
+        )}
+        {canEdit && r.imported && (
+          <>
+            <Link
+              href={`/app/discover/import?edit=${r.id}`}
+              className="inline-flex min-h-11 items-center rounded-pill px-4 font-bold underline"
+            >
+              {t.edit}
+            </Link>
+            <button
+              type="button"
+              disabled={removing}
+              onClick={remove}
+              className="min-h-11 rounded-pill px-4 font-bold text-peach-ink underline"
+            >
+              {t.remove}
+            </button>
+          </>
+        )}
+      </div>
     </li>
   );
 }

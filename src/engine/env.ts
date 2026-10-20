@@ -1,4 +1,4 @@
-import type { Cake, Main, Simple, Soup } from "./catalog/schema";
+import type { Cake, Main, Protein, Simple, Soup } from "./catalog/schema";
 import { allIngredientKeys, dietTags, recipeAllergens } from "./catalog/derive";
 import type { DietRules, Library, Pantry, Ratings } from "./types";
 
@@ -26,16 +26,16 @@ export type Env = {
 /** Le régime, les allergènes et les refus filtrent le catalogue avant tout le reste (§7.3, point 7). */
 export function dietAllows(
   rules: DietRules,
-  recipe: { ing: Record<string, number>; sv?: { ing: Record<string, number> }[] },
+  recipe: { ing: Record<string, number>; sv?: { ing: Record<string, number> }[]; p?: Protein },
 ) {
   const keys = allIngredientKeys(recipe);
   if (rules.refused.some((k) => keys.includes(k))) return false;
   if (rules.allergens.length) {
-    const allergens = recipeAllergens(keys);
+    const allergens = recipeAllergens(keys, false);
     if (rules.allergens.some((a) => (allergens as string[]).includes(a))) return false;
   }
   if (rules.diet === "vegetarien" || rules.diet === "pescetarien") {
-    if (!dietTags(keys).includes(rules.diet)) return false;
+    if (!dietTags(keys, recipe.p).includes(rules.diet)) return false;
   }
   return true;
 }
@@ -53,16 +53,26 @@ export function createEnv(options: {
   const allow = <R extends { ing: Record<string, number> }>(r: R) =>
     !options.diet || dietAllows(options.diet, r);
   const minProtein = options.diet?.minProtein ?? 0;
-  const meal = <R extends { ing: Record<string, number>; m: readonly number[] }>(r: R) =>
-    allow(r) && (r.m[1] ?? 0) >= minProtein;
-  const lib: Library = {
-    ...options.lib,
+  // Une recette importée aux macros inconnues (`mu`) n'est pas écartée par le seuil de protéines.
+  const meal = <R extends { ing: Record<string, number>; m: readonly number[]; mu?: true }>(r: R) =>
+    allow(r) && (r.mu === true || (r.m[1] ?? 0) >= minProtein);
+  const filtered = {
     mains: options.lib.mains.filter(meal),
     soups: options.lib.soups.filter(meal),
     simples: options.lib.simples.filter(meal),
     cakes: options.lib.cakes.filter(
       (c) => allow(c) && (!options.cakeTypes || options.cakeTypes.includes(c.t)),
     ),
+  };
+  // Recettes supprimées par le foyer : retirées du tirage, mais encore lisibles par les semaines qui les contiennent.
+  const retired = new Set(options.lib.retired ?? []);
+  const active = <R extends { id: string }>(list: R[]) => (retired.size ? list.filter((r) => !retired.has(r.id)) : list);
+  const lib: Library = {
+    ...options.lib,
+    mains: active(filtered.mains),
+    soups: active(filtered.soups),
+    simples: active(filtered.simples),
+    cakes: active(filtered.cakes),
   };
   return {
     lib,
@@ -72,10 +82,10 @@ export function createEnv(options: {
     ignoreDislike: false,
     diet: options.diet ?? null,
     bonus: options.bonus ?? {},
-    mainById: new Map(lib.mains.map((r) => [r.id, r])),
-    soupById: new Map(lib.soups.map((r) => [r.id, r])),
-    simpleById: new Map(lib.simples.map((r) => [r.id, r])),
-    cakeById: new Map(lib.cakes.map((r) => [r.id, r])),
+    mainById: new Map(filtered.mains.map((r) => [r.id, r])),
+    soupById: new Map(filtered.soups.map((r) => [r.id, r])),
+    simpleById: new Map(filtered.simples.map((r) => [r.id, r])),
+    cakeById: new Map(filtered.cakes.map((r) => [r.id, r])),
   };
 }
 

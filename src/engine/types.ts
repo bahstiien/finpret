@@ -24,6 +24,8 @@ export type Library = {
   notSeasonal: string[];
   /** Ordre des rayons (clé, libellé) ; « base » (placard) vient après. */
   aisles: [string, string][];
+  /** Recettes du foyer supprimées : hors tirage, encore affichables dans les semaines passées ou en cours. */
+  retired?: string[];
 };
 
 /** Garde-manger : quantité en stock, ou null pour « assez ». Un ingrédient absent n'est pas en stock. */

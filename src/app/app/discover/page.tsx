@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { DiscoverScreen, type DiscoverRecipe } from "@/components/discover/DiscoverScreen";
 import { ALLERGENS } from "@/engine/catalog/allergens";
+import type { Protein } from "@/engine/catalog/schema";
 import { allIngredientKeys, breakfastId, dietTags, recipeAllergens } from "@/engine/catalog/derive";
-import { monthOf } from "@/engine/compose";
+import { monthOf, weekRecipeIds } from "@/engine/compose";
 import { createEnv, dietAllows } from "@/engine/env";
 import { fill, fmtQ } from "@/engine/format";
 import { originOf } from "@/engine/origins";
@@ -19,10 +20,24 @@ import { currentAndNext } from "@/server/weeks";
 export const metadata: Metadata = { title: fr.nav.discover };
 
 /** Onglet Découvrir (§8.2) : tout le catalogue, filtré par défaut selon le régime et les allergènes du foyer. */
-export default async function DiscoverPage() {
+export default async function DiscoverPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ open?: string; plan?: string }>;
+}) {
+  const params = await searchParams;
   const { household } = await requireHousehold("/app/discover");
   const ctx = await loadHouseholdContext(household.id);
-  const { lib } = await loadLibrary(household.id);
+  const { lib: full, imported } = await loadLibrary(household.id);
+  // Les recettes supprimées par le foyer ne sont plus proposées.
+  const retired = new Set(full.retired ?? []);
+  const lib = {
+    ...full,
+    mains: full.mains.filter((r) => !retired.has(r.id)),
+    soups: full.soups.filter((r) => !retired.has(r.id)),
+    simples: full.simples.filter((r) => !retired.has(r.id)),
+    cakes: full.cakes.filter((r) => !retired.has(r.id)),
+  };
   const { current, next, today } = currentAndNext(ctx);
   const week = next ?? current;
   const month = monthOf(week?.start_date ?? today);
@@ -31,16 +46,28 @@ export default async function DiscoverPage() {
   const rules = toDietRules(ctx.settings);
   const allergenName = (a: string) => ALLERGENS[a as keyof typeof ALLERGENS] ?? a;
 
-  const describe = (r: { ing: Record<string, number>; sv?: { ing: Record<string, number> }[] }) => {
+  const inWeek = new Set([current, next].flatMap((w) => (w ? weekRecipeIds(w.plan) : [])));
+  const own = (id: string, r: { mu?: true }) => {
+    const meta = imported[id];
+    return {
+      imported: !!meta,
+      source: meta ? { name: meta.sourceName, url: meta.sourceUrl } : null,
+      inWeek: inWeek.has(id),
+      macrosUnknown: r.mu === true,
+    };
+  };
+
+  const describe = (r: { ing: Record<string, number>; sv?: { ing: Record<string, number> }[]; p?: Protein }) => {
     const keys = allIngredientKeys(r);
-    const allergens = recipeAllergens(keys);
+    const allergens = recipeAllergens(keys, false);
     const blocked = rules.allergens.filter((a) => (allergens as string[]).includes(a));
     const refused = rules.refused.filter((k) => keys.includes(k)).map((k) => lib.ingredients[k]?.l ?? k);
     return {
       allergens: allergens.map(allergenName),
       excluded: !dietAllows(rules, r),
       reasons: [...blocked.map(allergenName), ...refused],
-      diets: dietTags(keys) as string[],
+      diets: dietTags(keys, r.p) as string[],
+      unverifiedAllergens: keys.some((k) => k.startsWith("h_")),
     };
   };
   const ingredients = (ing: Record<string, number>) =>
@@ -72,7 +99,7 @@ export default async function DiscoverPage() {
     protein: r.m[1],
     freezes: "freeze" in r ? r.freeze : false,
     favorite: ctx.ratings[r.id] === 1,
-    imported: false,
+    ...own(r.id, r),
     ingredients: ingredients(r.ing),
     steps: steps.map((s) => fill(lib, s, r.ing, 1)),
     ...describe(r),
@@ -91,7 +118,7 @@ export default async function DiscoverPage() {
     protein: c.m[1],
     freezes: false,
     favorite: false,
-    imported: false,
+    ...own(c.id, c),
     ingredients: ingredients(c.ing),
     steps: c.steps.map((s) => fill(lib, s, c.ing, 1)),
     ...describe(c),
@@ -122,6 +149,9 @@ export default async function DiscoverPage() {
       breakfasts={breakfasts}
       regions={[...new Set(recipes.map((r) => r.region).filter((x): x is string => !!x))]}
       week={week && household.role !== "viewer" ? { id: week.id, start: week.start_date } : null}
+      canEdit={household.role !== "viewer"}
+      openId={params.open ?? null}
+      openPlan={params.plan === "1"}
       hasRestrictions={
         rules.allergens.length > 0 ||
         rules.refused.length > 0 ||

@@ -35,20 +35,29 @@ export function allIngredientKeys(recipe: WithIngredients): string[] {
   return [...keys];
 }
 
-/** Allergènes d'une recette : union de ceux de ses ingrédients, dans l'ordre réglementaire. */
-export function recipeAllergens(keys: readonly string[]): Allergen[] {
+/**
+ * Allergènes d'une recette : union de ceux de ses ingrédients, dans l'ordre réglementaire.
+ * `strict` (catalogue) : un ingrédient absent de la table est une erreur. Sinon (ingrédients créés par un foyer
+ * lors d'un import, allergènes inconnus) il est ignoré. TODO(spec) : allergènes des ingrédients du foyer.
+ */
+export function recipeAllergens(keys: readonly string[], strict = true): Allergen[] {
   const found = new Set<Allergen>();
   for (const key of keys) {
     const allergens = INGREDIENT_ALLERGENS[key];
-    if (!allergens) throw new Error(`Ingrédient sans entrée dans la table des allergènes : ${key}`);
+    if (!allergens) {
+      if (!strict) continue;
+      throw new Error(`Ingrédient sans entrée dans la table des allergènes : ${key}`);
+    }
     for (const allergen of allergens) found.add(allergen);
   }
   return (Object.keys(ALLERGENS) as Allergen[]).filter((a) => found.has(a));
 }
 
 /** Régimes compatibles : végétarien sans chair animale, pescétarien sans viande (poisson admis). */
-export function dietTags(keys: readonly string[]): DietTag[] {
+export function dietTags(keys: readonly string[], declared?: Protein): DietTag[] {
   const proteins = new Set(keys.map((k) => ANIMAL_PROTEIN[k]).filter(Boolean));
+  // Protéine déclarée à l'import (ingrédients du foyer inconnus de cette table).
+  if (declared && declared !== "veg") proteins.add(declared);
   if (proteins.size === 0) return ["vegetarien", "pescetarien"];
   if (proteins.size === 1 && proteins.has("poisson")) return ["pescetarien"];
   return [];
