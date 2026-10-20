@@ -6,11 +6,11 @@ Branche `progres` (worktree `spec-progres`, issue de `m2-catalogue`). Spec : `SP
 
 **G1 — données et moteur**
 - `src/engine/streak.ts`, `passport.ts`, `cooks.ts`, `progress-view.ts` : moteur pur, sans React ni Supabase.
-- Migration `20261101000000_progress.sql` : `sessions.done_at`, `streak_weeks`, `recipe_cooks`, `achievements` (lecture par les membres du foyer, aucune écriture client), correction des origines (`as` → null, `uk` → `gb`). Seed, `origins.ts` et `classify.ts` corrigés ; le schéma du seed accepte `o: null`.
+- Migration `20261102000000_progress.sql` : `sessions.done_at`, `streak_weeks`, `recipe_cooks`, `achievements` (lecture par les membres du foyer, aucune écriture client), correction des origines (`as` → null, `uk` → `gb`). Seed, `origins.ts` et `classify.ts` corrigés ; le schéma du seed accepte `o: null`.
 - `src/server/progress.ts` : orchestration testée sans base (`ProgressStore`), implémentée dans `progress-store.ts` avec la clé de service. `/api/cron/streak-close` (horaire), actions serveur `finishSessionAction`, `planPauseAction`, `cancelPauseAction`, `markAchievementsSeen`.
 - `scripts/backfill-progress.ts` (`pnpm backfill:progress [--dry-run]`) : rattrapage sans célébration.
 
-**G2 — série** : ligne de série en fin de session, tuile sur le Menu, page `/app/progress` (série, frise, jetons, `Planifier une pause`), réglage `progress_visible` et lien dans le profil, notification de pause automatique (migration `20261101100000`, branchée sur `/api/cron/notify`).
+**G2 — série** : ligne de série en fin de session, tuile sur le Menu, page `/app/progress` (série, frise, jetons, `Planifier une pause`), réglage `progress_visible` et lien dans le profil, notification de pause automatique (migration `20261102100000`, branchée sur `/api/cron/notify`).
 
 **G3 — passeport** : composant `Stamp`, icônes `streak`/`pause`/`passport`/`share`, bloc passeport, feuilles de détail et de nouveaux tampons (`CelebrationHost`), filtre `?origin=` dans Découvrir.
 
@@ -18,7 +18,7 @@ Branche `progres` (worktree `spec-progres`, issue de `m2-catalogue`). Spec : `SP
 
 ## Tests
 - Vitest : 455 verts (moteur, orchestration, carte de partage, notifications). `pnpm lint` et `pnpm typecheck` propres, `pnpm build` passe.
-- pgTAP sur PGlite : `12_progress_rls.test.sql` (9 vérifications), tous verts.
+- pgTAP sur PGlite : `13_progress_rls.test.sql` (9 vérifications), tous verts.
 - Playwright : `tests/e2e/progress.spec.ts` (5 parcours) et `/app/progress` ajouté à l'audit axe. **Non joués** : ils exigent les migrations sur le projet Supabase hébergé (`pnpm db:push`), non appliquées sans accord.
 
 ## Écarts avec la spec
