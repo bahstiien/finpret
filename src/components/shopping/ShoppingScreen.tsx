@@ -177,6 +177,9 @@ export function ShoppingScreen({
           else {
             const row = payload.new as Item & { week_id: string };
             if (row.week_id !== weekId) return prev;
+            // Un événement livré en retard ne remplace pas un état plus récent.
+            const known = next.get(row.id);
+            if (known?.updated_at && row.updated_at && row.updated_at < known.updated_at) return prev;
             // Une coche locale en attente reste prioritaire sur l'état reçu.
             const local = queue.current.find((q) => q.op === "check" && q.id === row.id);
             next.set(row.id, local && local.op === "check" ? { ...row, checked: local.checked } : row);

@@ -26,7 +26,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const { data: session } = week
     ? await supabase
         .from("sessions")
-        .select("week_id, started_at, current_step, tasks_done, timers")
+        .select("week_id, started_at, current_step, tasks_done, timers, updated_at")
         .eq("week_id", week.id)
         .maybeSingle()
     : { data: null };

@@ -26,7 +26,13 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
   const before = await firstDish.locator("b").innerText();
   await firstDish.getByRole("button", { name: /^Changer / }).click();
   await expect(toast).toContainText("remplacé par");
-  await expect(firstDish.locator("b")).not.toHaveText(before);
+  // « Changer » peut réattribuer les plats aux créneaux : le plat remplacé n'est plus dans la semaine.
+  await expect(
+    page
+      .getByTestId("dishes")
+      .locator("b")
+      .filter({ hasText: before.replace(/^[A-Z]{2}/, "") }),
+  ).toHaveCount(0);
 
   // Retirer puis remettre le dîner du lundi (le programme affiche le lundi avant le début de la semaine).
   await page.getByRole("button", { name: /^lundi \d+/ }).click();

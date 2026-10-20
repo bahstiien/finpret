@@ -19,6 +19,7 @@ export type SessionRow = {
   current_step: number;
   tasks_done: { sig?: string; done?: Record<string, boolean> };
   timers: Timer[];
+  updated_at?: string;
 };
 
 type Ctx = {
@@ -58,6 +59,10 @@ export function SessionProvider({
   const [row, setRow] = useState<SessionRow | null>(initial);
   // Écritures locales en cours : les états reçus entre-temps sont plus anciens que l'état optimiste.
   const writes = useRef(0);
+  // N'applique un état reçu que s'il est au moins aussi récent que l'état connu (Realtime peut livrer en retard).
+  const accept = useCallback((next: SessionRow) => {
+    setRow((cur) => (!cur?.updated_at || !next.updated_at || next.updated_at >= cur.updated_at ? next : cur));
+  }, []);
 
   useEffect(() => setRow(initial), [initial]);
 
@@ -65,11 +70,11 @@ export function SessionProvider({
     if (!weekId) return;
     const { data } = await supabase
       .from("sessions")
-      .select("week_id, started_at, current_step, tasks_done, timers")
+      .select("week_id, started_at, current_step, tasks_done, timers, updated_at")
       .eq("week_id", weekId)
       .maybeSingle();
-    if (data && writes.current === 0) setRow(data as unknown as SessionRow);
-  }, [supabase, weekId]);
+    if (data && writes.current === 0) accept(data as unknown as SessionRow);
+  }, [supabase, weekId, accept]);
 
   useEffect(() => {
     if (!weekId) return;
@@ -80,7 +85,7 @@ export function SessionProvider({
       { event: "*", schema: "public", table: "sessions", filter: `household_id=eq.${householdId}` },
       (payload) => {
         const next = payload.new as SessionRow;
-        if (next?.week_id === weekId && writes.current === 0) setRow(next);
+        if (next?.week_id === weekId && writes.current === 0) accept(next);
       },
     );
     // La session est lue dans les cookies de façon asynchrone : l'abonnement attend le jeton (RLS).
@@ -98,7 +103,7 @@ export function SessionProvider({
       window.removeEventListener("focus", onFocus);
       void supabase.removeChannel(channel);
     };
-  }, [supabase, weekId, householdId, reload]);
+  }, [supabase, weekId, householdId, reload, accept]);
 
   const call = useCallback(
     async (fn: () => PromiseLike<{ error: unknown }>) => {
