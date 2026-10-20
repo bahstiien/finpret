@@ -60,6 +60,7 @@ export async function applyToPendingWeek(start: string): Promise<ActionResult> {
   const { household } = await requireHousehold("/settings");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
   const res = await generateAndStore(household.id, start);
+  if (!res.ok && res.reason === "locked") return { ok: false, error: fr.menuActions.locked };
   if (!res.ok) return { ok: false, error: fr.menu.impossible };
   revalidatePath("/", "layout");
   return { ok: true, data: undefined };

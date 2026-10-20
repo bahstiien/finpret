@@ -13,10 +13,12 @@ import {
   toggleMeal,
 } from "@/engine/edit";
 import type { Env } from "@/engine/env";
+import { changedOccurrences, ensureOccurrenceIds, listOccurrences } from "@/engine/occurrences";
 import type { WeekPlan } from "@/engine/types";
 import { slotMap } from "@/engine/week";
 import { fr } from "@/i18n/fr";
 import { todayIn } from "@/lib/dates";
+import { FEATURES } from "@/lib/features";
 import { toMenuSettings } from "@/lib/settings";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
@@ -25,7 +27,8 @@ import { loadOffer, swapsUsed } from "@/server/entitlements-load";
 import { can } from "@/server/entitlements";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { trackEvent } from "@/server/events";
-import { type HouseholdContext, loadHouseholdContext } from "@/server/household-context";
+import { lockedFor, loadLockState } from "@/server/allocations";
+import { type HouseholdContext, loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { engineEnvFor, generateAndStore } from "@/server/weeks";
@@ -68,8 +71,19 @@ async function editWeek(
   const row = ctx.weeks.find((w) => w.id === weekId);
   if (!row) return { ok: false, error: t.weekGone };
   const env = await engineEnvFor(ctx);
-  const res = await edit({ env, plan: row.plan, ctx });
+  // Préparations à identité stable : posées avant toute modification (courses réelles, lot L2).
+  const basePlan = FEATURES.realPurchases ? ensureOccurrenceIds(row.plan, () => crypto.randomUUID()) : row.plan;
+  const res = await edit({ env, plan: basePlan, ctx });
   if ("error" in res) return { ok: false, error: res.error };
+  if (FEATURES.realPurchases) {
+    // Une préparation commencée ou préparée ne change pas, quel que soit l'écran d'où vient la modification (AC-10).
+    const pm = portionModelFor(ctx, basePlan.start);
+    const cakeOn = ctx.settings.menu.cake.enabled;
+    const before = listOccurrences(env, basePlan, pm, cakeOn);
+    const touched = changedOccurrences(before, listOccurrences(env, res.plan, pm, cakeOn));
+    const locked = lockedFor(before, await loadLockState(weekId));
+    if (touched.some((uid) => locked.has(uid))) return { ok: false, error: t.locked };
+  }
   const supabase = await createClient();
   const { error } = await supabase
     .from("weeks")
@@ -272,6 +286,7 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
   }
   if (row.start_date <= todayIn(ctx.timezone)) return { ok: false as const, error: t.weekStarted };
   const res = await generateAndStore(household.id, row.start_date);
+  if (!res.ok && res.reason === "locked") return { ok: false as const, error: t.locked };
   if (!res.ok) return { ok: false as const, error: fr.menu.impossible };
   revalidatePath("/app", "layout");
   return { ok: true as const, data: { message: t.regenerated(slotLabel(k)) } };
@@ -315,6 +330,7 @@ export async function prepareWeekAction(start: string) {
   if (household.role === "viewer") return { ok: false as const, error: fr.errors.forbidden };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(start)) return { ok: false as const, error: fr.errors.generic };
   const res = await generateAndStore(household.id, start);
+  if (!res.ok && res.reason === "locked") return { ok: false as const, error: t.locked };
   if (!res.ok) return { ok: false as const, error: fr.menu.impossible };
   revalidatePath("/app", "layout");
   return {

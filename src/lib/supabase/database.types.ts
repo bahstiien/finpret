@@ -644,6 +644,71 @@ export type Database = {
         Update: { checked?: boolean; label?: string | null; qty_text?: string | null; aisle?: string };
         Relationships: [];
       };
+      purchase_events: {
+        Row: {
+          id: string;
+          household_id: string;
+          week_id: string;
+          ingredient_key: string;
+          qty: number;
+          type: "purchase" | "correction" | "transfer_out" | "transfer_in";
+          op_key: string;
+          author: string | null;
+          created_at: string;
+        };
+        Insert: {
+          household_id: string;
+          week_id: string;
+          ingredient_key: string;
+          qty: number;
+          type: "purchase" | "correction" | "transfer_out" | "transfer_in";
+          op_key: string;
+        };
+        Update: never;
+        Relationships: [];
+      };
+      shopping_issues: {
+        Row: {
+          id: string;
+          household_id: string;
+          week_id: string;
+          ingredient_key: string;
+          kind: "not_found";
+          decision: "open" | "search_elsewhere" | "no_more";
+          author: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: { household_id: string; week_id: string; ingredient_key: string };
+        Update: { decision?: "open" | "search_elsewhere" | "no_more" };
+        Relationships: [];
+      };
+      preparation_states: {
+        Row: {
+          week_id: string;
+          uid: string;
+          household_id: string;
+          state: "started" | "prepared";
+          updated_by: string | null;
+          updated_at: string;
+        };
+        Insert: { week_id: string; uid: string; household_id: string; state: "started" | "prepared" };
+        Update: { state?: "started" | "prepared" };
+        Relationships: [];
+      };
+      coverage_confirmations: {
+        Row: {
+          week_id: string;
+          ingredient_key: string;
+          household_id: string;
+          confirmed_need: number;
+          author: string | null;
+          created_at: string;
+        };
+        Insert: { week_id: string; ingredient_key: string; household_id: string; confirmed_need: number };
+        Update: { confirmed_need?: number };
+        Relationships: [];
+      };
       sessions: {
         Row: {
           week_id: string;

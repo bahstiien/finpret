@@ -22,6 +22,8 @@ export const FEATURES = {
   offlineWrites: false,
   /** Rappels « courses prêtes » et « début de session » (REPORTÉ) : seuls dîner, décongélation, menus publiés et fin d'essai partent. */
   shoppingSessionNotifications: false,
+  /** Achats réels (journal `purchase_events`, courses réelles L1) : activation par foyer pilote, distincte de l'écriture hors ligne. */
+  realPurchases: false,
   /** Cantine saisie par enfant ou par lien (M10) : remplacée par les menus d'école publiés par l'association. */
   householdCanteen: true,
 } as const;

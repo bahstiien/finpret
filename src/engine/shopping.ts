@@ -48,6 +48,26 @@ export function shoppingList(
   return { items, baseUsed, covered };
 }
 
+/**
+ * Besoin culinaire et stock connu par ingrédient du menu (hors placard), en quantités numériques.
+ * Sert aux achats réels : le besoin est dérivé du plan, jamais lu dans le texte d'une ligne.
+ */
+export function shoppingNeeds(
+  env: Env,
+  w: WeekPlan,
+  pm: PortionModel,
+  pantry: Pantry,
+  cakeOn: boolean,
+): Record<string, { need: number; stock: number | null | undefined }> {
+  const out: Record<string, { need: number; stock: number | null | undefined }> = {};
+  const t = totals(env, w, pm, cakeOn);
+  for (const k of Object.keys(t)) {
+    if (!env.lib.ingredients[k] || env.lib.ingredients[k]!.c === "base") continue;
+    out[k] = { need: t[k]!, stock: pantry[k] };
+  }
+  return out;
+}
+
 export type ExportLine = { aisle: string; text: string; checked: boolean };
 
 /** Texte à envoyer dans Notes ou Messages : articles non cochés, dans l'ordre des rayons. */

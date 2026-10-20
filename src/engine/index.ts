@@ -1,10 +1,13 @@
 /** Moteur métier (SPEC §7) : TypeScript pur, sans React ni Supabase. */
+export * from "./allocation";
 export * from "./compose";
 export * from "./edit";
 export * from "./env";
 export * from "./format";
 export * from "./nutrition";
+export * from "./occurrences";
 export * from "./portions";
+export * from "./purchases";
 export * from "./quantities";
 export * from "./random";
 export * from "./season";

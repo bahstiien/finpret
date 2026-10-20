@@ -8,15 +8,23 @@ import { activeCake, activeMains, activeSimples, activeSoup, weekendItems } from
 
 export type Totals = Record<string, number>;
 
+/** Ingrédients d'une recette mis à l'échelle, arrondis aux contenants (une occurrence ou un total). */
+export function scaleIngredients(env: Env, ing: Record<string, number>, sc: number): Totals {
+  const out: Totals = {};
+  for (const k in ing) {
+    let q = snapNum(env.lib, k, ing[k]! * sc);
+    if (env.lib.ingredients[k]?.u === "boite") q = Math.max(1, Math.round(q));
+    out[k] = q;
+  }
+  return out;
+}
+
 /** Quantités totales de la semaine, arrondies aux contenants par recette. */
 export function totals(env: Env, w: WeekPlan, pm: PortionModel, cakeOn: boolean): Totals {
   const t: Totals = {};
   const add = (ing: Record<string, number>, sc: number) => {
-    for (const k in ing) {
-      let q = snapNum(env.lib, k, ing[k]! * sc);
-      if (env.lib.ingredients[k]?.u === "boite") q = Math.max(1, Math.round(q));
-      t[k] = (t[k] ?? 0) + q;
-    }
+    const q = scaleIngredients(env, ing, sc);
+    for (const k in q) t[k] = (t[k] ?? 0) + q[k]!;
   };
   for (const x of activeMains(env, w, pm)) if (x.P) add(x.r.ing, x.cookP / 4);
   const so = activeSoup(env, w, pm);

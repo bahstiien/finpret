@@ -10,9 +10,20 @@ import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { enqueue, loadQueue, type NewItem, type QueuedOp, saveQueue } from "@/lib/offline-queue";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { recordWeekEvent } from "@/server/actions/events";
+import {
+  clearShoppingIssue,
+  confirmCoverage,
+  recordPurchase,
+  reportShoppingIssue,
+  setPurchasedTotal,
+} from "@/server/actions/purchases";
+import { reviewSummary } from "@/engine/purchases";
+import type { PurchaseLine } from "@/server/purchases-view";
 
 const t = fr.shopping;
+const tp = fr.purchases;
 
 type Item = {
   id: string;
@@ -42,7 +53,11 @@ export function ShoppingScreen({
   baseUsed,
   frequent,
   exportFormat,
+  purchases,
+  canWrite,
 }: {
+  purchases: { lines: Record<string, PurchaseLine>; revision: number } | null;
+  canWrite: boolean;
   householdId: string;
   weekId: string;
   title: string;
@@ -62,6 +77,15 @@ export function ShoppingScreen({
   const [pending, setPending] = useState(0);
   const [label, setLabel] = useState("");
   const [qty, setQty] = useState("");
+  const router = useRouter();
+  const hasPurchases = purchases !== null;
+  const [editing, setEditing] = useState<string | null>(null);
+  const [mode, setMode] = useState<"total" | "add">("total");
+  const [pQty, setPQty] = useState("");
+  const [pUnit, setPUnit] = useState("g");
+  const [busy, setBusy] = useState(false);
+  const [issueFor, setIssueFor] = useState<string | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
   const queue = useRef<QueuedOp[]>([]);
   const flushing = useRef(false);
   const checkedSent = useRef(false);
@@ -197,6 +221,23 @@ export function ShoppingScreen({
         });
       },
     );
+    if (hasPurchases) {
+      channel.on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "purchase_events",
+          filter: `household_id=eq.${householdId}`,
+        },
+        () => router.refresh(),
+      );
+      channel.on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "shopping_issues", filter: `household_id=eq.${householdId}` },
+        () => router.refresh(),
+      );
+    }
     // La session est lue dans les cookies de façon asynchrone : sans jeton, la RLS bloquerait les événements.
     void supabase.auth.getSession().then(({ data }) => {
       if (cancelled) return;
@@ -211,7 +252,7 @@ export function ShoppingScreen({
       window.removeEventListener("offline", down);
       void supabase.removeChannel(channel);
     };
-  }, [supabase, weekId, householdId, userId, apply, flush]);
+  }, [supabase, weekId, householdId, userId, apply, flush, hasPurchases, router]);
 
   const list = [...items.values()];
   const visible = list;
@@ -227,6 +268,92 @@ export function ShoppingScreen({
         .sort((x, y) => Number(x.checked) - Number(y.checked) || nameOf(x).localeCompare(nameOf(y), "fr")),
     }))
     .filter((g) => g.items.length);
+
+  const savePurchase = async (key: string, line: PurchaseLine) => {
+    const qty = Number(pQty.replace(",", "."));
+    if (!online) return toast(tp.offlineReadOnly, "error");
+    if (!Number.isFinite(qty) || pQty.trim() === "") return toast(tp.INVALID_QUANTITY, "error");
+    setBusy(true);
+    const act = mode === "total" ? setPurchasedTotal : recordPurchase;
+    const res = await act({
+      weekId,
+      ingredient: key,
+      qty,
+      unit: pUnit as never,
+      expectedRevision: purchases?.revision,
+      opKey: crypto.randomUUID(),
+    });
+    setBusy(false);
+    if (!res.ok) {
+      toast(res.error, "error");
+      // Révision périmée : on recharge l'état avant de laisser réessayer.
+      router.refresh();
+      return;
+    }
+    toast(res.data.message);
+    setEditing(null);
+    setPQty("");
+    void line;
+    router.refresh();
+  };
+
+  /**
+   * Coche d'une ligne gérée (§8.1) : une coche vaut « acheté ». Sans achat enregistré, elle enregistre la
+   * quantité suggérée quand elle est fiable ; sinon elle ouvre la saisie et ne crée aucune quantité supposée.
+   */
+  const onCheck = async (i: Item, checked: boolean) => {
+    const key = i.ingredient_key;
+    const line = key ? purchases?.lines[key] : undefined;
+    if (!purchases || !key || !line || !checked || !canWrite) return run({ op: "check", id: i.id, checked });
+    if (line.bought !== null || line.status === "covered" || line.status === "surplus")
+      return run({ op: "check", id: i.id, checked });
+    if (line.suggestedQty === null) {
+      setEditing(key);
+      setMode("total");
+      setPQty("");
+      setPUnit(line.units[0]!);
+      return;
+    }
+    if (!online) return toast(tp.offlineReadOnly, "error");
+    const res = await recordPurchase({
+      weekId,
+      ingredient: key,
+      qty: line.suggestedQty,
+      unit: line.catalogUnit as never,
+      expectedRevision: purchases.revision,
+      opKey: crypto.randomUUID(),
+    });
+    if (!res.ok) {
+      toast(res.error, "error");
+      router.refresh();
+      return;
+    }
+    run({ op: "check", id: i.id, checked: true });
+    router.refresh();
+  };
+
+  const setIssue = async (key: string, decision: "open" | "search_elsewhere" | "no_more") => {
+    if (!online) return toast(tp.offlineReadOnly, "error");
+    const res = await reportShoppingIssue({ weekId, ingredient: key, decision });
+    toast(res.ok ? res.data.message : res.error, res.ok ? undefined : "error");
+    if (res.ok && decision === "open") setIssueFor(key);
+    else setIssueFor(null);
+    router.refresh();
+  };
+
+  const confirmAssez = async (key: string) => {
+    if (!online) return toast(tp.offlineReadOnly, "error");
+    const res = await confirmCoverage({ weekId, ingredient: key });
+    toast(res.ok ? res.data.message : res.error, res.ok ? undefined : "error");
+    router.refresh();
+  };
+
+  const clearIssue = async (key: string) => {
+    const res = await clearShoppingIssue(weekId, key);
+    toast(res.ok ? res.data.message : res.error, res.ok ? undefined : "error");
+    setIssueFor(null);
+    router.refresh();
+  };
 
   const add = (name: string, quantity = "") => {
     const clean = name.trim();
@@ -405,6 +532,20 @@ export function ShoppingScreen({
         </section>
       )}
 
+      {purchases && (
+        <section className="flex flex-col gap-2 rounded-card bg-surface p-4" data-testid="review">
+          <Button
+            type="button"
+            variant="outline"
+            className="self-start"
+            onClick={() => setReviewOpen((o) => !o)}
+          >
+            {reviewOpen ? tp.close : tp.review}
+          </Button>
+          {reviewOpen && <ReviewPanel lines={purchases.lines} />}
+        </section>
+      )}
+
       {groups.length === 0 ? (
         <p className="text-muted">{t.empty}</p>
       ) : (
@@ -418,12 +559,12 @@ export function ShoppingScreen({
             </h2>
             <ul className="flex flex-col divide-y divide-line">
               {g.items.map((i) => (
-                <li key={i.id} className="flex items-center gap-3 py-1" data-testid="shopping-item">
+                <li key={i.id} className="flex flex-wrap items-center gap-3 py-1" data-testid="shopping-item">
                   <label className="flex min-h-12 flex-1 cursor-pointer items-center gap-3">
                     <input
                       type="checkbox"
                       checked={i.checked}
-                      onChange={(e) => run({ op: "check", id: i.id, checked: e.target.checked })}
+                      onChange={(e) => void onCheck(i, e.target.checked)}
                       className="size-6 shrink-0 accent-green"
                     />
                     <span className={`flex flex-col ${i.checked ? "text-muted line-through" : ""}`}>
@@ -446,6 +587,79 @@ export function ShoppingScreen({
                       </span>
                     </span>
                   </label>
+                  {purchases && i.ingredient_key && purchases.lines[i.ingredient_key] && (
+                    <PurchaseBlock
+                      line={purchases.lines[i.ingredient_key]!}
+                      name={nameOf(i)}
+                      open={editing === i.ingredient_key}
+                      canWrite={canWrite}
+                      choosing={issueFor === i.ingredient_key}
+                      onIssue={(d) => void setIssue(i.ingredient_key!, d)}
+                      onReport={() => void setIssue(i.ingredient_key!, "open")}
+                      onClear={() => void clearIssue(i.ingredient_key!)}
+                      onConfirm={() => void confirmAssez(i.ingredient_key!)}
+                      onOpen={() => {
+                        const l = purchases.lines[i.ingredient_key!]!;
+                        setEditing(i.ingredient_key);
+                        setMode("total");
+                        setPQty("");
+                        setPUnit(l.units[0]!);
+                      }}
+                    />
+                  )}
+                  {purchases && i.ingredient_key && editing === i.ingredient_key && (
+                    <form
+                      className="flex w-full flex-col gap-2 rounded-2xl bg-chip p-3"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void savePurchase(i.ingredient_key!, purchases.lines[i.ingredient_key!]!);
+                      }}
+                    >
+                      <fieldset className="flex flex-wrap gap-2">
+                        <legend className="sr-only">{tp.modifyAria(nameOf(i))}</legend>
+                        <ChipToggle pressed={mode === "total"} onToggle={() => setMode("total")}>
+                          {tp.formTotal}
+                        </ChipToggle>
+                        <ChipToggle pressed={mode === "add"} onToggle={() => setMode("add")}>
+                          {tp.formAdd}
+                        </ChipToggle>
+                      </fieldset>
+                      <div className="flex gap-2">
+                        <label className="sr-only" htmlFor={`pq-${i.id}`}>
+                          {tp.qty}
+                        </label>
+                        <input
+                          id={`pq-${i.id}`}
+                          inputMode="decimal"
+                          value={pQty}
+                          onChange={(e) => setPQty(e.target.value)}
+                          aria-describedby={`pu-${i.id}`}
+                          className="min-h-11 w-28 rounded-2xl border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+                        />
+                        <label className="sr-only" htmlFor={`pu-${i.id}`}>
+                          {tp.unit}
+                        </label>
+                        <select
+                          id={`pu-${i.id}`}
+                          value={pUnit}
+                          onChange={(e) => setPUnit(e.target.value)}
+                          className="min-h-11 rounded-2xl border-2 border-line bg-surface px-3"
+                        >
+                          {purchases.lines[i.ingredient_key]!.units.map((u) => (
+                            <option key={u} value={u}>
+                              {tp.units[u as keyof typeof tp.units] ?? u}
+                            </option>
+                          ))}
+                        </select>
+                        <Button type="submit" disabled={busy}>
+                          {busy ? tp.saving : tp.save}
+                        </Button>
+                        <Button type="button" variant="outline" onClick={() => setEditing(null)}>
+                          {tp.cancel}
+                        </Button>
+                      </div>
+                    </form>
+                  )}
                   {i.source === "manual" && (
                     <button
                       type="button"
@@ -466,5 +680,140 @@ export function ShoppingScreen({
         {t.share}
       </Button>
     </>
+  );
+}
+
+/** Besoin, achat réel et reste d'une ligne : l'achat enregistré reste affiché même quand le menu change. */
+function PurchaseBlock({
+  line,
+  name,
+  open,
+  canWrite,
+  choosing,
+  onOpen,
+  onIssue,
+  onReport,
+  onClear,
+  onConfirm,
+}: {
+  line: PurchaseLine;
+  name: string;
+  open: boolean;
+  canWrite: boolean;
+  choosing: boolean;
+  onOpen: () => void;
+  onIssue: (d: "open" | "search_elsewhere" | "no_more") => void;
+  onReport: () => void;
+  onClear: () => void;
+  onConfirm: () => void;
+}) {
+  const state =
+    line.status === "to_verify"
+      ? tp.toConfirm
+      : line.status === "partial"
+        ? tp.partial
+        : line.status === "covered" || line.status === "surplus"
+          ? tp.covered
+          : null;
+  return (
+    <div className="flex w-full flex-col gap-1 pb-2 pl-9 text-sm" data-testid="purchase-line">
+      <p className="font-semibold">
+        {state && <span className="mr-2 rounded-pill bg-chip px-2 py-0.5">{state}</span>}
+        {line.deficit ? tp.remaining(line.deficit) : line.status === "to_verify" ? null : tp.covered}
+      </p>
+      <p className="text-muted">
+        {[
+          tp.need(line.need),
+          line.bought && tp.bought(line.bought),
+          line.surplus && tp.surplus(line.surplus),
+          line.suggestion && tp.toBuy(line.suggestion),
+        ]
+          .filter(Boolean)
+          .join(" · ")}
+      </p>
+      {canWrite && line.canConfirm && (
+        <button
+          type="button"
+          onClick={onConfirm}
+          className="min-h-11 self-start rounded-pill bg-chip px-4 font-semibold"
+        >
+          {tp.confirmCoverage}
+        </button>
+      )}
+      {line.issue && (
+        <p className="font-semibold" data-testid="issue-note">
+          <span className="mr-2 rounded-pill bg-yellow-soft px-2 py-0.5">{tp.toResolve}</span>
+          {tp.issueNote[line.issue]}
+        </p>
+      )}
+      {canWrite && !open && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={onOpen}
+            aria-label={tp.modifyAria(name)}
+            className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+          >
+            {tp.modify}
+          </button>
+          {line.issue ? (
+            <button
+              type="button"
+              onClick={onClear}
+              className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+            >
+              {tp.foundIt}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onReport}
+              aria-label={tp.notFoundAria(name)}
+              className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+            >
+              {tp.notFound}
+            </button>
+          )}
+        </div>
+      )}
+      {canWrite && (choosing || line.issue === "open") && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => onIssue("search_elsewhere")}
+            className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+          >
+            {tp.searchElsewhere}
+          </button>
+          <button
+            type="button"
+            onClick={() => onIssue("no_more")}
+            className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+          >
+            {tp.noMore}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** « Vérifier mes courses » (§8.4) : bilan sans promesse que le menu est réalisable. */
+function ReviewPanel({ lines }: { lines: Record<string, PurchaseLine> }) {
+  const r = reviewSummary(
+    Object.entries(lines).map(([key, l]) => ({ key, status: l.status, issue: l.issue })),
+  );
+  return (
+    <div className="flex flex-col gap-1" role="status">
+      <h2 className="font-extrabold">{tp.reviewTitle}</h2>
+      <p className="font-semibold">{r.ready ? tp.reviewClean : tp.reviewDone(r.unresolved)}</p>
+      <ul className="list-disc pl-5 text-sm">
+        <li>{tp.reviewKnown(r.known.length)}</li>
+        {r.toConfirm.length > 0 && <li>{tp.reviewToConfirm(r.toConfirm.length)}</li>}
+        {r.missing.length > 0 && <li>{tp.reviewMissing(r.missing.length)}</li>}
+        {r.surplus.length > 0 && <li>{tp.reviewSurplus(r.surplus.length)}</li>}
+      </ul>
+      <p className="text-sm text-muted">{tp.reviewNote}</p>
+    </div>
   );
 }

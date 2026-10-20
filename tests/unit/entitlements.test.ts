@@ -46,7 +46,7 @@ describe("tierOf", () => {
 
 describe("can", () => {
   it("génération, courses, session et Découvrir sont toujours permis", () => {
-    for (const f of ["menu.generate", "shopping", "session", "discover"] as Feature[]) {
+    for (const f of ["menu.generate", "shopping", "purchases", "session", "discover"] as Feature[]) {
       expect(can(free, f, { now: NOW })).toBe(true);
     }
   });

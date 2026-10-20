@@ -4,7 +4,7 @@ import { generateWeek } from "./compose";
 import { createEnv } from "./env";
 import { legacyPortions } from "./portions";
 import { seededRandom } from "./random";
-import { guessAisle, shoppingList, shoppingText } from "./shopping";
+import { guessAisle, shoppingList, shoppingNeeds, shoppingText } from "./shopping";
 import { DEFAULT_MENU_SETTINGS } from "./types";
 
 describe("courses", () => {
@@ -44,6 +44,18 @@ describe("courses", () => {
     const after = shoppingList(env, week!, legacyPortions(), { [first.key]: null }, true, []);
     expect(after.items.find((i) => i.key === first.key)).toBeUndefined();
     expect(after.covered).toContain(first.key);
+  });
+
+  it("expose les besoins numériques par ingrédient, sans le placard", () => {
+    const needs = shoppingNeeds(env, week!, legacyPortions(), {}, true);
+    const keys = Object.keys(needs);
+    expect(keys.length).toBeGreaterThan(5);
+    for (const k of keys) {
+      expect(LIB.ingredients[k]!.c).not.toBe("base");
+      expect(Number.isFinite(needs[k]!.need)).toBe(true);
+    }
+    const first = keys[0]!;
+    expect(shoppingNeeds(env, week!, legacyPortions(), { [first]: 50 }, true)[first]!.stock).toBe(50);
   });
 
   it("exporte les articles non cochés dans l'ordre des rayons", () => {

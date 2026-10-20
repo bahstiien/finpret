@@ -94,9 +94,10 @@ export type Guests = { a: number; c: number };
 /** Plan d'une semaine (§9, `weeks.plan`). */
 export type WeekPlan = {
   start: string;
-  groups: { meals: Slot[]; id: string }[];
-  soup: { days: number[]; id: string } | null;
-  simples: { day: number; id: string }[];
+  /** `uid` : identité stable de la préparation (distincte de la recette et de l'indice du tableau). */
+  groups: { meals: Slot[]; id: string; uid?: string }[];
+  soup: { days: number[]; id: string; uid?: string } | null;
+  simples: { day: number; id: string; uid?: string }[];
   bank: (Slot & { id: string })[];
   /** Index des plats doublés pour la réserve du congélateur. */
   doubles: number[];

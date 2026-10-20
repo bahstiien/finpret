@@ -1,8 +1,11 @@
 import "server-only";
 import type { Env } from "@/engine/env";
+import { removableMenuKeys } from "@/engine/purchases";
 import { guessAisle, shoppingList } from "@/engine/shopping";
+import { FEATURES } from "@/lib/features";
 import type { WeekPlan } from "@/engine/types";
 import { createClient } from "@/lib/supabase/server";
+import { pantryForWeek } from "./allocations";
 import { type HouseholdContext, portionModelFor } from "./household-context";
 
 /**
@@ -23,11 +26,15 @@ export async function syncShoppingItems(
   if (error) throw error;
   const rows = existing ?? [];
   const baseToBuy = rows.filter((r) => r.source === "pantry_check").map((r) => r.ingredient_key!);
+  // Stock déjà réservé par les semaines précédentes retiré (AC-11) ; une semaine inconnue du contexte garde tout le stock.
+  const stockRow = ctx.weeks.find((w) => w.id === week.id);
+  const pantry =
+    FEATURES.realPurchases && stockRow ? pantryForWeek(ctx, env, stockRow).pantry : ctx.pantry;
   const { items, baseUsed } = shoppingList(
     env,
     week.plan,
     portionModelFor(ctx, week.plan.start),
-    ctx.pantry,
+    pantry,
     ctx.settings.menu.cake.enabled,
     baseToBuy,
   );
@@ -48,7 +55,21 @@ export async function syncShoppingItems(
     const r = menuRows.get(i.key);
     return r && (r.qty_text !== i.qty || r.aisle !== i.aisle);
   });
-  const removed = [...menuRows.keys()].filter((k) => !wanted.some((i) => i.key === k));
+  // Un achat réel enregistré garde sa ligne : le recalcul ne met à jour que les besoins dérivés.
+  let purchased = new Set<string>();
+  if (FEATURES.realPurchases) {
+    const { data: ev, error: evErr } = await supabase
+      .from("purchase_events")
+      .select("ingredient_key")
+      .eq("week_id", week.id);
+    if (evErr) throw evErr;
+    purchased = new Set((ev ?? []).map((e) => e.ingredient_key));
+  }
+  const removed = removableMenuKeys(
+    [...menuRows.keys()],
+    wanted.map((i) => i.key),
+    purchased,
+  );
 
   if (inserts.length) {
     const { error: e } = await supabase.from("shopping_items").insert(inserts);

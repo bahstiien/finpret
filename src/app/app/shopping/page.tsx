@@ -4,7 +4,11 @@ import { Card } from "@/components/ui/Card";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
+import { FEATURES } from "@/lib/features";
 import { loadHouseholdContext } from "@/server/household-context";
+import { portionModelFor } from "@/server/household-context";
+import { pantryForWeek } from "@/server/allocations";
+import { loadPurchaseView } from "@/server/purchases-view";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
@@ -77,8 +81,23 @@ export default async function ShoppingPage() {
       .map((i) => [i.ingredient_key!, env.lib.ingredients[i.ingredient_key!]?.l ?? i.ingredient_key!]),
   );
 
+  const shared = FEATURES.realPurchases ? pantryForWeek(ctx, env, week) : null;
+  const purchases = shared
+    ? await loadPurchaseView(
+        env,
+        { id: week.id, plan: week.plan },
+        portionModelFor(ctx, week.plan.start),
+        shared.pantry,
+        ctx.settings.menu.cake.enabled,
+        new Set((items ?? []).filter((i) => i.checked && i.ingredient_key).map((i) => i.ingredient_key!)),
+        shared.unverified,
+      )
+    : null;
+
   return (
     <ShoppingScreen
+      purchases={purchases}
+      canWrite={household.role !== "viewer"}
       householdId={household.id}
       weekId={week.id}
       title={fr.shopping.exportTitle(formatShort(week.start_date))}

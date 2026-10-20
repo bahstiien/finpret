@@ -1,14 +1,17 @@
 import "server-only";
 import { generateWeek, weekRecipeIds } from "@/engine/compose";
 import { createEnv, type Env } from "@/engine/env";
+import { ensureOccurrenceIds } from "@/engine/occurrences";
 import { pantryAfterWeek, totals } from "@/engine/quantities";
 import { buildSession } from "@/engine/session";
 import type { WeekPlan } from "@/engine/types";
 import { isRemoved } from "@/engine/week";
 import { addDays, mondayOf, nextMonday, todayIn } from "@/lib/dates";
+import { FEATURES } from "@/lib/features";
 import { toDietRules, toEquipment, toMenuSettings } from "@/lib/settings";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
+import { hasAnyLock, loadLockState } from "./allocations";
 import { loadLibrary } from "./catalog";
 import { trackEvent } from "./events";
 import { getUser } from "./session";
@@ -161,7 +164,7 @@ async function commitWeek(ctx: HouseholdContext, env: Env, row: WeekRow) {
 
 export type GenerateOutcome =
   | { ok: true; week: WeekPlan; weekId: string; summary: WeekSummary; dislikesIgnored: boolean }
-  | { ok: false; reason: "impossible" | "forbidden" };
+  | { ok: false; reason: "impossible" | "forbidden" | "locked" };
 
 /**
  * Génère et enregistre la semaine qui commence `start` (en brouillon), en remplaçant un plan existant
@@ -179,6 +182,9 @@ export async function generateAndStore(householdId: string, start: string): Prom
   }
 
   const existing = ctx.weeks.find((w) => w.start_date === start) ?? null;
+  // Une semaine dont une préparation a commencé n'est jamais régénérée en bloc (courses réelles, §14).
+  if (FEATURES.realPurchases && existing && hasAnyLock(await loadLockState(existing.id)))
+    return { ok: false, reason: "locked" };
   const history = ctx.weeks.filter((w) => w.start_date < start).map((w) => weekRecipeIds(w.plan));
   const freshEnv = createEnv({
     lib: env.lib,
@@ -200,7 +206,8 @@ export async function generateAndStore(householdId: string, start: string): Prom
   if (!res.ok) return { ok: false, reason: "impossible" };
 
   // Le week-end déjà choisi pour cette semaine est gardé (comme le prototype).
-  const plan: WeekPlan = existing?.plan.weekend ? { ...res.week, weekend: existing.plan.weekend } : res.week;
+  const merged: WeekPlan = existing?.plan.weekend ? { ...res.week, weekend: existing.plan.weekend } : res.week;
+  const plan = FEATURES.realPurchases ? ensureOccurrenceIds(merged, () => crypto.randomUUID()) : merged;
   const today = todayIn(ctx.timezone);
   const payload = {
     household_id: householdId,
