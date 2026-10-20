@@ -12,3 +12,4 @@ export * from "./session";
 export * from "./slots";
 export * from "./types";
 export * from "./week";
+export * from "./shopping";

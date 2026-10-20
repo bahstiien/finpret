@@ -206,6 +206,36 @@ export type Database = {
         Update: { portions?: number; frozen_at?: string };
         Relationships: [];
       };
+      shopping_items: {
+        Row: {
+          id: string;
+          household_id: string;
+          week_id: string | null;
+          source: "menu" | "pantry_check" | "manual";
+          ingredient_key: string | null;
+          label: string | null;
+          qty_text: string | null;
+          aisle: string;
+          checked: boolean;
+          checked_by: string | null;
+          added_by: string | null;
+          updated_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          household_id: string;
+          week_id?: string | null;
+          source: "menu" | "pantry_check" | "manual";
+          ingredient_key?: string | null;
+          label?: string | null;
+          qty_text?: string | null;
+          aisle: string;
+          checked?: boolean;
+        };
+        Update: { checked?: boolean; label?: string | null; qty_text?: string | null; aisle?: string };
+        Relationships: [];
+      };
       aisles: {
         Row: { key: string; label: string; position: number };
         Insert: never;

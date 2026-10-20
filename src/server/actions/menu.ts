@@ -23,6 +23,7 @@ import { createClient } from "@/lib/supabase/server";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { type HouseholdContext, loadHouseholdContext } from "@/server/household-context";
 import { requireHousehold } from "@/server/session";
+import { syncShoppingItems } from "@/server/shopping";
 import { engineEnvFor, generateAndStore } from "@/server/weeks";
 
 /**
@@ -61,6 +62,7 @@ async function editWeek(weekId: string, edit: Edit): Promise<ActionResult<{ mess
     .update({ plan: res.plan as unknown as Json, pasta_need: res.plan.pastaNeed })
     .eq("id", weekId);
   if (error) return { ok: false, error: toUserMessage(error) };
+  await syncShoppingItems(ctx, env, { id: weekId, plan: res.plan });
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: res.message } };
 }

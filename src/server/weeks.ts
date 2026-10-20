@@ -16,6 +16,7 @@ import {
   portionModelFor,
   type WeekRow,
 } from "./household-context";
+import { syncShoppingItems } from "./shopping";
 
 export async function engineEnvFor(ctx: HouseholdContext, random: () => number = Math.random): Promise<Env> {
   const { lib, bonus } = await loadLibrary(ctx.id);
@@ -195,6 +196,7 @@ export async function generateAndStore(householdId: string, start: string): Prom
         .single()
     : await supabase.from("weeks").insert(payload).select("id").single();
   if (error) return { ok: false, reason: error.code === "42501" ? "forbidden" : "impossible" };
+  await syncShoppingItems(ctx, freshEnv, { id: data.id, plan });
   const summary = await summarize(ctx, plan, freshEnv);
   return { ok: true, week: plan, weekId: data.id, summary, dislikesIgnored: res.dislikesIgnored };
 }
