@@ -13,3 +13,4 @@ export * from "./slots";
 export * from "./types";
 export * from "./week";
 export * from "./shopping";
+export * from "./stock";

@@ -24,7 +24,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
     <>
       <nav
         aria-label={fr.nav.label}
-        className="fixed inset-x-3 bottom-3 z-40 rounded-pill bg-ink p-2 shadow-float min-[900px]:hidden"
+        className="fixed inset-x-3 bottom-3 z-40 rounded-pill bg-nav p-2 shadow-float min-[900px]:hidden"
         style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
         <ul className="flex items-center justify-between">
@@ -37,7 +37,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
                   aria-current={active ? "page" : undefined}
                   aria-label={active ? undefined : fr.nav[tab.label]}
                   className={`flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-pill px-3 font-bold ${
-                    active ? "bg-banana text-[#17151F]" : "text-surface"
+                    active ? "bg-banana text-[#17151F]" : "text-on-nav"
                   }`}
                 >
                   <Icon name={tab.icon} />

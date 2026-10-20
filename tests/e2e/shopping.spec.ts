@@ -63,7 +63,12 @@ test("courses partagées : temps réel, ajouts simultanés, hors ligne", async (
   // 3. Hors ligne puis reconnexion sans perte.
   await bContext.setOffline(true);
   await expect(b.getByTestId("offline")).toContainText("Hors ligne");
-  const second = b.getByTestId("shopping-item").filter({ hasNotText: firstName }).filter({ hasNotText: "Lessive" }).filter({ hasNotText: "Café" }).first();
+  const second = b
+    .getByTestId("shopping-item")
+    .filter({ hasNotText: firstName })
+    .filter({ hasNotText: "Lessive" })
+    .filter({ hasNotText: "Café" })
+    .first();
   const secondName = (await second.locator("span.font-semibold").innerText()).trim();
   await second.getByRole("checkbox").check();
   await b.getByLabel("Article à ajouter").fill("Piles");
