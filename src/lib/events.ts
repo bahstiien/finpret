@@ -28,6 +28,16 @@ export const EVENT_NAMES = [
   "empty_stamp_tapped",
   "progress_hidden",
   "progress_shown",
+  // Courses réelles (indicateurs : aucun libellé libre, aucun détail alimentaire).
+  "purchase_recorded",
+  "purchase_quantity_corrected",
+  "shopping_issue_reported",
+  "adaptation_previewed",
+  "adaptation_no_verified_candidate",
+  "adaptation_committed",
+  "adaptation_undone",
+  "adaptation_conflict",
+  "shopping_review_completed",
 ] as const;
 
 export type EventName = (typeof EVENT_NAMES)[number];

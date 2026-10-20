@@ -72,7 +72,9 @@ async function editWeek(
   if (!row) return { ok: false, error: t.weekGone };
   const env = await engineEnvFor(ctx);
   // Préparations à identité stable : posées avant toute modification (courses réelles, lot L2).
-  const basePlan = FEATURES.realPurchases ? ensureOccurrenceIds(row.plan, () => crypto.randomUUID()) : row.plan;
+  const basePlan = FEATURES.realPurchases
+    ? ensureOccurrenceIds(row.plan, () => crypto.randomUUID())
+    : row.plan;
   const res = await edit({ env, plan: basePlan, ctx });
   if ("error" in res) return { ok: false, error: res.error };
   if (FEATURES.realPurchases) {
@@ -85,11 +87,16 @@ async function editWeek(
     if (touched.some((uid) => locked.has(uid))) return { ok: false, error: t.locked };
   }
   const supabase = await createClient();
-  const { error } = await supabase
+  // Écriture conditionnée à la version lue : un autre appareil qui a modifié le plan entre-temps n'est pas écrasé.
+  const update = supabase
     .from("weeks")
     .update({ plan: res.plan as unknown as Json, pasta_need: res.plan.pastaNeed })
     .eq("id", weekId);
+  const { data: written, error } = await (
+    FEATURES.realPurchases ? update.eq("updated_at", row.updated_at) : update
+  ).select("id");
   if (error) return { ok: false, error: toUserMessage(error) };
+  if (!written?.length) return { ok: false, error: t.conflict };
   await syncShoppingItems(ctx, env, { id: weekId, plan: res.plan });
   if (feature === "menu.swap") {
     await trackEvent("menu_swap", { userId: user.id, householdId: household.id, props: { week: weekId } });

@@ -94,8 +94,28 @@ export default async function ShoppingPage() {
       )
     : null;
 
+  const { data: events } = FEATURES.realPurchases
+    ? await supabase
+        .from("adaptation_events")
+        .select("id, kind, changes, undone_by")
+        .eq("week_id", week.id)
+        .order("created_at", { ascending: false })
+        .limit(10)
+    : { data: null };
+  const recipeName = (id: string) =>
+    (env.mainById.get(id) ?? env.soupById.get(id) ?? env.simpleById.get(id))?.n ?? id;
+  const adaptHistory = (events ?? []).map((e) => ({
+    id: e.id,
+    kind: e.kind,
+    undone: e.undone_by !== null,
+    lines: (e.changes as unknown as { before: string; after: string }[]).map(
+      (c) => `${recipeName(c.before)} → ${recipeName(c.after)}`,
+    ),
+  }));
+
   return (
     <ShoppingScreen
+      adaptationHistory={adaptHistory}
       purchases={purchases}
       canWrite={household.role !== "viewer"}
       householdId={household.id}

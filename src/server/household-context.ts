@@ -14,6 +14,8 @@ export type WeekRow = {
   plan: WeekPlan;
   pasta_need: number | null;
   pantry_done: boolean;
+  /** Version de la ligne : une modification concurrente du plan est détectée à l'écriture. */
+  updated_at: string;
 };
 
 export type HouseholdContext = {
@@ -61,7 +63,7 @@ export const loadHouseholdContext = cache(async (householdId: string, client?: D
     supabase.from("ratings").select("recipe_id, value").eq("household_id", householdId),
     supabase
       .from("weeks")
-      .select("id, start_date, status, plan, pasta_need, pantry_done")
+      .select("id, start_date, status, plan, pasta_need, pantry_done, updated_at")
       .eq("household_id", householdId)
       .order("start_date", { ascending: false })
       .limit(8),

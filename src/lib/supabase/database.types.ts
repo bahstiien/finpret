@@ -656,14 +656,7 @@ export type Database = {
           author: string | null;
           created_at: string;
         };
-        Insert: {
-          household_id: string;
-          week_id: string;
-          ingredient_key: string;
-          qty: number;
-          type: "purchase" | "correction" | "transfer_out" | "transfer_in";
-          op_key: string;
-        };
+        Insert: never;
         Update: never;
         Relationships: [];
       };
@@ -707,6 +700,39 @@ export type Database = {
         };
         Insert: { week_id: string; ingredient_key: string; household_id: string; confirmed_need: number };
         Update: { confirmed_need?: number };
+        Relationships: [];
+      };
+      adaptation_previews: {
+        Row: {
+          id: string;
+          household_id: string;
+          week_id: string;
+          created_by: string | null;
+          fingerprint: string;
+          payload: Json;
+          created_at: string;
+          expires_at: string;
+          used_at: string | null;
+        };
+        Insert: { household_id: string; week_id: string; fingerprint: string; payload: Json };
+        Update: never;
+        Relationships: [];
+      };
+      adaptation_events: {
+        Row: {
+          id: string;
+          household_id: string;
+          week_id: string;
+          preview_id: string | null;
+          op_key: string;
+          changes: Json;
+          kind: "apply" | "undo";
+          author: string | null;
+          created_at: string;
+          undone_by: string | null;
+        };
+        Insert: never;
+        Update: never;
         Relationships: [];
       };
       sessions: {
@@ -939,6 +965,37 @@ export type Database = {
           role: Database["public"]["Enums"]["household_role"];
           status: "valid" | "expired" | "used";
         }[];
+      };
+      record_purchase: {
+        Args: {
+          p_week: string;
+          p_ingredient: string;
+          p_qty: number;
+          p_type: "purchase" | "correction";
+          p_op_key: string;
+          p_expected_revision?: number;
+        };
+        Returns: Json;
+      };
+      transfer_purchase: {
+        Args: { p_from: string; p_to: string; p_ingredient: string; p_qty: number; p_op_key: string };
+        Returns: Json;
+      };
+      commit_adaptation: {
+        Args: {
+          p_preview: string;
+          p_op_key: string;
+          p_expected_week_version: string;
+          p_expected_purchase_revision: number;
+          p_fingerprint: string;
+          p_plan: Json;
+          p_changes: Json;
+        };
+        Returns: Json;
+      };
+      undo_adaptation: {
+        Args: { p_event: string; p_op_key: string; p_expected_week_version: string; p_plan: Json; p_changes: Json };
+        Returns: Json;
       };
       is_household_member: { Args: { hid: string }; Returns: boolean };
       session_ensure: {

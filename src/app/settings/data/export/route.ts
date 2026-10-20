@@ -11,7 +11,22 @@ export async function GET() {
 
   const supabase = await createClient();
   const hid = household.id;
-  const [hh, memberships, members, settings, weeks, ratings, pantry, freezer, recipes] = await Promise.all([
+  const [
+    hh,
+    memberships,
+    members,
+    settings,
+    weeks,
+    ratings,
+    pantry,
+    freezer,
+    recipes,
+    purchases,
+    issues,
+    preparations,
+    confirmations,
+    adaptations,
+  ] = await Promise.all([
     supabase.from("households").select("*").eq("id", hid).single(),
     supabase.from("memberships").select("user_id, role, created_at").eq("household_id", hid),
     supabase.from("members").select("*").eq("household_id", hid),
@@ -21,6 +36,12 @@ export async function GET() {
     supabase.from("pantry").select("*").eq("household_id", hid),
     supabase.from("freezer").select("*").eq("household_id", hid),
     supabase.from("recipes").select("*").eq("household_id", hid),
+    // Courses réelles : achats déclarés, signalements, préparations protégées, confirmations, adaptations.
+    supabase.from("purchase_events").select("*").eq("household_id", hid).order("seq"),
+    supabase.from("shopping_issues").select("*").eq("household_id", hid),
+    supabase.from("preparation_states").select("*").eq("household_id", hid),
+    supabase.from("coverage_confirmations").select("*").eq("household_id", hid),
+    supabase.from("adaptation_events").select("*").eq("household_id", hid).order("created_at"),
   ]);
   const memberIds = (members.data ?? []).map((m) => m.id);
   const presence = memberIds.length
@@ -39,6 +60,11 @@ export async function GET() {
     pantry: pantry.data,
     freezer: freezer.data,
     recipes: recipes.data,
+    purchaseEvents: purchases.data,
+    shoppingIssues: issues.data,
+    preparationStates: preparations.data,
+    coverageConfirmations: confirmations.data,
+    adaptationEvents: adaptations.data,
   };
   const date = new Date().toISOString().slice(0, 10);
   return new NextResponse(JSON.stringify(body, null, 2), {
