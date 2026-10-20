@@ -62,4 +62,5 @@ Les icônes PWA provisoires sont générées par `node scripts/generate-icons.mj
    ```
 
    Les envois sont idempotents (une ligne par compte, type et jour dans `notification_log`) : un double passage n'envoie rien de plus. `?at=<date ISO>` rejoue un passage à une heure donnée.
+   Série de semaines fin prêtes (SPEC_PROGRES) : appeler de la même façon `GET https://<app>/api/cron/streak-close` toutes les heures (`'0 * * * *'`). Idempotent ; `?at=<date ISO>` rejoue un passage. Après le déploiement initial, jouer une fois `pnpm backfill:progress` (`--dry-run` pour essayer sur une copie).
 4. E-mail de repli (facultatif) : `RESEND_API_KEY` et `EMAIL_FROM`. Sans clé, seuls les envois push partent.

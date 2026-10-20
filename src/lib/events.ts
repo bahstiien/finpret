@@ -17,6 +17,17 @@ export const EVENT_NAMES = [
   "asso_simulator_used",
   "asso_lead_submitted",
   "asso_signup_started",
+  // Progrès : série et passeport (SPEC_PROGRES §7).
+  "streak_week_closed",
+  "streak_pause_planned",
+  "streak_pause_cancelled",
+  "streak_milestone",
+  "share_card_created",
+  "stamp_earned",
+  "progress_viewed",
+  "empty_stamp_tapped",
+  "progress_hidden",
+  "progress_shown",
 ] as const;
 
 export type EventName = (typeof EVENT_NAMES)[number];

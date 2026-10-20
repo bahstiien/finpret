@@ -111,6 +111,10 @@ export const notificationsSchema = z.object({
   consentAt: z.string().nullable().default(null),
   /** E-mails de fin d'essai et d'information : faux après un clic sur « Se désinscrire ». */
   marketingEmails: z.boolean().default(true),
+  /** Série et passeport affichés (SPEC_PROGRES §6.3) : le calcul continue quand c'est masqué. */
+  progress_visible: z.boolean().default(true),
+  /** Information « ta série est en pause » (SPEC_PROGRES §3.7), seule notification liée à la série. */
+  streakPaused: z.boolean().default(true),
 });
 
 export type DietSettings = z.infer<typeof dietSchema>;

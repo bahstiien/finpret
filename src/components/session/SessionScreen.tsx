@@ -8,7 +8,7 @@ import { dur } from "@/engine/format";
 import type { SessionStep } from "@/engine/session";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
-import { recordWeekEvent } from "@/server/actions/events";
+import { SessionDoneBanner } from "./SessionDoneBanner";
 import { bankDoublesAction, updatePantryAfterSession } from "@/server/actions/stock";
 import { useSession } from "./SessionProvider";
 
@@ -242,7 +242,7 @@ export function SessionScreen({
         </aside>
       </div>
 
-      {canEdit && index >= steps.length - 1 && allDone && <SessionDoneTracker weekId={weekId} />}
+      {canEdit && index >= steps.length - 1 && allDone && <SessionDoneBanner weekId={weekId} />}
       {canEdit && (
         <nav className="sticky bottom-24 flex gap-3 min-[900px]:bottom-4" aria-label={t.navigation}>
           <button
@@ -275,12 +275,4 @@ export function SessionScreen({
       )}
     </>
   );
-}
-
-/** Enregistre « session terminée » une fois la dernière étape cochée (une seule fois par semaine, côté serveur). */
-function SessionDoneTracker({ weekId }: { weekId: string }) {
-  useEffect(() => {
-    void recordWeekEvent("session_done", weekId);
-  }, [weekId]);
-  return null;
 }

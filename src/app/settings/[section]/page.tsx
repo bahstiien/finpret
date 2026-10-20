@@ -20,6 +20,7 @@ import { notificationsSchema } from "@/lib/settings";
 import { ADMIN_SECTIONS, type SettingsSection } from "@/lib/settings-sections";
 import { createClient } from "@/lib/supabase/server";
 import { leaveHousehold, switchHousehold } from "@/server/actions/households";
+import { signOut } from "@/server/actions/auth";
 import { deleteAccount, deleteHousehold } from "@/server/actions/settings";
 import { loadHouseholdContext } from "@/server/household-context";
 import { getHouseholds, getProfile, requireHousehold } from "@/server/session";
@@ -201,6 +202,13 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             <h2 className="text-xl font-extrabold">{t.profile.devices}</h2>
             <p className="text-sm text-muted">{t.profile.devicesHint}</p>
             <SignOutOthers />
+          </Card>
+          <Card className="flex flex-col gap-3">
+            <form action={signOut}>
+              <Button type="submit" variant="outline">
+                {fr.appShell.signOut}
+              </Button>
+            </form>
           </Card>
           <Card className="flex flex-col gap-3">
             <ActionForm

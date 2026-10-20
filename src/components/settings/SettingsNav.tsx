@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Icon } from "@/components/ui/Icon";
 import { fr } from "@/i18n/fr";
 
 export function SettingsNav({ sections }: { sections: (keyof typeof fr.settings.sections)[] }) {
@@ -26,6 +27,15 @@ export function SettingsNav({ sections }: { sections: (keyof typeof fr.settings.
             </li>
           );
         })}
+        <li>
+          <Link
+            href="/app/progress?from=profile"
+            className="inline-flex min-h-11 items-center gap-2 rounded-pill bg-violet-soft px-4 text-sm font-bold whitespace-nowrap text-violet-strong"
+          >
+            <Icon name="passport" className="size-4" />
+            {fr.progress.nav}
+          </Link>
+        </li>
       </ul>
     </nav>
   );

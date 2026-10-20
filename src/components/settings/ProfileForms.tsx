@@ -8,6 +8,7 @@ import { fr } from "@/i18n/fr";
 import type { NotificationSettings } from "@/lib/settings";
 import type { ActionResult } from "@/server/errors";
 import { FEATURES } from "@/lib/features";
+import { recordProgressEvent } from "@/server/actions/progress";
 import { removePushSubscription, savePushSubscription, sendTestNotification } from "@/server/actions/push";
 import { saveNotifications, saveProfile, signOutOtherDevices } from "@/server/actions/settings";
 import { SaveStatus, useAutosave } from "./Autosave";
@@ -142,6 +143,19 @@ export function NotificationsForm({ initial }: { initial: NotificationSettings }
           />
         </>
       )}
+      <Toggle
+        label={fr.progress.settings.visible}
+        checked={v.progress_visible}
+        onChange={(progress_visible) => {
+          update((d) => ({ ...d, progress_visible }));
+          void recordProgressEvent({ name: progress_visible ? "progress_shown" : "progress_hidden" });
+        }}
+      />
+      <Toggle
+        label={fr.progress.settings.streakPaused}
+        checked={v.streakPaused}
+        onChange={(streakPaused) => update((d) => ({ ...d, streakPaused }))}
+      />
       {v.push && (
         <Button
           type="button"

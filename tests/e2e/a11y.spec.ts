@@ -25,7 +25,7 @@ test("écrans de l'application, en clair puis en sombre", async ({ page }) => {
   await page.goto("/login");
   await signInFromLoginPage(page, uniqueEmail("a11y"));
   await completeOnboarding(page, "Accessible");
-  const screens = ["/app", "/app/discover", "/app/shopping", "/app/stock", "/app/session", "/app/print", "/app/discover/import", "/settings/profile", "/settings/canteen"];
+  const screens = ["/app", "/app/discover", "/app/shopping", "/app/stock", "/app/session", "/app/progress", "/app/print", "/app/discover/import", "/settings/profile", "/settings/canteen"];
   for (const scheme of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme: scheme });
     for (const path of screens) {
