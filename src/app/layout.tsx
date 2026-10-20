@@ -36,9 +36,15 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${gabarito.variable} ${figtree.variable}`}>
+    <html lang="fr" className={`${gabarito.variable} ${figtree.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Thème choisi sur cet appareil (§11), appliqué avant l'affichage pour éviter un flash. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-dvh">{children}</body>
     </html>
   );

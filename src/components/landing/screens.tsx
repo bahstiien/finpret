@@ -51,7 +51,7 @@ export function MenuScreen() {
                   : day.weekend
                     ? "bg-surface ring-2 ring-banana ring-inset"
                     : "bg-surface"
-              } ${day.past ? "opacity-55" : ""}`}
+              } ${day.past ? "text-muted" : ""}`}
             >
               <p className="font-display text-[14px] leading-none font-extrabold">{day.n}</p>
               <p className="mt-0.5 text-[9px] font-semibold">{day.d}</p>

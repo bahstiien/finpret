@@ -5,6 +5,7 @@ import {
   NotificationsForm,
   ProfileNameForm,
   SignOutOthers,
+  ThemeForm,
 } from "@/components/settings/ProfileForms";
 import { type CanteenChild, CanteenForm } from "@/components/settings/CanteenForms";
 import { DietForm, MenuForm, SessionForm, ShoppingForm } from "@/components/settings/SectionForms";
@@ -185,6 +186,10 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
               </form>
             </Card>
           )}
+          <Card className="flex flex-col gap-3">
+            <h2 className="text-xl font-extrabold">{t.profile.theme}</h2>
+            <ThemeForm />
+          </Card>
           <Card className="flex flex-col gap-4" id="notifications">
             <h2 className="text-xl font-extrabold">{t.profile.notifications}</h2>
             <NotificationsForm

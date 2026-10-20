@@ -215,3 +215,60 @@
     scroll-behavior: smooth;
   }
 }
+
+/* Vue imprimable (§8.6) : une page A4 portrait, en noir et blanc. */
+.print-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 190mm;
+  padding: 16px;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.3;
+}
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.print-table th,
+.print-table td {
+  border: 1px solid currentColor;
+  padding: 4px 5px;
+  text-align: left;
+  vertical-align: top;
+}
+.print-table thead th {
+  font-size: 0.85em;
+}
+.print-notes {
+  min-height: 22mm;
+  border: 1px dashed currentColor;
+  padding: 4px 6px;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-sheet {
+    max-width: none;
+    padding: 0;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+  }
+  .print-sheet * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+}

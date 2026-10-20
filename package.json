@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node -e \"require('fs').rmSync('.next-build',{recursive:true,force:true})\" && next build",
+    "build": "node -e \"require('fs').rmSync('.next-build',{recursive:true,force:true,maxRetries:20,retryDelay:500})\" && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -24,7 +24,8 @@
     "env:supabase": "supabase status -o env --override-name api.url=NEXT_PUBLIC_SUPABASE_URL --override-name auth.anon_key=NEXT_PUBLIC_SUPABASE_ANON_KEY --override-name auth.service_role_key=SUPABASE_SERVICE_ROLE_KEY --override-name db.url=SUPABASE_DB_URL",
     "test:db:ci": "supabase test db",
     "db:push": "node scripts/supabase-remote.mjs push",
-    "db:push:dry": "node scripts/supabase-remote.mjs push:dry"
+    "db:push:dry": "node scripts/supabase-remote.mjs push:dry",
+    "audit:lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@serwist/next": "^9.5.13",
@@ -39,6 +40,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
     "@electric-sql/pglite": "^0.5.10",
     "@electric-sql/pglite-pgtap": "^0.0.11",
     "@eslint/eslintrc": "^3.3.7",

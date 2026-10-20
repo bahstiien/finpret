@@ -236,7 +236,7 @@ export function DiscoverScreen({
         <ul className="grid gap-3 min-[900px]:grid-cols-2">
           {bfList.map((b) => (
             <li key={b.id} className="flex flex-col gap-1 rounded-card bg-surface p-5">
-              <span className="text-xs font-bold text-violet uppercase">{t.breakfastTypes[b.type]}</span>
+              <span className="text-xs font-bold text-violet-strong uppercase">{t.breakfastTypes[b.type]}</span>
               <b className="text-lg">{b.name}</b>
               <p className="text-muted">{b.description}</p>
               <p className="text-sm font-semibold">{t.macros(b.kcal, b.protein)}</p>
@@ -279,9 +279,9 @@ function RecipeCard({
       data-testid={`recipe-${r.id}`}
     >
       <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-        <span className="text-violet uppercase">{t.kinds[r.kind]}</span>
+        <span className="text-violet-strong uppercase">{t.kinds[r.kind]}</span>
         {r.seasonal && (
-          <span className="rounded-pill bg-[#e2f5e6] px-2 py-0.5 text-[#17633a]">{t.inSeason}</span>
+          <span className="rounded-pill bg-green-soft px-2 py-0.5 text-green-ink">{t.inSeason}</span>
         )}
         {r.freezes && (
           <span className="rounded-pill bg-blue-soft px-2 py-0.5 text-blue-ink">{t.freezes}</span>

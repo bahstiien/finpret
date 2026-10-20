@@ -186,7 +186,7 @@ export function MenuScreen({
               {t.weekend.eyebrow}
             </span>
             <h2 className="text-2xl font-black">{t.weekend.title}</h2>
-            <p className="text-white/85">{t.weekend.lead}</p>
+            <p className="text-white">{t.weekend.lead}</p>
             {view.weekend.length > 0 && (
               <ul className="flex flex-col gap-1">
                 {view.weekend.map((w) => (
@@ -240,7 +240,7 @@ export function MenuScreen({
         {view.recipes.map((r, i) => (
           <details key={i} className="rounded-card bg-surface p-5">
             <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-violet uppercase">{r.title}</span>
+              <span className="text-xs font-bold text-violet-strong uppercase">{r.title}</span>
               <b className="text-lg">
                 <Flag flag={r.flag} />
                 {r.name}
@@ -369,7 +369,7 @@ function DayStrip({
                     : weekend
                       ? "border-banana bg-surface"
                       : "border-transparent bg-surface"
-                } ${past && !isToday ? "opacity-50" : ""} ${selected === d.day && !isToday ? "outline-3 outline-violet" : ""}`}
+                } ${past && !isToday ? "text-muted" : ""} ${selected === d.day && !isToday ? "outline-3 outline-violet" : ""}`}
               >
                 <span className="text-lg font-black">{Number(d.iso.slice(8))}</span>
                 <span className="text-[0.7rem] font-bold">{fr.daysAbbr[d.day - 1]}</span>
@@ -594,7 +594,7 @@ function DishCardView({
             aria-label={t.like(dish.name)}
             disabled={pending}
             onClick={() => onRate(1)}
-            className={`grid size-11 place-items-center rounded-full border-2 ${dish.rating === 1 ? "border-green bg-[#e2f5e6]" : "border-transparent bg-chip"}`}
+            className={`grid size-11 place-items-center rounded-full border-2 ${dish.rating === 1 ? "border-green bg-green-soft" : "border-transparent bg-chip"}`}
           >
             <Icon name="thumbUp" className="size-5" />
           </button>

@@ -49,7 +49,7 @@ export function Hero() {
 
         <div className="grid items-center gap-10 pt-6 pb-14 sm:pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:pb-20">
           <div className="flex flex-col items-start gap-6">
-            <span className="rounded-pill bg-white/15 px-4 py-1.5 text-sm font-bold">{h.eyebrow}</span>
+            <span className="rounded-pill bg-black/25 px-4 py-1.5 text-sm font-bold">{h.eyebrow}</span>
             <h1 className="text-[44px] leading-[1.02] font-black tracking-[-0.02em] sm:text-6xl lg:text-7xl">
               {nb(h.titleLine1)} <span className="text-banana block">{nb(h.titleLine2)}</span>
             </h1>

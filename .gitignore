@@ -34,3 +34,6 @@ supabase/.temp/
 .DS_Store
 Thumbs.db
 *.log
+
+# Rapports Lighthouse (pnpm audit:lighthouse)
+lighthouse-report/

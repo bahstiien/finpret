@@ -85,7 +85,7 @@ function MealRow({
   const { run, pending } = useMenuAction();
   const badges = [
     m.favorite && { label: t.badges.favorite, tone: "bg-yellow-soft" },
-    m.kind === "simple" && { label: t.badges.simple, tone: "bg-[#ece7ff] text-violet" },
+    m.kind === "simple" && { label: t.badges.simple, tone: "bg-violet-soft text-violet-strong" },
     m.kind === "bank" && { label: t.badges.freezer, tone: "bg-blue-soft text-blue-ink" },
   ].filter(Boolean) as { label: string; tone: string }[];
   return (

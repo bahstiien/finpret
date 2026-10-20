@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
-import { Toggle } from "@/components/ui/Controls";
+import { ChipToggle, Toggle } from "@/components/ui/Controls";
 import { FormMessage, TextField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
 import type { NotificationSettings } from "@/lib/settings";
@@ -149,6 +149,44 @@ export function NotificationsForm({ initial }: { initial: NotificationSettings }
       {message && <FormMessage tone={message.tone}>{message.text}</FormMessage>}
       <SaveStatus status={status} />
     </div>
+  );
+}
+
+type Theme = "system" | "light" | "dark";
+
+/** Thème clair, sombre ou celui du système (§11), mémorisé sur l'appareil. */
+export function ThemeForm() {
+  const [theme, setTheme] = useState<Theme>("system");
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") setTheme(saved);
+    } catch {
+      // Stockage indisponible : on suit le système.
+    }
+  }, []);
+  const choose = (next: Theme) => {
+    setTheme(next);
+    try {
+      if (next === "system") localStorage.removeItem("theme");
+      else localStorage.setItem("theme", next);
+    } catch {
+      // Le choix vaut pour cette visite seulement.
+    }
+    if (next === "system") delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = next;
+  };
+  return (
+    <fieldset className="flex flex-col gap-2">
+      <legend className="mb-1 text-sm text-muted">{t.themeHint}</legend>
+      <div className="flex flex-wrap gap-2">
+        {(["system", "light", "dark"] as const).map((k) => (
+          <ChipToggle key={k} pressed={theme === k} onToggle={() => choose(k)}>
+            {t.themes[k]}
+          </ChipToggle>
+        ))}
+      </div>
+    </fieldset>
   );
 }
 

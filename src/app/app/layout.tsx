@@ -40,9 +40,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         sound={ctx.settings.session.sound}
         vibration={ctx.settings.session.vibration}
       >
-        <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-5 px-4 pt-6 pb-32 min-[900px]:px-8 min-[900px]:pb-10">
-          <AppNav shoppingLeft={count ?? 0} />
-          <TimerBar />
+        <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-5 px-4 pt-6 pb-32 min-[900px]:px-8 min-[900px]:pb-10 print:max-w-none print:p-0">
+          <div className="contents print:hidden">
+            <AppNav shoppingLeft={count ?? 0} />
+            <TimerBar />
+          </div>
           <main className="flex flex-col gap-5">{children}</main>
         </div>
       </SessionProvider>
