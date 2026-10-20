@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { FEATURES } from "../../src/lib/features";
 
 test("la page d'accueil s'affiche en français", async ({ page }) => {
   await page.goto("/");
@@ -18,11 +19,13 @@ test("le manifest PWA est servi", async ({ request }) => {
   const res = await request.get("/manifest.webmanifest");
   expect(res.ok()).toBe(true);
   const manifest = await res.json();
-  expect(manifest).toMatchObject({ lang: "fr", display: "standalone", short_name: "Menu" });
+  expect(manifest).toMatchObject({ lang: "fr", display: "standalone", short_name: "Fin Prêt" });
   expect(manifest.icons).toEqual(
     expect.arrayContaining([expect.objectContaining({ sizes: "512x512", purpose: "maskable" })]),
   );
-  expect(manifest.share_target.action).toBe("/app/discover/import");
+  // Cible de partage de l'import de recettes : seulement quand la fonction (REPORTÉE) est activée.
+  if (FEATURES.recipeImport) expect(manifest.share_target.action).toBe("/app/discover/import");
+  else expect(manifest.share_target).toBeUndefined();
   for (const icon of manifest.icons) {
     expect((await request.get(icon.src)).ok()).toBe(true);
   }

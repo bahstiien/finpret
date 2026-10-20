@@ -39,6 +39,12 @@ export function Hero() {
               </a>
             ))}
             <Link
+              href="/associations"
+              className="hidden min-h-11 items-center rounded-pill px-4 text-base font-bold hover:bg-white/15 md:inline-flex"
+            >
+              Associations
+            </Link>
+            <Link
               href="/login"
               className="inline-flex min-h-11 items-center rounded-pill border-2 border-white/70 px-5 text-base font-bold hover:bg-white/15"
             >

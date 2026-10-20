@@ -257,3 +257,39 @@ export async function deleteHousehold(formData: FormData): Promise<ActionResult>
   (await cookies()).delete(ACTIVE_HOUSEHOLD_COOKIE);
   redirect("/app");
 }
+
+const memberSchoolSchema = z.object({
+  memberId: z.uuid(),
+  schoolId: z.uuid().nullable(),
+  days: z.array(z.number().int().min(1).max(5)).max(5),
+});
+
+/**
+ * Relie un enfant à l'école de l'association du foyer, avec ses jours de cantine (SPEC_JANVIER §3 A).
+ * `schoolId: null` retire le lien. La RLS (`school_allowed_for_member`) refuse une école d'une autre association.
+ */
+export async function saveMemberSchool(value: unknown): Promise<ActionResult> {
+  const { household, forbidden } = await requireAdmin();
+  if (forbidden) return { ok: false, error: fr.errors.forbidden };
+  const parsed = memberSchoolSchema.safeParse(value);
+  if (!parsed.success) return { ok: false, error: fr.settings.invalid };
+  const { memberId, schoolId, days } = parsed.data;
+  const supabase = await createClient();
+  // L'enfant appartient bien au foyer actif.
+  const { data: kid } = await supabase
+    .from("members")
+    .select("id")
+    .eq("id", memberId)
+    .eq("household_id", household.id)
+    .eq("kind", "child")
+    .maybeSingle();
+  if (!kid) return { ok: false, error: fr.errors.forbidden };
+  const { error } = schoolId
+    ? await supabase
+        .from("member_schools")
+        .upsert({ member_id: memberId, school_id: schoolId, canteen_days: days }, { onConflict: "member_id" })
+    : await supabase.from("member_schools").delete().eq("member_id", memberId);
+  if (error) return { ok: false, error: toUserMessage(error) };
+  revalidatePath("/", "layout");
+  return { ok: true, data: undefined };
+}

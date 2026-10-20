@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { FEATURES } from "../../src/lib/features";
 import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
 
 // §6 « Exclusion d'un allergène » et §8.2 Découvrir.
@@ -17,7 +18,8 @@ test("un allergène coché masque ses recettes dans Découvrir, sauf avec « Aff
   await names.nth(1).fill("Julien");
   await page.getByRole("button", { name: "Continuer" }).click();
   await page.getByRole("button", { name: "Arachides", exact: true }).click();
-  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuer" }).click();
+  for (let i = 0; i < (FEATURES.onboardingHabits ? 3 : 2); i++)
+    await page.getByRole("button", { name: "Continuer" }).click();
   await page.getByRole("button", { name: "Préparer ma semaine" }).click();
   await expect(page.getByRole("heading", { name: "Ta semaine est prête !" })).toBeVisible({
     timeout: 30_000,

@@ -131,6 +131,7 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     .eq("id", householdId);
 
   await trackEvent("onboarding_done", { userId: user.id, householdId });
+  await trackEvent("trial_started", { userId: user.id, householdId });
   if (user.email)
     await sendWelcome(user.email, user.id, input.household.members[0]?.name ?? "").catch(() => null);
 

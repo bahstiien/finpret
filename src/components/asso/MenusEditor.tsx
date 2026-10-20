@@ -180,7 +180,7 @@ export function MenusEditor({
       <ul className="flex flex-col gap-3">
         {adding && <DayForm schoolId={schoolId} row={blank} isNew />}
         {rows.map((r) => (
-          <DayForm key={`${r.date}-${r.status}-${r.main}`} schoolId={schoolId} row={r} />
+          <DayForm key={r.date} schoolId={schoolId} row={r} />
         ))}
       </ul>
       {!rows.length && !adding && <p className="text-muted">{t.empty}</p>}

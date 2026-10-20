@@ -1,9 +1,10 @@
-# CLAUDE.md — Menu de la semaine
+# CLAUDE.md — Fin Prêt
 
 Application web progressive (PWA) multi-foyers de planification de repas et de batch cooking.
 La spécification complète est dans `docs/SPEC.md` : **lis-la en entier avant d'écrire du code**, puis travaille jalon par jalon (section 14 de la spec).
 
 ## Sources de vérité
+- `docs/RECAP_JANVIER.md` : état des jalons, reste à faire hors code, écarts et questions ouvertes. `docs/RESTAURATION.md` : sauvegarde et test de restauration.
 - `docs/SPEC_JANVIER.md` : **prioritaire** pour le lancement du 4 janvier 2027 (périmètre, jalons J0 à J9). En cas de contradiction : SPEC_JANVIER > SPEC > prototype. L'écart avec le code est suivi dans `docs/AUDIT_ECART_JANVIER.md`.
 - `src/lib/features.ts` : drapeaux des fonctionnalités REPORTÉES par SPEC_JANVIER (code conservé, masqué).
 - `design-system/tokens.json` : couleurs ; `pnpm tokens` génère `src/styles/tokens.css`.

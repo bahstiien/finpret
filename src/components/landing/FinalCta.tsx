@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { fr } from "@/i18n/fr";
 import { nb } from "@/lib/typography";
 import { Container, CtaLink } from "./Section";
@@ -26,6 +27,23 @@ export function FinalCta() {
             className="h-10 w-auto"
           />
           <p>{nb(f.signature)}</p>
+          <nav aria-label="Liens du pied de page" className="flex flex-wrap justify-center gap-x-4 text-sm">
+            {[
+              ["/associations", "Associations de parents"],
+              ["/mentions-legales", "Mentions légales"],
+              ["/cgu", "CGU"],
+              ["/cgv", "CGV"],
+              ["/confidentialite", "Confidentialité"],
+            ].map(([href, label]) => (
+              <Link
+                key={href}
+                href={href!}
+                className="inline-flex min-h-11 items-center underline underline-offset-4"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
           <p className="flex flex-col items-center gap-1 sm:items-end">
             <a
               href={`mailto:${f.contact}`}

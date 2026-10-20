@@ -18,6 +18,8 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
+  // Base des URL absolues (image de partage, canonical) : finpret.app en production.
+  metadataBase: new URL(process.env.APP_URL ?? "https://finpret.app"),
   title: { default: fr.app.name, template: `%s · ${fr.app.name}` },
   description: fr.app.description,
   applicationName: fr.app.name,

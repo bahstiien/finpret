@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { ChildSchoolForm } from "@/components/settings/ChildSchoolForm";
 import { HouseholdDetailsForm, MembersForm } from "@/components/settings/HouseholdForms";
 import { InviteForm } from "@/components/settings/InviteForm";
 import { RoleSelect } from "@/components/settings/RoleSelect";
@@ -52,6 +53,29 @@ export default async function HouseholdSettingsPage() {
       .gt("expires_at", new Date().toISOString())
       .order("created_at"),
   ]);
+  // École et jours de cantine des enfants, si le foyer est rattaché à une association (RLS : ses écoles seulement).
+  const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
+  const { data: hh } = await supabase
+    .from("households")
+    .select("association_id")
+    .eq("id", household.id)
+    .single();
+  const { data: assoSchools } = hh?.association_id
+    ? await supabase.from("association_schools").select("school_id").eq("association_id", hh.association_id)
+    : { data: [] };
+  const schoolIds = (assoSchools ?? []).map((s) => s.school_id);
+  const { data: schools } = schoolIds.length
+    ? await supabase.from("schools").select("id, name, city").in("id", schoolIds).order("name")
+    : { data: [] };
+  const { data: links } = kids.length
+    ? await supabase
+        .from("member_schools")
+        .select("member_id, school_id, canteen_days")
+        .in(
+          "member_id",
+          kids.map((k) => k.id),
+        )
+    : { data: [] };
   const userIds = (memberships ?? []).map((m) => m.user_id);
   const { data: profiles } = await supabase
     .from("profiles")
@@ -71,6 +95,25 @@ export default async function HouseholdSettingsPage() {
         weekStart={mondayOf(todayIn(ctx.timezone))}
         alternating={ctx.alternatingFrom !== null}
       />
+
+      {schools?.length && kids.length ? (
+        <Card className="flex flex-col gap-4">
+          <h2 className="text-xl font-extrabold">{fr.ecole.school}</h2>
+          <p className="text-sm text-muted">{fr.ecole.schoolHint}</p>
+          <ChildSchoolForm
+            schools={schools}
+            kids={kids.map((k) => {
+              const link = links?.find((l) => l.member_id === k.id);
+              return {
+                memberId: k.id,
+                name: k.name,
+                schoolId: link?.school_id ?? null,
+                days: link?.canteen_days ?? [1, 2, 4, 5],
+              };
+            })}
+          />
+        </Card>
+      ) : null}
 
       <Card className="flex flex-col gap-4">
         <h2 className="text-xl font-extrabold">{t.accounts}</h2>

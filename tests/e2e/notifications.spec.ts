@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { FEATURES } from "../../src/lib/features";
 import { adminClient, signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
 import { cronSecret } from "./helpers/cron";
 import { completeOnboarding } from "./helpers/onboarding";
@@ -13,6 +14,8 @@ test("le planificateur refuse un appel sans secret", async ({ request }) => {
 });
 
 test("deux passages du planificateur n'envoient pas deux fois le même rappel", async ({ page, request }) => {
+  // Le rappel « courses » est REPORTÉ (SPEC_JANVIER §2) ; l'idempotence reste couverte par les tests unitaires et pgTAP.
+  test.skip(!FEATURES.shoppingSessionNotifications, "Rappels courses et session REPORTÉS");
   test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
   test.setTimeout(90_000);
   const email = uniqueEmail("notif");
@@ -38,7 +41,11 @@ test("deux passages du planificateur n'envoient pas deux fois le même rappel", 
       },
     })
     .eq("user_id", user.id);
-  const { data: membership } = await admin.from("memberships").select("household_id").eq("user_id", user.id).single();
+  const { data: membership } = await admin
+    .from("memberships")
+    .select("household_id")
+    .eq("user_id", user.id)
+    .single();
   const { data: settings } = await admin
     .from("household_settings")
     .select("shopping")
@@ -54,10 +61,15 @@ test("deux passages du planificateur n'envoient pas deux fois le même rappel", 
   const headers = { authorization: `Bearer ${cronSecret()}` };
   const first = await request.get(`/api/cron/notify?at=${at}`, { headers });
   expect(first.ok()).toBe(true);
-  const second = await request.get(`/api/cron/notify?at=${encodeURIComponent("2026-10-24T07:12:00Z")}`, { headers });
+  const second = await request.get(`/api/cron/notify?at=${encodeURIComponent("2026-10-24T07:12:00Z")}`, {
+    headers,
+  });
   expect((await second.json()).duplicates).toBeGreaterThanOrEqual(1);
 
-  const { data: log } = await admin.from("notification_log").select("kind, day, payload").eq("user_id", user.id);
+  const { data: log } = await admin
+    .from("notification_log")
+    .select("kind, day, payload")
+    .eq("user_id", user.id);
   expect(log).toHaveLength(1);
   expect(log![0]).toMatchObject({ kind: "shopping", day: "2026-10-24" });
   expect((log![0]!.payload as { body: string }).body).toMatch(/^Courses : \d+ articles?\.$/);

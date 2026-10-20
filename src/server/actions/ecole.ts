@@ -33,5 +33,6 @@ export async function startWithCode(formData: FormData) {
     path: "/",
     maxAge: THIRTY_DAYS,
   });
-  redirect("/onboarding");
+  // Pas encore connecté : droit vers la connexion, qui revient sur l'onboarding.
+  redirect(user ? "/onboarding" : `/login?next=${encodeURIComponent("/onboarding")}`);
 }

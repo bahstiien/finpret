@@ -1,4 +1,4 @@
-# Menu de la semaine
+# Fin Prêt
 
 PWA multi-foyers de planification de repas et de batch cooking. Spécification : [`docs/SPEC.md`](docs/SPEC.md) ; règles de travail : [`CLAUDE.md`](CLAUDE.md).
 

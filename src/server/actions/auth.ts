@@ -7,6 +7,7 @@ import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { safeNext } from "@/lib/redirect";
 import { createClient } from "@/lib/supabase/server";
+import { allow } from "@/server/rate-limit";
 
 export type LoginState =
   { status: "idle" } | { status: "sent"; email: string } | { status: "error"; message: string };
@@ -37,6 +38,8 @@ export async function signInWithEmail(_prev: LoginState, formData: FormData): Pr
   });
   if (!parsed.success) return { status: "error", message: fr.login.invalidEmail };
 
+  // 5 liens par heure et par adresse (SPEC_JANVIER §8) : freine l'envoi en rafale.
+  if (!allow(`login:${parsed.data.email}`, 5, 3_600_000)) return { status: "error", message: fr.login.tooMany };
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,

@@ -92,9 +92,13 @@ Les sprints A et la landing (indépendante) peuvent tourner en parallèle.
 | Chantier | État |
 | --- | --- |
 | Drapeaux REPORTÉS (`src/lib/features.ts`) | Fait : Apple, rôle `viewer`, étape « habitudes », garde alternée, congélateur et restes, import de recettes (page, action, partage), synchronisation de session, écriture hors ligne des courses. Code et tables conservés. Cantine par enfant laissée active (`householdCanteen`) jusqu'au remplacement par les menus d'école (Sprint B). |
-| Table `events` + `trackEvent` | Fait : migration `20261027100000_events.sql` (non poussée au projet distant), test pgTAP, événements `signup`, `onboarding_done`, `week_generated`, `session_started`, `session_done`, `shopping_checked`. `trial_started`, `subscribed`, `association_joined` et `asso_*` suivront avec leurs fonctions. |
-| `can()` (`src/server/entitlements.ts`) | Fait et testé (table §4, D12). **Pas encore branché** aux actions et à l'interface : il lui faut `subscriptions` et `households.association_id` (Sprint B). |
+| Table `events` + `trackEvent` | Fait : migration `20261027100000_events.sql` (poussée sur le projet de développement), test pgTAP, événements `signup`, `onboarding_done`, `week_generated`, `session_started`, `session_done`, `shopping_checked`. `trial_started`, `subscribed`, `association_joined` et `asso_*` suivront avec leurs fonctions. |
+| `can()` (`src/server/entitlements.ts`) | Fait, testé et branché aux actions et aux écrans (Sprint B). |
 | `design-system/tokens.json` + `pnpm tokens` | Fait ; `src/styles/tokens.css` généré, `tokens:check` en CI. `brand/charte-fin-pret.md` toujours absente. |
 | CI sans Docker | Fait : pgTAP sur PGlite, e2e sur le projet hébergé via secrets `SUPABASE_DEV_*` (à créer dans le dépôt), build et e2e sautés sans secrets. |
 | Sentry | Fait (`src/instrumentation*.ts`), actif seulement avec `SENTRY_DSN` ; sans source maps. |
-| Renommage « Fin Prêt » | Non fait (décision à prendre). |
+| Renommage « Fin Prêt » | Fait (application, manifest, paquet). |
+
+## 9. Suite
+
+Les sprints B à D sont livrés : voir `RECAP_JANVIER.md` (fait, reste à faire par l'équipe, écarts, questions ouvertes).

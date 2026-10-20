@@ -4,8 +4,8 @@ import { engineFr } from "./engine";
 
 export const fr = {
   app: {
-    name: "Menu de la semaine",
-    shortName: "Menu",
+    name: "Fin Prêt",
+    shortName: "Fin Prêt",
     description: "Tes repas de la semaine, la liste de courses et la session de batch cooking du dimanche.",
   },
   home: {
@@ -270,6 +270,7 @@ export const fr = {
     google: "Continuer avec Google",
     invalidEmail: "Cette adresse e-mail ne semble pas valide.",
     failed: "La connexion n'a pas abouti. Réessaie dans un instant.",
+    tooMany: "Trop de liens demandés pour cette adresse. Réessaie dans une heure.",
     providerUnavailable: "Ce mode de connexion n'est pas encore disponible.",
     linkExpired: "Ce lien de connexion a expiré ou a déjà servi. Demande-en un nouveau.",
   },
@@ -321,7 +322,7 @@ export const fr = {
     copy: "Copier",
     copied: "Copié !",
     share: "Partager",
-    shareText: (household: string) => `Rejoins le foyer « ${household} » sur Menu de la semaine`,
+    shareText: (household: string) => `Rejoins le foyer « ${household} » sur Fin Prêt`,
     pending: "En attente",
     expiresOn: (date: string) => `expire le ${date}`,
     revoke: "Révoquer",
