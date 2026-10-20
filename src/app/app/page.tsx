@@ -1,151 +1,97 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { ActionForm } from "@/components/ui/ActionForm";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { SelectField } from "@/components/ui/Field";
-import { Pill } from "@/components/ui/Pill";
-import { dur } from "@/engine/format";
-import { slotMap } from "@/engine/week";
+import { MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
+import { NoWeek } from "@/components/menu/NoWeek";
+import { eligible } from "@/engine/season";
+import { monthOf } from "@/engine/compose";
 import { fr } from "@/i18n/fr";
-import { formatShort } from "@/lib/dates";
-import { signOut } from "@/server/actions/auth";
-import { switchHousehold } from "@/server/actions/households";
-import { generateWeekAction } from "@/server/actions/weeks";
-import { loadHouseholdContext } from "@/server/household-context";
-import { getHouseholds, getProfile, requireHousehold } from "@/server/session";
+import { formatLong, timeIn } from "@/lib/dates";
+import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
+import { buildMenuView, canPrepareNext, flagOf } from "@/server/menu-view";
+import { getProfile, getUser, requireHousehold } from "@/server/session";
 import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 
-export const metadata: Metadata = { title: "Menu" };
+export const metadata: Metadata = { title: fr.nav.menu };
 
-// M4 : récapitulatif de la semaine ; l'écran Menu complet arrive en M5 (§8.1).
-export default async function AppHomePage() {
-  const { user, household } = await requireHousehold("/app");
-  const ctx = await loadHouseholdContext(household.id);
-  if (!ctx.onboardedAt && household.role === "admin") redirect("/onboarding");
-  const [profile, households] = await Promise.all([getProfile(), getHouseholds()]);
-  const name = profile?.display_name ?? user.email ?? "";
+/** Onglet Menu (§8.1). `?week=next` affiche la semaine suivante déjà préparée. */
+export default async function MenuPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+  const { household } = await requireHousehold("/app");
+  const [ctx, profile, user, params] = await Promise.all([
+    loadHouseholdContext(household.id),
+    getProfile(),
+    getUser(),
+    searchParams,
+  ]);
   const canEdit = household.role !== "viewer";
-  const { current, next, nextStart } = currentAndNext(ctx);
-  const week = current ?? next;
-  const env = week ? await engineEnvFor(ctx) : null;
-  const summary = week && env ? await summarize(ctx, week.plan, env) : null;
-  const map = week && env ? slotMap(env, week.plan) : {};
+  const { today, current, next, nextStart } = currentAndNext(ctx);
+  const showNext = params.week === "next" && next;
+  const row = showNext ? next : (current ?? next);
+  const hour = Number(timeIn(ctx.timezone).slice(0, 2));
+  const header = {
+    date: formatLong(today),
+    greeting: hour >= 18 ? fr.menuScreen.evening : fr.menuScreen.morning,
+    // TODO(spec) §16 Q2 : prénom du membre lié au compte, sinon celui du profil.
+    name:
+      ctx.members.find((m) => m.userId === user?.id)?.name ??
+      profile?.display_name ??
+      user?.email?.split("@")[0] ??
+      "",
+  };
+  if (!row) return <NoWeek header={header} canEdit={canEdit} start={nextStart} />;
+
+  const env = await engineEnvFor(ctx);
+  const pm = portionModelFor(ctx, row.start_date);
+  const view = buildMenuView(ctx, env, row, pm, today);
+  const summary = await summarize(ctx, row.plan, env);
+  const month = monthOf(row.start_date);
+  const quick = (r: { steps?: string[]; prepMin?: number; blocks?: { active: number; passive: number }[] }) =>
+    !!r.steps || (r.prepMin ?? 0) + (r.blocks ?? []).reduce((s, b) => s + b.active + b.passive, 0) <= 30;
+  const weekendOptions: PickerOption[] = [...env.lib.simples, ...env.lib.mains].map((r) => ({
+    id: r.id,
+    name: r.n,
+    short: r.s,
+    flag: flagOf(r.o),
+    seasonal: eligible(env, r, month),
+    quick: quick(r),
+    favorite: env.ratings[r.id] === 1,
+    type: "steps" in r ? "simple" : "main",
+  }));
+  const cakeOptions: PickerOption[] = env.lib.cakes.map((c) => ({
+    id: c.id,
+    name: c.n,
+    short: c.n,
+    flag: null,
+    seasonal: !c.months || c.months.includes(month),
+    quick: false,
+    favorite: false,
+    type: c.t,
+  }));
+  const active = ctx.members.filter((m) => !m.archived);
+  const shortcuts = {
+    family: {
+      a: active.filter((m) => m.kind === "adult").length,
+      c: active.filter((m) => m.kind === "child").length,
+    },
+    adults: { a: active.filter((m) => m.kind === "adult").length, c: 0 },
+  };
+  const isCurrent = row === current;
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-4xl font-black">{fr.appShell.hello(name)}</h1>
-        <div className="flex flex-wrap items-center gap-2">
-          <Pill tone="violet" data-testid="active-household">
-            {household.name}
-          </Pill>
-          <Pill>{fr.roles[household.role]}</Pill>
-        </div>
-      </header>
-
-      {!ctx.onboardedAt ? (
-        <Card>
-          <p className="text-muted">{fr.menu.finishSetup}</p>
-        </Card>
-      ) : week && summary ? (
-        <>
-          <h2 className="text-2xl font-extrabold" data-testid="week-title">
-            {fr.menu.weekOf(formatShort(week.start_date))}
-          </h2>
-          <ul className="grid gap-3 sm:grid-cols-3" data-testid="week-summary">
-            <li className="rounded-card bg-violet p-5 text-white">
-              <span className="block font-display text-3xl font-black" data-testid="summary-meals">
-                {summary.meals}
-              </span>
-              <span className="text-sm font-semibold">{fr.menu.meals}</span>
-            </li>
-            <li className="rounded-card bg-blue-soft p-5 text-blue-ink">
-              <span className="block font-display text-3xl font-black">{dur(summary.sessionMinutes)}</span>
-              <span className="text-sm font-semibold">{fr.menu.session}</span>
-            </li>
-            <li className="rounded-card bg-pink-soft p-5 text-pink-ink">
-              <span className="block font-display text-3xl font-black">{summary.shoppingItems}</span>
-              <span className="text-sm font-semibold">{fr.menu.shopping}</span>
-            </li>
-          </ul>
-          <Card>
-            <ul className="flex flex-col divide-y divide-line">
-              {[1, 2, 3, 4, 5].map((d) => (
-                <li key={d} className="grid grid-cols-[6rem_1fr] gap-2 py-3">
-                  <span className="font-bold capitalize">{fr.days[d - 1]}</span>
-                  <span className="flex flex-col gap-1">
-                    {(["lunch", "dinner"] as const).map((meal) => {
-                      const entry = map[`${d}-${meal}`];
-                      const removed = week.plan.removed.includes(`${d}-${meal}`);
-                      return (
-                        <span key={meal}>
-                          <span className="text-sm text-muted">{fr.meals[meal]} · </span>
-                          {entry && !removed ? (
-                            entry.r.n
-                          ) : (
-                            <span className="text-muted">{fr.menu.nothing}</span>
-                          )}
-                        </span>
-                      );
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </>
-      ) : (
-        <Card className="flex flex-col gap-4">
-          <p className="text-muted">{fr.menu.noWeek}</p>
-          {canEdit && (
-            <ActionForm
-              action={generateWeekAction.bind(null, nextStart)}
-              fields={{}}
-              label={fr.menu.prepare}
-              variant="primary"
-            />
-          )}
-        </Card>
-      )}
-
-      {households.length > 1 && (
-        <Card>
-          <form action={switchHousehold} className="flex flex-wrap items-end gap-3">
-            <SelectField
-              id="householdId"
-              name="householdId"
-              label={fr.household.switchLabel}
-              defaultValue={household.id}
-              className="min-w-56 flex-1"
-            >
-              {households.map((h) => (
-                <option key={h.id} value={h.id}>
-                  {h.name}
-                </option>
-              ))}
-            </SelectField>
-            <Button type="submit" variant="outline">
-              {fr.household.switch}
-            </Button>
-          </form>
-        </Card>
-      )}
-
-      <div className="flex flex-wrap gap-3">
-        <Link
-          href="/settings"
-          className="inline-flex min-h-11 items-center rounded-pill bg-surface px-6 font-bold"
-        >
-          {fr.appShell.settings}
-        </Link>
-        <form action={signOut}>
-          <Button type="submit" variant="dark">
-            {fr.appShell.signOut}
-          </Button>
-        </form>
-      </div>
-    </main>
+    <MenuScreen
+      header={header}
+      view={view}
+      canEdit={canEdit}
+      sessionMinutes={summary.sessionMinutes}
+      weekendOptions={weekendOptions}
+      cakeOptions={cakeOptions}
+      shortcuts={shortcuts}
+      childFactor={pm.childFactor}
+      weeks={{
+        isCurrent,
+        hasNext: !!next && isCurrent,
+        hasCurrent: !!current && !isCurrent,
+        nextStart,
+        canPrepareNext: isCurrent && !next && canPrepareNext(today),
+      }}
+    />
   );
 }

@@ -22,7 +22,7 @@ export type HouseholdContext = {
   alternatingFrom: string | null;
   onboardedAt: string | null;
   settings: HouseholdSettings;
-  members: Member[];
+  members: (Member & { userId?: string | null })[];
   presence: PresenceRule[];
   pantry: Pantry;
   bank: BankEntry[];
@@ -90,6 +90,7 @@ export const loadHouseholdContext = cache(async (householdId: string): Promise<H
       birthdate: m.birthdate,
       portionOverride: m.portion_override,
       archived: m.archived,
+      userId: m.user_id,
     })),
     presence: (presence.data ?? []).map((p) => ({
       memberId: p.member_id,

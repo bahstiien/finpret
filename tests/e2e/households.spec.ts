@@ -34,11 +34,11 @@ test("premier menu après l'onboarding (§5)", async ({ page }) => {
   await expect(recap).toContainText("repas prévus");
   await page.getByRole("link", { name: "Voir mon menu" }).click();
   await expect(page).toHaveURL(/\/app$/);
-  await expect(page.getByTestId("active-household")).toHaveText("Les Dupont");
+  await expect(page.getByTestId("week-title")).toContainText("Semaine du");
   await expect(page.getByTestId("summary-meals")).toHaveText("10");
   await expect(page.getByTestId("week-summary")).toContainText("Session");
-  await expect(page.getByTestId("week-summary")).toContainText("Articles à acheter");
-  await expect(page.getByText("Administrateur")).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Changer / }).first()).toBeVisible();
+  await expect(page.getByTestId("dishes").getByRole("listitem")).toHaveCount(5); // 4 plats et la soupe
 });
 
 test("connexion par lien magique, invitation et adhésion ; le paramétrage reste à l'administrateur", async ({
@@ -71,8 +71,8 @@ test("connexion par lien magique, invitation et adhésion ; le paramétrage rest
   await expect(guest).toHaveURL(new URL(link).pathname);
   await guest.getByRole("button", { name: "Rejoindre le foyer" }).click();
   await expect(guest).toHaveURL(/\/app$/);
-  await expect(guest.getByTestId("active-household")).toHaveText("Les Martin");
-  await expect(guest.getByText("Lecture seule", { exact: true })).toBeVisible();
+  await expect(guest.getByTestId("week-title")).toContainText("Semaine du");
+  await expect(guest.getByRole("button", { name: /^Changer / })).toHaveCount(0); // lecture seule
   await expect(guest.getByTestId("summary-meals")).toHaveText("10");
 
   // 4. L'invitation a servi : elle n'est plus en attente et le lien est refusé.

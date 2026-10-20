@@ -27,7 +27,9 @@ export default async function OnboardingPage() {
   ]);
   // Le nom par défaut du profil est la partie locale de l'e-mail : on ne le propose pas comme prénom.
   const displayName = profile?.display_name ?? "";
-  const initial = onboardingDefaults(displayName === user.email?.split("@")[0] ? "" : displayName);
+  // (tronquée à 60 caractères par la base) ; un prénom fait au plus 40 caractères.
+  const fromEmail = !!displayName && (user.email?.split("@")[0] ?? "").startsWith(displayName);
+  const initial = onboardingDefaults(fromEmail ? "" : displayName.slice(0, 40));
   if (household) initial.household.name = household.name;
 
   return (
