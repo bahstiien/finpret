@@ -58,6 +58,12 @@ export default async function AppHomePage() {
 
       <div className="flex flex-wrap gap-3">
         <Link
+          href="/settings/profile"
+          className="inline-flex min-h-11 items-center rounded-pill bg-banana px-6 font-bold text-[#17151F]"
+        >
+          {fr.appShell.account}
+        </Link>
+        <Link
           href="/settings/household"
           className="inline-flex min-h-11 items-center rounded-pill bg-surface px-6 font-bold"
         >

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { HouseholdNameForm } from "@/components/settings/NameForms";
 import { InviteForm } from "@/components/settings/InviteForm";
 import { RoleSelect } from "@/components/settings/RoleSelect";
 import { ActionForm } from "@/components/ui/ActionForm";
@@ -52,13 +52,18 @@ export default async function HouseholdSettingsPage() {
   const nameOf = (id: string) => profiles?.find((p) => p.user_id === id)?.display_name ?? "—";
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <Link href="/app" className="self-start text-sm font-semibold text-muted underline">
-        ← {fr.app.shortName}
-      </Link>
-      <h1 className="text-4xl font-black">
-        {t.title} · {household.name}
-      </h1>
+    <>
+      <Card className="flex flex-col gap-4">
+        <h2 className="text-2xl font-extrabold">{fr.settingsAccount.householdDetails}</h2>
+        {isAdmin ? (
+          <HouseholdNameForm householdId={household.id} initial={household.name} />
+        ) : (
+          <>
+            <p className="font-semibold">{household.name}</p>
+            <p className="text-sm text-muted">{fr.settingsAccount.adminOnlyName}</p>
+          </>
+        )}
+      </Card>
 
       <Card className="flex flex-col gap-4">
         <h2 className="text-2xl font-extrabold">{t.accounts}</h2>
@@ -138,6 +143,6 @@ export default async function HouseholdSettingsPage() {
           <p className="text-muted">{t.adminOnly}</p>
         )}
       </Card>
-    </main>
+    </>
   );
 }

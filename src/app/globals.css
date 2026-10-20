@@ -215,3 +215,22 @@
     scroll-behavior: smooth;
   }
 }
+
+/* Apparition douce des blocs de la page d'accueil (inspirée du hero 21st) ; absente si l'utilisateur réduit les animations. */
+@keyframes finpret-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: finpret-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+}
