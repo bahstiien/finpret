@@ -5,6 +5,7 @@ import { householdPortions } from "@/engine/portions";
 import type { BankEntry, Pantry, Ratings, WeekPlan } from "@/engine/types";
 import { type HouseholdSettings, parseSettings } from "@/lib/settings";
 import { createClient } from "@/lib/supabase/server";
+import type { Db } from "@/lib/supabase/types";
 
 export type WeekRow = {
   id: string;
@@ -32,8 +33,9 @@ export type HouseholdContext = {
 };
 
 /** Tout ce dont le moteur a besoin pour un foyer (réglages, membres, stock, avis, semaines). */
-export const loadHouseholdContext = cache(async (householdId: string): Promise<HouseholdContext> => {
-  const supabase = await createClient();
+/** `client` : client de service pour les tâches planifiées (sans session) ; client de la requête sinon. */
+export const loadHouseholdContext = cache(async (householdId: string, client?: Db): Promise<HouseholdContext> => {
+  const supabase = client ?? (await createClient());
   const [household, settings, members, pantry, freezer, ratings, weeks] = await Promise.all([
     supabase
       .from("households")

@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
+import { cronSecret } from "./tests/e2e/helpers/cron";
 
 // Mêmes variables que l'application (URL et clé Supabase locales).
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
@@ -31,6 +32,10 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,
     // Import de recettes : pages de test servies sans réseau sous https://recettes.test/<nom> (§8.8).
-    env: { IMPORT_FIXTURES_DIR: path.resolve("tests/fixtures/import") },
+    env: {
+      IMPORT_FIXTURES_DIR: path.resolve("tests/fixtures/import"),
+      // Planificateur des notifications (§12) appelé par les tests.
+      CRON_SECRET: cronSecret(),
+    },
   },
 });

@@ -3,6 +3,7 @@ import { cache } from "react";
 import type { Cake, Ingredient, Main, Pack, Simple, Soup } from "@/engine/catalog/schema";
 import type { Library } from "@/engine/types";
 import { createClient } from "@/lib/supabase/server";
+import type { Db } from "@/lib/supabase/types";
 
 /** Recette du foyer : lien et nom du site d'origine (« Source : Marmiton »), null si saisie à la main. */
 export type ImportedMeta = { sourceUrl: string | null; sourceName: string | null };
@@ -27,8 +28,9 @@ type IngredientRow = {
 export const loadLibrary = cache(
   async (
     householdId: string,
+    client?: Db,
   ): Promise<{ lib: Library; bonus: Record<string, number>; imported: Record<string, ImportedMeta> }> => {
-    const supabase = await createClient();
+    const supabase = client ?? (await createClient());
     const [aisles, ingredients, packs, recipes, own] = await Promise.all([
       supabase.from("aisles").select("key, label, position").order("position"),
       supabase.from("ingredients").select("key, label, unit, aisle, forms, half, seasonal"),

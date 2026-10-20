@@ -17,9 +17,14 @@ import {
   type WeekRow,
 } from "./household-context";
 import { syncShoppingItems } from "./shopping";
+import type { Db } from "@/lib/supabase/types";
 
-export async function engineEnvFor(ctx: HouseholdContext, random: () => number = Math.random): Promise<Env> {
-  const { lib, bonus } = await loadLibrary(ctx.id);
+export async function engineEnvFor(
+  ctx: HouseholdContext,
+  random: () => number = Math.random,
+  client?: Db,
+): Promise<Env> {
+  const { lib, bonus } = await loadLibrary(ctx.id, client);
   return createEnv({
     lib,
     pantry: ctx.pantry,

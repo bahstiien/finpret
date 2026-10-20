@@ -72,6 +72,18 @@ export type Database = {
         Update: { display_name?: string | null; active_household?: string | null };
         Relationships: [];
       };
+      push_subscriptions: {
+        Row: { id: string; user_id: string; endpoint: string; keys: Json; user_agent: string | null; created_at: string };
+        Insert: { endpoint: string; keys: Json; user_agent?: string | null; user_id?: string };
+        Update: { keys?: Json; user_agent?: string | null };
+        Relationships: [];
+      };
+      notification_log: {
+        Row: { id: number; user_id: string; kind: string; day: string; sent_at: string; payload: Json | null };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       user_settings: {
         Row: { user_id: string; notifications: Json };
         Insert: never;
@@ -414,6 +426,10 @@ export type Database = {
       };
       session_timer: { Args: { p_week: string; p_id: string; p_action: string }; Returns: undefined };
       household_role_of: { Args: { hid: string }; Returns: Database["public"]["Enums"]["household_role"] };
+      claim_notification: {
+        Args: { p_user: string; p_kind: string; p_day: string; p_payload?: Json };
+        Returns: boolean;
+      };
     };
     Enums: { household_role: "admin" | "member" | "viewer" };
     CompositeTypes: { [_ in never]: never };

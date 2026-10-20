@@ -45,3 +45,21 @@ Après chaque migration : `pnpm db:types` régénère `src/lib/supabase/database
 ## Icônes
 
 Les icônes PWA provisoires sont générées par `node scripts/generate-icons.mjs`.
+
+## Notifications (M9)
+
+1. Clés VAPID : `pnpm dlx web-push generate-vapid-keys`, puis `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` et `VAPID_SUBJECT` dans `.env.local` (et dans l'hébergement).
+2. `CRON_SECRET` : `openssl rand -hex 32`.
+3. Planificateur : appeler `GET https://<app>/api/cron/notify` toutes les 15 minutes avec l'en-tête `Authorization: Bearer <CRON_SECRET>`. Avec Supabase (extensions `pg_cron` et `pg_net` activées), dans l'éditeur SQL :
+
+   ```sql
+   select cron.schedule('notify', '*/15 * * * *', $$
+     select net.http_get(
+       url := 'https://<app>/api/cron/notify',
+       headers := jsonb_build_object('Authorization', 'Bearer <CRON_SECRET>')
+     );
+   $$);
+   ```
+
+   Les envois sont idempotents (une ligne par compte, type et jour dans `notification_log`) : un double passage n'envoie rien de plus. `?at=<date ISO>` rejoue un passage à une heure donnée.
+4. E-mail de repli (facultatif) : `RESEND_API_KEY` et `EMAIL_FROM`. Sans clé, seuls les envois push partent.
