@@ -61,9 +61,9 @@ export default async function SubscriptionPage({
       {params.code === "ok" && <FormMessage tone="success">{t.codeOk}</FormMessage>}
       {params.code === "locked" && <FormMessage tone="error">{t.codeLocked}</FormMessage>}
       {errorText && <FormMessage tone="error">{errorText}</FormMessage>}
-      <p className="rounded-card bg-surface p-5 font-bold" data-testid="offer-status">
+      <Card as="p" padding="cozy" className="font-bold" data-testid="offer-status">
         {status}
-      </p>
+      </Card>
 
       {tier !== "subscribed" && isAdmin && (
         <section className="grid gap-3 min-[600px]:grid-cols-2" aria-label={t.title}>

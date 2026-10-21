@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/server/admin";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 /** Journal des actions du back-office (200 dernières). */
 export default async function AdminAuditPage() {
@@ -12,7 +13,7 @@ export default async function AdminAuditPage() {
   return (
     <>
       <PageHeader title="Journal" />
-      <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5 text-sm">
+      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line text-sm">
         {(data ?? []).map((a) => (
           <li key={a.id} className="py-2">
             <b>{a.action}</b> · {a.target ?? "—"} ·{" "}
@@ -22,7 +23,7 @@ export default async function AdminAuditPage() {
           </li>
         ))}
         {!data?.length && <li className="text-muted">Aucune action.</li>}
-      </ul>
+      </Card>
     </>
   );
 }

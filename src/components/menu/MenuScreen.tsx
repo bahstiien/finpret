@@ -437,24 +437,24 @@ function Tiles({
         </div>
       )}
       {day.thaw.length > 0 && (
-        <div className="flex flex-col gap-2 rounded-card bg-yellow-soft p-5">
+        <Card as="div" tone="yellow" padding="cozy" className="flex flex-col gap-2">
           <span className="grid size-10 place-items-center rounded-xl bg-surface">
             <Icon name="snow" />
           </span>
           <span className="text-sm text-muted">{isToday ? t.tiles.beforeBed : t.tiles.eveBefore}</span>
           <b className="text-lg leading-tight">{t.tiles.thaw(day.thaw)}</b>
-        </div>
+        </Card>
       )}
-      <div className="flex flex-col gap-1 rounded-card bg-blue-soft p-5 text-blue-ink">
+      <Card as="div" tone="blue" padding="cozy" className="flex flex-col gap-1">
         <span className="text-sm font-semibold">{t.tiles.session}</span>
         <b className="font-display text-3xl font-black">{dur(sessionMinutes)}</b>
-      </div>
-      <div className="flex flex-col gap-1 rounded-card bg-surface p-5">
+      </Card>
+      <Card as="div" padding="cozy" className="flex flex-col gap-1">
         <span className="text-sm font-semibold text-muted">{t.tiles.planned}</span>
         <b className="font-display text-3xl font-black" data-testid="summary-meals">
           {planned}
         </b>
-      </div>
+      </Card>
     </div>
   );
 }
@@ -608,7 +608,7 @@ function DishCardView({
   onSwap: () => void;
 }) {
   return (
-    <li className="flex w-72 shrink-0 snap-start flex-col gap-3 rounded-card bg-surface p-5">
+    <Card as="li" padding="cozy" className="flex w-72 shrink-0 snap-start flex-col gap-3">
       <div>
         <b className="text-lg leading-tight">
           <Flag flag={dish.flag} />
@@ -660,6 +660,6 @@ function DishCardView({
           </button>
         </div>
       )}
-    </li>
+    </Card>
   );
 }

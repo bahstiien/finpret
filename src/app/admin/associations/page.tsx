@@ -3,6 +3,7 @@ import { ActionForm } from "@/components/ui/ActionForm";
 import { checkAssociationEmail, checkRnaOrSiren } from "@/lib/rna";
 import { approveAssociation, setAssociationSuspended } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { Card } from "@/components/ui/Card";
 
 const STATUS = {
   pending: "En attente",
@@ -30,9 +31,11 @@ export default async function AdminAssociationsPage() {
           const rna = checkRnaOrSiren(a.rna_or_siren);
           const mail = checkAssociationEmail(a.email);
           return (
-            <li
+            <Card
+              as="li"
+              padding="cozy"
               key={a.id}
-              className="flex flex-col gap-3 rounded-card bg-surface p-5"
+              className="flex flex-col gap-3"
               data-testid={`asso-${a.code}`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -74,7 +77,7 @@ export default async function AdminAssociationsPage() {
                   />
                 )}
               </div>
-            </li>
+            </Card>
           );
         })}
       </ul>

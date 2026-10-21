@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { associationsFr } from "@/i18n/associations";
 import { estimateAnnualAmount, SIM_FAMILIES, SIM_SHARE } from "@/lib/simulator";
 import { recordPublicEvent } from "@/server/actions/public";
+import { Card } from "@/components/ui/Card";
 
 const t = associationsFr.simulator;
 const euros = new Intl.NumberFormat("fr-FR", {
@@ -24,7 +25,7 @@ export function Simulator() {
   };
   const amount = estimateAnnualAmount(families, share);
   return (
-    <div className="flex flex-col gap-6 rounded-card bg-surface p-6 sm:p-8">
+    <Card as="div" className="flex flex-col gap-6 sm:p-8">
       <div className="grid gap-6 sm:grid-cols-2">
         <label className="flex flex-col gap-2 font-bold">
           <span>
@@ -65,6 +66,6 @@ export function Simulator() {
         {t.result(euros.format(amount))}
       </p>
       <p className="text-sm text-muted">{t.note}</p>
-    </div>
+    </Card>
   );
 }

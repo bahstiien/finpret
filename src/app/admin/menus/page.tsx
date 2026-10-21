@@ -4,6 +4,7 @@ import { unpublishMenu } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { menuText } from "@/server/school-canteen";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 /** Menus d'école récents : contrôle et dépublication en cas d'erreur. */
 export default async function AdminMenusPage() {
@@ -23,7 +24,7 @@ export default async function AdminMenusPage() {
   return (
     <>
       <PageHeader title="Menus d'école" />
-      <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
+      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
         {(data ?? []).map((m) => (
           <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
             <span>
@@ -44,7 +45,7 @@ export default async function AdminMenusPage() {
           </li>
         ))}
         {!data?.length && <li className="text-muted">Aucun menu.</li>}
-      </ul>
+      </Card>
     </>
   );
 }

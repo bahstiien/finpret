@@ -3,6 +3,7 @@ import { formatShort } from "@/lib/dates";
 import { markPayoutPaid } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const STATUS = { ready: "À verser", paid: "Versé", carried_over: "Reporté" } as const;
@@ -34,7 +35,7 @@ export default async function AdminPayoutsPage() {
           </a>
         ))}
       </div>
-      <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
+      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
         {(data ?? []).map((p) => {
           const a = byId.get(p.association_id);
           return (
@@ -62,7 +63,7 @@ export default async function AdminPayoutsPage() {
           );
         })}
         {!data?.length && <li className="text-muted">Aucun versement.</li>}
-      </ul>
+      </Card>
     </>
   );
 }

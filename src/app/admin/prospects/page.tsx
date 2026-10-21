@@ -3,6 +3,7 @@ import { formatShort } from "@/lib/dates";
 import { markLeadContacted } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 /** Demandes de présentation reçues depuis la landing /associations. */
 export default async function AdminLeadsPage() {
@@ -15,7 +16,7 @@ export default async function AdminLeadsPage() {
   return (
     <>
       <PageHeader title="Prospects" />
-      <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
+      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
         {(data ?? []).map((l) => (
           <li
             key={l.id}
@@ -44,7 +45,7 @@ export default async function AdminLeadsPage() {
           </li>
         ))}
         {!data?.length && <li className="text-muted">Aucune demande.</li>}
-      </ul>
+      </Card>
     </>
   );
 }

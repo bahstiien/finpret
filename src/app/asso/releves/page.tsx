@@ -28,7 +28,9 @@ export default async function StatementsPage() {
       {association.status === "approved" ? (
         <IbanForm last4={association.ibanLast4} />
       ) : (
-        <p className="rounded-card bg-surface p-5">{t.ibanMissing}</p>
+        <Card as="p" padding="cozy">
+          {t.ibanMissing}
+        </Card>
       )}
       <Card padding="cozy" aria-label={t.title}>
         {!data?.length && <p className="text-muted">{t.none}</p>}

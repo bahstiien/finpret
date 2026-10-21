@@ -15,14 +15,17 @@ const tones: Record<CardTone, string> = {
 
 const paddings = { none: "", sm: "p-4", cozy: "p-5", md: "p-6", lg: "p-8" } as const;
 
-/** Surface de base de l'interface : rayon 28 px, quatre teintes douces et deux teintes pleines. */
+type CardTag = "section" | "div" | "li" | "article" | "figure" | "p" | "ul" | "dl";
+
+/** Surface de base de l'interface : rayon 28 px, huit teintes ; `as` choisit l'élément HTML (section par défaut). */
 export function Card({
+  as: Tag = "section",
   tone = "surface",
   padding = "md",
   className = "",
   ...props
-}: HTMLAttributes<HTMLElement> & { tone?: CardTone; padding?: keyof typeof paddings }) {
-  return <section className={`rounded-card ${tones[tone]} ${paddings[padding]} ${className}`} {...props} />;
+}: HTMLAttributes<HTMLElement> & { as?: CardTag; tone?: CardTone; padding?: keyof typeof paddings }) {
+  return <Tag className={`rounded-card ${tones[tone]} ${paddings[padding]} ${className}`} {...props} />;
 }
 
 /** Page centrée simple (connexion, création de foyer, invitation). */

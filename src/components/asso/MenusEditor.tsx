@@ -10,6 +10,7 @@ import {
   publishAllDrafts,
   saveSchoolMenu,
 } from "@/server/actions/asso";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.asso.menus;
 
@@ -34,7 +35,7 @@ function DayForm({ schoolId, row, isNew = false }: { schoolId: string; row: Menu
   const [state, action, pending] = useActionState<MenuState, FormData>(saveSchoolMenu, {});
   if (row.readOnly) {
     return (
-      <li className="rounded-card bg-surface p-4">
+      <Card as="li" padding="sm">
         <p className="font-bold">{row.label}</p>
         <p>
           {FIELDS.map((f) => row[f])
@@ -42,11 +43,11 @@ function DayForm({ schoolId, row, isNew = false }: { schoolId: string; row: Menu
             .join(", ")}
         </p>
         <p className="text-sm text-muted">{t.readOnly}</p>
-      </li>
+      </Card>
     );
   }
   return (
-    <li className="rounded-card bg-surface p-4" data-testid={`menu-${row.date || "new"}`}>
+    <Card as="li" padding="sm" data-testid={`menu-${row.date || "new"}`}>
       <form action={action} className="flex flex-col gap-3">
         <input type="hidden" name="schoolId" value={schoolId} />
         {isNew ? (
@@ -102,7 +103,7 @@ function DayForm({ schoolId, row, isNew = false }: { schoolId: string; row: Menu
           )}
         </div>
       </form>
-    </li>
+    </Card>
   );
 }
 

@@ -12,6 +12,7 @@ import { loadPurchaseView } from "@/server/purchases-view";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
+import { PageHeader } from "@/components/ui/Layout";
 
 export const metadata: Metadata = { title: fr.nav.shopping };
 
@@ -24,7 +25,7 @@ export default async function ShoppingPage() {
   if (!week) {
     return (
       <>
-        <h1 className="text-4xl font-black">{fr.nav.shopping}</h1>
+        <PageHeader title={fr.nav.shopping} />
         <Card>
           <p className="text-muted">{fr.shopping.noWeek}</p>
         </Card>

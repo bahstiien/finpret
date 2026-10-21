@@ -3,6 +3,7 @@ import { requireAdmin } from "@/server/admin";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/Field";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 /** Écoles : liste, création, nombre d'associations rattachées. */
 export default async function AdminSchoolsPage() {
@@ -26,7 +27,7 @@ export default async function AdminSchoolsPage() {
         <TextField id="s-uai" name="uai" label="UAI (facultatif)" maxLength={8} className="w-40" />
         <Button type="submit">Ajouter</Button>
       </form>
-      <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
+      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
         {(schools ?? []).map((s) => (
           <li key={s.id} className="flex flex-wrap justify-between gap-2 py-3">
             <span>
@@ -37,7 +38,7 @@ export default async function AdminSchoolsPage() {
           </li>
         ))}
         {!schools?.length && <li className="text-muted">Aucune école.</li>}
-      </ul>
+      </Card>
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { fr } from "@/i18n/fr";
 import { nb } from "@/lib/typography";
 import { Container, SectionTitle } from "./Section";
+import { Card } from "@/components/ui/Card";
 
 export function HowItWorks() {
   const h = fr.landing.how;
@@ -10,7 +11,7 @@ export function HowItWorks() {
         <SectionTitle id="comment-titre" title={h.title} lead={h.lead} />
         <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           {h.steps.map((step, i) => (
-            <li key={step.title} className="flex flex-col gap-3 rounded-card bg-surface p-6">
+            <Card as="li" key={step.title} className="flex flex-col gap-3">
               <span
                 aria-hidden="true"
                 className="grid size-11 place-items-center rounded-full bg-violet font-display text-xl font-extrabold text-white"
@@ -22,7 +23,7 @@ export function HowItWorks() {
                 {nb(step.title)}
               </h3>
               <p className="text-base text-muted">{nb(step.text)}</p>
-            </li>
+            </Card>
           ))}
         </ol>
       </Container>

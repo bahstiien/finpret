@@ -20,6 +20,7 @@ import { setCakeAction, setWeekendAction } from "@/server/actions/menu";
 import type { Flag as FlagData } from "@/server/menu-view";
 import { buttonClass } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.discover;
 
@@ -256,14 +257,14 @@ export function DiscoverScreen({
       ) : (
         <ul className="grid gap-3 min-[900px]:grid-cols-2">
           {bfList.map((b) => (
-            <li key={b.id} className="flex flex-col gap-1 rounded-card bg-surface p-5">
+            <Card as="li" padding="cozy" key={b.id} className="flex flex-col gap-1">
               <span className="text-xs font-bold text-violet-strong uppercase">
                 {t.breakfastTypes[b.type]}
               </span>
               <b className="text-lg">{b.name}</b>
               <p className="text-muted">{b.description}</p>
               <p className="text-sm font-semibold">{t.macros(b.kcal, b.protein)}</p>
-            </li>
+            </Card>
           ))}
         </ul>
       )}

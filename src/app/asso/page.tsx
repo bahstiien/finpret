@@ -52,10 +52,10 @@ export default async function AssoDashboardPage() {
       </Card>
       <dl className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-3" data-testid="asso-stats">
         {cards.map((c) => (
-          <div key={c.label} className="rounded-card bg-surface p-5">
+          <Card as="div" padding="cozy" key={c.label}>
             <dt className="text-sm font-semibold text-muted">{c.label}</dt>
             <dd className="font-display text-3xl font-black">{c.value}</dd>
-          </div>
+          </Card>
         ))}
       </dl>
       <p className="text-sm text-muted">{t.fewerHint}</p>

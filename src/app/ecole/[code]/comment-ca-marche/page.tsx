@@ -8,6 +8,7 @@ import { associationByCode } from "@/server/associations";
 import { allow, clientIp } from "@/server/rate-limit";
 import { headers } from "next/headers";
 import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 export const metadata: Metadata = {
   title: fr.ecole.metaTitle,
@@ -52,7 +53,9 @@ export default async function HowItWorksPage({ params }: { params: Promise<{ cod
           ))}
         </ul>
       </section>
-      <p className="rounded-card bg-yellow-soft p-5 font-bold">{c.benefit}</p>
+      <Card as="p" tone="yellow" padding="cozy" className="font-bold">
+        {c.benefit}
+      </Card>
       <div className="flex items-center gap-4">
         {/* eslint-disable-next-line @next/next/no-img-element -- QR code généré à la volée (data URL) */}
         <img src={qr} alt={`QR code vers ${c.address}`} width={130} height={130} />
