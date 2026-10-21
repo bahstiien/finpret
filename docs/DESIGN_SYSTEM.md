@@ -46,7 +46,7 @@ Une seule source pour l'apparence : les couleurs viennent de `design-system/toke
 - Un nouveau token se déclare dans `design-system/tokens.json`, puis `pnpm tokens`.
 - Les textes restent dans `src/i18n/fr.ts`.
 
-## À migrer
-Migrés : titres de page (`PageHeader`) et cartes simples (`Card`) sur Menu, Session, Stock, Découvrir, Abonnement, Progression, Réglages, onboarding, admin, asso, école et invitations ; boutons-liens jaunes (`buttonClass()`).
+## État de la migration
+Migrés : titres de page (`PageHeader`) et cartes simples (`Card`, y compris `as="li"`, `as="div"`, `as="p"`) sur tous les écrans, Courses et pages marketing comprises ; boutons-liens jaunes (`buttonClass()`).
 
-Reste : Courses (`ShoppingScreen`, en cours de modification ailleurs), les pages marketing (`landing/`, `associations/`) qui ont leur propre habillage, les cartes à classes dynamiques et les listes `<ul className="rounded-card …">`, ainsi que les boutons secondaires écrits à la main. Les remplacer écran par écran en vérifiant le rendu.
+Reste, volontairement : les cartes à classes calculées (teinte choisie dans le code), les listes `<ul className="rounded-card divide-y …">`, les `<form>` et `<details>` qui portent déjà leur propre habillage, et quelques boutons secondaires posés sur une carte colorée. Les migrer au fil des retouches de chaque écran.

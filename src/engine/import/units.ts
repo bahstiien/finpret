@@ -3,7 +3,11 @@
 /** « PT1H30M » → 90 ; « P0DT0H20M » → 20 ; null si illisible. */
 export function isoMinutes(iso: string | null | undefined): number | null {
   if (!iso) return null;
-  const m = iso.trim().match(/^P(?:(\d+(?:[.,]\d+)?)D)?(?:T(?:(\d+(?:[.,]\d+)?)H)?(?:(\d+(?:[.,]\d+)?)M)?(?:(\d+(?:[.,]\d+)?)S)?)?$/i);
+  const m = iso
+    .trim()
+    .match(
+      /^P(?:(\d+(?:[.,]\d+)?)D)?(?:T(?:(\d+(?:[.,]\d+)?)H)?(?:(\d+(?:[.,]\d+)?)M)?(?:(\d+(?:[.,]\d+)?)S)?)?$/i,
+    );
   if (!m || iso.trim().toUpperCase() === "P" || iso.trim().toUpperCase() === "PT") return null;
   const n = (v?: string) => (v ? Number(v.replace(",", ".")) : 0);
   const total = n(m[1]) * 1440 + n(m[2]) * 60 + n(m[3]) + n(m[4]) / 60;
@@ -38,10 +42,17 @@ export const UNIT_WORDS: [RegExp, UnitInfo][] = [
   [/^(ml|millilitres?)$/i, { unit: "ml", factor: 1 }],
   [/^(verres?)$/i, { unit: "ml", factor: 200 }],
   [/^(tasses?|bols?)$/i, { unit: "ml", factor: 250 }],
-  [/^(c\.?\s?à\.?\s?s\.?|c\.?\s?s\.?|cs|cas|càs|cuill?(?:è|e)res?\s+à\s+soupe|cuill?\.?\s+à\s+soupe|c\.\s?à\s?soupe)$/i, { unit: "cs", factor: 1 }],
-  [/^(c\.?\s?à\.?\s?c\.?|c\.?\s?c\.?|cc|cac|càc|cuill?(?:è|e)res?\s+à\s+café|cuill?\.?\s+à\s+café|c\.\s?à\s?café)$/i, { unit: "cc", factor: 1 }],
+  [
+    /^(c\.?\s?à\.?\s?s\.?|c\.?\s?s\.?|cs|cas|càs|cuill?(?:è|e)res?\s+à\s+soupe|cuill?\.?\s+à\s+soupe|c\.\s?à\s?soupe)$/i,
+    { unit: "cs", factor: 1 },
+  ],
+  [
+    /^(c\.?\s?à\.?\s?c\.?|c\.?\s?c\.?|cc|cac|càc|cuill?(?:è|e)res?\s+à\s+café|cuill?\.?\s+à\s+café|c\.\s?à\s?café)$/i,
+    { unit: "cc", factor: 1 },
+  ],
   [/^(boîtes?|boites?|conserves?)$/i, { unit: "boite", factor: 1 }],
 ];
 
 /** Mots qui comptent des pièces (« 3 gousses d'ail », « 2 tranches de jambon ») : l'unité du catalogue décide. */
-export const PIECE_WORDS = /^(gousses?|tranches?|feuilles?|brins?|branches?|bottes?|bouquets?|pincées?|filets?|morceaux?|sachets?|pots?|paquets?|briques?|pavés?|boules?|rouleaux?|tiges?|têtes?|poignées?|zestes?|cubes?|tablettes?|barquettes?|bocaux?|bocal|noix|noisettes?|petits?|gros|grosses?|grandes?|moyens?|moyennes?)$/i;
+export const PIECE_WORDS =
+  /^(gousses?|tranches?|feuilles?|brins?|branches?|bottes?|bouquets?|pincées?|filets?|morceaux?|sachets?|pots?|paquets?|briques?|pavés?|boules?|rouleaux?|tiges?|têtes?|poignées?|zestes?|cubes?|tablettes?|barquettes?|bocaux?|bocal|noix|noisettes?|petits?|gros|grosses?|grandes?|moyens?|moyennes?)$/i;

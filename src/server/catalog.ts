@@ -40,7 +40,10 @@ export const loadLibrary = cache(
         .select("id, kind, data, household_id, status, source_url, source_name, is_active")
         // Catalogue global actif, et toutes les recettes du foyer (les supprimées restent lisibles par les semaines).
         .or(`and(household_id.is.null,is_active.eq.true),household_id.eq.${householdId}`),
-      supabase.from("household_ingredients").select("key, label, unit, aisle").eq("household_id", householdId),
+      supabase
+        .from("household_ingredients")
+        .select("key, label, unit, aisle")
+        .eq("household_id", householdId),
     ]);
     for (const res of [aisles, ingredients, packs, recipes, own]) if (res.error) throw res.error;
 

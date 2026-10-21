@@ -22,7 +22,10 @@ describe("heure locale du foyer", () => {
     expect(at("2026-10-20T15:30:00Z")).toEqual({ date: "2026-10-20", weekday: 2, minutes: 17 * 60 + 30 });
     expect(at("2026-11-03T16:30:00Z")).toEqual({ date: "2026-11-03", weekday: 2, minutes: 17 * 60 + 30 });
     expect(at("2026-10-20T22:30:00Z")).toMatchObject({ date: "2026-10-21", weekday: 3 });
-    expect(at("2026-10-20T15:30:00Z", "America/Montreal")).toMatchObject({ date: "2026-10-20", minutes: 11 * 60 + 30 });
+    expect(at("2026-10-20T15:30:00Z", "America/Montreal")).toMatchObject({
+      date: "2026-10-20",
+      minutes: 11 * 60 + 30,
+    });
   });
 });
 
@@ -44,14 +47,18 @@ describe("rappels dus dans la fenêtre de 15 min", () => {
   it("rappel de session la veille quand la session commence juste après minuit", () => {
     const schedule = { ...SCHEDULE, sessionDay: 1, sessionTime: "00:10" };
     // Dimanche 23 h 40 à Paris → lundi 0 h 10.
-    expect(dueNotifications(PREFS, schedule, at("2026-11-01T22:40:00Z")).map((d) => d.kind)).toEqual(["session"]);
+    expect(dueNotifications(PREFS, schedule, at("2026-11-01T22:40:00Z")).map((d) => d.kind)).toEqual([
+      "session",
+    ]);
   });
 
   it("rien sans consentement, sans canal ou rappel désactivé", () => {
     expect(kinds("2026-10-20T15:30:00Z", { ...PREFS, consentAt: null })).toEqual([]);
     expect(kinds("2026-10-20T15:30:00Z", { ...PREFS, push: false })).toEqual([]);
     expect(kinds("2026-10-20T15:30:00Z", { ...PREFS, push: false, email: true })).toEqual(["dinner"]);
-    expect(kinds("2026-10-20T15:30:00Z", { ...PREFS, dinner: { enabled: false, time: "17:30" } })).toEqual([]);
+    expect(kinds("2026-10-20T15:30:00Z", { ...PREFS, dinner: { enabled: false, time: "17:30" } })).toEqual(
+      [],
+    );
   });
 
   it("deux passages dans la même fenêtre donnent la même clé d'idempotence", () => {

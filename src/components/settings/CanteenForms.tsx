@@ -8,7 +8,12 @@ import { Toggle } from "@/components/ui/Controls";
 import { FormMessage, TextField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
 import type { CanteenSettings } from "@/lib/settings";
-import { importCanteenPdf, importCanteenUrl, saveCanteenDay, validateCanteenMenus } from "@/server/actions/canteen";
+import {
+  importCanteenPdf,
+  importCanteenUrl,
+  saveCanteenDay,
+  validateCanteenMenus,
+} from "@/server/actions/canteen";
 import { saveSettings } from "@/server/actions/settings";
 import { SaveStatus, useAutosave } from "./Autosave";
 
@@ -24,13 +29,26 @@ export type CanteenChild = {
   pending: { date: string; label: string; text: string }[];
 };
 
-export function CanteenForm({ initial, kids, canEdit }: { initial: CanteenSettings; kids: CanteenChild[]; canEdit: boolean }) {
+export function CanteenForm({
+  initial,
+  kids,
+  canEdit,
+}: {
+  initial: CanteenSettings;
+  kids: CanteenChild[];
+  canEdit: boolean;
+}) {
   const save = useCallback((v: CanteenSettings) => saveSettings("canteen", v), []);
   const { value: v, update, status } = useAutosave(initial, save);
   return (
     <>
       <Card className="flex flex-col gap-2">
-        <Toggle label={t.alert} hint={t.alertHint} checked={v.alert} onChange={(alert) => update((d) => ({ ...d, alert }))} />
+        <Toggle
+          label={t.alert}
+          hint={t.alertHint}
+          checked={v.alert}
+          onChange={(alert) => update((d) => ({ ...d, alert }))}
+        />
         <SaveStatus status={status} />
       </Card>
       {kids.length === 0 && (
@@ -58,12 +76,24 @@ export function CanteenForm({ initial, kids, canEdit }: { initial: CanteenSettin
   );
 }
 
-function ChildCanteen({ kid, canEdit, url, onUrl }: { kid: CanteenChild; canEdit: boolean; url: string; onUrl: (url: string) => void }) {
+function ChildCanteen({
+  kid,
+  canEdit,
+  url,
+  onUrl,
+}: {
+  kid: CanteenChild;
+  canEdit: boolean;
+  url: string;
+  onUrl: (url: string) => void;
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<{ tone: "success" | "error"; text: string }>();
   const file = useRef<HTMLInputElement>(null);
-  const run = (action: () => Promise<{ ok: true; data: { message: string } } | { ok: false; error: string }>) =>
+  const run = (
+    action: () => Promise<{ ok: true; data: { message: string } } | { ok: false; error: string }>,
+  ) =>
     start(async () => {
       const res = await action();
       setMessage(res.ok ? { tone: "success", text: res.data.message } : { tone: "error", text: res.error });
@@ -158,7 +188,9 @@ function PendingMenus({
 }: {
   kid: CanteenChild;
   canEdit: boolean;
-  onDone: (action: () => Promise<{ ok: true; data: { message: string } } | { ok: false; error: string }>) => void;
+  onDone: (
+    action: () => Promise<{ ok: true; data: { message: string } } | { ok: false; error: string }>,
+  ) => void;
 }) {
   const [rows, setRows] = useState(kid.pending.map((p) => ({ ...p, keep: true })));
   return (
@@ -174,7 +206,9 @@ function PendingMenus({
             value={r.text}
             maxLength={300}
             disabled={!r.keep || !canEdit}
-            onChange={(e) => setRows((rs) => rs.map((x, j) => (j === i ? { ...x, text: e.target.value } : x)))}
+            onChange={(e) =>
+              setRows((rs) => rs.map((x, j) => (j === i ? { ...x, text: e.target.value } : x)))
+            }
           />
           <Toggle
             label={t.keep}
@@ -190,7 +224,10 @@ function PendingMenus({
           className="self-start"
           onClick={() =>
             onDone(() =>
-              validateCanteenMenus({ memberId: kid.id, menus: rows.map((r) => ({ date: r.date, text: r.text, keep: r.keep })) }),
+              validateCanteenMenus({
+                memberId: kid.id,
+                menus: rows.map((r) => ({ date: r.date, text: r.text, keep: r.keep })),
+              }),
             )
           }
         >

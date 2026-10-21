@@ -38,7 +38,7 @@ export const BUILTIN_SYNONYMS: Record<string, string> = {
   "blanc de poulet": "poulet",
   "filet de poulet": "poulet",
   "escalope de poulet": "poulet",
-  "poulet": "poulet",
+  poulet: "poulet",
   "cuisse de poulet": "cuisse",
   "viande hachee": "boeuf",
   "boeuf hache": "boeuf",
@@ -71,7 +71,7 @@ export const BUILTIN_SYNONYMS: Record<string, string> = {
   "thon au naturel": "thon",
   "dos de cabillaud": "cabillaud",
   "pave de saumon": "saumon",
-  "saumon": "saumon",
+  saumon: "saumon",
   "chocolat noir": "chocolat",
   "poudre d amande": "amande",
   "amande en poudre": "amande",
@@ -81,7 +81,40 @@ export const BUILTIN_SYNONYMS: Record<string, string> = {
 };
 
 /** Mots qui ne changent pas l'ingrédient acheté. */
-const STOP = new Set(["de", "d", "du", "des", "la", "le", "les", "l", "a", "au", "aux", "en", "bio", "frais", "fraiche", "fraiches", "gros", "grosse", "petit", "petits", "petite", "bien", "mur", "murs", "mure", "mures", "entier", "entiers", "extra", "vierge", "surgele", "surgeles"]);
+const STOP = new Set([
+  "de",
+  "d",
+  "du",
+  "des",
+  "la",
+  "le",
+  "les",
+  "l",
+  "a",
+  "au",
+  "aux",
+  "en",
+  "bio",
+  "frais",
+  "fraiche",
+  "fraiches",
+  "gros",
+  "grosse",
+  "petit",
+  "petits",
+  "petite",
+  "bien",
+  "mur",
+  "murs",
+  "mure",
+  "mures",
+  "entier",
+  "entiers",
+  "extra",
+  "vierge",
+  "surgele",
+  "surgeles",
+]);
 
 export function normalize(s: string): string {
   return s
@@ -137,25 +170,39 @@ export function matchIngredient(
   synonyms: Record<string, string> = BUILTIN_SYNONYMS,
 ): MatchResult {
   const target = normalize(line.label);
-  const entries = Object.entries(ingredients).map(([key, g]) => ({ key, label: g.l, norm: normalize(g.l), keyNorm: normalize(key) }));
+  const entries = Object.entries(ingredients).map(([key, g]) => ({
+    key,
+    label: g.l,
+    norm: normalize(g.l),
+    keyNorm: normalize(key),
+  }));
   const syn = Object.entries(synonyms).map(([k, v]) => [normalize(k), v] as const);
 
   const scored = entries
     .map((e) => {
       // Les mots du libellé du catalogue présents dans la ligne comptent autant que la similarité globale.
       const words = e.norm.split(" ");
-      const contained = words.every((w) => target.split(" ").includes(w)) ? 0.9 + 0.1 * (words.length / Math.max(1, target.split(" ").length)) : 0;
-      return { key: e.key, label: e.label, score: Math.max(dice(target, e.norm), dice(target, e.keyNorm), contained) };
+      const contained = words.every((w) => target.split(" ").includes(w))
+        ? 0.9 + 0.1 * (words.length / Math.max(1, target.split(" ").length))
+        : 0;
+      return {
+        key: e.key,
+        label: e.label,
+        score: Math.max(dice(target, e.norm), dice(target, e.keyNorm), contained),
+      };
     })
     .sort((a, b) => b.score - a.score);
   const candidates = scored.slice(0, 5).map((c) => ({ ...c, score: Math.round(c.score * 100) / 100 }));
 
   const exact = entries.find((e) => e.norm === target || e.keyNorm === target.replace(/ /g, ""));
   if (exact) return { key: exact.key, method: "exact", score: 1, candidates };
-  const bySyn = syn.find(([k]) => k === target) ?? syn.find(([k]) => target.startsWith(`${k} `) || target.endsWith(` ${k}`));
+  const bySyn =
+    syn.find(([k]) => k === target) ??
+    syn.find(([k]) => target.startsWith(`${k} `) || target.endsWith(` ${k}`));
   if (bySyn && ingredients[bySyn[1]]) return { key: bySyn[1], method: "synonym", score: 0.95, candidates };
   const best = scored[0];
-  if (best && best.score >= SIMILARITY_THRESHOLD) return { key: best.key, method: "similarity", score: best.score, candidates };
+  if (best && best.score >= SIMILARITY_THRESHOLD)
+    return { key: best.key, method: "similarity", score: best.score, candidates };
   return { key: null, method: null, score: best?.score ?? 0, candidates };
 }
 

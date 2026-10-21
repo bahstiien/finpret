@@ -60,7 +60,8 @@ export function allocate(input: {
 
   for (const k of keys) {
     const rawStock = input.stock[k];
-    let stockLeft = typeof rawStock === "number" ? Math.max(0, dec(rawStock - (input.reserved?.[k] ?? 0))) : 0;
+    let stockLeft =
+      typeof rawStock === "number" ? Math.max(0, dec(rawStock - (input.reserved?.[k] ?? 0))) : 0;
     let purchaseLeft = Math.max(0, input.purchases[k] ?? 0);
     const tot: IngredientTotals = { need: 0, stock: 0, purchase: 0, deficit: 0, surplus: 0, discrepancy: 0 };
 

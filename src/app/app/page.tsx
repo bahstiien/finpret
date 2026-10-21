@@ -141,22 +141,22 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
   return (
     <>
       <MenuScreen
-      header={header}
-      view={view}
-      canEdit={canEdit}
-      sessionMinutes={summary.sessionMinutes}
-      weekendOptions={weekendOptions}
-      cakeOptions={cakeOptions}
-      shortcuts={shortcuts}
-      childFactor={pm.childFactor}
-      canteen={canteen}
-      weeks={{
-        isCurrent,
-        hasNext: !!next && isCurrent,
-        hasCurrent: !!current && !isCurrent,
-        nextStart,
-        canPrepareNext: isCurrent && !next && canPrepareNext(today),
-      }}
+        header={header}
+        view={view}
+        canEdit={canEdit}
+        sessionMinutes={summary.sessionMinutes}
+        weekendOptions={weekendOptions}
+        cakeOptions={cakeOptions}
+        shortcuts={shortcuts}
+        childFactor={pm.childFactor}
+        canteen={canteen}
+        weeks={{
+          isCurrent,
+          hasNext: !!next && isCurrent,
+          hasCurrent: !!current && !isCurrent,
+          nextStart,
+          canPrepareNext: isCurrent && !next && canPrepareNext(today),
+        }}
       />
       {progress.visible && <StreakTile streak={progress.streak} />}
     </>

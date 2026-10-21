@@ -67,7 +67,10 @@ export function PrintSheet({ data }: { data: PrintData }) {
           </div>
           <div className="flex shrink-0 gap-2">
             {data.chips.map((c) => (
-              <span key={c} className="rounded-pill border border-current px-3 py-1 text-xs font-bold whitespace-nowrap">
+              <span
+                key={c}
+                className="rounded-pill border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
+              >
                 {c}
               </span>
             ))}

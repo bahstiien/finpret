@@ -26,7 +26,13 @@ describe("bases alimentaires (FOOD_GROUPS du prototype)", () => {
 describe("jours de cantine", () => {
   const leo = { id: "leo", kind: "child" as const, archived: false };
   const lunchOff = (days: number[], parity: "all" | "A" | "B" = "all") =>
-    days.map((d) => ({ memberId: "leo", weekday: d, meal: "lunch" as const, present: false, weekParity: parity }));
+    days.map((d) => ({
+      memberId: "leo",
+      weekday: d,
+      meal: "lunch" as const,
+      present: false,
+      weekParity: parity,
+    }));
 
   it("midis de semaine où l'enfant est absent mais dîne à la maison", () => {
     expect(canteenDays(leo, lunchOff([1, 2, 4, 5]), "2026-10-19")).toEqual([1, 2, 4, 5]);
@@ -72,7 +78,9 @@ Férié`;
       { date: "2027-01-04", text: "potage, lasagnes" },
       { date: "2027-01-05", text: "poulet, frites" },
     ]);
-    expect(splitByDate("Le 12/10/2026 : pizza", "2026-10-01")).toEqual([{ date: "2026-10-12", text: "pizza" }]);
+    expect(splitByDate("Le 12/10/2026 : pizza", "2026-10-01")).toEqual([
+      { date: "2026-10-12", text: "pizza" },
+    ]);
   });
 
   it("ignore les nombres qui ne sont pas des dates et les dates impossibles", () => {

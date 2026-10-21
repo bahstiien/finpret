@@ -67,7 +67,14 @@ export function listOccurrences(env: Env, w: WeekPlan, pm: PortionModel, cakeOn:
     });
   }
   const ck = activeCake(env, w, cakeOn);
-  if (ck) out.push({ uid: "cake", kind: "cake", recipeId: w.cake, slots: [], needs: scaleIngredients(env, ck.ing, 1) });
+  if (ck)
+    out.push({
+      uid: "cake",
+      kind: "cake",
+      recipeId: w.cake,
+      slots: [],
+      needs: scaleIngredients(env, ck.ing, 1),
+    });
   for (const x of weekendItems(env, w)) {
     out.push({
       uid: `weekend:${x.k}`,

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { recordWeekEvent } from "@/server/actions/events";
 import {
   clearShoppingIssue,
+  trackReviewCompleted,
   confirmCoverage,
   recordPurchase,
   reportShoppingIssue,
@@ -21,6 +22,8 @@ import {
 } from "@/server/actions/purchases";
 import { reviewSummary } from "@/engine/purchases";
 import type { PurchaseLine } from "@/server/purchases-view";
+import { AdaptationPanel, type AdaptationHistoryItem } from "./AdaptationPanel";
+import { type PreparationItem, type TransferChoice, WeekOpsPanel } from "./WeekOpsPanel";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
 
@@ -57,7 +60,15 @@ export function ShoppingScreen({
   exportFormat,
   purchases,
   canWrite,
+  adaptationHistory,
+  preparations,
+  transfers,
+  otherWeeks,
 }: {
+  preparations: PreparationItem[];
+  transfers: TransferChoice[];
+  otherWeeks: { id: string; label: string }[];
+  adaptationHistory: AdaptationHistoryItem[];
   purchases: { lines: Record<string, PurchaseLine>; revision: number } | null;
   canWrite: boolean;
   householdId: string;
@@ -542,12 +553,45 @@ export function ShoppingScreen({
             type="button"
             variant="outline"
             className="self-start"
-            onClick={() => setReviewOpen((o) => !o)}
+            onClick={() => {
+              if (!reviewOpen) {
+                const r = reviewSummary(
+                  Object.entries(purchases.lines).map(([key, l]) => ({
+                    key,
+                    status: l.status,
+                    issue: l.issue,
+                  })),
+                );
+                void trackReviewCompleted(r.unresolved);
+              }
+              setReviewOpen((o) => !o);
+            }}
           >
             {reviewOpen ? tp.close : tp.review}
           </Button>
           {reviewOpen && <ReviewPanel lines={purchases.lines} />}
         </Card>
+      )}
+
+      {purchases && canWrite && (
+        <WeekOpsPanel
+          weekId={weekId}
+          online={online}
+          preparations={preparations}
+          transfers={transfers}
+          otherWeeks={otherWeeks}
+        />
+      )}
+
+      {purchases && canWrite && (
+        <AdaptationPanel
+          weekId={weekId}
+          online={online}
+          history={adaptationHistory}
+          candidates={Object.entries(purchases.lines)
+            .filter(([, l]) => l.status === "partial" || l.status === "uncovered")
+            .map(([key]) => ({ key, label: ingredientLabels[key] ?? names[key] ?? key }))}
+        />
       )}
 
       {groups.length === 0 ? (

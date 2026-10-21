@@ -1,7 +1,13 @@
 import "server-only";
 import { stockPerWeek } from "@/engine/allocation";
 import type { Env } from "@/engine/env";
-import { listOccurrences, lockedUids, type Occurrence, type PreparationState, sumNeeds } from "@/engine/occurrences";
+import {
+  listOccurrences,
+  lockedUids,
+  type Occurrence,
+  type PreparationState,
+  sumNeeds,
+} from "@/engine/occurrences";
 import type { Pantry } from "@/engine/types";
 import { createClient } from "@/lib/supabase/server";
 import { type HouseholdContext, portionModelFor, type WeekRow } from "@/server/household-context";
@@ -56,5 +62,4 @@ export const lockedFor = (occ: readonly Occurrence[], lock: LockState) =>
   lockedUids(occ, lock.states, lock.sessionStarted);
 
 /** Vrai si au moins une préparation de la semaine est protégée : une régénération complète est alors refusée. */
-export const hasAnyLock = (lock: LockState) =>
-  lock.sessionStarted || Object.keys(lock.states).length > 0;
+export const hasAnyLock = (lock: LockState) => lock.sessionStarted || Object.keys(lock.states).length > 0;

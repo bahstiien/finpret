@@ -40,7 +40,6 @@ export async function generateMetadata({
 export default async function SettingsSectionPage({ params }: { params: Promise<{ section: string }> }) {
   const { section: raw } = await params;
   if (raw === "notifications") redirect("/settings/profile#notifications");
-  if (raw === "subscription") redirect("/app/abonnement");
   if (!(ADMIN_SECTIONS as readonly string[]).includes(raw)) notFound();
   const section = raw as SettingsSection;
   const { user, household } = await requireHousehold(`/settings/${section}`);

@@ -65,7 +65,8 @@ const hm = (t: string) => {
 };
 
 /** Minute de la semaine (lundi 0 h = 0). */
-const ofWeek = (weekday: number, minutes: number) => ((((weekday - 1) * 1440 + minutes) % WEEK) + WEEK) % WEEK;
+const ofWeek = (weekday: number, minutes: number) =>
+  ((((weekday - 1) * 1440 + minutes) % WEEK) + WEEK) % WEEK;
 
 /** Le moment `target` (minute de la semaine) est passé depuis moins de `window` minutes. */
 const inWindow = (now: number, target: number, window: number) => {
@@ -73,7 +74,10 @@ const inWindow = (now: number, target: number, window: number) => {
   return delta < window;
 };
 
-export type DueNotification = { kind: NotificationKind; /** Jour concerné, clé d'idempotence. */ day: string };
+export type DueNotification = {
+  kind: NotificationKind;
+  /** Jour concerné, clé d'idempotence. */ day: string;
+};
 
 /**
  * Rappels à envoyer maintenant pour un compte. Le jour retenu est la date locale de l'envoi :
@@ -91,10 +95,12 @@ export function dueNotifications(
   const due: NotificationKind[] = [];
   if (prefs.dinner.enabled && daily(prefs.dinner.time)) due.push("dinner");
   if (prefs.thaw.enabled && daily(prefs.thaw.time)) due.push("thaw");
-  if (prefs.shoppingReady && inWindow(now, ofWeek(schedule.shoppingDay, hm(SHOPPING_TIME)), window)) due.push("shopping");
+  if (prefs.shoppingReady && inWindow(now, ofWeek(schedule.shoppingDay, hm(SHOPPING_TIME)), window))
+    due.push("shopping");
   if (prefs.sessionStart) {
     const sessionWeekday = schedule.sessionDay === 0 ? 7 : schedule.sessionDay;
-    if (inWindow(now, ofWeek(sessionWeekday, hm(schedule.sessionTime) - SESSION_LEAD_MIN), window)) due.push("session");
+    if (inWindow(now, ofWeek(sessionWeekday, hm(schedule.sessionTime) - SESSION_LEAD_MIN), window))
+      due.push("session");
   }
   return due.map((kind) => ({ kind, day: local.date }));
 }

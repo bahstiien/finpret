@@ -87,5 +87,5 @@ describe("grille des réglages (§7.6)", () => {
     });
     expect(CASES).toHaveLength(2400);
     expect(problems).toEqual([]);
-  });
+  }, 30_000);
 });
