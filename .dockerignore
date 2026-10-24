@@ -9,7 +9,6 @@ node_modules
 coverage
 test-results
 playwright-report
-tests
 docs
 reference
 deploy
