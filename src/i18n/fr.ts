@@ -660,6 +660,10 @@ export const fr = {
     simpleOn: (day: string) => `Soir simple, ${day}`,
     bankOn: (slot: string) => `Du congélateur, ${slot}`,
     recipeKinds: { main: "Plat de batch", soup: "Soupe du soir", simple: "Soir simple" },
+    difficulty: {
+      label: (level: number) => `Difficulté ${level} sur 4`,
+      levels: ["Très facile", "Facile", "Demande de l'attention", "Technique"],
+    },
     simpleLead: "Cuisiné le soir même, 15 à 25 minutes.",
     keeps: (days: number, freeze: boolean) =>
       `Frigo ${days} jours maximum${freeze ? ", se congèle 3 mois" : ", ne se congèle pas"}.`,

@@ -23,6 +23,7 @@ import { useMenuAction } from "./useMenuAction";
 import { Card } from "@/components/ui/Card";
 
 const t = fr.menuScreen;
+const tv = fr.menuView;
 
 export type PickerOption = {
   id: string;
@@ -276,6 +277,16 @@ export function MenuScreen({
                 {r.name}
               </b>
               <span className="text-sm text-muted">{r.portions}</span>
+              <span
+                className="text-sm text-muted"
+                role="img"
+                aria-label={`${tv.difficulty.label(r.difficulty)} : ${tv.difficulty.levels[r.difficulty - 1]}`}
+              >
+                {"●".repeat(r.difficulty)}
+                <span aria-hidden className="opacity-30">
+                  {"●".repeat(4 - r.difficulty)}
+                </span>
+              </span>
             </summary>
             <div className="mt-3 flex flex-col gap-3">
               {r.description && <p className="text-muted">{r.description}</p>}

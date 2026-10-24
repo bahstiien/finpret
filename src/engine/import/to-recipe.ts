@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CAKE_TYPES, PROTEINS, UNITS, type Cake, type Main, type Simple, type Soup } from "../catalog/schema";
+import { estimateDifficulty } from "../catalog/difficulty";
 import type { ImportDraft } from "./classify";
 
 /**
@@ -89,6 +90,7 @@ export function toRecipe(form: ImportForm, keys: (string | null)[]): ImportedRec
         ...common,
         t: form.cakeType,
         tm: `${form.prepMin + form.cookMin} min`,
+        diff: estimateDifficulty({ tm: `${form.prepMin + form.cookMin} min` }),
         parts: `${form.parts} parts`,
         kid: "",
         steps: form.steps,
@@ -104,6 +106,7 @@ export function toRecipe(form: ImportForm, keys: (string | null)[]): ImportedRec
         o: form.origin,
         p: form.protein,
         steps: form.steps,
+        diff: estimateDifficulty({ steps: form.steps, ing }),
         ...opt,
       },
     };
@@ -117,6 +120,7 @@ export function toRecipe(form: ImportForm, keys: (string | null)[]): ImportedRec
     p: form.protein,
     fridge: form.fridge,
     freeze: form.freeze,
+    diff: estimateDifficulty({ blocks: [{ mode: form.oven ? "four" : "feu", active: form.prepMin }] }),
     prepMin: form.prepMin,
     prep: [],
     blocks: [
