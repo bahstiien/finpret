@@ -1,0 +1,8 @@
+finpret.app {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
+
+www.finpret.app {
+	redir https://finpret.app{uri} permanent
+}

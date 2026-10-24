@@ -44,7 +44,7 @@ function redirectToLogin(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Tout sauf les fichiers statiques, le service worker, le manifest et les icônes.
-    "/((?!_next/static|_next/image|favicon.ico|sw.js|swe-worker|manifest.webmanifest|icons/).*)",
+    // Tout sauf les fichiers statiques, le service worker, le manifest, les icônes et la sonde de santé.
+    "/((?!_next/static|_next/image|favicon.ico|sw.js|swe-worker|manifest.webmanifest|icons/|api/health$).*)",
   ],
 };
