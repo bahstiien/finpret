@@ -87,7 +87,11 @@ describe("stock partagé entre semaines", () => {
     const weeks = stockPerWeek({ x: 500 }, [{ x: 400 }, { x: 300 }]);
     expect(weeks[0]!.available.x).toBe(500);
     expect(weeks[1]!.available.x).toBe(100);
-    const next = allocate({ occurrences: [occ("n", 1, { x: 300 })], stock: weeks[1]!.available, purchases: {} });
+    const next = allocate({
+      occurrences: [occ("n", 1, { x: 300 })],
+      stock: weeks[1]!.available,
+      purchases: {},
+    });
     expect(next.byIngredient.x).toMatchObject({ stock: 100, deficit: 200 });
   });
 

@@ -23,7 +23,7 @@ export async function startWithCode(formData: FormData) {
   const household = user ? await getActiveHousehold() : null;
   if (user && household?.role === "admin") {
     const res = await attachHousehold(household.id, association.id, user.id);
-    redirect(res.ok ? "/app/abonnement?code=ok" : "/app/abonnement?code=locked");
+    redirect(res.ok ? "/settings/subscription?code=ok" : "/settings/subscription?code=locked");
   }
 
   (await cookies()).set(ASSOCIATION_COOKIE, association.code, {

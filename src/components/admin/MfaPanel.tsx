@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FormMessage, TextField } from "@/components/ui/Field";
 import { createClient } from "@/lib/supabase/client";
+import { Card } from "@/components/ui/Card";
 
 type Enrollment = { factorId: string; qr: string; secret: string };
 
@@ -57,7 +58,7 @@ export function MfaPanel() {
   }
 
   return (
-    <div className="flex max-w-md flex-col gap-4 rounded-card bg-surface p-6">
+    <Card as="div" className="flex max-w-md flex-col gap-4">
       {enrollment && (
         <>
           <p>
@@ -87,6 +88,6 @@ export function MfaPanel() {
       <Button type="button" disabled={busy || code.length !== 6 || !factorId} onClick={verify}>
         Valider
       </Button>
-    </div>
+    </Card>
   );
 }

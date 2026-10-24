@@ -9,6 +9,7 @@ import { Phone } from "@/components/landing/Phone";
 import { Container, SectionTitle } from "@/components/landing/Section";
 import { associationsFr, SITE_URL } from "@/i18n/associations";
 import { nb } from "@/lib/typography";
+import { Card } from "@/components/ui/Card";
 
 const t = associationsFr;
 const URL = `${SITE_URL}/associations`;
@@ -100,10 +101,10 @@ export default function AssociationsPage() {
               <Phone label={t.hero.visualAlt} height="h-[420px]">
                 <div className="flex flex-col gap-3 px-4 pt-2">
                   <p className="text-xs font-bold text-muted">{t.hero.today}</p>
-                  <div className="rounded-card bg-surface p-4">
+                  <Card as="div" padding="sm">
                     <p className="text-xs font-semibold text-muted">{t.hero.cantine}</p>
                     <p className="mt-1 text-lg font-extrabold">Poulet rôti, riz</p>
-                  </div>
+                  </Card>
                   <p className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink">
                     {t.hero.alert}
                   </p>
@@ -122,9 +123,9 @@ export default function AssociationsPage() {
             <SectionTitle id="probleme" title={t.problem.title} />
             <ul className="grid gap-4 md:grid-cols-3">
               {t.problem.cards.map((c) => (
-                <li key={c} className="rounded-card bg-surface p-6 text-lg font-bold">
+                <Card as="li" key={c} className="text-lg font-bold">
                   {nb(c)}
-                </li>
+                </Card>
               ))}
             </ul>
           </section>
@@ -133,12 +134,12 @@ export default function AssociationsPage() {
             <SectionTitle id="comment" title={t.how.title} />
             <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {t.how.steps.map((s, i) => (
-                <li key={s} className="flex gap-4 rounded-card bg-surface p-6">
+                <Card as="li" key={s} className="flex gap-4">
                   <span className="grid size-10 shrink-0 place-items-center rounded-full bg-violet font-display text-lg font-black text-white">
                     {i + 1}
                   </span>
                   <span className="font-bold">{nb(s)}</span>
-                </li>
+                </Card>
               ))}
             </ol>
             <Link
@@ -153,12 +154,14 @@ export default function AssociationsPage() {
             <SectionTitle id="familles" title={t.families.title} />
             <ul className="grid gap-4 md:grid-cols-2">
               {t.families.items.map((c) => (
-                <li key={c} className="rounded-card bg-surface p-6 font-bold">
+                <Card as="li" key={c} className="font-bold">
                   {nb(c)}
-                </li>
+                </Card>
               ))}
             </ul>
-            <p className="rounded-card bg-yellow-soft p-6 text-lg font-bold">{nb(t.families.benefit)}</p>
+            <Card as="p" tone="yellow" className="text-lg font-bold">
+              {nb(t.families.benefit)}
+            </Card>
           </section>
 
           <section aria-labelledby="simulateur" className="flex flex-col gap-6">
@@ -170,9 +173,9 @@ export default function AssociationsPage() {
             <SectionTitle id="zero" title={t.zero.title} />
             <ul className="grid gap-4 md:grid-cols-4">
               {t.zero.items.map((c) => (
-                <li key={c} className="rounded-card bg-green-soft p-6 font-bold text-green-ink">
+                <Card as="li" tone="green" key={c} className="font-bold">
                   {nb(c)}
-                </li>
+                </Card>
               ))}
             </ul>
           </section>
@@ -181,28 +184,28 @@ export default function AssociationsPage() {
             <SectionTitle id="confiance" title={t.trust.title} />
             <ul className="flex flex-col gap-3">
               {t.trust.items.map((c) => (
-                <li key={c} className="rounded-card bg-surface p-5 font-semibold">
+                <Card as="li" padding="cozy" key={c} className="font-semibold">
                   {nb(c)}
-                </li>
+                </Card>
               ))}
             </ul>
           </section>
 
           {t.testimonial.quote && (
-            <figure className="rounded-card bg-surface p-8">
+            <Card as="figure" padding="lg">
               <blockquote className="text-xl font-bold">{nb(t.testimonial.quote)}</blockquote>
               <figcaption className="mt-3 text-muted">{t.testimonial.author}</figcaption>
-            </figure>
+            </Card>
           )}
 
           <section aria-labelledby="faq" className="flex flex-col gap-6">
             <SectionTitle id="faq" title={t.faq.title} />
             <dl className="flex flex-col gap-3">
               {t.faq.items.map((f) => (
-                <div key={f.q} className="rounded-card bg-surface p-6">
+                <Card as="div" key={f.q}>
                   <dt className="text-lg font-extrabold">{nb(f.q)}</dt>
                   <dd className="mt-2 text-muted">{nb(f.a)}</dd>
-                </div>
+                </Card>
               ))}
             </dl>
           </section>

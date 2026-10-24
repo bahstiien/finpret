@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/landing/Section";
 import { legalFr, type LegalSlug, SITE_URL } from "@/i18n/associations";
 import { PublicFooter, PublicHeader } from "./PublicShell";
+import { Card } from "@/components/ui/Card";
 
 export function legalMetadata(slug: LegalSlug): Metadata {
   const page = legalFr.pages[slug];
@@ -30,18 +31,18 @@ export function LegalPage({ slug }: { slug: LegalSlug }) {
       <main id="contenu">
         <Container className="flex max-w-3xl flex-col gap-8 py-12 sm:py-20">
           <h1 className="text-4xl font-black">{page.title}</h1>
-          <p className="rounded-card bg-yellow-soft p-5 font-semibold" data-testid="legal-todo">
+          <Card as="p" tone="yellow" padding="cozy" className="font-semibold" data-testid="legal-todo">
             {legalFr.todo}
-          </p>
+          </Card>
           {slug === "mentions-legales" && (
-            <dl className="rounded-card bg-surface p-5" data-testid="company">
+            <Card as="dl" padding="cozy" data-testid="company">
               <dt className="font-bold">Éditeur</dt>
               <dd>{c.name}</dd>
               <dt className="mt-2 font-bold">Immatriculation</dt>
               <dd>{c.id}</dd>
               <dt className="mt-2 font-bold">TVA</dt>
               <dd>{c.vat}</dd>
-            </dl>
+            </Card>
           )}
           {page.sections.map((s) => (
             <section key={s} className="flex flex-col gap-2">

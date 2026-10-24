@@ -50,7 +50,14 @@ export function tierOf(offer: HouseholdOffer, now: Date = new Date()): Tier {
 }
 
 /** « purchases » : corriger ses achats réels reste gratuit (D-01), sans consommer le quota de changements (D-02). */
-const ALWAYS: readonly Feature[] = ["menu.generate", "shopping", "purchases", "session", "discover", "progress"];
+const ALWAYS: readonly Feature[] = [
+  "menu.generate",
+  "shopping",
+  "purchases",
+  "session",
+  "discover",
+  "progress",
+];
 const PAID_ONLY: readonly Feature[] = ["menu.move", "menu.guests", "pantry", "notifications.meals", "print"];
 /** D12 : cantine et alerte doublon gratuites pour les foyers rattachés à une association. */
 const ASSOCIATION_FREE: readonly Feature[] = ["canteen", "canteen.alert"];

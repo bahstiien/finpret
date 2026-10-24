@@ -39,7 +39,8 @@ export async function signInWithEmail(_prev: LoginState, formData: FormData): Pr
   if (!parsed.success) return { status: "error", message: fr.login.invalidEmail };
 
   // 5 liens par heure et par adresse (SPEC_JANVIER §8) : freine l'envoi en rafale.
-  if (!allow(`login:${parsed.data.email}`, 5, 3_600_000)) return { status: "error", message: fr.login.tooMany };
+  if (!allow(`login:${parsed.data.email}`, 5, 3_600_000))
+    return { status: "error", message: fr.login.tooMany };
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,

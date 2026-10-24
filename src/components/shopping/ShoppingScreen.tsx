@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { recordWeekEvent } from "@/server/actions/events";
 import {
   clearShoppingIssue,
+  trackReviewCompleted,
   confirmCoverage,
   recordPurchase,
   reportShoppingIssue,
@@ -21,6 +22,10 @@ import {
 } from "@/server/actions/purchases";
 import { reviewSummary } from "@/engine/purchases";
 import type { PurchaseLine } from "@/server/purchases-view";
+import { AdaptationPanel, type AdaptationHistoryItem } from "./AdaptationPanel";
+import { type PreparationItem, type TransferChoice, WeekOpsPanel } from "./WeekOpsPanel";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.shopping;
 const tp = fr.purchases;
@@ -55,7 +60,15 @@ export function ShoppingScreen({
   exportFormat,
   purchases,
   canWrite,
+  adaptationHistory,
+  preparations,
+  transfers,
+  otherWeeks,
 }: {
+  preparations: PreparationItem[];
+  transfers: TransferChoice[];
+  otherWeeks: { id: string; label: string }[];
+  adaptationHistory: AdaptationHistoryItem[];
   purchases: { lines: Record<string, PurchaseLine>; revision: number } | null;
   canWrite: boolean;
   householdId: string;
@@ -428,17 +441,19 @@ export function ShoppingScreen({
   return (
     <>
       <header className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="text-4xl font-black">{fr.nav.shopping}</h1>
-          <button
-            type="button"
-            onClick={share}
-            aria-label={t.share}
-            className="grid size-12 place-items-center rounded-full bg-banana text-[#17151F]"
-          >
-            <Icon name="basket" />
-          </button>
-        </div>
+        <PageHeader
+          title={fr.nav.shopping}
+          actions={
+            <button
+              type="button"
+              onClick={share}
+              aria-label={t.share}
+              className="grid size-12 place-items-center rounded-full bg-banana text-[#17151F]"
+            >
+              <Icon name="basket" />
+            </button>
+          }
+        />
         <p className="font-semibold" data-testid="shopping-progress">
           {t.progress(done, visible.length)}
         </p>
@@ -515,7 +530,7 @@ export function ShoppingScreen({
       </form>
 
       {baseUsed.length > 0 && (
-        <section className="flex flex-col gap-2 rounded-card bg-surface p-4">
+        <Card padding="sm" className="flex flex-col gap-2">
           <h2 className="font-extrabold">{t.base}</h2>
           <p className="text-sm text-muted">{t.baseHint}</p>
           <div className="flex flex-wrap gap-2">
@@ -529,28 +544,61 @@ export function ShoppingScreen({
               </ChipToggle>
             ))}
           </div>
-        </section>
+        </Card>
       )}
 
       {purchases && (
-        <section className="flex flex-col gap-2 rounded-card bg-surface p-4" data-testid="review">
+        <Card padding="sm" className="flex flex-col gap-2" data-testid="review">
           <Button
             type="button"
             variant="outline"
             className="self-start"
-            onClick={() => setReviewOpen((o) => !o)}
+            onClick={() => {
+              if (!reviewOpen) {
+                const r = reviewSummary(
+                  Object.entries(purchases.lines).map(([key, l]) => ({
+                    key,
+                    status: l.status,
+                    issue: l.issue,
+                  })),
+                );
+                void trackReviewCompleted(r.unresolved);
+              }
+              setReviewOpen((o) => !o);
+            }}
           >
             {reviewOpen ? tp.close : tp.review}
           </Button>
           {reviewOpen && <ReviewPanel lines={purchases.lines} />}
-        </section>
+        </Card>
+      )}
+
+      {purchases && canWrite && (
+        <WeekOpsPanel
+          weekId={weekId}
+          online={online}
+          preparations={preparations}
+          transfers={transfers}
+          otherWeeks={otherWeeks}
+        />
+      )}
+
+      {purchases && canWrite && (
+        <AdaptationPanel
+          weekId={weekId}
+          online={online}
+          history={adaptationHistory}
+          candidates={Object.entries(purchases.lines)
+            .filter(([, l]) => l.status === "partial" || l.status === "uncovered")
+            .map(([key]) => ({ key, label: ingredientLabels[key] ?? names[key] ?? key }))}
+        />
       )}
 
       {groups.length === 0 ? (
         <p className="text-muted">{t.empty}</p>
       ) : (
         groups.map((g) => (
-          <section key={g.key} className="flex flex-col rounded-card bg-surface p-4">
+          <Card padding="sm" key={g.key} className="flex flex-col">
             <h2 className="flex items-center justify-between pb-2 font-extrabold">
               {g.label}
               <small className="font-semibold text-muted">
@@ -673,7 +721,7 @@ export function ShoppingScreen({
                 </li>
               ))}
             </ul>
-          </section>
+          </Card>
         ))
       )}
       <Button type="button" variant="outline" onClick={share} className="self-start">

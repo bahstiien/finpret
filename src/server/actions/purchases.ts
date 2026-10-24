@@ -2,14 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import {
-  appendEvent,
-  type PurchaseEvent,
-  type PurchaseErrorCode,
-  type PurchaseEventType,
-  toCatalogUnit,
-  weekRevision,
-} from "@/engine/purchases";
+import { toCatalogUnit } from "@/engine/purchases";
 import { ensureOccurrenceIds, listOccurrences } from "@/engine/occurrences";
 import { shoppingNeeds } from "@/engine/shopping";
 import { fr } from "@/i18n/fr";
@@ -20,6 +13,7 @@ import { type ActionResult, toUserMessage } from "@/server/errors";
 import { householdCan } from "@/server/entitlements-load";
 import { pantryForWeek } from "@/server/allocations";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
+import { trackEvent } from "@/server/events";
 import { allow } from "@/server/rate-limit";
 import { requireHousehold } from "@/server/session";
 import { engineEnvFor } from "@/server/weeks";
@@ -45,22 +39,6 @@ const input = z.object({
 
 type Input = z.infer<typeof input>;
 
-const rowToEvent = (r: {
-  id: string;
-  week_id: string;
-  ingredient_key: string;
-  qty: number;
-  type: PurchaseEventType;
-  op_key: string;
-}): PurchaseEvent => ({
-  id: r.id,
-  weekId: r.week_id,
-  ingredient: r.ingredient_key,
-  qty: Number(r.qty),
-  type: r.type,
-  opKey: r.op_key,
-});
-
 async function write(raw: Input, type: "purchase" | "correction", okMessage: string): Promise<Result> {
   if (!FEATURES.realPurchases) return { ok: false, error: fr.errors.forbidden };
   const { household, user } = await requireHousehold("/app/courses");
@@ -79,53 +57,40 @@ async function write(raw: Input, type: "purchase" | "correction", okMessage: str
   const q = toCatalogUnit(lib, p.ingredient, p.qty, p.unit);
   if (!q.ok) return { ok: false, error: t[q.code] };
 
+  // Idempotence, révision et solde sont vérifiés dans la transaction SQL, sous verrou de la semaine.
   const supabase = await createClient();
-  const { data: rows, error } = await supabase
-    .from("purchase_events")
-    .select("id, week_id, ingredient_key, qty, type, op_key")
-    .eq("household_id", household.id)
-    .eq("week_id", p.weekId)
-    .order("created_at");
-  if (error) return { ok: false, error: toUserMessage(error) };
-  const log = (rows ?? []).map(rowToEvent);
-
-  // La clé d'idempotence est unique dans le foyer : on la cherche aussi hors de cette semaine.
-  const { data: dup } = await supabase
-    .from("purchase_events")
-    .select("id, week_id, ingredient_key, qty, type, op_key")
-    .eq("household_id", household.id)
-    .eq("op_key", p.opKey)
-    .maybeSingle();
-  const full = dup && !log.some((e) => e.id === dup.id) ? [...log, rowToEvent(dup)] : log;
-
-  const res = appendEvent(
-    full,
-    { weekId: p.weekId, ingredient: p.ingredient, qty: q.value, type, opKey: p.opKey, author: user.id },
-    { expectedRevision: p.expectedRevision, newId: () => crypto.randomUUID() },
-  );
-  if (!res.ok) return { ok: false, error: t[res.code as PurchaseErrorCode] };
-  const { event, replayed, log: next } = res.value;
-  if (!replayed) {
-    const { error: e } = await supabase.from("purchase_events").insert({
-      household_id: household.id,
-      week_id: event.weekId,
-      ingredient_key: event.ingredient,
-      qty: event.qty,
-      type,
-      op_key: event.opKey,
+  const { data, error } = await supabase.rpc("record_purchase", {
+    p_week: p.weekId,
+    p_ingredient: p.ingredient,
+    p_qty: q.value,
+    p_type: type,
+    p_op_key: p.opKey,
+    p_expected_revision: p.expectedRevision,
+  });
+  if (error) return { ok: false, error: purchaseError(error) };
+  const res = data as { replayed: boolean; revision: number };
+  if (!res.replayed) {
+    await trackEvent(type === "purchase" ? "purchase_recorded" : "purchase_quantity_corrected", {
+      userId: user.id,
+      householdId: household.id,
+      props: { op: p.opKey },
     });
-    if (e) {
-      // Course entre deux appareils avec la même clé : l'autre écriture fait foi, rien n'est compté deux fois.
-      if (e.code === "23505")
-        return { ok: true, data: { message: t.replayed, revision: weekRevision(log, p.weekId) } };
-      return { ok: false, error: t.failed };
-    }
     revalidatePath("/app", "layout");
   }
-  return {
-    ok: true,
-    data: { message: replayed ? t.replayed : okMessage, revision: weekRevision(next, p.weekId) },
+  return { ok: true, data: { message: res.replayed ? t.replayed : okMessage, revision: res.revision } };
+}
+
+/** Erreurs métier levées par les fonctions SQL d'achats, traduites pour l'utilisateur. */
+function purchaseError(e: { code?: string; message?: string }): string {
+  const known: Record<string, string> = {
+    version_conflict: t.VERSION_CONFLICT,
+    idempotency_conflict: t.IDEMPOTENCY_CONFLICT,
+    insufficient_available_quantity: t.INSUFFICIENT_AVAILABLE_QUANTITY,
+    invalid_quantity: t.INVALID_QUANTITY,
   };
+  const hit = Object.entries(known).find(([code]) => e.message === code);
+  if (hit) return hit[1];
+  return e.code === "42501" ? fr.errors.forbidden : t.failed;
 }
 
 /** « Ajouter un achat » : additionne à ce qui est déjà enregistré. */
@@ -152,7 +117,7 @@ export async function reportShoppingIssue(
   raw: z.infer<typeof issueInput>,
 ): Promise<ActionResult<{ message: string }>> {
   if (!FEATURES.realPurchases) return { ok: false, error: fr.errors.forbidden };
-  const { household } = await requireHousehold("/app/shopping");
+  const { household, user } = await requireHousehold("/app/shopping");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
   if (!(await householdCan(household.id, "purchases"))) return { ok: false, error: fr.errors.upgrade };
   const parsed = issueInput.safeParse(raw);
@@ -182,6 +147,11 @@ export async function reportShoppingIssue(
       .eq("ingredient_key", p.ingredient);
     if (e) return { ok: false, error: toUserMessage(e) };
   }
+  await trackEvent("shopping_issue_reported", {
+    userId: user.id,
+    householdId: household.id,
+    props: { decision: p.decision },
+  });
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: t.issueSaved } };
 }
@@ -217,7 +187,9 @@ const prepInput = z.object({
  * « Déjà commencé / préparé » (§14) : protège une préparation. Elle ne peut plus être remplacée ni réécrite,
  * et son allocation de ressources est préservée. Il n'y a pas de retour en arrière.
  */
-export async function markPreparation(raw: z.infer<typeof prepInput>): Promise<ActionResult<{ message: string }>> {
+export async function markPreparation(
+  raw: z.infer<typeof prepInput>,
+): Promise<ActionResult<{ message: string }>> {
   if (!FEATURES.realPurchases) return { ok: false, error: fr.errors.forbidden };
   const { household } = await requireHousehold("/app");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
@@ -229,12 +201,22 @@ export async function markPreparation(raw: z.infer<typeof prepInput>): Promise<A
   if (!week) return { ok: false, error: fr.menuActions.weekGone };
   const env = await engineEnvFor(ctx);
   const plan = ensureOccurrenceIds(week.plan, () => crypto.randomUUID());
-  const known = listOccurrences(env, plan, portionModelFor(ctx, plan.start), ctx.settings.menu.cake.enabled);
-  if (!known.some((o) => o.uid === p.uid)) return { ok: false, error: t.prepUnknown };
+  const pm = portionModelFor(ctx, plan.start);
+  const cakeOn = ctx.settings.menu.cake.enabled;
+  const before = listOccurrences(env, week.plan, pm, cakeOn);
+  const known = listOccurrences(env, plan, pm, cakeOn);
+  // Une semaine sans identités persistées expose des identités dérivées (« main:0 ») : même ordre, même préparation.
+  const at = before.findIndex((o) => o.uid === p.uid);
+  const uid = at >= 0 ? known[at]?.uid : known.find((o) => o.uid === p.uid)?.uid;
+  if (!uid) return { ok: false, error: t.prepUnknown };
+  p.uid = uid;
   const supabase = await createClient();
   // Les identités posées pour la première fois sont enregistrées avec le plan.
   if (JSON.stringify(plan) !== JSON.stringify(week.plan)) {
-    const { error: e } = await supabase.from("weeks").update({ plan: plan as unknown as Json }).eq("id", p.weekId);
+    const { error: e } = await supabase
+      .from("weeks")
+      .update({ plan: plan as unknown as Json })
+      .eq("id", p.weekId);
     if (e) return { ok: false, error: toUserMessage(e) };
   }
   const { data: existing } = await supabase
@@ -244,7 +226,11 @@ export async function markPreparation(raw: z.infer<typeof prepInput>): Promise<A
     .eq("uid", p.uid)
     .maybeSingle();
   const res = existing
-    ? await supabase.from("preparation_states").update({ state: p.state }).eq("week_id", p.weekId).eq("uid", p.uid)
+    ? await supabase
+        .from("preparation_states")
+        .update({ state: p.state })
+        .eq("week_id", p.weekId)
+        .eq("uid", p.uid)
     : await supabase
         .from("preparation_states")
         .insert({ week_id: p.weekId, uid: p.uid, household_id: household.id, state: p.state });
@@ -259,7 +245,9 @@ const coverageInput = z.object({ weekId: z.uuid(), ingredient: z.string().min(1)
  * « Confirmer que j'en ai assez » : couverture non numérique, bornée au besoin calculé par le serveur
  * au moment de la confirmation. Une augmentation ultérieure du besoin la rend caduque (AC-12).
  */
-export async function confirmCoverage(raw: z.infer<typeof coverageInput>): Promise<ActionResult<{ message: string }>> {
+export async function confirmCoverage(
+  raw: z.infer<typeof coverageInput>,
+): Promise<ActionResult<{ message: string }>> {
   if (!FEATURES.realPurchases) return { ok: false, error: fr.errors.forbidden };
   const { household } = await requireHousehold("/app/shopping");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
@@ -275,9 +263,13 @@ export async function confirmCoverage(raw: z.infer<typeof coverageInput>): Promi
   // Seul un stock « assez » de cette semaine se confirme ; le besoin vient du plan, jamais du client.
   if (shared.pantry[p.ingredient] !== null || shared.unverified.has(p.ingredient))
     return { ok: false, error: t.notDeclaredAssez };
-  const need = shoppingNeeds(env, week.plan, portionModelFor(ctx, week.plan.start), shared.pantry, ctx.settings.menu.cake.enabled)[
-    p.ingredient
-  ]?.need;
+  const need = shoppingNeeds(
+    env,
+    week.plan,
+    portionModelFor(ctx, week.plan.start),
+    shared.pantry,
+    ctx.settings.menu.cake.enabled,
+  )[p.ingredient]?.need;
   if (need === undefined) return { ok: false, error: fr.errors.generic };
   const supabase = await createClient();
   const { error } = await supabase
@@ -289,4 +281,62 @@ export async function confirmCoverage(raw: z.infer<typeof coverageInput>): Promi
   if (error) return { ok: false, error: toUserMessage(error) };
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: t.coverageConfirmed } };
+}
+
+const transferInput = z.object({
+  fromWeekId: z.uuid(),
+  toWeekId: z.uuid(),
+  ingredient: z.string().min(1).max(60),
+  qty: z.number().finite().positive().max(100000),
+  unit: z.enum(["g", "kg", "ml", "l", "pc", "boite", "cs", "cc"]),
+  opKey: z.string().min(8).max(120),
+});
+
+/**
+ * « Réaffecter » : transfert explicite d'une quantité disponible vers une autre semaine. La source diminue de
+ * la même quantité, la destination l'acquiert : aucune seconde copie (§9.6).
+ */
+export async function transferPurchase(
+  raw: z.infer<typeof transferInput>,
+): Promise<ActionResult<{ message: string }>> {
+  if (!FEATURES.realPurchases) return { ok: false, error: fr.errors.forbidden };
+  const { household } = await requireHousehold("/app/shopping");
+  if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
+  if (!(await householdCan(household.id, "purchases"))) return { ok: false, error: fr.errors.upgrade };
+  const parsed = transferInput.safeParse(raw);
+  if (!parsed.success) return { ok: false, error: t.INVALID_QUANTITY };
+  const p = parsed.data;
+  if (!allow(`purchase:${household.id}`, 60, 60_000)) return { ok: false, error: fr.errors.generic };
+  const ctx = await loadHouseholdContext(household.id);
+  if (!ctx.weeks.some((w) => w.id === p.fromWeekId) || !ctx.weeks.some((w) => w.id === p.toWeekId))
+    return { ok: false, error: fr.menuActions.weekGone };
+  const { lib } = await engineEnvFor(ctx);
+  const q = toCatalogUnit(lib, p.ingredient, p.qty, p.unit);
+  if (!q.ok) return { ok: false, error: t[q.code] };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("transfer_purchase", {
+    p_from: p.fromWeekId,
+    p_to: p.toWeekId,
+    p_ingredient: p.ingredient,
+    p_qty: q.value,
+    p_op_key: p.opKey,
+  });
+  if (error) return { ok: false, error: purchaseError(error) };
+  const replayed = (data as { replayed: boolean }).replayed;
+  if (!replayed) revalidatePath("/app", "layout");
+  return { ok: true, data: { message: replayed ? t.replayed : t.transferred } };
+}
+
+/**
+ * « Vérifier mes courses » ouvert : indicateur du bilan (nombre de lignes à résoudre seulement, jamais de
+ * libellé). Ne modifie aucune donnée.
+ */
+export async function trackReviewCompleted(unresolved: number): Promise<void> {
+  if (!FEATURES.realPurchases || !Number.isInteger(unresolved) || unresolved < 0 || unresolved > 1000) return;
+  const { household, user } = await requireHousehold("/app/shopping");
+  await trackEvent("shopping_review_completed", {
+    userId: user.id,
+    householdId: household.id,
+    props: { unresolved },
+  });
 }

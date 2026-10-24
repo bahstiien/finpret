@@ -7,11 +7,13 @@ import { createClient } from "@/lib/supabase/server";
 import { FEATURES } from "@/lib/features";
 import { loadHouseholdContext } from "@/server/household-context";
 import { portionModelFor } from "@/server/household-context";
-import { pantryForWeek } from "@/server/allocations";
+import { listOccurrences } from "@/engine/occurrences";
+import { loadLockState, lockedFor, pantryForWeek } from "@/server/allocations";
 import { loadPurchaseView } from "@/server/purchases-view";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
+import { PageHeader } from "@/components/ui/Layout";
 
 export const metadata: Metadata = { title: fr.nav.shopping };
 
@@ -24,7 +26,7 @@ export default async function ShoppingPage() {
   if (!week) {
     return (
       <>
-        <h1 className="text-4xl font-black">{fr.nav.shopping}</h1>
+        <PageHeader title={fr.nav.shopping} />
         <Card>
           <p className="text-muted">{fr.shopping.noWeek}</p>
         </Card>
@@ -94,8 +96,63 @@ export default async function ShoppingPage() {
       )
     : null;
 
+  const { data: events } = FEATURES.realPurchases
+    ? await supabase
+        .from("adaptation_events")
+        .select("id, kind, changes, undone_by")
+        .eq("week_id", week.id)
+        .order("created_at", { ascending: false })
+        .limit(10)
+    : { data: null };
+  const recipeName = (id: string) =>
+    (env.mainById.get(id) ?? env.soupById.get(id) ?? env.simpleById.get(id))?.n ?? id;
+  const adaptHistory = (events ?? []).map((e) => ({
+    id: e.id,
+    kind: e.kind,
+    undone: e.undone_by !== null,
+    lines: (e.changes as unknown as { before: string; after: string }[]).map(
+      (c) => `${recipeName(c.before)} → ${recipeName(c.after)}`,
+    ),
+  }));
+
+  const lock = shared ? await loadLockState(week.id) : null;
+  const occurrences = lock
+    ? listOccurrences(env, week.plan, portionModelFor(ctx, week.plan.start), ctx.settings.menu.cake.enabled)
+    : [];
+  const locked = lock ? lockedFor(occurrences, lock) : new Set<string>();
+  const preparations = occurrences.map((o) => {
+    const st = lock?.states[o.uid];
+    return {
+      uid: o.uid,
+      name: recipeName(o.recipeId),
+      state:
+        st === "started" || st === "prepared"
+          ? st
+          : lock?.sessionStarted && locked.has(o.uid)
+            ? ("locked" as const)
+            : ("planned" as const),
+    };
+  });
+  const transfers = purchases
+    ? Object.entries(purchases.lines)
+        .filter(([, l]) => l.balance > 0)
+        .map(([key, l]) => ({
+          key,
+          label: labels[key] ?? env.lib.ingredients[key]?.l ?? key,
+          balance: l.balance,
+          unit: l.catalogUnit,
+        }))
+    : [];
+  const otherWeeks = ctx.weeks
+    .filter((w) => w.id !== week.id && w.start_date >= week.start_date)
+    .map((w) => ({ id: w.id, label: formatShort(w.start_date) }));
+
   return (
     <ShoppingScreen
+      preparations={preparations}
+      transfers={transfers}
+      otherWeeks={otherWeeks}
+      adaptationHistory={adaptHistory}
       purchases={purchases}
       canWrite={household.role !== "viewer"}
       householdId={household.id}

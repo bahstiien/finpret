@@ -55,6 +55,8 @@ export type RecipeDetail = {
   ingredients: string[];
   steps: string[];
   notes: string[];
+  /** 1 (très facile) à 4 (technique). */
+  difficulty: number;
 };
 
 export type GridCell = {
@@ -302,6 +304,7 @@ export function buildMenuView(
       ingredients: ingLines(r.ing, x.cookP / 4),
       steps: [...r.prep, ...r.blocks.flatMap((b) => b.a)].map((s) => fill(lib, s, r.ing, x.cookP / 4)),
       notes: [t.keeps(r.fridge, r.freeze), ...(r.jj ? [t.dayJ(fill(lib, r.jj, r.ing, 2 / 4))] : [])],
+      difficulty: r.diff,
     });
   }
   if (so && so.P) {
@@ -315,6 +318,7 @@ export function buildMenuView(
       ingredients: ingLines(r.ing, so.P / 4),
       steps: [...r.prep, ...r.blocks.flatMap((b) => b.a)].map((s) => fill(lib, s, r.ing, so.P / 4)),
       notes: [t.keeps(r.fridge, r.freeze)],
+      difficulty: r.diff,
     });
   }
   for (const s of activeSimples(env, w).filter((x) => x.on)) {
@@ -328,6 +332,7 @@ export function buildMenuView(
       ingredients: ingLines(s.r.ing, sc),
       steps: s.r.steps.map((x) => fill(lib, x, s.r.ing, sc)),
       notes: [],
+      difficulty: s.r.diff,
     });
   }
 

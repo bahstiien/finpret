@@ -28,8 +28,7 @@ export async function syncShoppingItems(
   const baseToBuy = rows.filter((r) => r.source === "pantry_check").map((r) => r.ingredient_key!);
   // Stock déjà réservé par les semaines précédentes retiré (AC-11) ; une semaine inconnue du contexte garde tout le stock.
   const stockRow = ctx.weeks.find((w) => w.id === week.id);
-  const pantry =
-    FEATURES.realPurchases && stockRow ? pantryForWeek(ctx, env, stockRow).pantry : ctx.pantry;
+  const pantry = FEATURES.realPurchases && stockRow ? pantryForWeek(ctx, env, stockRow).pantry : ctx.pantry;
   const { items, baseUsed } = shoppingList(
     env,
     week.plan,

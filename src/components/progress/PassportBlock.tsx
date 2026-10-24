@@ -10,6 +10,8 @@ import type { CountryEntry, SeasonEntry } from "@/engine/progress-view";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import { recordProgressEvent } from "@/server/actions/progress";
+import { buttonClass } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.progress.passport;
 
@@ -28,7 +30,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-card bg-surface p-6" aria-labelledby="passport-title">
+    <Card className="flex flex-col gap-4" aria-labelledby="passport-title">
       <div className="flex flex-col gap-2">
         <h2 id="passport-title" className="text-2xl font-black">
           {t.title}
@@ -125,10 +127,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
               )}
             </div>
             {country.remaining.length > 0 && (
-              <Link
-                href={`/app/discover?origin=${country.code}`}
-                className="inline-flex min-h-11 items-center justify-center rounded-pill bg-banana px-6 font-bold text-[#17151F]"
-              >
+              <Link href={`/app/discover?origin=${country.code}`} className={buttonClass()}>
                 {t.discover}
               </Link>
             )}
@@ -148,6 +147,6 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
           </div>
         )}
       </Sheet>
-    </section>
+    </Card>
   );
 }

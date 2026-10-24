@@ -19,6 +19,7 @@
    80,
    10
   ],
+  "diff": 1,
   "d": "Velouté épais cuit et mixé au blender chauffant, lentilles corail pour les protéines.",
   "ing": {
    "butternut": 800,
@@ -70,6 +71,7 @@
    64,
    10
   ],
+  "diff": 1,
   "d": "Soupe orange douce au cumin, prête en une fournée de blender par soir.",
   "ing": {
    "lentillescorail": 200,
@@ -131,6 +133,7 @@
    56,
    10
   ],
+  "diff": 1,
   "d": "Le classique de l'hiver, épaissi aux haricots blancs pour les protéines.",
   "ing": {
    "poireau": 3,
@@ -188,6 +191,7 @@
    51,
    14
   ],
+  "diff": 1,
   "d": "Velouté au cumin, pois chiches rôtis à l'air fryer pour le croquant.",
   "ing": {
    "choufleur": 800,
@@ -256,6 +260,7 @@
    40,
    7
   ],
+  "diff": 1,
   "d": "Soupe de légumes d'été, petites pâtes cuites dans la soupe au moment de servir.",
   "ing": {
    "courgette": 2,
@@ -308,6 +313,7 @@
    35,
    12
   ],
+  "diff": 1,
   "d": "Velouté de courgette au fromage frais, tartines gratinées à l'air fryer au moment du repas.",
   "ing": {
    "courgette": 4,
@@ -365,6 +371,7 @@
    48,
    15
   ],
+  "diff": 1,
   "d": "Potimarron cuit avec la peau, tartines gratinées à l'air fryer au moment du repas.",
   "ing": {
    "potimarron": 900,
@@ -422,6 +429,7 @@
    56,
    6
   ],
+  "diff": 2,
   "d": "Soupe rassasiante et riche en protéines végétales.",
   "ing": {
    "poiscasses": 300,
@@ -484,6 +492,7 @@
    45,
    25
   ],
+  "diff": 1,
   "d": "Soupe froide mixée au blender, sans cuisson.",
   "ing": {
    "tomatefraiche": 10,
@@ -532,6 +541,7 @@
    42,
    8
   ],
+  "diff": 1,
   "d": "Velouté printanier, œuf mollet cuit minute pour les protéines.",
   "ing": {
    "asperges": 800,
@@ -586,6 +596,7 @@
    52,
    5
   ],
+  "diff": 1,
   "d": "Doux et sucré, très apprécié des enfants.",
   "ing": {
    "petitspois": 600,
@@ -635,6 +646,7 @@
    50,
    9
   ],
+  "diff": 1,
   "d": "Bouillon soja-gingembre, poulet effiloché, nouilles cuites dans le bol au moment du repas.",
   "ing": {
    "poulet": 400,
@@ -686,6 +698,7 @@
    76,
    8
   ],
+  "diff": 1,
   "d": "La soupe marocaine du ramadan, épaisse et parfumée au ras el hanout.",
   "ing": {
    "lentillescorail": 150,
@@ -732,6 +745,7 @@
    35,
    9
   ],
+  "diff": 1,
   "d": "Inspirée du tom kha gai : lait de coco, gingembre et citron.",
   "ing": {
    "poulet": 400,
@@ -777,6 +791,7 @@
    42,
    6
   ],
+  "diff": 1,
   "d": "Le bouillon de poulet réconfortant, petites pâtes cuites au moment.",
   "ing": {
    "poulet": 400,
@@ -818,6 +833,7 @@
    46,
    13
   ],
+  "diff": 1,
   "d": "Doux et crémeux, il plaît à toute la famille.",
   "ing": {
    "champignons": 600,
@@ -859,6 +875,7 @@
    66,
    12
   ],
+  "diff": 1,
   "d": "Épaisse et rustique, avec du parmesan et un filet d'huile d'olive.",
   "ing": {
    "haricotsblancs": 2,
@@ -903,6 +920,7 @@
    48,
    12
   ],
+  "diff": 1,
   "d": "Bouillon parfumé gingembre-cannelle, nouilles de riz cuites au moment.",
   "ing": {
    "boeuf": 400,
@@ -951,6 +969,7 @@
    48,
    10
   ],
+  "diff": 1,
   "d": "Rien ne se perd : les fanes en soupe, les radis en tartines.",
   "ing": {
    "radis": 2,
@@ -1006,6 +1025,7 @@
    50,
    7
   ],
+  "diff": 1,
   "d": "Asperges, fèves et petits pois dans un bouillon léger.",
   "ing": {
    "asperges": 300,
@@ -1053,6 +1073,7 @@
    40,
    12
   ],
+  "diff": 1,
   "d": "Façon tzatziki à boire, sans cuisson.",
   "ing": {
    "concombre": 3,
@@ -1101,6 +1122,7 @@
    56,
    13
   ],
+  "diff": 1,
   "d": "La soupe paysanne du Sud-Ouest, épaisse et rassasiante.",
   "ing": {
    "chou": 0.5,
@@ -1143,6 +1165,7 @@
    70,
    5
   ],
+  "diff": 1,
   "d": "Épaisse et rassasiante, un trait de skyr au service.",
   "ing": {
    "poiscasses": 300,
@@ -1191,6 +1214,7 @@
    66,
    11
   ],
+  "diff": 1,
   "d": "Doux et orangé, feta émiettée au service.",
   "ing": {
    "lentillescorail": 200,
@@ -1233,6 +1257,7 @@
    66,
    12
   ],
+  "diff": 1,
   "d": "Épaisse et parfumée, avec des chips de tortilla au fromage.",
   "ing": {
    "haricotsrouges": 2,
@@ -1277,6 +1302,7 @@
    48,
    14
   ],
+  "diff": 1,
   "d": "Inspirée du lablabi tunisien, citron et cumin.",
   "ing": {
    "poischiches": 2,
@@ -1321,6 +1347,7 @@
    62,
    9
   ],
+  "diff": 1,
   "d": "Version toute saison aux carottes et pommes de terre.",
   "ing": {
    "haricotsblancs": 2,
@@ -1364,6 +1391,7 @@
    72,
    9
   ],
+  "diff": 1,
   "d": "Rustique et nourrissante, mixée à moitié.",
   "ing": {
    "lentillesvertes": 200,
@@ -1410,6 +1438,7 @@
    56,
    9
   ],
+  "diff": 1,
   "d": "Le velouté vert du printemps, très doux.",
   "ing": {
    "feves": 400,
@@ -1467,6 +1496,7 @@
    48,
    12
   ],
+  "diff": 1,
   "d": "Velouté vert onctueux, croûtons à l'emmental.",
   "ing": {
    "brocoli": 700,

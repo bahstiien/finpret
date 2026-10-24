@@ -39,62 +39,64 @@ export async function GET(request: NextRequest) {
   }
 
   const meals = await milestoneMeals(household.id, milestone);
-  await trackEvent("share_card_created", { userId: user.id, householdId: household.id, props: { milestone } });
+  await trackEvent("share_card_created", {
+    userId: user.id,
+    householdId: household.id,
+    props: { milestone },
+  });
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: VIOLET,
+        color: "#ffffff",
+        padding: 96,
+      }}
+    >
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          width: 140,
+          height: 140,
+          borderRadius: 40,
+          background: "#ffffff",
+          color: VIOLET,
+          fontSize: 96,
+          fontWeight: 900,
           alignItems: "center",
-          background: VIOLET,
-          color: "#ffffff",
-          padding: 96,
+          justifyContent: "center",
         }}
       >
+        M
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+        <div style={{ display: "flex", fontSize: 360, fontWeight: 900, lineHeight: 1 }}>{milestone}</div>
+        <div style={{ display: "flex", fontSize: 76, fontWeight: 900, marginTop: 8 }}>
+          {fr.progress.streak.weeks(milestone).replace(/^\d+ /, "")}
+        </div>
         <div
           style={{
             display: "flex",
-            width: 140,
-            height: 140,
-            borderRadius: 40,
-            background: "#ffffff",
-            color: VIOLET,
-            fontSize: 96,
-            fontWeight: 900,
-            alignItems: "center",
-            justifyContent: "center",
+            marginTop: 64,
+            padding: "24px 48px",
+            borderRadius: 999,
+            background: BANANA,
+            color: INK,
+            fontSize: 48,
+            fontWeight: 800,
           }}
         >
-          M
+          {meals} repas préparés le dimanche
         </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-          <div style={{ display: "flex", fontSize: 360, fontWeight: 900, lineHeight: 1 }}>{milestone}</div>
-          <div style={{ display: "flex", fontSize: 76, fontWeight: 900, marginTop: 8 }}>
-            {fr.progress.streak.weeks(milestone).replace(/^\d+ /, "")}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              marginTop: 64,
-              padding: "24px 48px",
-              borderRadius: 999,
-              background: BANANA,
-              color: INK,
-              fontSize: 48,
-              fontWeight: 800,
-            }}
-          >
-            {meals} repas préparés le dimanche
-          </div>
-        </div>
-        <div style={{ display: "flex", fontSize: 44, fontWeight: 700, opacity: 0.9 }}>{fr.app.name}</div>
       </div>
-    ),
+      <div style={{ display: "flex", fontSize: 44, fontWeight: 700, opacity: 0.9 }}>{fr.app.name}</div>
+    </div>,
     { width: 1080, height: 1350 },
   );
 }

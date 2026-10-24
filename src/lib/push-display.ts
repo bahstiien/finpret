@@ -29,6 +29,7 @@ export function notificationFor(p: PushPayload): { title: string; options: Notif
 
 /** Adresse ouverte au clic : uniquement un chemin de l'application (pas de redirection vers un autre site). */
 export function notificationTarget(path: unknown, origin: string): string {
-  const safe = typeof path === "string" && path.startsWith("/") && !path.startsWith("//") && !path.startsWith("/\\");
+  const safe =
+    typeof path === "string" && path.startsWith("/") && !path.startsWith("//") && !path.startsWith("/\\");
   return new URL(safe ? path : "/app", origin).href;
 }

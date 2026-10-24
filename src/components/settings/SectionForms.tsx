@@ -20,18 +20,19 @@ import {
 } from "@/lib/settings";
 import { saveSettings } from "@/server/actions/settings";
 import { ApplyPrompt, SaveStatus, useAutosave } from "./Autosave";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.settings;
 
 function Panel({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-4 rounded-card bg-surface p-5">
+    <Card padding="cozy" className="flex flex-col gap-4">
       <div>
         <h2 className="text-xl font-extrabold">{title}</h2>
         {hint && <p className="text-sm text-muted">{hint}</p>}
       </div>
       {children}
-    </section>
+    </Card>
   );
 }
 

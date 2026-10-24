@@ -82,7 +82,10 @@ describe("occurrences", () => {
     const modified = structuredClone(twin);
     const m = twin.groups[0]!.meals[0]!;
     modified.removed = [...modified.removed, `${m.day}-${m.meal}`];
-    const changed = changedOccurrences(listOccurrences(env, twin, pm, true), listOccurrences(env, modified, pm, true));
+    const changed = changedOccurrences(
+      listOccurrences(env, twin, pm, true),
+      listOccurrences(env, modified, pm, true),
+    );
     expect(changed).toContain(twin.groups[0]!.uid);
     expect(changed).not.toContain(twin.groups[1]!.uid);
   });

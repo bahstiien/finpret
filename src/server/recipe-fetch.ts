@@ -110,7 +110,8 @@ export async function fetchPublic(
     }
     return { ok: false, error: "http" };
   } catch (e) {
-    if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError")) return { ok: false, error: "timeout" };
+    if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError"))
+      return { ok: false, error: "timeout" };
     return { ok: false, error: "network" };
   }
 }
@@ -121,7 +122,9 @@ export async function fetchRecipePage(raw: string, options: FetchOptions = {}): 
   const fromFixture = await fixture(check.url);
   if (fromFixture) return fromFixture;
   const res = await fetchPublic(raw, "html", options);
-  return res.ok ? { ok: true, html: new TextDecoder("utf-8").decode(res.bytes), finalUrl: res.finalUrl } : res;
+  return res.ok
+    ? { ok: true, html: new TextDecoder("utf-8").decode(res.bytes), finalUrl: res.finalUrl }
+    : res;
 }
 
 // ---------------------------------------------------------------------------
@@ -152,7 +155,11 @@ export async function callModel(prompt: string, maxTokens = 2000): Promise<unkno
       "x-api-key": process.env.ANTHROPIC_API_KEY!,
       "anthropic-version": "2023-06-01",
     },
-    body: JSON.stringify({ model: LLM_MODEL, max_tokens: maxTokens, messages: [{ role: "user", content: prompt }] }),
+    body: JSON.stringify({
+      model: LLM_MODEL,
+      max_tokens: maxTokens,
+      messages: [{ role: "user", content: prompt }],
+    }),
   });
   if (!res.ok) throw new Error(`modèle : ${res.status}`);
   const body = (await res.json()) as { content?: { type: string; text?: string }[] };
@@ -166,7 +173,9 @@ const STYLE =
   "Ne mentionne ni le site ni l'auteur.";
 
 /** Recette lue dans le texte d'une page sans données structurées. null si rien d'exploitable. */
-export async function extractWithModel(html: string): Promise<{ recipe: ExtractedRecipe; steps: string[] } | null> {
+export async function extractWithModel(
+  html: string,
+): Promise<{ recipe: ExtractedRecipe; steps: string[] } | null> {
   if (!llmAvailable()) return null;
   try {
     const raw = await callModel(

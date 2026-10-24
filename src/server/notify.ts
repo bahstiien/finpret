@@ -28,14 +28,25 @@ export type Recipient = {
   schedule: HouseholdSchedule;
 };
 
-export type Payload = { kind: NotificationKind | ExtraKind | "test"; title: string; body: string; url: string; day: string };
+export type Payload = {
+  kind: NotificationKind | ExtraKind | "test";
+  title: string;
+  body: string;
+  url: string;
+  day: string;
+};
 export type Subscription = { id: string; endpoint: string; keys: { p256dh: string; auth: string } };
 
 export type NotifyDeps = {
   recipients: () => Promise<Recipient[]>;
   /** Texte du rappel pour ce foyer, ou null s'il n'y a rien à dire (pas de dîner prévu, rien à décongeler…). */
   content: (householdId: string, kind: NotificationKind, local: LocalTime) => Promise<string | number | null>;
-  claim: (userId: string, kind: NotificationKind | ExtraKind, day: string, payload: Payload) => Promise<boolean>;
+  claim: (
+    userId: string,
+    kind: NotificationKind | ExtraKind,
+    day: string,
+    payload: Payload,
+  ) => Promise<boolean>;
   subscriptions: (userId: string) => Promise<Subscription[]>;
   sendPush: (sub: Subscription, payload: Payload) => Promise<"ok" | "gone" | "error">;
   removeSubscription: (id: string) => Promise<void>;
@@ -44,7 +55,11 @@ export type NotifyDeps = {
 };
 
 /** Titre, texte et lien d'un rappel. */
-export function payloadFor(kind: NotificationKind | "test", value: string | number | null, day: string): Payload {
+export function payloadFor(
+  kind: NotificationKind | "test",
+  value: string | number | null,
+  day: string,
+): Payload {
   const t = fr.notifications;
   const body =
     kind === "dinner"
@@ -60,7 +75,12 @@ export function payloadFor(kind: NotificationKind | "test", value: string | numb
 export type DeliveryResult = { push: number; email: boolean };
 
 /** Envoie un rappel déjà réservé sur les appareils du compte, puis par e-mail si besoin. */
-export async function deliver(deps: NotifyDeps, userId: string, prefs: Pick<NotificationPrefs, "push" | "email">, payload: Payload) {
+export async function deliver(
+  deps: NotifyDeps,
+  userId: string,
+  prefs: Pick<NotificationPrefs, "push" | "email">,
+  payload: Payload,
+) {
   let push = 0;
   if (prefs.push) {
     for (const sub of await deps.subscriptions(userId)) {

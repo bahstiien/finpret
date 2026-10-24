@@ -206,7 +206,9 @@ export async function generateAndStore(householdId: string, start: string): Prom
   if (!res.ok) return { ok: false, reason: "impossible" };
 
   // Le week-end déjà choisi pour cette semaine est gardé (comme le prototype).
-  const merged: WeekPlan = existing?.plan.weekend ? { ...res.week, weekend: existing.plan.weekend } : res.week;
+  const merged: WeekPlan = existing?.plan.weekend
+    ? { ...res.week, weekend: existing.plan.weekend }
+    : res.week;
   const plan = FEATURES.realPurchases ? ensureOccurrenceIds(merged, () => crypto.randomUUID()) : merged;
   const today = todayIn(ctx.timezone);
   const payload = {

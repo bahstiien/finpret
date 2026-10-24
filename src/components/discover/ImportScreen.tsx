@@ -164,7 +164,13 @@ function ReviewForm({
   aisles,
   origins,
 }: {
-  initial: { importId: string | null; form: ImportForm; lines: Line[]; servings: number | null; rewritten: boolean };
+  initial: {
+    importId: string | null;
+    form: ImportForm;
+    lines: Line[];
+    servings: number | null;
+    rewritten: boolean;
+  };
   editId: string | null;
   ingredients: CatalogIngredient[];
   aisles: [string, string][];
@@ -182,7 +188,8 @@ function ReviewForm({
   const byKey = new Map(ingredients.map((i) => [i.key, i]));
 
   const set = <K extends keyof ImportForm>(k: K, v: ImportForm[K]) => setForm((f) => ({ ...f, [k]: v }));
-  const setLine = (i: number, patch: Partial<Line>) => setLines((ls) => ls.map((l, j) => (j === i ? { ...l, ...patch } : l)));
+  const setLine = (i: number, patch: Partial<Line>) =>
+    setLines((ls) => ls.map((l, j) => (j === i ? { ...l, ...patch } : l)));
   const q = quality(lines.map((l) => ({ key: l.key, toTaste: l.toTaste, uncertain: l.uncertain })));
 
   const submit = (plan: boolean) => {
@@ -217,7 +224,9 @@ function ReviewForm({
   const scaleTo4 = () => {
     const n = Number(askValue.replace(",", "."));
     if (!(n > 0 && n <= 50)) return;
-    setLines((ls) => ls.map((l) => (l.qty === null ? l : { ...l, qty: Math.round(((l.qty * 4) / n) * 10) / 10 })));
+    setLines((ls) =>
+      ls.map((l) => (l.qty === null ? l : { ...l, qty: Math.round(((l.qty * 4) / n) * 10) / 10 })),
+    );
     setServings(n);
     setAskServings(false);
   };
@@ -271,7 +280,13 @@ function ReviewForm({
         </div>
       )}
 
-      <TextField id="name" label={t.name} required value={form.name} onChange={(e) => set("name", e.target.value)} />
+      <TextField
+        id="name"
+        label={t.name}
+        required
+        value={form.name}
+        onChange={(e) => set("name", e.target.value)}
+      />
 
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-2 text-xl font-bold">{t.ingredients}</legend>
@@ -293,7 +308,12 @@ function ReviewForm({
                     value={l.key ?? ""}
                     onChange={(e) => {
                       const g = byKey.get(e.target.value);
-                      setLine(i, g ? { key: g.key, label: g.label, unit: g.unit, aisle: g.aisle, uncertain: false } : { key: null, uncertain: false });
+                      setLine(
+                        i,
+                        g
+                          ? { key: g.key, label: g.label, unit: g.unit, aisle: g.aisle, uncertain: false }
+                          : { key: null, uncertain: false },
+                      );
                     }}
                   >
                     <option value="">{t.newIngredient}</option>
@@ -355,7 +375,12 @@ function ReviewForm({
                       value={l.label}
                       onChange={(e) => setLine(i, { label: e.target.value })}
                     />
-                    <SelectField id={`aisle-${i}`} label={t.aisle} value={l.aisle} onChange={(e) => setLine(i, { aisle: e.target.value })}>
+                    <SelectField
+                      id={`aisle-${i}`}
+                      label={t.aisle}
+                      value={l.aisle}
+                      onChange={(e) => setLine(i, { aisle: e.target.value })}
+                    >
                       {aisles.map(([k, label]) => (
                         <option key={k} value={k}>
                           {label}
@@ -364,7 +389,11 @@ function ReviewForm({
                     </SelectField>
                   </div>
                 )}
-                <Toggle label={t.toTaste} checked={l.toTaste} onChange={(v) => setLine(i, { toTaste: v, uncertain: false })} />
+                <Toggle
+                  label={t.toTaste}
+                  checked={l.toTaste}
+                  onChange={(v) => setLine(i, { toTaste: v, uncertain: false })}
+                />
               </li>
             );
           })}
@@ -376,7 +405,17 @@ function ReviewForm({
           onClick={() =>
             setLines((ls) => [
               ...ls,
-              { original: "", key: null, label: "", qty: null, unit: "g", aisle: "divers", toTaste: false, uncertain: false, suggestions: [] },
+              {
+                original: "",
+                key: null,
+                label: "",
+                qty: null,
+                unit: "g",
+                aisle: "divers",
+                toTaste: false,
+                uncertain: false,
+                suggestions: [],
+              },
             ])
           }
         >
@@ -387,7 +426,12 @@ function ReviewForm({
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-2 text-xl font-bold">{t.classify}</legend>
         <div className="grid gap-3 min-[700px]:grid-cols-3">
-          <SelectField id="kind" label={t.kind} value={form.kind} onChange={(e) => set("kind", e.target.value as ImportForm["kind"])}>
+          <SelectField
+            id="kind"
+            label={t.kind}
+            value={form.kind}
+            onChange={(e) => set("kind", e.target.value as ImportForm["kind"])}
+          >
             {(["main", "soup", "simple", "cake"] as const).map((k) => (
               <option key={k} value={k}>
                 {t.kinds[k]}
@@ -409,7 +453,12 @@ function ReviewForm({
             </SelectField>
           )}
           {form.kind !== "cake" && (
-            <SelectField id="origin" label={t.origin} value={form.origin} onChange={(e) => set("origin", e.target.value)}>
+            <SelectField
+              id="origin"
+              label={t.origin}
+              value={form.origin}
+              onChange={(e) => set("origin", e.target.value)}
+            >
               {origins.map(([code, label]) => (
                 <option key={code} value={code}>
                   {label}
@@ -431,12 +480,34 @@ function ReviewForm({
                   </option>
                 ))}
               </SelectField>
-              <NumberField id="parts" label={t.parts} value={form.parts} onChange={(v) => set("parts", v ?? 1)} />
+              <NumberField
+                id="parts"
+                label={t.parts}
+                value={form.parts}
+                onChange={(v) => set("parts", v ?? 1)}
+              />
             </>
           )}
-          <NumberField id="prep" label={t.prepMin} value={form.prepMin} onChange={(v) => set("prepMin", v ?? 0)} />
-          <NumberField id="cook" label={t.cookMin} value={form.cookMin} onChange={(v) => set("cookMin", v ?? 0)} />
-          {isBatch && <NumberField id="fridge" label={t.fridge} value={form.fridge} onChange={(v) => set("fridge", v ?? 3)} />}
+          <NumberField
+            id="prep"
+            label={t.prepMin}
+            value={form.prepMin}
+            onChange={(v) => set("prepMin", v ?? 0)}
+          />
+          <NumberField
+            id="cook"
+            label={t.cookMin}
+            value={form.cookMin}
+            onChange={(v) => set("cookMin", v ?? 0)}
+          />
+          {isBatch && (
+            <NumberField
+              id="fridge"
+              label={t.fridge}
+              value={form.fridge}
+              onChange={(v) => set("fridge", v ?? 3)}
+            />
+          )}
         </div>
         {form.kind !== "cake" && (
           <div className="grid gap-1 min-[700px]:grid-cols-2 min-[700px]:gap-x-8">
@@ -449,7 +520,10 @@ function ReviewForm({
         <div className="flex flex-col gap-2">
           <span className="text-sm font-semibold">{t.months}</span>
           <div className="flex flex-wrap gap-2">
-            <ChipToggle pressed={!form.months} onToggle={() => set("months", form.months ? null : [new Date().getMonth() + 1])}>
+            <ChipToggle
+              pressed={!form.months}
+              onToggle={() => set("months", form.months ? null : [new Date().getMonth() + 1])}
+            >
               {t.allYear}
             </ChipToggle>
             {form.months &&
@@ -458,7 +532,9 @@ function ReviewForm({
                   key={m}
                   pressed={months.includes(i + 1)}
                   onToggle={() => {
-                    const next = months.includes(i + 1) ? months.filter((x) => x !== i + 1) : [...months, i + 1];
+                    const next = months.includes(i + 1)
+                      ? months.filter((x) => x !== i + 1)
+                      : [...months, i + 1];
                     set("months", next.length ? next.sort((a, b) => a - b) : null);
                   }}
                 >
@@ -470,7 +546,12 @@ function ReviewForm({
         <div className="grid gap-3 min-[700px]:grid-cols-2">
           <p className="text-sm font-semibold min-[700px]:col-span-2">{t.macros}</p>
           <NumberField id="kcal" label={t.kcal} value={form.kcal} onChange={(v) => set("kcal", v)} />
-          <NumberField id="protein-g" label={t.proteinG} value={form.proteinG} onChange={(v) => set("proteinG", v)} />
+          <NumberField
+            id="protein-g"
+            label={t.proteinG}
+            value={form.proteinG}
+            onChange={(v) => set("proteinG", v)}
+          />
         </div>
       </fieldset>
 
@@ -490,23 +571,47 @@ function ReviewForm({
                 id={`step-${i}`}
                 rows={2}
                 value={s}
-                onChange={(e) => set("steps", form.steps.map((x, j) => (j === i ? e.target.value : x)))}
+                onChange={(e) =>
+                  set(
+                    "steps",
+                    form.steps.map((x, j) => (j === i ? e.target.value : x)),
+                  )
+                }
                 className="min-h-11 w-full rounded-2xl border-2 border-line bg-surface px-4 py-2 focus:border-violet focus:outline-none"
               />
               <div className="flex flex-col">
-                <StepButton label={t.moveUp(i + 1)} icon="▲" disabled={i === 0} onClick={() => set("steps", swap(form.steps, i, i - 1))} />
+                <StepButton
+                  label={t.moveUp(i + 1)}
+                  icon="▲"
+                  disabled={i === 0}
+                  onClick={() => set("steps", swap(form.steps, i, i - 1))}
+                />
                 <StepButton
                   label={t.moveDown(i + 1)}
                   icon="▼"
                   disabled={i === form.steps.length - 1}
                   onClick={() => set("steps", swap(form.steps, i, i + 1))}
                 />
-                <StepButton label={t.removeStep(i + 1)} icon="✕" onClick={() => set("steps", form.steps.filter((_, j) => j !== i))} />
+                <StepButton
+                  label={t.removeStep(i + 1)}
+                  icon="✕"
+                  onClick={() =>
+                    set(
+                      "steps",
+                      form.steps.filter((_, j) => j !== i),
+                    )
+                  }
+                />
               </div>
             </li>
           ))}
         </ol>
-        <Button type="button" variant="outline" className="self-start" onClick={() => set("steps", [...form.steps, ""])}>
+        <Button
+          type="button"
+          variant="outline"
+          className="self-start"
+          onClick={() => set("steps", [...form.steps, ""])}
+        >
           <Icon name="plus" /> {t.addStep}
         </Button>
       </fieldset>
@@ -560,7 +665,17 @@ function NumberField({
   );
 }
 
-function StepButton({ label, icon, disabled, onClick }: { label: string; icon: string; disabled?: boolean; onClick: () => void }) {
+function StepButton({
+  label,
+  icon,
+  disabled,
+  onClick,
+}: {
+  label: string;
+  icon: string;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"

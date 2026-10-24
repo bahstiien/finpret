@@ -45,7 +45,9 @@ describe("validation des liens (SSRF)", () => {
   });
 
   it("lit le lien partagé et nomme le site", () => {
-    expect(urlFromShare({ text: "Regarde ça https://www.750g.com/gratin.htm, miam" })).toBe("https://www.750g.com/gratin.htm");
+    expect(urlFromShare({ text: "Regarde ça https://www.750g.com/gratin.htm, miam" })).toBe(
+      "https://www.750g.com/gratin.htm",
+    );
     expect(urlFromShare({ url: "https://a.fr/x", text: "https://b.fr" })).toBe("https://a.fr/x");
     expect(siteName(new URL("https://www.marmiton.org/x"))).toBe("Marmiton");
     expect(siteName(new URL("https://blog.exemple.fr/x"))).toBe("blog.exemple.fr");
@@ -99,7 +101,10 @@ describe("conversions d'unités", () => {
 /** Lignes réelles d'ingrédients (formes rencontrées sur les sites cités) et le résultat attendu. */
 const LINES: [string, Partial<ReturnType<typeof parseIngredientLine>>][] = [
   ["2 c. à soupe d'huile d'olive", { qty: 2, unit: "cs", label: "huile d'olive" }],
-  ["1 boîte de tomates pelées (400 g)", { qty: 1, unit: "boite", label: "tomates pelées", note: "400 g", alt: { qty: 400, unit: "g" } }],
+  [
+    "1 boîte de tomates pelées (400 g)",
+    { qty: 1, unit: "boite", label: "tomates pelées", note: "400 g", alt: { qty: 400, unit: "g" } },
+  ],
   ["3 gousses d'ail", { qty: 3, unit: null, pieceWord: "gousses", label: "ail" }],
   ["sel, poivre", { qty: null, toTaste: true }],
   ["Sel et poivre", { qty: null, toTaste: true }],
@@ -127,7 +132,10 @@ const LINES: [string, Partial<ReturnType<typeof parseIngredientLine>>][] = [
   ["deux échalotes", { qty: 2, label: "échalotes" }],
   ["4 tranches de jambon", { qty: 4, pieceWord: "tranches", label: "jambon" }],
   ["1 bouquet de persil", { qty: 1, pieceWord: "bouquet", label: "persil" }],
-  ["1 morceau de gingembre frais (3 cm)", { qty: 1, pieceWord: "morceau", label: "gingembre frais", note: "3 cm" }],
+  [
+    "1 morceau de gingembre frais (3 cm)",
+    { qty: 1, pieceWord: "morceau", label: "gingembre frais", note: "3 cm" },
+  ],
   ["1 sachet de levure chimique", { qty: 1, pieceWord: "sachet", label: "levure chimique" }],
   ["125 g beurre mou", { qty: 125, unit: "g", label: "beurre mou" }],
   ["1 oeuf", { qty: 1, label: "oeuf" }],
@@ -189,7 +197,10 @@ describe("extraction des pages", () => {
   });
 
   it("lit le JSON-LD, le @graph, un tableau et les microdonnées", () => {
-    expect(extractRecipe(fixture("marmiton"))).toMatchObject({ method: "jsonld", recipe: { siteName: "Marmiton", yield: "6 personnes" } });
+    expect(extractRecipe(fixture("marmiton"))).toMatchObject({
+      method: "jsonld",
+      recipe: { siteName: "Marmiton", yield: "6 personnes" },
+    });
     expect(extractRecipe(fixture("750g"))?.recipe.instructions).toHaveLength(2);
     expect(extractRecipe(fixture("cuisineaz"))?.recipe.instructions).toHaveLength(2);
     expect(extractRecipe(fixture("journaldesfemmes"))?.method).toBe("microdata");
@@ -209,12 +220,24 @@ describe("extraction des pages", () => {
 describe("brouillon d'import", () => {
   const draft = (name: string) => {
     const { recipe } = extractRecipe(fixture(name))!;
-    return buildDraft({ recipe, url: `https://exemple.fr/${name}`, sourceName: recipe.siteName ?? name, lib: LIB });
+    return buildDraft({
+      recipe,
+      url: `https://exemple.fr/${name}`,
+      sourceName: recipe.siteName ?? name,
+      lib: LIB,
+    });
   };
 
   it("Marmiton : 4 portions, au moins 90 % d'ingrédients rapprochés, aucune étape d'origine", () => {
     const d = draft("marmiton");
-    expect(d).toMatchObject({ servings: 6, kind: "main", protein: "volaille", origin: "fr", fridge: 3, macros: [420, 38, 0, 0] });
+    expect(d).toMatchObject({
+      servings: 6,
+      kind: "main",
+      protein: "volaille",
+      origin: "fr",
+      fridge: 3,
+      macros: [420, 38, 0, 0],
+    });
     const q = quality(d.lines);
     expect(q.matched / q.total).toBeGreaterThanOrEqual(0.9);
     expect(d.lines.find((l) => l.key === "poulet")?.qty).toBe(800);
@@ -223,7 +246,14 @@ describe("brouillon d'import", () => {
   });
 
   it("classe le type, la protéine, les pâtes, le four et la conservation", () => {
-    expect(draft("750g")).toMatchObject({ kind: "main", protein: "porc", pasta: true, comfort: true, oven: true, freeze: false });
+    expect(draft("750g")).toMatchObject({
+      kind: "main",
+      protein: "porc",
+      pasta: true,
+      comfort: true,
+      oven: true,
+      freeze: false,
+    });
     expect(draft("cuisineaz")).toMatchObject({ kind: "soup", protein: "veg", servings: 4 });
     expect(draft("journaldesfemmes")).toMatchObject({ kind: "simple", origin: "in", servings: 2 });
     const cookies = draft("wordpress-wprm");
@@ -234,8 +264,17 @@ describe("brouillon d'import", () => {
 
   it("lignes au goût en placard, conversions impossibles surlignées", () => {
     const d = draft("cuisineaz");
-    expect(d.lines.find((l) => l.original === "Sel")).toMatchObject({ toTaste: true, aisle: "base", uncertain: false, qty: null });
-    expect(d.lines.find((l) => l.key === "potimarron")).toMatchObject({ qty: 1000, unit: "g", uncertain: false });
+    expect(d.lines.find((l) => l.original === "Sel")).toMatchObject({
+      toTaste: true,
+      aisle: "base",
+      uncertain: false,
+      qty: null,
+    });
+    expect(d.lines.find((l) => l.key === "potimarron")).toMatchObject({
+      qty: 1000,
+      unit: "g",
+      uncertain: false,
+    });
     expect(d.lines.find((l) => l.key === "pommedeterre")).toMatchObject({ qty: null, uncertain: true });
   });
 
@@ -250,9 +289,20 @@ describe("brouillon d'import", () => {
 
   it("demande les portions quand la page ne les donne pas", () => {
     const { recipe } = extractRecipe(fixture("marmiton"))!;
-    const d = buildDraft({ recipe: { ...recipe, yield: null }, url: "https://x.fr", sourceName: "x", lib: LIB });
+    const d = buildDraft({
+      recipe: { ...recipe, yield: null },
+      url: "https://x.fr",
+      sourceName: "x",
+      lib: LIB,
+    });
     expect(d.servings).toBeNull();
-    const forced = buildDraft({ recipe: { ...recipe, yield: null }, url: "https://x.fr", sourceName: "x", lib: LIB, servings: 8 });
+    const forced = buildDraft({
+      recipe: { ...recipe, yield: null },
+      url: "https://x.fr",
+      sourceName: "x",
+      lib: LIB,
+      servings: 8,
+    });
     expect(forced.lines[0]?.qty).toBe(600);
   });
 });
@@ -261,9 +311,13 @@ describe("recette validée → catalogue", () => {
   const base = () => {
     const { recipe } = extractRecipe(fixture("marmiton"))!;
     const d = buildDraft({ recipe, url: "https://www.marmiton.org/x", sourceName: "Marmiton", lib: LIB });
-    return { ...draftToForm(d), steps: ["Fais dorer le poulet.", "Ajoute les légumes et laisse mijoter 45 min."] };
+    return {
+      ...draftToForm(d),
+      steps: ["Fais dorer le poulet.", "Ajoute les légumes et laisse mijoter 45 min."],
+    };
   };
-  const keysOf = (form: ReturnType<typeof base>) => form.lines.map((l) => (l.key && LIB.ingredients[l.key] ? l.key : null));
+  const keysOf = (form: ReturnType<typeof base>) =>
+    form.lines.map((l) => (l.key && LIB.ingredients[l.key] ? l.key : null));
 
   it("produit un plat de batch conforme au format du catalogue, sans étape d'origine", () => {
     const form = base();
@@ -278,8 +332,12 @@ describe("recette validée → catalogue", () => {
   it("chaque type respecte son schéma, macros inconnues signalées", () => {
     const form = { ...base(), kcal: null, proteinG: null };
     const keys = keysOf(form);
-    expect(simpleSchema.safeParse({ id: "x", ...toRecipe({ ...form, kind: "simple" }, keys).data }).success).toBe(true);
-    expect(soupSchema.safeParse({ id: "x", ...toRecipe({ ...form, kind: "soup" }, keys).data }).success).toBe(true);
+    expect(
+      simpleSchema.safeParse({ id: "x", ...toRecipe({ ...form, kind: "simple" }, keys).data }).success,
+    ).toBe(true);
+    expect(soupSchema.safeParse({ id: "x", ...toRecipe({ ...form, kind: "soup" }, keys).data }).success).toBe(
+      true,
+    );
     const cake = toRecipe({ ...form, kind: "cake" }, keys);
     expect(cakeSchema.safeParse({ id: "x", ...cake.data }).success).toBe(true);
     expect(cake.data.mu).toBe(true);
@@ -288,9 +346,25 @@ describe("recette validée → catalogue", () => {
   it("aller-retour avec l'écran de modification", () => {
     const form = base();
     const out = toRecipe(form, keysOf(form));
-    const back = fromRecipe(out.kind, out.data as Record<string, unknown>, { url: form.sourceUrl, name: form.sourceName }, LIB.ingredients);
-    expect(back).toMatchObject({ name: form.name, kind: "main", protein: "volaille", steps: form.steps, kcal: 420 });
-    expect(toRecipe(back, back.lines.map((l) => l.key))).toEqual(out);
+    const back = fromRecipe(
+      out.kind,
+      out.data as Record<string, unknown>,
+      { url: form.sourceUrl, name: form.sourceName },
+      LIB.ingredients,
+    );
+    expect(back).toMatchObject({
+      name: form.name,
+      kind: "main",
+      protein: "volaille",
+      steps: form.steps,
+      kcal: 420,
+    });
+    expect(
+      toRecipe(
+        back,
+        back.lines.map((l) => l.key),
+      ),
+    ).toEqual(out);
   });
 
   it("une recette importée et validée est proposée par le générateur (20 générations)", () => {
@@ -301,7 +375,14 @@ describe("recette validée → catalogue", () => {
     let seen = 0;
     for (let i = 0; i < 20; i++) {
       const env = createEnv({ lib, random: seededRandom(100 + i), bonus: { imp_poulet: 0.3 } });
-      const res = generateWeek({ env, settings: DEFAULT_MENU_SETTINGS, start: "2027-08-02", previous: null, history: [], bank: [] });
+      const res = generateWeek({
+        env,
+        settings: DEFAULT_MENU_SETTINGS,
+        start: "2027-08-02",
+        previous: null,
+        history: [],
+        bank: [],
+      });
       expect(res.ok).toBe(true);
       if (res.ok && res.week.groups.some((g) => g.id === "imp_poulet")) seen++;
     }
@@ -311,7 +392,10 @@ describe("recette validée → catalogue", () => {
   it("une recette supprimée n'est plus tirée mais reste lisible", () => {
     const form = base();
     const imported = { id: "imp_poulet", ...toRecipe(form, keysOf(form)).data } as Main;
-    const env = createEnv({ lib: { ...LIB, mains: [...LIB.mains, imported], retired: ["imp_poulet"] }, random: seededRandom(1) });
+    const env = createEnv({
+      lib: { ...LIB, mains: [...LIB.mains, imported], retired: ["imp_poulet"] },
+      random: seededRandom(1),
+    });
     expect(env.lib.mains.some((r) => r.id === "imp_poulet")).toBe(false);
     expect(env.mainById.get("imp_poulet")?.n).toBe("Poulet basquaise facile");
   });
