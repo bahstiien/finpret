@@ -16,8 +16,7 @@ const BUCKET = "asso-statements";
 export async function runQuarterClosing(quarter?: string, now = new Date()): Promise<ClosingSummary> {
   const db = createAdminClient();
   const target = quarter ?? previousQuarter(todayIn("Europe/Paris", now));
-  // Le bucket est créé au premier besoin (privé).
-  await db.storage.createBucket(BUCKET, { public: false }).catch(() => null);
+  // Le bucket `asso-statements` (privé) est créé par la migration 20261106000000_storage_buckets.
   const pdfs = new Map<string, Buffer>();
   return closeQuarter(db, target, {
     writeStatement: async (input) => {

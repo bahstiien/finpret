@@ -358,6 +358,8 @@ export const fr = {
   errors: {
     generic: "Oups, ça n'a pas marché. Réessaie dans un instant.",
     forbidden: "Tu n'as pas les droits pour faire ça.",
+    subscriptionCancel:
+      "Nous n'avons pas pu résilier ton abonnement. Rien n'a été supprimé : réessaie dans un instant ou écris-nous.",
     members_limit:
       "Ton foyer a atteint le nombre de comptes de son offre. Passe à l'offre payante pour en ajouter.",
     upgrade: "Cette option fait partie de l'offre payante. Découvre-la dans Abonnement.",

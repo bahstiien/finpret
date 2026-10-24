@@ -13,6 +13,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
 import { ACTIVE_HOUSEHOLD_COOKIE, requireHousehold, requireUser } from "@/server/session";
+import { stripeAvailable, stripeClient } from "@/server/stripe";
+import { cancelHouseholdSubscriptions } from "@/server/subscription-cleanup";
 import { generateAndStore } from "@/server/weeks";
 
 type Section = keyof typeof SETTINGS_SCHEMAS;
@@ -235,7 +237,16 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
       .select("*", { count: "exact", head: true })
       .eq("household_id", m.household_id)
       .eq("role", "admin");
-    if ((count ?? 0) <= 1) await supabase.from("households").delete().eq("id", m.household_id);
+    if ((count ?? 0) <= 1) {
+      // L'abonnement Stripe est résilié avant le foyer : sinon la facturation continuerait sans compte.
+      const cancelled = await cancelHouseholdSubscriptions(
+        createAdminClient(),
+        m.household_id,
+        stripeAvailable() ? stripeClient() : null,
+      );
+      if (!cancelled.ok) return { ok: false, error: fr.errors.subscriptionCancel };
+      await supabase.from("households").delete().eq("id", m.household_id);
+    }
   }
   const admin = createAdminClient();
   const { error } = await admin.auth.admin.deleteUser(user.id);
@@ -252,6 +263,12 @@ export async function deleteHousehold(formData: FormData): Promise<ActionResult>
   if (String(formData.get("confirm") ?? "").trim() !== household.name) {
     return { ok: false, error: fr.settings.data.confirmMismatch };
   }
+  const cancelled = await cancelHouseholdSubscriptions(
+    createAdminClient(),
+    household.id,
+    stripeAvailable() ? stripeClient() : null,
+  );
+  if (!cancelled.ok) return { ok: false, error: fr.errors.subscriptionCancel };
   const supabase = await createClient();
   const { error } = await supabase.from("households").delete().eq("id", household.id);
   if (error) return { ok: false, error: toUserMessage(error) };
