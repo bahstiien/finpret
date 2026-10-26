@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import robots, { DISALLOWED } from "@/app/robots";
 import sitemap, { PUBLIC_PATHS } from "@/app/sitemap";
+import { seoPaths } from "@/seo/paths";
 
 /** Correspondance robots.txt : préfixe, `$` en fin de motif pour une correspondance exacte. */
 const blocked = (path: string) =>
@@ -17,12 +18,15 @@ describe("robots.txt et sitemap", () => {
       "/admin/mfa",
       "/api/stripe/webhook",
       "/join/abc",
+      "/settings/household",
+      "/onboarding",
+      "/dashboard",
     ]) {
       expect(blocked(p), p).toBe(true);
     }
   });
   it("laisse passer la landing et ses pages (/associations ne commence pas par /asso/)", () => {
-    for (const p of ["/", "/associations", "/associations/comment-ca-marche", "/cgu", "/mentions-legales"]) {
+    for (const p of ["/", "/associations", "/associations/comment-ca-marche", "/cgu", "/mentions-legales", "/recettes", "/menus/semaine-4-personnes", "/batch-cooking/famille"]) {
       expect(blocked(p), p).toBe(false);
     }
   });
@@ -33,7 +37,10 @@ describe("robots.txt et sitemap", () => {
     const urls = sitemap().map((e) => e.url);
     expect(urls).toContain("https://finpret.app/associations");
     expect(urls).toContain("https://finpret.app/associations/comment-ca-marche");
-    expect(urls).toHaveLength(PUBLIC_PATHS.length);
+    expect(urls).toHaveLength(PUBLIC_PATHS.length + seoPaths().length);
+    expect(urls).toContain("https://finpret.app/recettes");
+    expect(urls).toContain("https://finpret.app/menus/semaine-4-personnes-batch-cooking");
+    expect(urls).toContain("https://finpret.app/batch-cooking/en-2-heures");
     expect(urls.some((u) => /\/(ecole|app|asso|admin|join)(\/|$)/.test(u))).toBe(false);
   });
 });

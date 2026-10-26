@@ -1,6 +1,13 @@
 /** Routes qui demandent une session. */
 export const PROTECTED_PREFIXES = ["/app", "/onboarding", "/settings", "/asso", "/admin"] as const;
 
+/** Routes à ne jamais indexer : en plus des routes protégées, la connexion, les liens d'invitation, l'API et le retour d'auth. */
+export const NOINDEX_PREFIXES = [...PROTECTED_PREFIXES, "/login", "/join", "/api", "/auth"] as const;
+
+export function isNoindexPath(pathname: string): boolean {
+  return NOINDEX_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 export function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }

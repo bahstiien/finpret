@@ -15,6 +15,14 @@ export const DISALLOWED = [
   "/admin$",
   "/api/",
   "/join/",
+  "/dashboard/",
+  "/dashboard$",
+  "/settings/",
+  "/settings$",
+  "/onboarding/",
+  "/onboarding$",
+  "/login$",
+  "/auth/",
 ] as const;
 
 export default function robots(): MetadataRoute.Robots {

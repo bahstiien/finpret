@@ -1,9 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import { isProtectedPath } from "@/lib/redirect";
+import { isNoindexPath, isProtectedPath } from "@/lib/redirect";
 
 /** Rafraîchit la session Supabase à chaque requête et protège les routes de l'application. */
 export async function middleware(request: NextRequest) {
+  const response = await handle(request);
+  // Toutes les routes connectées (et connexion, API, invitations) sont en noindex, même si le robot les atteint.
+  if (isNoindexPath(request.nextUrl.pathname)) response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return response;
+}
+
+async function handle(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const protectedPath = isProtectedPath(request.nextUrl.pathname);
@@ -44,7 +51,8 @@ function redirectToLogin(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Tout sauf les fichiers statiques, le service worker, le manifest, les icônes et la sonde de santé.
-    "/((?!_next/static|_next/image|favicon.ico|sw.js|swe-worker|manifest.webmanifest|icons/|api/health$).*)",
+    // Tout sauf les fichiers statiques, le service worker, le manifest, les icônes et la sonde de santé et les pages publiques SEO
+    // (rendues statiquement : pas d'appel Supabase à chaque requête).
+    "/((?!_next/static|_next/image|favicon.ico|sw.js|swe-worker|manifest.webmanifest|icons/|api/health$|recettes|menus|batch-cooking|og/).*)",
   ],
 };
