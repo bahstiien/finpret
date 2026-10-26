@@ -114,7 +114,10 @@ export function planSession(recipes: readonly RecipeView[]): { steps: PlanStep[]
     .filter((r) => r.oven)
     .reduce((s, r) => s + r.blocks.filter((b) => b.mode === "four").reduce((t, b) => t + b.active + b.passive, 0), 0);
   const minutes = Math.ceil(Math.max(active + lastTail, ovenSeq) / 5) * 5;
-  return { steps: steps.map(({ tail: _tail, ...s }) => s), minutes };
+  return {
+    steps: steps.map((s) => ({ slug: s.slug, name: s.name, activeMin: s.activeMin, passiveMin: s.passiveMin, oven: s.oven })),
+    minutes,
+  };
 }
 
 function shopping(recipes: readonly RecipeView[], scale: number): { groups: ShoppingGroup[]; pantry: string[] } {
