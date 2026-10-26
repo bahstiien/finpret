@@ -13,7 +13,8 @@ const nextConfig: NextConfig = {
   // avec un `next dev` déjà lancé sur .next.
   distDir: process.env.NODE_ENV === "production" ? ".next-build" : ".next",
   // Image Docker minimale : `.next-build/standalone` contient le serveur et ses seules dépendances.
-  output: "standalone",
+  // Le mode standalone crée des symlinks, refusés sous Windows sans droits : on ne l'active que là où il sert (Docker, CI).
+  ...(process.platform === "win32" ? {} : { output: "standalone" as const }),
   reactStrictMode: true,
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
