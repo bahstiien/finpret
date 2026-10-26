@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { SessionProvider, type SessionRow } from "@/components/session/SessionProvider";
 import { TimerBar } from "@/components/session/TimerBar";
 import { CelebrationHost } from "@/components/progress/CelebrationHost";
-import { AppNav } from "@/components/ui/AppNav";
+import { AppFrame } from "@/components/ui/AppFrame";
 import { ToastProvider } from "@/components/ui/Toast";
 import { loadCelebrations } from "@/server/progress-view";
 import { loadHouseholdContext } from "@/server/household-context";
@@ -43,14 +43,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         sound={ctx.settings.session.sound}
         vibration={ctx.settings.session.vibration}
       >
-        <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-5 px-4 pt-6 pb-32 min-[900px]:px-8 min-[900px]:pb-10 print:max-w-none print:p-0">
-          <div className="contents print:hidden">
-            <AppNav shoppingLeft={count ?? 0} />
-            <TimerBar />
-          </div>
-          <main className="flex flex-col gap-5">{children}</main>
-          {celebrations && <CelebrationHost data={celebrations} />}
-        </div>
+        <AppFrame
+          shoppingLeft={count ?? 0}
+          top={<TimerBar />}
+          overlay={celebrations ? <CelebrationHost data={celebrations} /> : null}
+        >
+          {children}
+        </AppFrame>
       </SessionProvider>
     </ToastProvider>
   );

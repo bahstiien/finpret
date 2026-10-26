@@ -3,6 +3,8 @@ import { dur } from "@/engine/format";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import type { WeekSummary } from "@/server/weeks";
+import { buttonClass } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.onboarding;
 
@@ -17,7 +19,7 @@ export function OnboardingRecap({ result }: { result: { start: string; summary: 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center gap-6 px-4 py-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-4xl font-black">{r.title}</h1>
+        <PageHeader title={r.title} />
         <p className="text-muted">{r.lead(formatShort(result.start))}</p>
       </div>
       <ul className="grid gap-3 sm:grid-cols-3" data-testid="onboarding-recap">
@@ -28,10 +30,7 @@ export function OnboardingRecap({ result }: { result: { start: string; summary: 
           </li>
         ))}
       </ul>
-      <Link
-        href="/app"
-        className="inline-flex min-h-11 items-center justify-center rounded-pill bg-banana px-6 font-bold text-[#17151F]"
-      >
+      <Link href="/app" className={buttonClass()}>
         {r.cta}
       </Link>
     </div>

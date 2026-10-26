@@ -3,6 +3,8 @@ import { IbanForm } from "@/components/asso/IbanForm";
 import { fr } from "@/i18n/fr";
 import { createClient } from "@/lib/supabase/server";
 import { requireManager } from "@/server/asso-session";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.asso.statements;
 
@@ -21,14 +23,16 @@ export default async function StatementsPage() {
     .order("quarter", { ascending: false });
   return (
     <>
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
       <p className="text-muted">{t.lead}</p>
       {association.status === "approved" ? (
         <IbanForm last4={association.ibanLast4} />
       ) : (
-        <p className="rounded-card bg-surface p-5">{t.ibanMissing}</p>
+        <Card as="p" padding="cozy">
+          {t.ibanMissing}
+        </Card>
       )}
-      <section className="rounded-card bg-surface p-5" aria-label={t.title}>
+      <Card padding="cozy" aria-label={t.title}>
         {!data?.length && <p className="text-muted">{t.none}</p>}
         <ul className="flex flex-col divide-y divide-line">
           {(data ?? []).map((p) => (
@@ -44,7 +48,7 @@ export default async function StatementsPage() {
             </li>
           ))}
         </ul>
-      </section>
+      </Card>
     </>
   );
 }

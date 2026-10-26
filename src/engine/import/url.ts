@@ -5,7 +5,8 @@
 
 export type UrlCheck = { ok: true; url: URL } | { ok: false; reason: "invalid" | "scheme" | "private" };
 
-const BLOCKED_HOSTS = /^(localhost|localhost\.localdomain|.*\.localhost|.*\.local|.*\.internal|.*\.home\.arpa)$/i;
+const BLOCKED_HOSTS =
+  /^(localhost|localhost\.localdomain|.*\.localhost|.*\.local|.*\.internal|.*\.home\.arpa)$/i;
 
 export function checkUrl(raw: string): UrlCheck {
   let url: URL;
@@ -48,7 +49,11 @@ export function isPrivateIp(host: string): boolean {
 }
 
 /** Lien de la cible de partage : l'URL peut arriver dans `url` ou au milieu du texte partagé. */
-export function urlFromShare(params: { url?: string | null; text?: string | null; title?: string | null }): string {
+export function urlFromShare(params: {
+  url?: string | null;
+  text?: string | null;
+  title?: string | null;
+}): string {
   if (params.url) return params.url;
   const match = `${params.text ?? ""} ${params.title ?? ""}`.match(/https?:\/\/\S+/);
   return match ? match[0].replace(/[).,;]+$/, "") : "";

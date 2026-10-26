@@ -19,7 +19,14 @@ export type ParsedLine = {
   alt: { qty: number; unit: CatalogUnit } | null;
 };
 
-const FRACTIONS: Record<string, string> = { "½": " 1/2", "¼": " 1/4", "¾": " 3/4", "⅓": " 1/3", "⅔": " 2/3", "⅛": " 1/8" };
+const FRACTIONS: Record<string, string> = {
+  "½": " 1/2",
+  "¼": " 1/4",
+  "¾": " 3/4",
+  "⅓": " 1/3",
+  "⅔": " 2/3",
+  "⅛": " 1/8",
+};
 
 const toNumber = (s: string): number => {
   const t = s.trim().replace(",", ".");
@@ -30,14 +37,30 @@ const toNumber = (s: string): number => {
   return Number(t);
 };
 
-const WORD_NUMBERS: Record<string, number> = { un: 1, une: 1, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, huit: 8, dix: 10, douze: 12, demi: 0.5, "demi-": 0.5 };
-const TO_TASTE = /(?<!\p{L})(au goût|selon (?:votre|ton|le) goût|à volonté|q\.?\s?s\.?|quantité suffisante|facultatif)(?!\p{L})/iu;
-const TASTE_WORDS = /^(sel|poivre|fleur de sel|sel et poivre|sel, poivre|poivre du moulin|piment d'espelette|muscade|quelques?|un peu|une pincée|1 pincée|pincée)\b/i;
+const WORD_NUMBERS: Record<string, number> = {
+  un: 1,
+  une: 1,
+  deux: 2,
+  trois: 3,
+  quatre: 4,
+  cinq: 5,
+  six: 6,
+  huit: 8,
+  dix: 10,
+  douze: 12,
+  demi: 0.5,
+  "demi-": 0.5,
+};
+const TO_TASTE =
+  /(?<!\p{L})(au goût|selon (?:votre|ton|le) goût|à volonté|q\.?\s?s\.?|quantité suffisante|facultatif)(?!\p{L})/iu;
+const TASTE_WORDS =
+  /^(sel|poivre|fleur de sel|sel et poivre|sel, poivre|poivre du moulin|piment d'espelette|muscade|quelques?|un peu|une pincée|1 pincée|pincée)\b/i;
 
 const PINCH = /\bpinc(é|e)es?(?!\p{L})|\bune? peu\b/iu;
 
 /** Retire les articles et prépositions de tête : « de », « d' », « du », « des », « de la ». */
-const stripArticles = (s: string) => s.replace(/^(?:de la |de l'|de l’|des |du |de |d'|d’|la |le |les |l'|l’)/i, "").trim();
+const stripArticles = (s: string) =>
+  s.replace(/^(?:de la |de l'|de l’|des |du |de |d'|d’|la |le |les |l'|l’)/i, "").trim();
 
 export function parseIngredientLine(raw: string): ParsedLine {
   const original = decodeEntities(raw).trim();
@@ -58,7 +81,9 @@ export function parseIngredientLine(raw: string): ParsedLine {
 
   // Quantité en tête (chiffres, fraction, fourchette, ou nombre en lettres).
   let qty: number | null = null;
-  const q = s.match(/^(?:environ |env\. |~)?(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)(?:\s*(?:à|-|–|ou)\s*\d+(?:[.,]\d+)?)?\s*/i);
+  const q = s.match(
+    /^(?:environ |env\. |~)?(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)(?:\s*(?:à|-|–|ou)\s*\d+(?:[.,]\d+)?)?\s*/i,
+  );
   if (q) {
     qty = toNumber(q[1]!);
     s = s.slice(q[0].length);
@@ -98,15 +123,24 @@ export function parseIngredientLine(raw: string): ParsedLine {
   // Ce qui suit une virgule ou un tiret est une précision (« oignon, émincé »), sauf « sel, poivre ».
   const comma = s.search(/,| - /);
   if (comma > 0 && !TASTE_WORDS.test(s)) {
-    notes.push(s.slice(comma + 1).replace(/^-?\s*/, "").trim());
+    notes.push(
+      s
+        .slice(comma + 1)
+        .replace(/^-?\s*/, "")
+        .trim(),
+    );
     s = s.slice(0, comma).trim();
   }
   const label = s.replace(/[.;:]+$/, "").trim();
   const toTaste =
-    TO_TASTE.test(original) || PINCH.test(original) || (qty === null && (TASTE_WORDS.test(original) || !label));
+    TO_TASTE.test(original) ||
+    PINCH.test(original) ||
+    (qty === null && (TASTE_WORDS.test(original) || !label));
 
   // « 1 potimarron (environ 1 kg) » : la masse entre parenthèses, utile si l'ingrédient se compte en grammes.
-  const inner = notes.map((n) => n.match(/^(?:environ |env\. |~)?(\d+(?:[.,]\d+)?)\s*(kg|g|l|cl|ml)\b/i)).find(Boolean);
+  const inner = notes
+    .map((n) => n.match(/^(?:environ |env\. |~)?(\d+(?:[.,]\d+)?)\s*(kg|g|l|cl|ml)\b/i))
+    .find(Boolean);
   const alt = inner
     ? (() => {
         const info = UNIT_WORDS.find(([re]) => re.test(inner[2]!))![1];

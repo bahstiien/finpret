@@ -7,6 +7,7 @@ import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import type { ActionResult } from "@/server/errors";
 import { applyToPendingWeek } from "@/server/actions/settings";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.settings;
 
@@ -70,7 +71,14 @@ export function ApplyPrompt({ start, onDone }: { start: string; onDone: () => vo
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<{ tone: "success" | "error"; text: string }>();
   return (
-    <div className="flex flex-col gap-3 rounded-card bg-yellow-soft p-5" role="region" aria-live="polite">
+    <Card
+      as="div"
+      tone="yellow"
+      padding="cozy"
+      className="flex flex-col gap-3"
+      role="region"
+      aria-live="polite"
+    >
       <p className="font-semibold">{t.apply.question(formatShort(start))}</p>
       <div className="flex flex-wrap gap-2">
         <Button
@@ -93,6 +101,6 @@ export function ApplyPrompt({ start, onDone }: { start: string; onDone: () => vo
         </Button>
       </div>
       {message && <FormMessage tone={message.tone}>{message.text}</FormMessage>}
-    </div>
+    </Card>
   );
 }

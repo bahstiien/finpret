@@ -69,7 +69,8 @@ export function isPresentAt(
   parity: "A" | "B" | null,
 ): boolean {
   const rules = presence.filter((r) => r.memberId === memberId && r.weekday === day && r.meal === meal);
-  const rule = (parity && rules.find((r) => r.weekParity === parity)) || rules.find((r) => r.weekParity === "all");
+  const rule =
+    (parity && rules.find((r) => r.weekParity === parity)) || rules.find((r) => r.weekParity === "all");
   return rule ? rule.present : true;
 }
 
@@ -81,7 +82,8 @@ export function householdPortions(options: {
 }): PortionModel {
   const parity = weekParity(options.weekStart, options.alternatingFrom);
   const active = options.members.filter((m) => !m.archived);
-  const isPresent = (m: Member, day: number, meal: Meal) => isPresentAt(options.presence, m.id, day, meal, parity);
+  const isPresent = (m: Member, day: number, meal: Meal) =>
+    isPresentAt(options.presence, m.id, day, meal, parity);
   const portion = (m: Member) => memberPortion(m, options.weekStart);
   const children = active.filter((m) => m.kind === "child");
   return {

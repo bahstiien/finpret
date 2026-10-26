@@ -71,7 +71,10 @@ const PROTEIN_WORDS: [RegExp, Exclude<Protein, "veg">][] = [
   [/poulet|dinde|canard|volaille|pintade/i, "volaille"],
   [/b(œ|oe)uf|veau|agneau|mouton|steak/i, "boeuf"],
   [/porc|jambon|lardon|saucisse|chorizo|bacon|pancetta|lard\b/i, "porc"],
-  [/poisson|saumon|cabillaud|thon|crevette|moule|colin|merlu|sardine|maquereau|truite|lieu|calamar|crabe|gambas|saint-jacques/i, "poisson"],
+  [
+    /poisson|saumon|cabillaud|thon|crevette|moule|colin|merlu|sardine|maquereau|truite|lieu|calamar|crabe|gambas|saint-jacques/i,
+    "poisson",
+  ],
 ];
 
 /** Cuisine (`recipeCuisine`) vers les codes d'origine du catalogue. */
@@ -106,7 +109,9 @@ const CAKE = word(
 const PASTA = word(
   "p(â|a)tes|spaghetti|tagliatelles?|penne|fusilli|macaroni|lasagnes?|linguine|coquillettes?|farfalle|raviolis?|gnocchis?|orzo|nouilles",
 );
-const COMFORT = word("gratins?|tartiflette|raclette|lasagnes?|hachis|parmentier|croziflette|fondue|mac and cheese|croque|quiches?|pizzas?");
+const COMFORT = word(
+  "gratins?|tartiflette|raclette|lasagnes?|hachis|parmentier|croziflette|fondue|mac and cheese|croque|quiches?|pizzas?",
+);
 const OVEN = /\bfour\b|°\s?C|\bth\.?\s?\d|thermostat|gratine/i;
 /** Plats qui se congèlent mal (§8.8) : crème, œufs, pommes de terre entières. */
 const NO_FREEZE_KEYS = ["creme", "oeufs", "pommedeterre"];
@@ -128,7 +133,9 @@ export function convert(qty: number, from: ParsedLine["unit"], to: Unit): number
 
 /** Quantité arrondie comme dans le catalogue (grammes à 5 près, pièces à ½ près). */
 const tidy = (qty: number, unit: Unit) =>
-  unit === "g" || unit === "ml" ? Math.max(1, qty >= 50 ? round(qty, 5) : round(qty)) : Math.max(0.5, round(qty, 0.5));
+  unit === "g" || unit === "ml"
+    ? Math.max(1, qty >= 50 ? round(qty, 5) : round(qty))
+    : Math.max(0.5, round(qty, 0.5));
 
 /**
  * Mois de saison des légumes, déduits des recettes du catalogue qui en contiennent et ont des mois définis.
@@ -162,7 +169,14 @@ export type DraftInput = {
   servings?: number | null;
 };
 
-export function buildDraft({ recipe, url, sourceName, lib, synonyms, servings: forced }: DraftInput): ImportDraft {
+export function buildDraft({
+  recipe,
+  url,
+  sourceName,
+  lib,
+  synonyms,
+  servings: forced,
+}: DraftInput): ImportDraft {
   const servings = forced ?? parseYield(recipe.yield);
   const isCake = guessKind(recipe, null) === "cake";
   // Les goûters gardent les quantités d'origine (un gâteau entier, découpé en parts) ; le reste passe à 4 portions.
@@ -172,7 +186,7 @@ export function buildDraft({ recipe, url, sourceName, lib, synonyms, servings: f
     const p = parseIngredientLine(raw);
     const match = matchIngredient(p, lib.ingredients, synonyms);
     const ing: Ingredient | undefined = match.key ? lib.ingredients[match.key] : undefined;
-    const unit: Unit = ing?.u ?? (p.unit ?? p.alt?.unit ?? "pc");
+    const unit: Unit = ing?.u ?? p.unit ?? p.alt?.unit ?? "pc";
     const toTaste = p.toTaste || (!!ing && ing.c === "base" && p.qty === null);
     let qty: number | null = null;
     let uncertain = !toTaste && (!match.key || (match.method === "similarity" && match.score < 0.9));
@@ -198,12 +212,19 @@ export function buildDraft({ recipe, url, sourceName, lib, synonyms, servings: f
 
   const all = `${recipe.name} ${recipe.category ?? ""} ${recipe.keywords ?? ""}`;
   const steps = recipe.instructions.join(" ");
-  const totalMin = isoMinutes(recipe.totalTime) ?? sum(isoMinutes(recipe.prepTime), isoMinutes(recipe.cookTime));
+  const totalMin =
+    isoMinutes(recipe.totalTime) ?? sum(isoMinutes(recipe.prepTime), isoMinutes(recipe.cookTime));
 
   const kind = guessKind(recipe, totalMin);
 
   const proteins = lines
-    .map((l) => (l.key ? PROTEIN_OF[l.key] : l.aisle === "viande" ? PROTEIN_WORDS.find(([re]) => re.test(l.label))?.[1] : undefined))
+    .map((l) =>
+      l.key
+        ? PROTEIN_OF[l.key]
+        : l.aisle === "viande"
+          ? PROTEIN_WORDS.find(([re]) => re.test(l.label))?.[1]
+          : undefined,
+    )
     .filter((p): p is Exclude<Protein, "veg"> => !!p);
   // Première protéine animale de la liste (en général l'ingrédient principal).
   const protein: Protein = proteins[0] ?? "veg";
@@ -222,7 +243,8 @@ export function buildDraft({ recipe, url, sourceName, lib, synonyms, servings: f
   const kcal = firstNumber(recipe.nutrition?.calories);
   const prot = firstNumber(recipe.nutrition?.protein);
   // La nutrition des sites est donnée par portion (`servingSize`) ; sans protéines, les macros restent inconnues.
-  const macros: ImportDraft["macros"] = kcal !== null && prot !== null ? [round(kcal), round(prot), 0, 0] : null;
+  const macros: ImportDraft["macros"] =
+    kcal !== null && prot !== null ? [round(kcal), round(prot), 0, 0] : null;
 
   return {
     name: recipe.name,
@@ -251,7 +273,8 @@ export function buildDraft({ recipe, url, sourceName, lib, synonyms, servings: f
 /** Type proposé : soupe ou goûter d'après le nom, sinon soir simple (30 min ou moins) ou plat de batch (§8.8). */
 function guessKind(recipe: ExtractedRecipe, totalMin: number | null): ImportKind {
   if (SOUP.test(recipe.name)) return "soup";
-  if (CAKE.test(recipe.name) || /dessert|go(û|u)ter|p(â|a)tisserie/i.test(recipe.category ?? "")) return "cake";
+  if (CAKE.test(recipe.name) || /dessert|go(û|u)ter|p(â|a)tisserie/i.test(recipe.category ?? ""))
+    return "cake";
   return totalMin !== null && totalMin <= 30 ? "simple" : "main";
 }
 

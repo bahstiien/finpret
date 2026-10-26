@@ -22,7 +22,9 @@ export async function associationByCode(rawCode: string): Promise<PublicAssociat
     .eq("code", code)
     .maybeSingle();
   if (!data) return null;
-  const links = data.association_schools as unknown as { schools: { id: string; name: string; city: string } | null }[];
+  const links = data.association_schools as unknown as {
+    schools: { id: string; name: string; city: string } | null;
+  }[];
   return {
     id: data.id,
     name: data.name,
@@ -33,7 +35,9 @@ export async function associationByCode(rawCode: string): Promise<PublicAssociat
 }
 
 /** Association approuvée d'un code, ou null (un code non validé n'ouvre aucun avantage). */
-export async function approvedAssociation(rawCode: string | undefined | null): Promise<PublicAssociation | null> {
+export async function approvedAssociation(
+  rawCode: string | undefined | null,
+): Promise<PublicAssociation | null> {
   if (!rawCode) return null;
   const association = await associationByCode(rawCode);
   return association?.status === "approved" ? association : null;
@@ -49,11 +53,19 @@ export type AttachResult = { ok: true; changed: boolean } | { ok: false; reason:
  * nouveau code s'applique. L'essai passe à 30 jours depuis l'inscription du foyer. Écriture avec la clé de service
  * (un compte ne peut pas modifier son rattachement lui-même).
  */
-export async function attachHousehold(householdId: string, associationId: string, userId?: string): Promise<AttachResult> {
+export async function attachHousehold(
+  householdId: string,
+  associationId: string,
+  userId?: string,
+): Promise<AttachResult> {
   const db = createAdminClient();
   const [{ data: household }, { data: sub }] = await Promise.all([
     db.from("households").select("association_id, created_at").eq("id", householdId).single(),
-    db.from("subscriptions").select("plan, status, trial_ends_at").eq("household_id", householdId).maybeSingle(),
+    db
+      .from("subscriptions")
+      .select("plan, status, trial_ends_at")
+      .eq("household_id", householdId)
+      .maybeSingle(),
   ]);
   if (!household) return { ok: false, reason: "locked" };
   if (household.association_id === associationId) return { ok: true, changed: false };

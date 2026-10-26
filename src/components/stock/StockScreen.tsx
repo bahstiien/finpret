@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/components/ui/Layout";
 import { useState } from "react";
 import { Flag } from "@/components/menu/Flag";
 import { useMenuAction } from "@/components/menu/useMenuAction";
@@ -17,6 +18,7 @@ import {
   updatePantryAfterSession,
 } from "@/server/actions/stock";
 import type { Flag as FlagData } from "@/server/menu-view";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.stock;
 
@@ -67,10 +69,10 @@ export function StockScreen({
 
   return (
     <>
-      <h1 className="text-4xl font-black">{fr.nav.stock}</h1>
+      <PageHeader title={fr.nav.stock} />
 
       {FEATURES.freezerAndLeftovers && week && canEdit && (!week.pantryDone || week.doublesToBank) && (
-        <section className="flex flex-col gap-3 rounded-card bg-yellow-soft p-5">
+        <Card tone="yellow" padding="cozy" className="flex flex-col gap-3">
           <h2 className="text-lg font-extrabold">{t.afterSession(week.start)}</h2>
           <p className="text-sm text-muted">{t.afterSessionHint}</p>
           <div className="flex flex-wrap gap-2">
@@ -94,7 +96,7 @@ export function StockScreen({
               </Button>
             )}
           </div>
-        </section>
+        </Card>
       )}
 
       {FEATURES.freezerAndLeftovers && (
@@ -182,7 +184,7 @@ export function StockScreen({
         </section>
       )}
 
-      <section className="flex flex-col gap-3 rounded-card bg-surface p-5" data-testid="pantry">
+      <Card padding="cozy" className="flex flex-col gap-3" data-testid="pantry">
         <h2 className="text-xl font-extrabold">{t.pantry}</h2>
         {pantry.length === 0 && <p className="text-sm text-muted">{t.pantryEmpty}</p>}
         <ul className="flex flex-col divide-y divide-line">
@@ -264,7 +266,7 @@ export function StockScreen({
             }}
           />
         )}
-      </section>
+      </Card>
     </>
   );
 }

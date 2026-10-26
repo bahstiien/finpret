@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
@@ -28,11 +29,14 @@ export function SessionDoneBanner({ weekId }: { weekId: string }) {
   if (!result?.visible || result.current < 1) return null;
   return (
     <p
-      className="flex items-center gap-2 rounded-card bg-violet-soft p-4 font-bold text-violet-strong"
+      className="flex flex-wrap items-center gap-2 rounded-card bg-violet-soft p-4 font-bold text-violet-strong"
       data-testid="session-streak"
     >
       <Icon name="streak" />
       {fr.progress.streak.sessionDone(result.current)}
+      <Link href="/app/progress?from=session" className="ml-auto min-h-11 content-center underline">
+        {fr.progress.title}
+      </Link>
     </p>
   );
 }

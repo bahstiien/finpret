@@ -8,7 +8,9 @@ import type { BankEntry, ComfortSetting, DietRules, MenuSettings } from "@/engin
 import { DEFAULT_MENU_SETTINGS } from "@/engine/types";
 import type { LegacyState } from "./legacy";
 
-const { seed } = validateSeed(rawSeed);
+// Le prototype ne connaît que les 110 plats d'origine : les plats de saison ajoutés ensuite (hv_, pr_, et_, au_) sont écartés.
+const LEGACY_ADDED = /^(hv|pr|et|au)_/;
+const { seed } = validateSeed({ ...rawSeed, mains: rawSeed.mains.filter((r) => !LEGACY_ADDED.test(r.id)) });
 export const LIB = libraryFromSeed(seed!);
 
 export function engineEnv(state: LegacyState, seedNumber: number, diet?: DietRules): Env {

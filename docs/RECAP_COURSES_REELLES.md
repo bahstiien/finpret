@@ -1,4 +1,4 @@
-# Récapitulatif — Courses réelles, lot L1 (en cours)
+# Récapitulatif — Courses réelles, lots L1 à L4 (drapeau `realPurchases` éteint)
 
 ## Fait
 - `src/engine/purchases.ts` : unités structurées, journal append-only (idempotence, révision, solde non négatif), couverture (partiel, surplus, à vérifier, « assez » borné), contenants à 100 %, `removableMenuKeys`.
@@ -49,6 +49,6 @@
 - Interface non vérifiée dans un navigateur (drapeau désactivé, pas de Supabase local).
 - `packBest` garde sa tolérance de 97 % (parité avec le prototype) ; `recommendPacks` (100 %) n'est utilisé que dans la vue des achats réels.
 - Migration non poussée sur Supabase hébergé.
-- L2 : pas d'écran « Déjà commencé / préparé » (action serveur seulement) ; pas d'écran pour les transferts ; annulation d'adaptation (§13) liée à L3.
+- L2 : panneau « Où j'en suis » (`WeekOpsPanel`) : « Déjà commencé / préparé » et « Réaffecter » (transfert vers une semaine suivante). Écrans non vérifiés dans un navigateur.
 - L3 : en l'absence de proposition, pas d'action « retirer le repas non commencé » ; remplacement limité aux plats, soupes et soirs simples (pas week-end ni goûter) ; interface non vérifiée dans un navigateur.
 - L5 (temps réel de bout en bout, mesures, instrumentation), L6 (pilote) et arbitrages du §25 non traités.

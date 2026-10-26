@@ -1,5 +1,6 @@
 import { fr } from "@/i18n/fr";
 import type { MyAssociation } from "@/server/asso-session";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.asso.status;
 
@@ -17,8 +18,15 @@ export function StatusBanner({
         ? t.rejected(association.rejectReason)
         : t.suspended;
   return (
-    <p role="status" className="rounded-card bg-yellow-soft p-5 font-semibold" data-testid="asso-status">
+    <Card
+      as="p"
+      tone="yellow"
+      padding="cozy"
+      role="status"
+      className="font-semibold"
+      data-testid="asso-status"
+    >
       {text}
-    </p>
+    </Card>
   );
 }

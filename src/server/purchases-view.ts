@@ -35,6 +35,8 @@ export type PurchaseLine = {
   issue: IssueDecision | null;
   /** Stock « assez » déclaré, couverture à confirmer pour ce besoin. */
   canConfirm: boolean;
+  /** Quantité acquise disponible (unité du catalogue), pour une réaffectation vers une autre semaine. */
+  balance: number;
 };
 
 const MASS = ["g", "kg"];
@@ -124,6 +126,7 @@ export async function loadPurchaseView(
       catalogUnit: ing.u,
       issue: issues.get(k) ?? null,
       canConfirm: n.stock === null && !unverified.has(k) && c.status === "to_verify",
+      balance: purchased !== null && purchased > 0 ? purchased : 0,
     };
   }
   return { lines, revision: weekRevision(log, week.id) };

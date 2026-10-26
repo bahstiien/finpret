@@ -994,7 +994,13 @@ export type Database = {
         Returns: Json;
       };
       undo_adaptation: {
-        Args: { p_event: string; p_op_key: string; p_expected_week_version: string; p_plan: Json; p_changes: Json };
+        Args: {
+          p_event: string;
+          p_op_key: string;
+          p_expected_week_version: string;
+          p_plan: Json;
+          p_changes: Json;
+        };
         Returns: Json;
       };
       is_household_member: { Args: { hid: string }; Returns: boolean };

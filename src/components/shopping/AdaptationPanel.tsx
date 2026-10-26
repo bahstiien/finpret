@@ -12,6 +12,7 @@ import {
   previewAdaptation,
   undoAdaptation,
 } from "@/server/actions/adaptation";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.purchases.adapt;
 
@@ -89,7 +90,7 @@ export function AdaptationPanel({
   };
 
   return (
-    <section className="flex flex-col gap-3 rounded-card bg-surface p-4" data-testid="adaptation">
+    <Card padding="sm" className="flex flex-col gap-3" data-testid="adaptation">
       {candidates.length > 0 && (
         <Button
           type="button"
@@ -222,6 +223,6 @@ export function AdaptationPanel({
           </ul>
         </div>
       )}
-    </section>
+    </Card>
   );
 }

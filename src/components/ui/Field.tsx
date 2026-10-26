@@ -1,3 +1,4 @@
+import { Callout } from "./Layout";
 import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
 
 const control =
@@ -39,14 +40,5 @@ export function SelectField({
 }
 
 export function FormMessage({ tone, children }: { tone: "error" | "success"; children: React.ReactNode }) {
-  return (
-    <p
-      role={tone === "error" ? "alert" : "status"}
-      className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
-        tone === "error" ? "bg-peach text-peach-ink" : "bg-yellow-soft text-ink"
-      }`}
-    >
-      {children}
-    </p>
-  );
+  return <Callout tone={tone}>{children}</Callout>;
 }

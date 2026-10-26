@@ -201,8 +201,15 @@ export async function markPreparation(
   if (!week) return { ok: false, error: fr.menuActions.weekGone };
   const env = await engineEnvFor(ctx);
   const plan = ensureOccurrenceIds(week.plan, () => crypto.randomUUID());
-  const known = listOccurrences(env, plan, portionModelFor(ctx, plan.start), ctx.settings.menu.cake.enabled);
-  if (!known.some((o) => o.uid === p.uid)) return { ok: false, error: t.prepUnknown };
+  const pm = portionModelFor(ctx, plan.start);
+  const cakeOn = ctx.settings.menu.cake.enabled;
+  const before = listOccurrences(env, week.plan, pm, cakeOn);
+  const known = listOccurrences(env, plan, pm, cakeOn);
+  // Une semaine sans identités persistées expose des identités dérivées (« main:0 ») : même ordre, même préparation.
+  const at = before.findIndex((o) => o.uid === p.uid);
+  const uid = at >= 0 ? known[at]?.uid : known.find((o) => o.uid === p.uid)?.uid;
+  if (!uid) return { ok: false, error: t.prepUnknown };
+  p.uid = uid;
   const supabase = await createClient();
   // Les identités posées pour la première fois sont enregistrées avec le plan.
   if (JSON.stringify(plan) !== JSON.stringify(week.plan)) {

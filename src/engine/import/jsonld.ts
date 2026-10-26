@@ -91,7 +91,11 @@ function fromNode(node: Node, site: string | null): ExtractedRecipe {
   const keywords = node.keywords;
   return {
     name: text(node.name) ?? "",
-    yield: text(Array.isArray(node.recipeYield) ? node.recipeYield.find((y) => /\D/.test(String(y))) ?? node.recipeYield[0] : node.recipeYield),
+    yield: text(
+      Array.isArray(node.recipeYield)
+        ? (node.recipeYield.find((y) => /\D/.test(String(y))) ?? node.recipeYield[0])
+        : node.recipeYield,
+    ),
     ingredients: ((node.recipeIngredient ?? node.ingredients ?? []) as unknown[])
       .map((i) => text(i))
       .filter((s): s is string => !!s),
@@ -114,9 +118,14 @@ function fromNode(node: Node, site: string | null): ExtractedRecipe {
 }
 
 /** Recette trouvée dans le HTML (JSON-LD d'abord, microdonnées ensuite), ou null. */
-export function extractRecipe(html: string): { recipe: ExtractedRecipe; method: "jsonld" | "microdata" } | null {
-  const site = html.match(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i)?.[1] ?? null;
-  for (const m of html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+export function extractRecipe(
+  html: string,
+): { recipe: ExtractedRecipe; method: "jsonld" | "microdata" } | null {
+  const site =
+    html.match(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i)?.[1] ?? null;
+  for (const m of html.matchAll(
+    /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  )) {
     try {
       const node = findRecipe(JSON.parse(m[1]!.trim()));
       if (node) {
@@ -128,16 +137,23 @@ export function extractRecipe(html: string): { recipe: ExtractedRecipe; method: 
     }
   }
   const micro = extractMicrodata(html);
-  return micro ? { recipe: { ...micro, siteName: site ? decodeEntities(site) : null }, method: "microdata" } : null;
+  return micro
+    ? { recipe: { ...micro, siteName: site ? decodeEntities(site) : null }, method: "microdata" }
+    : null;
 }
 
 /** Microdonnées schema.org (itemprop) : second recours. */
 function extractMicrodata(html: string): Omit<ExtractedRecipe, "siteName"> | null {
   if (!/itemtype=["']https?:\/\/schema\.org\/Recipe["']/i.test(html)) return null;
   const props = (name: string) =>
-    [...html.matchAll(new RegExp(`<[^>]+itemprop=["']${name}["'][^>]*?(?:content=["']([^"']*)["'][^>]*)?>([\\s\\S]*?)<\\/`, "gi"))].map(
-      (m) => decodeEntities(m[1] ?? m[2] ?? ""),
-    );
+    [
+      ...html.matchAll(
+        new RegExp(
+          `<[^>]+itemprop=["']${name}["'][^>]*?(?:content=["']([^"']*)["'][^>]*)?>([\\s\\S]*?)<\\/`,
+          "gi",
+        ),
+      ),
+    ].map((m) => decodeEntities(m[1] ?? m[2] ?? ""));
   const name = props("name")[0] ?? "";
   const ingredients = [...props("recipeIngredient"), ...props("ingredients")].filter(Boolean);
   if (!name || !ingredients.length) return null;

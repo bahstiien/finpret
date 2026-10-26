@@ -4,6 +4,8 @@ import { TextField } from "@/components/ui/Field";
 import { formatShort } from "@/lib/dates";
 import { extendTrial } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 
 /** Support : retrouver un compte par e-mail, voir ses foyers et son offre, prolonger un essai. */
 export default async function AdminSupportPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
@@ -32,7 +34,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
     : [{ data: [] }, { data: [] }];
   return (
     <>
-      <h1 className="text-4xl font-black">Support</h1>
+      <PageHeader title="Support" />
       <form className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-5">
         <TextField
           id="q"
@@ -46,7 +48,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
       </form>
       {q && !found && <p className="text-muted">Aucun compte avec cet e-mail.</p>}
       {found && (
-        <section className="flex flex-col gap-3 rounded-card bg-surface p-5">
+        <Card padding="cozy" className="flex flex-col gap-3">
           <p>
             <b>{found.email}</b> · <code className="text-xs">{found.id}</code>
           </p>
@@ -72,7 +74,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
               </div>
             );
           })}
-        </section>
+        </Card>
       )}
     </>
   );

@@ -64,6 +64,29 @@
   h2,
   h3 {
     font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  h1 {
+    letter-spacing: -0.02em;
+  }
+  body {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Retour tactile : les contrôles s'enfoncent légèrement sous le doigt. */
+  a[class*="rounded-pill"],
+  button[class*="rounded-pill"],
+  button[class*="rounded-full"],
+  a[class*="rounded-full"] {
+    transition:
+      transform 120ms ease,
+      background-color 150ms ease,
+      opacity 150ms ease;
+  }
+  a[class*="rounded-pill"]:active,
+  button[class*="rounded-pill"]:active:not(:disabled),
+  button[class*="rounded-full"]:active:not(:disabled),
+  a[class*="rounded-full"]:active {
+    transform: scale(0.97);
   }
   :focus-visible {
     outline: 3px solid var(--violet);
@@ -86,6 +109,31 @@
   animation: finpret-pulse 2s ease-in-out infinite;
 }
 
+/* Chaque écran apparaît en douceur : repère visuel de la navigation, sans bloquer. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: page-enter 220ms ease-out both;
+}
+@keyframes skeleton {
+  50% {
+    opacity: 0.55;
+  }
+}
+.skeleton {
+  animation: skeleton 1.4s ease-in-out infinite;
+  background: var(--chip);
+  border-radius: var(--radius-card);
+}
+
 @keyframes stamp-in {
   from {
     opacity: 0;
@@ -98,8 +146,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .timer-ready {
+  .timer-ready,
+  .page-enter,
+  .skeleton {
     animation: none;
+  }
+  a:active,
+  button:active {
+    transform: none !important;
   }
   html {
     scroll-behavior: auto;

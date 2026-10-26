@@ -7,6 +7,7 @@ import { fr } from "@/i18n/fr";
 import { createClient } from "@/lib/supabase/server";
 import { acceptEditorInvitation } from "@/server/actions/asso";
 import { getUser } from "@/server/session";
+import { buttonClass } from "@/components/ui/Button";
 
 const t = fr.asso.team.accept;
 
@@ -53,7 +54,7 @@ export default async function EditorInvitationPage({
           ) : (
             <Link
               href={`/login?next=${encodeURIComponent(`/asso/invitation/${token}`)}`}
-              className="inline-flex min-h-11 items-center justify-center rounded-pill bg-banana px-6 font-bold text-[#17151F]"
+              className={buttonClass()}
             >
               {t.login}
             </Link>

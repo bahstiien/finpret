@@ -12,6 +12,7 @@ import { FEATURES } from "@/lib/features";
 import type { OnboardingInput } from "@/lib/onboarding";
 import { DIETS } from "@/lib/settings";
 import { completeOnboarding } from "@/server/actions/onboarding";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.onboarding;
 type Step = "household" | "diet" | "rhythm" | "equipment" | "habits";
@@ -92,7 +93,7 @@ export function OnboardingWizard({
         <p className="text-muted">{t.steps[current].lead}</p>
       </div>
 
-      <section className="flex flex-col gap-5 rounded-card bg-surface p-5">
+      <Card padding="cozy" className="flex flex-col gap-5">
         {current === "household" && (
           <HouseholdStep data={data} update={update} schools={schools} associationName={associationName} />
         )}
@@ -100,7 +101,7 @@ export function OnboardingWizard({
         {current === "rhythm" && <RhythmStep data={data} update={update} />}
         {current === "equipment" && <EquipmentStep data={data} update={update} />}
         {current === "habits" && <HabitsStep data={data} update={update} />}
-      </section>
+      </Card>
 
       {error && <FormMessage tone="error">{error}</FormMessage>}
       {pending && <FormMessage tone="success">{t.working}</FormMessage>}

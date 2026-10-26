@@ -36,11 +36,19 @@ export async function runStreakPausedNotifications(
   for (const row of rows) {
     const local = localTime(now, zone.get(row.household_id) ?? "Europe/Paris");
     if (!autoPausedNoticeDue(row.week_start, local)) continue;
-    const { data: members } = await db.from("memberships").select("user_id").eq("household_id", row.household_id);
+    const { data: members } = await db
+      .from("memberships")
+      .select("user_id")
+      .eq("household_id", row.household_id);
     for (const { user_id: userId } of members ?? []) {
-      const { data: settings } = await db.from("user_settings").select("notifications").eq("user_id", userId).maybeSingle();
+      const { data: settings } = await db
+        .from("user_settings")
+        .select("notifications")
+        .eq("user_id", userId)
+        .maybeSingle();
       const prefs = notificationsSchema.safeParse(settings?.notifications ?? {});
-      if (!prefs.success || !prefs.data.consentAt || !prefs.data.streakPaused || !prefs.data.progress_visible) continue;
+      if (!prefs.success || !prefs.data.consentAt || !prefs.data.streakPaused || !prefs.data.progress_visible)
+        continue;
       if (!(prefs.data.push || prefs.data.email)) continue;
       summary.due++;
       const payload: Payload = {

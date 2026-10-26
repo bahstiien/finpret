@@ -7,6 +7,7 @@ import { fr } from "@/i18n/fr";
 import { createClient } from "@/lib/supabase/server";
 import { acceptInvitation } from "@/server/actions/households";
 import { getUser } from "@/server/session";
+import { buttonClass } from "@/components/ui/Button";
 
 export const metadata: Metadata = { title: "Invitation", robots: { index: false } };
 
@@ -38,10 +39,7 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
               variant="primary"
             />
           ) : (
-            <Link
-              href={`/login?next=${encodeURIComponent(`/join/${token}`)}`}
-              className="inline-flex min-h-11 items-center justify-center rounded-pill bg-banana px-6 font-bold text-[#17151F]"
-            >
+            <Link href={`/login?next=${encodeURIComponent(`/join/${token}`)}`} className={buttonClass()}>
               {fr.join.loginFirst}
             </Link>
           )}

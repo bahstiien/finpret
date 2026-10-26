@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CAKE_TYPES, PROTEINS, UNITS, type Cake, type Main, type Simple, type Soup } from "../catalog/schema";
+import { estimateDifficulty } from "../catalog/difficulty";
 import type { ImportDraft } from "./classify";
 
 /**
@@ -77,16 +78,38 @@ export function toRecipe(form: ImportForm, keys: (string | null)[]): ImportedRec
     ...(form.months && form.months.length < 12 && { months: [...form.months].sort((a, b) => a - b) }),
     ...(!known && { mu: true as const }),
   };
-  const opt = { ...(form.pasta && { pasta: true as const }), ...(form.comfort && { comfort: true as const }) };
+  const opt = {
+    ...(form.pasta && { pasta: true as const }),
+    ...(form.comfort && { comfort: true as const }),
+  };
 
   if (form.kind === "cake") {
     return {
       kind: "cake",
-      data: { ...common, t: form.cakeType, tm: `${form.prepMin + form.cookMin} min`, parts: `${form.parts} parts`, kid: "", steps: form.steps },
+      data: {
+        ...common,
+        t: form.cakeType,
+        tm: `${form.prepMin + form.cookMin} min`,
+        diff: estimateDifficulty({ tm: `${form.prepMin + form.cookMin} min` }),
+        parts: `${form.parts} parts`,
+        kid: "",
+        steps: form.steps,
+      },
     };
   }
   if (form.kind === "simple") {
-    return { kind: "simple", data: { ...common, s: shortName(form.name), o: form.origin, p: form.protein, steps: form.steps, ...opt } };
+    return {
+      kind: "simple",
+      data: {
+        ...common,
+        s: shortName(form.name),
+        o: form.origin,
+        p: form.protein,
+        steps: form.steps,
+        diff: estimateDifficulty({ steps: form.steps, ing }),
+        ...opt,
+      },
+    };
   }
   // Plat de batch ou soupe : les étapes deviennent un bloc de cuisson que la session sait ordonnancer.
   const batch = {
@@ -97,9 +120,17 @@ export function toRecipe(form: ImportForm, keys: (string | null)[]): ImportedRec
     p: form.protein,
     fridge: form.fridge,
     freeze: form.freeze,
+    diff: estimateDifficulty({ blocks: [{ mode: form.oven ? "four" : "feu", active: form.prepMin }] }),
     prepMin: form.prepMin,
     prep: [],
-    blocks: [{ mode: form.oven ? ("four" as const) : ("feu" as const), active: form.prepMin, passive: form.cookMin, a: form.steps }],
+    blocks: [
+      {
+        mode: form.oven ? ("four" as const) : ("feu" as const),
+        active: form.prepMin,
+        passive: form.cookMin,
+        a: form.steps,
+      },
+    ],
     box: "",
     jj: "",
     ...opt,
@@ -140,7 +171,15 @@ export function fromRecipe(
     parts: Number.parseInt(String(d.parts ?? "8"), 10) || 8,
     lines: Object.entries(ing).map(([key, qty]) => {
       const g = ingredients[key];
-      return { original: "", key, label: g?.l ?? key, qty, unit: g?.u ?? "pc", aisle: g?.c ?? "divers", toTaste: false };
+      return {
+        original: "",
+        key,
+        label: g?.l ?? key,
+        qty,
+        unit: g?.u ?? "pc",
+        aisle: g?.c ?? "divers",
+        toTaste: false,
+      };
     }),
     steps: d.steps ?? [...(d.prep ?? []), ...(d.blocks ?? []).flatMap((b) => b.a)],
   };

@@ -9,6 +9,7 @@
    23,
    8
   ],
+  "diff": 4,
   "kid": "Il écrase les bananes à la fourchette.",
   "ing": {
    "banane": 3,
@@ -40,6 +41,7 @@
    28,
    9
   ],
+  "diff": 3,
   "kid": "Le pot de yaourt sert de mesure : il remplit et verse.",
   "ing": {
    "yaourt": 1,
@@ -69,6 +71,7 @@
    25,
    12
   ],
+  "diff": 4,
   "kid": "Il verse les carottes râpées et mélange à la cuillère.",
   "ing": {
    "carotte": 3,
@@ -109,6 +112,7 @@
    28,
    6
   ],
+  "diff": 3,
   "kid": "Il dispose les lamelles de pomme sur le dessus.",
   "ing": {
    "pomme": 3,
@@ -147,6 +151,7 @@
    27,
    10
   ],
+  "diff": 3,
   "kid": "Il casse le chocolat en morceaux.",
   "ing": {
    "poire": 3,
@@ -181,6 +186,7 @@
    24,
    11
   ],
+  "diff": 3,
   "kid": "Il ne devine jamais qu'il y a un légume dedans.",
   "ing": {
    "potimarron": 300,
@@ -215,6 +221,7 @@
    24,
    5
   ],
+  "diff": 3,
   "kid": "Il répartit les fruits dans le plat.",
   "ing": {
    "fruitsrouges": 400,
@@ -248,6 +255,7 @@
    26,
    6
   ],
+  "diff": 3,
   "kid": "Il remplit les caissettes à la cuillère.",
   "ing": {
    "fruitsrouges": 200,
@@ -278,6 +286,7 @@
    13,
    3
   ],
+  "diff": 2,
   "kid": "Il forme les petites boules et les aplatit.",
   "ing": {
    "banane": 2,
@@ -305,6 +314,7 @@
    28,
    8
   ],
+  "diff": 4,
   "kid": "Il dessine les marbrures avec un couteau.",
   "ing": {
    "farine": 200,
@@ -336,6 +346,7 @@
    32,
    8
   ],
+  "diff": 1,
   "kid": "Il tresse les trois boudins de pâte.",
   "ing": {
    "farine": 500,
@@ -365,6 +376,7 @@
    25,
    5
   ],
+  "diff": 1,
   "kid": "Il façonne les petits pains et fait les entailles aux ciseaux.",
   "ing": {
    "farine": 500,
@@ -394,6 +406,7 @@
    30,
    8
   ],
+  "diff": 1,
   "kid": "Il saupoudre la cannelle et le sucre avant de rouler.",
   "ing": {
    "farine": 450,
@@ -424,6 +437,7 @@
    30,
    9
   ],
+  "diff": 1,
   "kid": "Il glisse les morceaux de chocolat dans chaque pâton.",
   "ing": {
    "farine": 450,
@@ -454,6 +468,7 @@
    35,
    6
   ],
+  "diff": 1,
   "kid": "Il ajoute les raisins dans la pâte.",
   "ing": {
    "farine": 450,
@@ -484,6 +499,7 @@
    34,
    12
   ],
+  "diff": 1,
   "kid": "Il étale la garniture au chocolat.",
   "ing": {
    "farine": 400,
@@ -525,6 +541,7 @@
    33,
    7
   ],
+  "diff": 1,
   "kid": "Il dispose les dés de pomme sur la pâte.",
   "ing": {
    "farine": 400,
@@ -563,6 +580,7 @@
    40,
    2
   ],
+  "diff": 1,
   "kid": "Il mélange le miel et le lait tiède.",
   "ing": {
    "farine": 250,
@@ -591,6 +609,7 @@
    11,
    4
   ],
+  "diff": 3,
   "kid": "Il remplit les moules à la cuillère.",
   "ing": {
    "farine": 150,
@@ -619,6 +638,7 @@
    28,
    8
   ],
+  "diff": 3,
   "kid": "Il râpe le zeste du citron.",
   "ing": {
    "yaourt": 1,
@@ -647,6 +667,7 @@
    14,
    3
   ],
+  "diff": 2,
   "kid": "Il verse la pâte à la louche (avec toi près de la poêle).",
   "ing": {
    "farine": 250,
@@ -673,6 +694,7 @@
    8,
    1
   ],
+  "diff": 2,
   "kid": "Il retourne les pancakes à la spatule.",
   "ing": {
    "farine": 150,
@@ -706,6 +728,7 @@
    11,
    8
   ],
+  "diff": 3,
   "kid": "Il pose une framboise sur chaque financier.",
   "ing": {
    "amande": 125,
@@ -742,6 +765,7 @@
    32,
    8
   ],
+  "diff": 3,
   "kid": "Il fait le sable du crumble avec les doigts.",
   "ing": {
    "pomme": 3,
@@ -776,6 +800,7 @@
    24,
    11
   ],
+  "diff": 4,
   "kid": "Il ne devine jamais qu'il y a une courgette dedans.",
   "ing": {
    "courgette": 1,
@@ -809,6 +834,7 @@
    22,
    5
   ],
+  "diff": 3,
   "kid": "Il range les demi-abricots dans le plat.",
   "ing": {
    "abricots": 500,
@@ -836,6 +862,7 @@
    28,
    5
   ],
+  "diff": 1,
   "kid": "Il répartit les pruneaux dans le plat.",
   "ing": {
    "farine": 125,
@@ -863,6 +890,7 @@
    7,
    5
   ],
+  "diff": 2,
   "kid": "Il forme les petits rochers avec les doigts.",
   "ing": {
    "coco": 150,
@@ -887,6 +915,7 @@
    9,
    3
   ],
+  "diff": 3,
   "kid": "Il découpe les formes à l'emporte-pièce.",
   "ing": {
    "farine": 200,
@@ -923,6 +952,7 @@
    28,
    8
   ],
+  "diff": 3,
   "kid": "Il range les lamelles de pomme en rosace.",
   "ing": {
    "patefeuilletee": 1,
@@ -949,6 +979,7 @@
    25,
    6
   ],
+  "diff": 3,
   "kid": "Il écrase les bananes et remplit les caissettes.",
   "ing": {
    "banane": 2,
@@ -983,6 +1014,7 @@
    28,
    7
   ],
+  "diff": 4,
   "kid": "Il répartit les tronçons de rhubarbe sur la pâte.",
   "ing": {
    "rhubarbe": 400,
@@ -1015,6 +1047,7 @@
    29,
    6
   ],
+  "diff": 3,
   "kid": "Il équeute les fraises.",
   "ing": {
    "fraises": 300,
@@ -1050,6 +1083,7 @@
    30,
    8
   ],
+  "diff": 4,
   "kid": "Il presse les oranges.",
   "ing": {
    "orange": 2,
@@ -1078,6 +1112,7 @@
    20,
    6
   ],
+  "diff": 3,
   "kid": "Il tasse la préparation dans le moule.",
   "ing": {
    "flocons": 200,

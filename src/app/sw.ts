@@ -30,7 +30,10 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const target = notificationTarget((event.notification.data as { url?: string } | null)?.url, self.location.origin);
+  const target = notificationTarget(
+    (event.notification.data as { url?: string } | null)?.url,
+    self.location.origin,
+  );
   event.waitUntil(
     (async () => {
       const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });

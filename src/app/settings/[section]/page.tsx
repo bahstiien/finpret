@@ -24,6 +24,7 @@ import { signOut } from "@/server/actions/auth";
 import { deleteAccount, deleteHousehold } from "@/server/actions/settings";
 import { loadHouseholdContext } from "@/server/household-context";
 import { getHouseholds, getProfile, requireHousehold } from "@/server/session";
+import { buttonClass } from "@/components/ui/Button";
 
 const t = fr.settings;
 
@@ -39,7 +40,6 @@ export async function generateMetadata({
 export default async function SettingsSectionPage({ params }: { params: Promise<{ section: string }> }) {
   const { section: raw } = await params;
   if (raw === "notifications") redirect("/settings/profile#notifications");
-  if (raw === "subscription") redirect("/app/abonnement");
   if (!(ADMIN_SECTIONS as readonly string[]).includes(raw)) notFound();
   const section = raw as SettingsSection;
   const { user, household } = await requireHousehold(`/settings/${section}`);
@@ -92,12 +92,17 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             .order("date")
         : { data: [] };
       const isCanteenDay = (id: string, date: string) =>
-        canteenDays(kids.find((k) => k.id === id)!, ctx.presence, mondayOf(date), ctx.alternatingFrom).includes(
-          isoWeekday(date),
-        );
+        canteenDays(
+          kids.find((k) => k.id === id)!,
+          ctx.presence,
+          mondayOf(date),
+          ctx.alternatingFrom,
+        ).includes(isoWeekday(date));
       const children: CanteenChild[] = kids.map((k) => {
         const mine = (menus ?? []).filter((m) => m.member_id === k.id);
-        const dates = Array.from({ length: 14 }, (_, i) => addDays(today, i)).filter((d) => isCanteenDay(k.id, d));
+        const dates = Array.from({ length: 14 }, (_, i) => addDays(today, i)).filter((d) =>
+          isCanteenDay(k.id, d),
+        );
         return {
           id: k.id,
           name: k.name,
@@ -120,11 +125,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
           <Card className="flex flex-col gap-3">
             <h2 className="text-xl font-extrabold">{t.data.export}</h2>
             <p className="text-sm text-muted">{t.data.exportHint}</p>
-            <a
-              href="/settings/data/export"
-              download
-              className="inline-flex min-h-11 items-center justify-center self-start rounded-pill bg-banana px-6 font-bold text-[#17151F]"
-            >
+            <a href="/settings/data/export" download className={buttonClass({ className: "self-start" })}>
               {t.data.export}
             </a>
           </Card>

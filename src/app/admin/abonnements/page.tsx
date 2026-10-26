@@ -1,5 +1,7 @@
 import { formatShort } from "@/lib/dates";
 import { requireAdmin } from "@/server/admin";
+import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 /** Abonnements : répartition par offre et derniers foyers (sans donnée personnelle des membres). */
 export default async function AdminSubscriptionsPage() {
@@ -18,18 +20,18 @@ export default async function AdminSubscriptionsPage() {
   for (const s of subs ?? []) counts[s.plan] = (counts[s.plan] ?? 0) + 1;
   return (
     <>
-      <h1 className="text-4xl font-black">Abonnements</h1>
+      <PageHeader title="Abonnements" />
       <dl className="grid grid-cols-2 gap-3 min-[700px]:grid-cols-4">
         {(["trial", "monthly", "yearly", "free"] as const).map((p) => (
-          <div key={p} className="rounded-card bg-surface p-5">
+          <Card as="div" padding="cozy" key={p}>
             <dt className="text-sm font-semibold text-muted">
               {{ trial: "Essai", monthly: "Mensuels", yearly: "Annuels", free: "Gratuits" }[p]}
             </dt>
             <dd className="font-display text-3xl font-black">{counts[p] ?? 0}</dd>
-          </div>
+          </Card>
         ))}
       </dl>
-      <ul className="flex flex-col divide-y divide-line rounded-card bg-surface p-5">
+      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
         {(subs ?? []).slice(0, 50).map((s) => (
           <li key={s.household_id} className="flex flex-wrap justify-between gap-2 py-3 text-sm">
             <span>
@@ -45,7 +47,7 @@ export default async function AdminSubscriptionsPage() {
             </span>
           </li>
         ))}
-      </ul>
+      </Card>
     </>
   );
 }

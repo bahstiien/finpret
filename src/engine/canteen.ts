@@ -5,14 +5,34 @@ import type { Library } from "./types";
 
 /** Dictionnaire `FOOD_GROUPS` du prototype (bases détectées par mots-clés). */
 export const FOOD_GROUPS: [string, string[]][] = [
-  ["pâtes", ["pâte", "pates", "spaghetti", "coquillette", "macaroni", "lasagne", "tortellini", "ravioli", "penne", "torti"]],
+  [
+    "pâtes",
+    [
+      "pâte",
+      "pates",
+      "spaghetti",
+      "coquillette",
+      "macaroni",
+      "lasagne",
+      "tortellini",
+      "ravioli",
+      "penne",
+      "torti",
+    ],
+  ],
   ["riz", ["riz", "risotto", "paella"]],
-  ["poisson", ["poisson", "colin", "cabillaud", "saumon", "thon", "merlu", "lieu ", "hoki", "sardine", "maquereau"]],
+  [
+    "poisson",
+    ["poisson", "colin", "cabillaud", "saumon", "thon", "merlu", "lieu ", "hoki", "sardine", "maquereau"],
+  ],
   ["volaille", ["poulet", "dinde", "volaille", "nugget", "cordon"]],
   ["bœuf", ["bœuf", "boeuf", "steak", "haché", "bolognaise", "hachis", "chili", "boulette"]],
   ["porc", ["porc", "jambon", "saucisse", "lardon", "knack"]],
   ["œufs", ["omelette", "œuf", "oeuf", "quiche"]],
-  ["pommes de terre", ["frite", "purée", "puree", "pomme de terre", "pommes de terre", "gratin dauphinois", "potatoes"]],
+  [
+    "pommes de terre",
+    ["frite", "purée", "puree", "pomme de terre", "pommes de terre", "gratin dauphinois", "potatoes"],
+  ],
   ["pizza", ["pizza"]],
   ["légumineuses", ["lentille", "pois chiche", "haricots rouges", "flageolet"]],
 ];
@@ -24,7 +44,10 @@ export function groupsOf(text: string | null | undefined): string[] {
 }
 
 /** `recipeGroups` du prototype : nom de la recette et libellés de ses ingrédients. */
-export function recipeGroups(lib: Pick<Library, "ingredients">, r: { n: string; ing?: Record<string, number> } | null | undefined) {
+export function recipeGroups(
+  lib: Pick<Library, "ingredients">,
+  r: { n: string; ing?: Record<string, number> } | null | undefined,
+) {
   if (!r) return [];
   return groupsOf([r.n, ...Object.keys(r.ing ?? {}).map((k) => lib.ingredients[k]?.l ?? k)].join(" "));
 }
@@ -52,7 +75,9 @@ export function canteenDays(
   if (member.kind !== "child" || member.archived) return [];
   const parity = weekParity(weekStart, alternatingFrom);
   return [1, 2, 3, 4, 5].filter(
-    (d) => !isPresentAt(presence, member.id, d, "lunch", parity) && isPresentAt(presence, member.id, d, "dinner", parity),
+    (d) =>
+      !isPresentAt(presence, member.id, d, "lunch", parity) &&
+      isPresentAt(presence, member.id, d, "dinner", parity),
   );
 }
 
@@ -60,7 +85,20 @@ export function canteenDays(
 // Découpage d'un menu (texte d'un PDF) par date
 // ---------------------------------------------------------------------------
 
-const MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+const MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
 const MONTH_RE = MONTHS.map((m) => m.replace("é", "[ée]").replace("û", "[uû]")).join("|");
 const WEEKDAY_RE = "lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche";
 
@@ -72,7 +110,8 @@ const DATE_RE = new RegExp(
 
 export type DatedMenu = { date: string; text: string };
 
-const iso = (y: number, m: number, d: number) => `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+const iso = (y: number, m: number, d: number) =>
+  `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 
 /**
  * Menus datés lus dans un texte libre. L'année manquante est celle qui place la date au plus près de `reference`.
@@ -85,7 +124,14 @@ export function splitByDate(text: string, reference: string): DatedMenu[] {
   for (const m of text.matchAll(DATE_RE)) {
     const day = Number(m[2]);
     const month = m[3]
-      ? MONTHS.findIndex((x) => x.normalize("NFD").replace(/\p{Diacritic}/gu, "") === m[3]!.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")) + 1
+      ? MONTHS.findIndex(
+          (x) =>
+            x.normalize("NFD").replace(/\p{Diacritic}/gu, "") ===
+            m[3]!
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/\p{Diacritic}/gu, ""),
+        ) + 1
       : Number(m[5]);
     // Un nombre seul (« 2 œufs ») n'est pas une date : il faut un jour de la semaine, un mois écrit ou une barre.
     if (!m[1] && !m[3] && !m[5]) continue;
@@ -94,11 +140,15 @@ export function splitByDate(text: string, reference: string): DatedMenu[] {
     if (year && year < 100) year += 2000;
     if (!year) {
       year = [refYear - 1, refYear, refYear + 1].reduce((best, y) =>
-        Math.abs(Date.parse(`${iso(y, month, day)}T12:00:00Z`) - refTime) < Math.abs(Date.parse(`${iso(best, month, day)}T12:00:00Z`) - refTime) ? y : best,
+        Math.abs(Date.parse(`${iso(y, month, day)}T12:00:00Z`) - refTime) <
+        Math.abs(Date.parse(`${iso(best, month, day)}T12:00:00Z`) - refTime)
+          ? y
+          : best,
       );
     }
     const date = iso(year, month, day);
-    if (Number.isNaN(Date.parse(`${date}T12:00:00Z`)) || new Date(`${date}T12:00:00Z`).getUTCDate() !== day) continue;
+    if (Number.isNaN(Date.parse(`${date}T12:00:00Z`)) || new Date(`${date}T12:00:00Z`).getUTCDate() !== day)
+      continue;
     hits.push({ index: m.index!, end: m.index! + m[0].length, date });
   }
   const out = new Map<string, string>();

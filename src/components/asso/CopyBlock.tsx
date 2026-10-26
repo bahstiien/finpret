@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { fr } from "@/i18n/fr";
+import { Card } from "@/components/ui/Card";
 
 /** Texte à copier-coller (e-mail type, message pour les groupes de parents). */
 export function CopyBlock({ title, text }: { title: string; text: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <section className="flex flex-col gap-3 rounded-card bg-surface p-5">
+    <Card padding="cozy" className="flex flex-col gap-3">
       <h2 className="text-lg font-extrabold">{title}</h2>
       <pre className="font-sans text-sm whitespace-pre-wrap">{text}</pre>
       <Button
@@ -26,6 +27,6 @@ export function CopyBlock({ title, text }: { title: string; text: string }) {
       >
         {copied ? fr.asso.kit.copied : fr.asso.kit.copy}
       </Button>
-    </section>
+    </Card>
   );
 }

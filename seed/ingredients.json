@@ -840,5 +840,126 @@
   "l": "Abricots",
   "u": "g",
   "c": "legumes"
+ },
+ "tofu": {
+  "l": "Tofu ferme",
+  "u": "g",
+  "c": "frais"
+ },
+ "panais": {
+  "l": "Panais",
+  "u": "g",
+  "c": "legumes"
+ },
+ "navet": {
+  "l": "Navets",
+  "u": "g",
+  "c": "legumes"
+ },
+ "topinambour": {
+  "l": "Topinambours",
+  "u": "g",
+  "c": "legumes"
+ },
+ "celerirave": {
+  "l": "Céleri-rave",
+  "u": "g",
+  "c": "legumes"
+ },
+ "fenouil": {
+  "l": "Fenouil",
+  "u": "pc",
+  "c": "legumes",
+  "n": [
+   "fenouil",
+   "fenouils"
+  ]
+ },
+ "noix": {
+  "l": "Noix",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "polenta": {
+  "l": "Polenta (semoule de maïs précuite)",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "artichaut": {
+  "l": "Artichauts",
+  "u": "pc",
+  "c": "legumes",
+  "n": [
+   "artichaut",
+   "artichauts"
+  ]
+ },
+ "blette": {
+  "l": "Blettes",
+  "u": "g",
+  "c": "legumes"
+ },
+ "olives": {
+  "l": "Olives noires dénoyautées",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "sesame": {
+  "l": "Graines de sésame",
+  "u": "cs",
+  "c": "epicerie"
+ },
+ "melon": {
+  "l": "Melon",
+  "u": "pc",
+  "c": "legumes",
+  "n": [
+   "melon",
+   "melons"
+  ]
+ },
+ "peche": {
+  "l": "Pêches",
+  "u": "pc",
+  "c": "legumes",
+  "n": [
+   "pêche",
+   "pêches"
+  ]
+ },
+ "basilic": {
+  "l": "Basilic frais",
+  "u": "pc",
+  "showN": true,
+  "c": "legumes",
+  "n": [
+   "bouquet",
+   "bouquets"
+  ]
+ },
+ "menthe": {
+  "l": "Menthe fraîche",
+  "u": "pc",
+  "showN": true,
+  "c": "legumes",
+  "n": [
+   "bouquet",
+   "bouquets"
+  ]
+ },
+ "betterave": {
+  "l": "Betteraves",
+  "u": "g",
+  "c": "legumes"
+ },
+ "patatedouce": {
+  "l": "Patates douces",
+  "u": "g",
+  "c": "legumes"
+ },
+ "chataigne": {
+  "l": "Châtaignes cuites",
+  "u": "g",
+  "c": "epicerie"
  }
 }

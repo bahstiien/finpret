@@ -16,6 +16,8 @@ const months = z.array(month).min(1);
 const ingredientQuantities = z.record(z.string(), z.number().positive());
 /** Macros par portion adulte : [kcal, protéines g, glucides g, lipides g]. */
 const macros4 = z.tuple([z.number(), z.number(), z.number(), z.number()]);
+/** Difficulté : 1 (très facile) à 4 (technique). */
+const difficulty = z.number().int().min(1).max(4);
 const country = z.string().regex(/^[a-z]{2}$/);
 
 export const ingredientSchema = z
@@ -68,6 +70,7 @@ const batchBase = {
   p: z.enum(PROTEINS),
   fridge: z.number().int().nonnegative(),
   freeze: z.boolean(),
+  diff: difficulty,
   months: months.optional(),
   m: macros4,
   ing: ingredientQuantities,
@@ -102,6 +105,7 @@ export const simpleSchema = z
     s: z.string().min(1),
     o: country,
     m: macros4,
+    diff: difficulty,
     ing: ingredientQuantities,
     steps: z.array(z.string()).min(1),
     months: months.optional(),
@@ -122,6 +126,7 @@ export const cakeSchema = z
     parts: z.string().min(1),
     months: months.optional(),
     m: macros4,
+    diff: difficulty,
     kid: z.string(),
     mu: z.literal(true).optional(),
     ing: ingredientQuantities,

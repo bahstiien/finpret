@@ -160,7 +160,8 @@ export const assoFr = {
     iban: "IBAN enregistré",
     ibanMissing: "Votre IBAN sera demandé après la validation de votre association.",
     ibanLabel: "IBAN de l'association",
-    ibanHint: "Il est chiffré et ne sera plus affiché en entier. Il sert uniquement aux virements trimestriels.",
+    ibanHint:
+      "Il est chiffré et ne sera plus affiché en entier. Il sert uniquement aux virements trimestriels.",
     ibanSave: "Enregistrer l'IBAN",
     ibanSaved: "IBAN enregistré.",
     ibanInvalid: "Cet IBAN n'est pas valide : vérifiez la saisie.",
@@ -186,6 +187,18 @@ export const subscriptionFr = {
   choose: "Choisir",
   portal: "Gérer mon abonnement",
   portalHint: "Changer de formule, mettre à jour ta carte, résilier ou télécharger tes factures.",
+  pastDue:
+    "Ton dernier paiement a été refusé. Règle la facture ci-dessous ou mets ta carte à jour pour garder ton abonnement.",
+  billing: {
+    title: "Paiements et factures",
+    empty: "Aucune facture pour le moment.",
+    unavailable: "Tes factures sont momentanément indisponibles. Réessaie dans un instant.",
+    number: (n: string) => `Facture ${n}`,
+    view: "Voir",
+    download: "Télécharger (PDF)",
+    pay: "Régler maintenant",
+    statuses: { paid: "Payée", open: "À régler", void: "Annulée", uncollectible: "Impayée" },
+  },
   includedTitle: "Ce que ça débloque",
   included: [
     "Déplacer des repas, choisir qui est à table",
@@ -201,6 +214,34 @@ export const subscriptionFr = {
   codeLocked: "Ton foyer est déjà rattaché à une association tant que l'abonnement est actif.",
   codeInvalid: "Ce code n'est pas valide ou pas encore actif.",
   success: "Merci ! Ton abonnement est en cours d'activation.",
+  confirmations: {
+    canceled: "C'est noté : l'abonnement s'arrêtera à la fin de la période payée.",
+    resumed: "Ton abonnement est repris : il se renouvelle normalement.",
+    changed: "Ta formule est changée. Le prorata apparaît sur ta prochaine facture.",
+  },
+  subscribedEnding: (plan: string, date: string) =>
+    `Abonnement ${plan} résilié : actif jusqu'au ${date}, sans renouvellement.`,
+  cancel: "Résilier l'abonnement",
+  cancelConfirm: (date: string) => `Résilier ? Tu gardes tous les avantages jusqu'au ${date}.`,
+  resume: "Reprendre l'abonnement",
+  changeToYearly: "Passer à l'annuel (49,99 € par an)",
+  changeToMonthly: "Passer au mensuel (5,99 € par mois)",
+  changeHint: "Le changement est immédiat, Stripe calcule le prorata.",
+  card: {
+    title: "Moyen de paiement",
+    line: (brand: string, last4: string) => `${brand} se terminant par ${last4}`,
+    expires: (month: number, year: number) => `Expire en ${String(month).padStart(2, "0")}/${year}`,
+    expired: "Cette carte a expiré : mets-la à jour pour éviter un paiement refusé.",
+    none: "Aucune carte enregistrée.",
+    update: "Mettre à jour la carte",
+  },
+  legal: {
+    secure: "Paiement sécurisé par Stripe.",
+    cgv: "Conditions générales de vente",
+    privacy: "Confidentialité",
+  },
+  memberNote: "Seul l'administrateur du foyer gère l'abonnement, le paiement et les factures.",
+  detailsUnavailable: "Les détails de ton abonnement sont momentanément indisponibles.",
   errors: {
     notConfigured: "Le paiement n'est pas encore disponible. Réessaie plus tard.",
     notAdmin: "Seul l'administrateur du foyer peut gérer l'abonnement.",

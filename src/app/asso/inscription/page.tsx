@@ -4,6 +4,8 @@ import { SignupForm } from "@/components/asso/SignupForm";
 import { fr } from "@/i18n/fr";
 import { getMyAssociation } from "@/server/asso-session";
 import { requireUser } from "@/server/session";
+import { PageHeader } from "@/components/ui/Layout";
+import { Card } from "@/components/ui/Card";
 
 const t = fr.asso.signup;
 
@@ -15,11 +17,11 @@ export default async function SignupPage() {
   if (await getMyAssociation()) redirect("/asso");
   return (
     <>
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
       <p className="text-muted">{t.lead}</p>
-      <div className="rounded-card bg-surface p-5">
+      <Card as="div" padding="cozy">
         <SignupForm />
-      </div>
+      </Card>
     </>
   );
 }

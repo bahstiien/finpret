@@ -7,6 +7,7 @@ import { addDays, formatLong, todayIn } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
 import { importsThisMonth, MAX_IMPORTS_PER_MONTH } from "@/server/asso-quota";
 import { requireAssociation } from "@/server/asso-session";
+import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.asso.menus;
 
@@ -48,7 +49,7 @@ export default async function AssoMenusPage({
   const used = await importsThisMonth(association.id);
   return (
     <>
-      <h1 className="text-4xl font-black">{t.title}</h1>
+      <PageHeader title={t.title} />
       <p className="text-muted">{t.lead}</p>
       <StatusBanner association={association} />
       {association.schools.length > 1 && (

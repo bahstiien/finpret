@@ -9,6 +9,7 @@
    29,
    24
   ],
+  "diff": 1,
   "ing": {
    "painmie": 8,
    "jambon": 4,
@@ -33,6 +34,7 @@
    17,
    30
   ],
+  "diff": 1,
   "ing": {
    "oeufs": 10,
    "champignons": 300,
@@ -59,6 +61,7 @@
    47,
    19
   ],
+  "diff": 1,
   "ing": {
    "patesfraiches": 500,
    "parmesan": 40,
@@ -81,6 +84,7 @@
    25,
    23
   ],
+  "diff": 1,
   "ing": {
    "galette": 4,
    "jambon": 4,
@@ -105,6 +109,7 @@
    46,
    21
   ],
+  "diff": 1,
   "ing": {
    "tortilla": 8,
    "haricotsrouges": 1,
@@ -130,6 +135,7 @@
    68,
    18
   ],
+  "diff": 1,
   "ing": {
    "pizza": 2,
    "passata": 200,
@@ -161,6 +167,7 @@
    30,
    24
   ],
+  "diff": 1,
   "ing": {
    "tomatefraiche": 4,
    "haricotsverts": 300,
@@ -188,6 +195,7 @@
    28,
    24
   ],
+  "diff": 1,
   "ing": {
    "oeufs": 8,
    "saumonfume": 150,
@@ -222,6 +230,7 @@
    45,
    18
   ],
+  "diff": 1,
   "ing": {
    "pain": 8,
    "chevre": 200,
@@ -246,6 +255,7 @@
    56,
    31
   ],
+  "diff": 1,
   "ing": {
    "patescompletes": 320,
    "pesto": 1,
@@ -269,6 +279,7 @@
    70,
    13
   ],
+  "diff": 1,
   "ing": {
    "riz": 240,
    "oeufs": 4,
@@ -295,6 +306,7 @@
    78,
    20
   ],
+  "diff": 1,
   "ing": {
    "steak": 4,
    "painburger": 4,
@@ -322,6 +334,7 @@
    64,
    13
   ],
+  "diff": 1,
   "ing": {
    "poulet": 500,
    "chapelure": 60,
@@ -350,6 +363,7 @@
    52,
    17
   ],
+  "diff": 1,
   "ing": {
    "patescompletes": 320,
    "lardons": 150,
@@ -379,6 +393,7 @@
    52,
    18
   ],
+  "diff": 1,
   "ing": {
    "poulet": 500,
    "poivron": 2,
@@ -408,6 +423,7 @@
    66,
    10
   ],
+  "diff": 1,
   "ing": {
    "cabillaud": 500,
    "chapelure": 60,
@@ -442,6 +458,7 @@
    44,
    42
   ],
+  "diff": 1,
   "ing": {
    "pommedeterre": 1000,
    "raclette": 500,
@@ -465,6 +482,7 @@
    36,
    22
   ],
+  "diff": 1,
   "ing": {
    "tomates": 2,
    "oignon": 1,
@@ -501,6 +519,7 @@
    32,
    19
   ],
+  "diff": 1,
   "ing": {
    "chou": 0.5,
    "farine": 150,
@@ -527,6 +546,7 @@
    48,
    15
   ],
+  "diff": 1,
   "ing": {
    "boeuf": 400,
    "tortilla": 8,
@@ -556,6 +576,7 @@
    40,
    24
   ],
+  "diff": 1,
   "ing": {
    "oeufs": 8,
    "pommedeterre": 600,
@@ -580,6 +601,7 @@
    46,
    12
   ],
+  "diff": 1,
   "ing": {
    "poulet": 400,
    "tortilla": 8,
@@ -607,6 +629,7 @@
    62,
    21
   ],
+  "diff": 1,
   "ing": {
    "patescompletes": 320,
    "ail": 4,
@@ -631,6 +654,7 @@
    82,
    10
   ],
+  "diff": 1,
   "ing": {
    "gnocchis": 800,
    "passata": 400,
@@ -655,6 +679,7 @@
    30,
    23
   ],
+  "diff": 1,
   "ing": {
    "oeufs": 8,
    "jambon": 4,
@@ -680,6 +705,7 @@
    76,
    18
   ],
+  "diff": 1,
   "ing": {
    "gnocchis": 800,
    "champignons": 300,
@@ -704,6 +730,7 @@
    70,
    15
   ],
+  "diff": 1,
   "ing": {
    "nouillesramen": 300,
    "oeufs": 4,
@@ -729,6 +756,7 @@
    42,
    20
   ],
+  "diff": 1,
   "ing": {
    "pommedeterre": 800,
    "oeufs": 4,
@@ -758,6 +786,7 @@
    32,
    19
   ],
+  "diff": 1,
   "ing": {
    "asperges": 600,
    "oeufs": 6,
@@ -788,6 +817,7 @@
    40,
    13
   ],
+  "diff": 1,
   "ing": {
    "radis": 1,
    "pain": 8,
@@ -818,6 +848,7 @@
    26,
    24
   ],
+  "diff": 1,
   "ing": {
    "galette": 4,
    "epinards": 300,
@@ -849,6 +880,7 @@
    64,
    24
   ],
+  "diff": 1,
   "ing": {
    "patescompletes": 320,
    "tomatefraiche": 4,
@@ -878,6 +910,7 @@
    42,
    20
   ],
+  "diff": 1,
   "ing": {
    "pain": 8,
    "tomatefraiche": 4,
@@ -904,6 +937,7 @@
    90,
    19
   ],
+  "diff": 1,
   "ing": {
    "haricotsrouges": 1,
    "flocons": 60,
@@ -932,6 +966,7 @@
    16,
    27
   ],
+  "diff": 1,
   "ing": {
    "oeufs": 8,
    "epinardssurg": 300,
@@ -956,6 +991,7 @@
    44,
    20
   ],
+  "diff": 1,
   "ing": {
    "painmie": 8,
    "champignons": 200,
@@ -980,6 +1016,7 @@
    46,
    20
   ],
+  "diff": 1,
   "ing": {
    "pain": 8,
    "houmous": 200,
@@ -1004,6 +1041,7 @@
    28,
    22
   ],
+  "diff": 1,
   "ing": {
    "galette": 4,
    "oeufs": 4,
@@ -1028,6 +1066,7 @@
    78,
    13
   ],
+  "diff": 1,
   "ing": {
    "gnocchis": 800,
    "epinardssurg": 300,
@@ -1052,6 +1091,7 @@
    74,
    22
   ],
+  "diff": 1,
   "ing": {
    "pizza": 2,
    "ricotta": 250,
@@ -1076,6 +1116,7 @@
    52,
    20
   ],
+  "diff": 1,
   "ing": {
    "tortilla": 8,
    "oeufs": 6,
@@ -1100,6 +1141,7 @@
    70,
    14
   ],
+  "diff": 1,
   "ing": {
    "riz": 240,
    "oeufs": 5,
@@ -1125,6 +1167,7 @@
    44,
    22
   ],
+  "diff": 1,
   "ing": {
    "lentillesvertes": 250,
    "feta": 150,
@@ -1157,6 +1200,7 @@
    70,
    19
   ],
+  "diff": 1,
   "ing": {
    "patescompletes": 320,
    "feves": 300,
