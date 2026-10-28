@@ -39,7 +39,7 @@ export default async function TeamPage() {
       <PageHeader title={t.title} />
       <p className="text-muted">{t.lead}</p>
       <Card padding="cozy" aria-label={t.members}>
-        <h2 className="mb-3 text-xl font-extrabold">{t.members}</h2>
+        <h2 className="mb-3 text-xl font-bold">{t.members}</h2>
         <ul className="flex flex-col divide-y divide-line">
           {people.map((m) => (
             <li key={m.user_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
@@ -59,11 +59,11 @@ export default async function TeamPage() {
         </ul>
       </Card>
       <Card padding="cozy" className="flex flex-col gap-4">
-        <h2 className="text-xl font-extrabold">{t.invite}</h2>
+        <h2 className="text-xl font-bold">{t.invite}</h2>
         <InviteEditorForm />
       </Card>
       <Card padding="cozy" aria-label={t.pending} data-testid="asso-invitations">
-        <h2 className="mb-3 text-xl font-extrabold">{t.pending}</h2>
+        <h2 className="mb-3 text-xl font-bold">{t.pending}</h2>
         {!invitations?.length && <p className="text-muted">{t.none}</p>}
         <ul className="flex flex-col divide-y divide-line">
           {(invitations ?? []).map((i) => (

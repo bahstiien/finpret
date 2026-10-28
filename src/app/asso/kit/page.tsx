@@ -24,7 +24,7 @@ export default async function KitPage() {
       {ready ? (
         <>
           <Card padding="cozy" className="flex flex-col gap-3">
-            <h2 className="text-lg font-extrabold">{t.tuto}</h2>
+            <h2 className="text-lg font-bold">{t.tuto}</h2>
             <p className="text-sm text-muted">{t.tutoHint}</p>
             <div className="flex flex-wrap gap-2">
               <a href="/asso/kit/tuto" className={buttonClass()}>

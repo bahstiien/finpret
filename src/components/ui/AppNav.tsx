@@ -67,18 +67,18 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
       </nav>
       <nav
         aria-label={fr.nav.label}
-        className="hidden min-[900px]:sticky min-[900px]:top-4 min-[900px]:flex min-[900px]:h-[calc(100dvh-2rem)] min-[900px]:flex-col min-[900px]:self-start min-[900px]:gap-6 min-[900px]:overflow-y-auto min-[900px]:[scrollbar-width:none] min-[900px]:[&::-webkit-scrollbar]:hidden min-[900px]:rounded-[28px] min-[900px]:bg-nav min-[900px]:p-5 min-[900px]:text-on-nav"
+        className="hidden min-[900px]:sticky min-[900px]:top-4 min-[900px]:flex min-[900px]:h-[calc(100dvh-2rem)] min-[900px]:flex-col min-[900px]:self-start min-[900px]:gap-6 min-[900px]:overflow-y-auto min-[900px]:[scrollbar-width:none] min-[900px]:[&::-webkit-scrollbar]:hidden min-[900px]:rounded-3xl min-[900px]:bg-nav min-[900px]:p-4 min-[900px]:text-on-nav"
       >
         <Link href="/app" className="flex items-center gap-3 px-1 pt-1" aria-label={fr.app.name}>
           <span
             aria-hidden="true"
-            className="grid size-11 place-items-center rounded-2xl bg-violet font-display text-2xl font-black text-white"
+            className="grid size-11 place-items-center rounded-2xl bg-violet font-display text-2xl font-bold text-white"
           >
             M
           </span>
-          <span className="font-display text-2xl font-black">{fr.app.name}</span>
+          <span className="font-display text-2xl font-bold">{fr.app.name}</span>
         </Link>
-        <ul className="flex flex-col gap-1.5">
+        <ul className="flex flex-col gap-1">
           {TABS.map((tab) => {
             const active = isActive(tab.href);
             return (
@@ -86,14 +86,14 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
                 <Link
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors ${
+                  className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors duration-300 ease-base ${
                     active ? "bg-banana text-[#17151F]" : "text-on-nav/80 hover:bg-white/10 hover:text-on-nav"
                   }`}
                 >
                   <Icon name={tab.icon} className="size-5" />
                   <span className="flex-1">{fr.nav[tab.label]}</span>
                   {tab.label === "shopping" && shoppingLeft > 0 && (
-                    <span className="grid min-w-6 place-items-center rounded-full bg-peach px-1.5 text-sm font-bold text-peach-ink">
+                    <span className="grid min-w-6 place-items-center rounded-full bg-peach px-1 text-sm font-bold text-peach-ink">
                       {shoppingLeft}
                     </span>
                   )}
@@ -103,8 +103,8 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
           })}
         </ul>
         <div className="mt-auto flex flex-col gap-4">
-          <div className="rounded-[24px] bg-banana p-4 text-[#17151F] [@media(max-height:820px)]:hidden">
-            <p className="font-display text-lg leading-tight font-black">{fr.nav.sessionPromo}</p>
+          <div className="rounded-3xl bg-banana p-4 text-[#17151F] [@media(max-height:820px)]:hidden">
+            <p className="font-display text-lg leading-tight font-bold">{fr.nav.sessionPromo}</p>
             <Link
               href="/app/session"
               className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-pill bg-[#17151F] px-4 text-sm font-bold text-white"
@@ -116,7 +116,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
           <Link
             href="/settings"
             aria-current={accountActive ? "page" : undefined}
-            className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors ${
+            className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors duration-300 ease-base ${
               accountActive
                 ? "bg-banana text-[#17151F]"
                 : "text-on-nav/80 hover:bg-white/10 hover:text-on-nav"

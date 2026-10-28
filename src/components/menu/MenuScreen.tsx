@@ -124,7 +124,7 @@ export function MenuScreen({
       <header className="flex items-start justify-between gap-4 min-[900px]:items-center">
         <div>
           <p className="text-sm font-semibold text-muted first-letter:uppercase">{header.date}</p>
-          <h1 className="text-4xl font-black tracking-tight [overflow-wrap:anywhere]">
+          <h1 className="text-4xl font-bold tracking-tight [overflow-wrap:anywhere]">
             {header.greeting}, <span className="break-words">{header.name}</span>{" "}
             <span aria-hidden="true">👋</span>
           </h1>
@@ -145,7 +145,7 @@ export function MenuScreen({
           <Link
             href="/settings"
             aria-label={fr.nav.account}
-            className="hidden size-12 place-items-center rounded-full bg-violet font-display text-lg font-black text-white uppercase min-[900px]:grid"
+            className="hidden size-12 place-items-center rounded-full bg-violet font-display text-lg font-bold text-white uppercase min-[900px]:grid"
           >
             {header.name.charAt(0) || "·"}
           </Link>
@@ -153,7 +153,7 @@ export function MenuScreen({
       </header>
 
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-lg font-extrabold" data-testid="week-title">
+        <h2 className="text-lg font-bold" data-testid="week-title">
           {fr.menu.weekOf(formatShort(view.start))}
         </h2>
         {weeks.hasNext && (
@@ -171,8 +171,8 @@ export function MenuScreen({
         )}
       </div>
 
-      <div className="grid gap-5 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-        <div className="flex flex-col gap-5">
+      <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div className="flex flex-col gap-4">
           <DayStrip view={view} selected={selected} onSelect={setSelected} />
           <DayProgram
             day={day}
@@ -196,7 +196,7 @@ export function MenuScreen({
           />
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <PlanGrid
             view={view}
             canEdit={canEdit}
@@ -213,7 +213,7 @@ export function MenuScreen({
             <span className="self-start rounded-pill border border-white/40 px-3 py-1 text-xs font-bold">
               {t.weekend.eyebrow}
             </span>
-            <h2 className="text-2xl font-black">{t.weekend.title}</h2>
+            <h2 className="text-2xl font-bold">{t.weekend.title}</h2>
             <p className="text-white">{t.weekend.lead}</p>
             {view.weekend.length > 0 && (
               <ul className="flex flex-col gap-1">
@@ -245,7 +245,7 @@ export function MenuScreen({
 
       <section className="flex flex-col gap-3 min-[900px]:rounded-card min-[900px]:bg-surface min-[900px]:p-6">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-2xl font-black">{t.dishes}</h2>
+          <h2 className="text-2xl font-bold">{t.dishes}</h2>
           <span className="text-sm text-muted">{t.dishCount(view.dishes.length)}</span>
         </div>
         <ul
@@ -267,9 +267,9 @@ export function MenuScreen({
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-2xl font-black">{t.recipes}</h2>
+        <h2 className="text-2xl font-bold">{t.recipes}</h2>
         {view.recipes.map((r, i) => (
-          <details key={i} className="rounded-card bg-surface p-5">
+          <details key={i} className="rounded-card bg-surface p-4">
             <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-2">
               <span className="text-xs font-bold text-violet-strong uppercase">{r.title}</span>
               <b className="text-lg">
@@ -290,14 +290,14 @@ export function MenuScreen({
             </summary>
             <div className="mt-3 flex flex-col gap-3">
               {r.description && <p className="text-muted">{r.description}</p>}
-              <h3 className="font-extrabold">{t.ingredients}</h3>
-              <ul className="list-disc pl-5">
+              <h3 className="font-bold">{t.ingredients}</h3>
+              <ul className="list-disc pl-4">
                 {r.ingredients.map((x) => (
                   <li key={x}>{x}</li>
                 ))}
               </ul>
-              <h3 className="font-extrabold">{t.steps}</h3>
-              <ol className="list-decimal pl-5">
+              <h3 className="font-bold">{t.steps}</h3>
+              <ol className="list-decimal pl-4">
                 {r.steps.map((x, j) => (
                   <li key={j}>{x}</li>
                 ))}
@@ -392,7 +392,7 @@ function DayStrip({
 }) {
   return (
     <nav aria-label={t.days} className="-mx-1 overflow-x-auto px-1">
-      <ul className="grid grid-cols-7 gap-1.5">
+      <ul className="grid grid-cols-7 gap-1">
         {view.days.map((d) => {
           const isToday = d.day === view.todayIndex;
           const past = view.todayIndex > d.day && view.todayIndex <= 7;
@@ -404,7 +404,7 @@ function DayStrip({
                 aria-pressed={selected === d.day}
                 aria-label={`${fr.days[d.day - 1]} ${Number(d.iso.slice(8))}${isToday ? `, ${t.today}` : ""}`}
                 onClick={() => onSelect(d.day)}
-                className={`flex h-16 w-full flex-col items-center justify-center rounded-2xl border-2 font-display transition ${
+                className={`flex h-16 w-full flex-col items-center justify-center rounded-2xl border-2 font-display transition duration-300 ease-base ${
                   isToday
                     ? "border-banana bg-banana text-[#17151F]"
                     : weekend
@@ -412,8 +412,8 @@ function DayStrip({
                       : "border-transparent bg-surface"
                 } ${past && !isToday ? "text-muted" : ""} ${selected === d.day && !isToday ? "outline-3 outline-violet" : ""}`}
               >
-                <span className="text-lg font-black">{Number(d.iso.slice(8))}</span>
-                <span className="text-[0.7rem] font-bold">{fr.daysAbbr[d.day - 1]}</span>
+                <span className="text-lg font-bold">{Number(d.iso.slice(8))}</span>
+                <span className="text-xs font-bold">{fr.daysAbbr[d.day - 1]}</span>
               </button>
             </li>
           );
@@ -437,7 +437,7 @@ function Tiles({
   return (
     <div className="grid grid-cols-2 gap-3" data-testid="week-summary">
       {day.tonight && (
-        <div className="flex flex-col gap-2 rounded-card bg-ink p-5 text-surface">
+        <div className="flex flex-col gap-2 rounded-card bg-ink p-4 text-surface">
           <span className="grid size-10 place-items-center rounded-xl bg-banana text-[#17151F]">
             <Icon name="pot" />
           </span>
@@ -458,11 +458,11 @@ function Tiles({
       )}
       <Card as="div" tone="blue" padding="cozy" className="flex flex-col gap-1">
         <span className="text-sm font-semibold">{t.tiles.session}</span>
-        <b className="font-display text-3xl font-black">{dur(sessionMinutes)}</b>
+        <b className="font-display text-3xl font-bold">{dur(sessionMinutes)}</b>
       </Card>
       <Card as="div" padding="cozy" className="flex flex-col gap-1">
         <span className="text-sm font-semibold text-muted">{t.tiles.planned}</span>
-        <b className="font-display text-3xl font-black" data-testid="summary-meals">
+        <b className="font-display text-3xl font-bold" data-testid="summary-meals">
           {planned}
         </b>
       </Card>
@@ -489,7 +489,7 @@ function PlanGrid({
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-extrabold">{t.grid.title}</h2>
+        <h2 className="text-xl font-bold">{t.grid.title}</h2>
         <span className="flex gap-3 text-sm text-muted">
           <span className="flex items-center gap-1">
             <span className="size-2.5 rounded-full bg-violet" aria-hidden="true" /> {t.grid.batch}

@@ -142,8 +142,8 @@ export function MenusEditor({
   };
   if (!active) return <FormMessage tone="success">{t.inactive}</FormMessage>;
   return (
-    <div className="flex flex-col gap-5">
-      <form action={importAction} className="flex flex-col gap-3 rounded-card bg-surface p-5">
+    <div className="flex flex-col gap-4">
+      <form action={importAction} className="flex flex-col gap-3 rounded-card bg-surface p-4">
         <input type="hidden" name="schoolId" value={schoolId} />
         <label htmlFor="pdf" className="text-sm font-semibold">
           {t.importLabel}

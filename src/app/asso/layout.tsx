@@ -33,7 +33,7 @@ export default async function AssoLayout({ children }: { children: React.ReactNo
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="inline-flex min-h-11 items-center rounded-pill bg-surface px-5 font-bold hover:bg-chip"
+                    className="inline-flex min-h-11 items-center rounded-pill bg-surface px-4 font-bold hover:bg-chip"
                   >
                     {l.label}
                   </Link>
@@ -43,7 +43,7 @@ export default async function AssoLayout({ children }: { children: React.ReactNo
           </nav>
         </>
       )}
-      <main className="flex flex-col gap-5">{children}</main>
+      <main className="flex flex-col gap-4">{children}</main>
     </div>
   );
 }

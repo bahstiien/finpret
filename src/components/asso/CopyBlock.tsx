@@ -10,7 +10,7 @@ export function CopyBlock({ title, text }: { title: string; text: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <Card padding="cozy" className="flex flex-col gap-3">
-      <h2 className="text-lg font-extrabold">{title}</h2>
+      <h2 className="text-lg font-bold">{title}</h2>
       <pre className="font-sans text-sm whitespace-pre-wrap">{text}</pre>
       <Button
         type="button"

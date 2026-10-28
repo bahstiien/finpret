@@ -27,7 +27,7 @@ export function StreakTile({ streak }: { streak: Pick<StreakState, "current" | "
         <Icon name="streak" className="size-6" />
       </span>
       <span className="flex flex-col">
-        <span className="font-black">
+        <span className="font-bold">
           {t.streak.label}
           {" : "}
           {t.streak.tile(streak.current)}

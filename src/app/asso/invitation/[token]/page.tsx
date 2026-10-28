@@ -42,7 +42,7 @@ export default async function EditorInvitationPage({
         <FormMessage tone="error">{problem}</FormMessage>
       ) : (
         <>
-          <h1 className="text-3xl font-black">{t.title(invitation.association_name)}</h1>
+          <h1 className="text-3xl font-bold">{t.title(invitation.association_name)}</h1>
           <p className="text-muted">{t.lead}</p>
           {user ? (
             <form action={acceptEditorInvitation}>

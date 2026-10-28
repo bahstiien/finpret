@@ -59,7 +59,7 @@ export default async function EcolePage({ params }: { params: Promise<{ code: st
         </>
       ) : (
         <>
-          <h1 className="text-3xl font-black">{t.inactiveTitle}</h1>
+          <h1 className="text-3xl font-bold">{t.inactiveTitle}</h1>
           <p className="text-muted">{t.inactiveBody}</p>
           <Link href="/login" className="font-semibold underline">
             {t.inactiveCta}

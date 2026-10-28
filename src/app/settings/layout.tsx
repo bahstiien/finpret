@@ -32,7 +32,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
       </Link>
       <PageHeader title={fr.settings.title} />
       <SettingsNav sections={[...sections]} />
-      <div className="flex max-w-3xl flex-col gap-5">{children}</div>
+      <div className="flex max-w-3xl flex-col gap-4">{children}</div>
     </AppFrame>
   );
 }

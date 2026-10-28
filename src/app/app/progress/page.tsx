@@ -36,7 +36,7 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
       <ProgressViewed from={from} />
       <PageHeader title={t.title} />
 
-      <Card className="flex flex-col gap-5" aria-labelledby="streak-title">
+      <Card className="flex flex-col gap-4" aria-labelledby="streak-title">
         <h2 id="streak-title" className="sr-only">
           {t.streak.label}
         </h2>
@@ -46,7 +46,7 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
           </span>
           <div>
             <p
-              className="font-display text-5xl leading-none font-black min-[900px]:text-6xl"
+              className="font-display text-5xl leading-none font-bold min-[900px]:text-6xl"
               data-testid="streak-current"
             >
               {t.streak.weeks(streak.current)}

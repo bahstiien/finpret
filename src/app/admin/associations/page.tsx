@@ -24,7 +24,7 @@ export default async function AdminAssociationsPage() {
   const rows = [...(data ?? [])].sort((a, b) => order[a.status] - order[b.status]);
   return (
     <>
-      <h1 className="text-4xl font-black">Associations</h1>
+      <h1 className="text-4xl font-bold">Associations</h1>
       {!rows.length && <p className="text-muted">Aucune association pour l&apos;instant.</p>}
       <ul className="flex flex-col gap-3">
         {rows.map((a) => {
@@ -39,7 +39,7 @@ export default async function AdminAssociationsPage() {
               data-testid={`asso-${a.code}`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-xl font-extrabold">{a.name}</h2>
+                <h2 className="text-xl font-bold">{a.name}</h2>
                 <span className="rounded-pill bg-chip px-3 py-1 text-sm font-bold">{STATUS[a.status]}</span>
               </div>
               <p className="text-sm">

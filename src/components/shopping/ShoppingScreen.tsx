@@ -466,7 +466,7 @@ export function ShoppingScreen({
           className="h-2 overflow-hidden rounded-pill bg-line"
         >
           <div
-            className="h-full rounded-pill bg-[#FF6B8B] transition-all"
+            className="h-full rounded-pill bg-[#FF6B8B] transition-all duration-300 ease-base"
             style={{ width: `${visible.length ? (done / visible.length) * 100 : 0}%` }}
           />
         </div>
@@ -531,7 +531,7 @@ export function ShoppingScreen({
 
       {baseUsed.length > 0 && (
         <Card padding="sm" className="flex flex-col gap-2">
-          <h2 className="font-extrabold">{t.base}</h2>
+          <h2 className="font-bold">{t.base}</h2>
           <p className="text-sm text-muted">{t.baseHint}</p>
           <div className="flex flex-wrap gap-2">
             {baseUsed.map((b) => (
@@ -599,7 +599,7 @@ export function ShoppingScreen({
       ) : (
         groups.map((g) => (
           <Card padding="sm" key={g.key} className="flex flex-col">
-            <h2 className="flex items-center justify-between pb-2 font-extrabold">
+            <h2 className="flex items-center justify-between pb-2 font-bold">
               {g.label}
               <small className="font-semibold text-muted">
                 {g.items.filter((i) => i.checked).length}/{g.items.length}
@@ -764,7 +764,7 @@ function PurchaseBlock({
           ? tp.covered
           : null;
   return (
-    <div className="flex w-full flex-col gap-1 pb-2 pl-9 text-sm" data-testid="purchase-line">
+    <div className="flex w-full flex-col gap-1 pb-2 pl-8 text-sm" data-testid="purchase-line">
       <p className="font-semibold">
         {state && <span className="mr-2 rounded-pill bg-chip px-2 py-0.5">{state}</span>}
         {line.deficit ? tp.remaining(line.deficit) : line.status === "to_verify" ? null : tp.covered}
@@ -853,9 +853,9 @@ function ReviewPanel({ lines }: { lines: Record<string, PurchaseLine> }) {
   );
   return (
     <div className="flex flex-col gap-1" role="status">
-      <h2 className="font-extrabold">{tp.reviewTitle}</h2>
+      <h2 className="font-bold">{tp.reviewTitle}</h2>
       <p className="font-semibold">{r.ready ? tp.reviewClean : tp.reviewDone(r.unresolved)}</p>
-      <ul className="list-disc pl-5 text-sm">
+      <ul className="list-disc pl-4 text-sm">
         <li>{tp.reviewKnown(r.known.length)}</li>
         {r.toConfirm.length > 0 && <li>{tp.reviewToConfirm(r.toConfirm.length)}</li>}
         {r.missing.length > 0 && <li>{tp.reviewMissing(r.missing.length)}</li>}

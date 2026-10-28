@@ -8,6 +8,12 @@ export const fr = {
     shortName: "Fin Prêt",
     description: "Tes repas de la semaine, la liste de courses et la session de batch cooking du dimanche.",
   },
+  /** Page 404 de marque. */
+  notFoundPage: {
+    title: "Page introuvable",
+    lead: "Cette adresse n'existe pas ou a changé de place. Reviens à l'accueil pour repartir de là.",
+    home: "Retour à l'accueil",
+  },
   home: {
     eyebrow: "Batch cooking en famille",
     title: "Une session le dimanche, une semaine sans y penser.",

@@ -73,7 +73,7 @@ export function StockScreen({
 
       {FEATURES.freezerAndLeftovers && week && canEdit && (!week.pantryDone || week.doublesToBank) && (
         <Card tone="yellow" padding="cozy" className="flex flex-col gap-3">
-          <h2 className="text-lg font-extrabold">{t.afterSession(week.start)}</h2>
+          <h2 className="text-lg font-bold">{t.afterSession(week.start)}</h2>
           <p className="text-sm text-muted">{t.afterSessionHint}</p>
           <div className="flex flex-wrap gap-2">
             {!week.pantryDone && (
@@ -101,12 +101,12 @@ export function StockScreen({
 
       {FEATURES.freezerAndLeftovers && (
         <section
-          className="flex flex-col gap-3 rounded-card bg-green-soft p-5 text-ink"
+          className="flex flex-col gap-3 rounded-card bg-green-soft p-4 text-ink"
           data-testid="freezer"
         >
           <div className="flex items-baseline justify-between">
-            <h2 className="text-xl font-extrabold text-green-ink">{t.freezer}</h2>
-            <span className="font-display text-xl font-black text-green-ink">{t.meals(total)}</span>
+            <h2 className="text-xl font-bold text-green-ink">{t.freezer}</h2>
+            <span className="font-display text-xl font-bold text-green-ink">{t.meals(total)}</span>
           </div>
           {freezer.length === 0 && <p className="text-sm text-muted">{t.freezerEmpty}</p>}
           <ul className="flex flex-col gap-2">
@@ -132,7 +132,7 @@ export function StockScreen({
                     >
                       −
                     </button>
-                    <output className="w-6 text-center font-display text-lg font-black">{f.portions}</output>
+                    <output className="w-6 text-center font-display text-lg font-bold">{f.portions}</output>
                     <button
                       type="button"
                       aria-label={t.more(f.name)}
@@ -144,7 +144,7 @@ export function StockScreen({
                     </button>
                   </div>
                 ) : (
-                  <span className="font-display text-lg font-black">{f.portions}</span>
+                  <span className="font-display text-lg font-bold">{f.portions}</span>
                 )}
               </li>
             ))}
@@ -185,7 +185,7 @@ export function StockScreen({
       )}
 
       <Card padding="cozy" className="flex flex-col gap-3" data-testid="pantry">
-        <h2 className="text-xl font-extrabold">{t.pantry}</h2>
+        <h2 className="text-xl font-bold">{t.pantry}</h2>
         {pantry.length === 0 && <p className="text-sm text-muted">{t.pantryEmpty}</p>}
         <ul className="flex flex-col divide-y divide-line">
           {pantry.map((p) => (

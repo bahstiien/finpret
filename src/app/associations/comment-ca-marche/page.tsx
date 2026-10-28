@@ -75,12 +75,12 @@ export default function HowItWorksPage() {
             › {crumbs.how}
           </nav>
           <header className="flex flex-col gap-4">
-            <h1 className="text-4xl font-black tracking-[-0.01em] sm:text-5xl">{nb(t.title)}</h1>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{nb(t.title)}</h1>
             <p className="text-lg text-muted">{nb(t.lead)}</p>
           </header>
           {t.sections.map((s) => (
             <section key={s.id} aria-labelledby={s.id} className="flex flex-col gap-4">
-              <h2 id={s.id} className="text-2xl font-extrabold sm:text-3xl">
+              <h2 id={s.id} className="text-2xl font-bold sm:text-3xl">
                 {nb(s.title)}
               </h2>
               {s.paragraphs?.map((p) => (
@@ -105,7 +105,7 @@ export default function HowItWorksPage() {
           <div className="flex flex-wrap items-center gap-4">
             <SignupLink
               href="/asso/inscription"
-              className="inline-flex min-h-[52px] items-center justify-center rounded-pill bg-banana px-8 font-extrabold text-[#17151f]"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-pill bg-banana px-8 font-bold text-[#17151f]"
             >
               {t.cta}
             </SignupLink>

@@ -25,7 +25,7 @@ export function HouseholdDetailsForm({ initial, timezones }: { initial: Details;
   const { value: v, update, status } = useAutosave(initial, save);
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
-      <h2 className="text-xl font-extrabold">{t.details}</h2>
+      <h2 className="text-xl font-bold">{t.details}</h2>
       <TextField
         id="household-name"
         label={t.name}
@@ -131,7 +131,7 @@ export function MembersForm({
 
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
-      <h2 className="text-xl font-extrabold">{t.members}</h2>
+      <h2 className="text-xl font-bold">{t.members}</h2>
       {error && <FormMessage tone="error">{error}</FormMessage>}
       <ul className="flex flex-col gap-3">
         {members.map((m) => (

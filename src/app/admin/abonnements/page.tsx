@@ -27,7 +27,7 @@ export default async function AdminSubscriptionsPage() {
             <dt className="text-sm font-semibold text-muted">
               {{ trial: "Essai", monthly: "Mensuels", yearly: "Annuels", free: "Gratuits" }[p]}
             </dt>
-            <dd className="font-display text-3xl font-black">{counts[p] ?? 0}</dd>
+            <dd className="font-display text-3xl font-bold">{counts[p] ?? 0}</dd>
           </Card>
         ))}
       </dl>

@@ -38,16 +38,16 @@ export default async function HowItWorksPage({ params }: { params: Promise<{ cod
       <PageHeader title={c.title} />
       <p className="text-lg text-muted">{c.hook}</p>
       <section>
-        <h2 className="mb-2 text-xl font-extrabold">{c.stepsTitle}</h2>
-        <ol className="list-decimal pl-5">
+        <h2 className="mb-2 text-xl font-bold">{c.stepsTitle}</h2>
+        <ol className="list-decimal pl-4">
           {c.steps.map((s) => (
             <li key={s}>{s}</li>
           ))}
         </ol>
       </section>
       <section>
-        <h2 className="mb-2 text-xl font-extrabold">{c.featuresTitle}</h2>
-        <ul className="list-disc pl-5">
+        <h2 className="mb-2 text-xl font-bold">{c.featuresTitle}</h2>
+        <ul className="list-disc pl-4">
           {c.features.map((f) => (
             <li key={f}>{f}</li>
           ))}

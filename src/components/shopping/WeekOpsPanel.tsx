@@ -92,7 +92,7 @@ export function WeekOpsPanel({
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="font-extrabold">{t.title}</h2>
+        <h2 className="font-bold">{t.title}</h2>
         <Button variant="ghost" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
           {open ? t.hide : t.open}
         </Button>
@@ -127,7 +127,7 @@ export function WeekOpsPanel({
             </ul>
           )}
 
-          <h3 className="pt-2 font-extrabold">{t.transferTitle}</h3>
+          <h3 className="pt-2 font-bold">{t.transferTitle}</h3>
           {transfers.length === 0 || otherWeeks.length === 0 ? (
             <p className="text-muted">{t.noTransfer}</p>
           ) : (

@@ -26,8 +26,8 @@ export function Showcase() {
                 className={`flex flex-col gap-6 overflow-hidden rounded-card pt-6 sm:pt-8 ${tone}`}
               >
                 <div className="flex flex-col gap-2 px-6 sm:px-8">
-                  <p className={`text-sm font-bold tracking-[0.06em] uppercase ${kicker}`}>{item.kicker}</p>
-                  <h3 className="text-2xl leading-tight font-extrabold">{nb(item.title)}</h3>
+                  <p className={`text-sm font-bold tracking-wider uppercase ${kicker}`}>{item.kicker}</p>
+                  <h3 className="text-2xl leading-tight font-bold">{nb(item.title)}</h3>
                   <p className="text-base">{nb(item.text)}</p>
                 </div>
                 <div className="mt-auto flex h-[400px] justify-center overflow-hidden">

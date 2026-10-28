@@ -18,7 +18,7 @@ export function Faq() {
                   <Icon name="chevron" className="size-5" />
                 </span>
               </summary>
-              <p className="px-6 pb-5 text-base text-muted">{nb(item.a)}</p>
+              <p className="px-6 pb-4 text-base text-muted">{nb(item.a)}</p>
             </details>
           ))}
         </div>

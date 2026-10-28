@@ -14,7 +14,7 @@ export function LeadForm() {
   if (state.ok) return <FormMessage tone="success">{t.sent}</FormMessage>;
   return (
     <form action={action} className="flex flex-col gap-4 rounded-card bg-surface p-6" id="presentation">
-      <h2 className="text-2xl font-extrabold">{t.title}</h2>
+      <h2 className="text-2xl font-bold">{t.title}</h2>
       <p className="text-muted">{t.intro}</p>
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>

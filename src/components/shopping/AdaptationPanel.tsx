@@ -105,7 +105,7 @@ export function AdaptationPanel({
 
       {open && (
         <div className="flex flex-col gap-3">
-          <h2 className="font-extrabold">{t.title}</h2>
+          <h2 className="font-bold">{t.title}</h2>
           <p className="text-sm text-muted">{t.intro}</p>
           <fieldset className="flex flex-col gap-1">
             <legend className="sr-only">{t.title}</legend>
@@ -154,8 +154,8 @@ export function AdaptationPanel({
               ) : (
                 preview.proposals.map((p, i) => (
                   <article key={i} className="flex flex-col gap-1 rounded-2xl bg-chip p-3">
-                    <h3 className="font-extrabold">{t.resolves(p.resolved, p.total)}</h3>
-                    <ul className="list-disc pl-5 text-sm">
+                    <h3 className="font-bold">{t.resolves(p.resolved, p.total)}</h3>
+                    <ul className="list-disc pl-4 text-sm">
                       {p.lines.map((l, j) => (
                         <li key={j}>
                           {t.replaces(l.from, l.to)}
@@ -200,7 +200,7 @@ export function AdaptationPanel({
 
       {history.length > 0 && (
         <div className="flex flex-col gap-1">
-          <h2 className="font-extrabold">{t.history}</h2>
+          <h2 className="font-bold">{t.history}</h2>
           <ul className="flex flex-col gap-1 text-sm">
             {history.map((h) => (
               <li key={h.id} className="flex flex-wrap items-center gap-2">

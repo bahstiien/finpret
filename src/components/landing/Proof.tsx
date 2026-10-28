@@ -10,7 +10,7 @@ export function Proof() {
         <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
           {p.stats.map((s) => (
             <li key={s.label} className="flex flex-col gap-1">
-              <span className="font-display text-5xl leading-none font-black tracking-[-0.02em] text-violet sm:text-6xl">
+              <span className="font-display text-5xl leading-none font-bold tracking-tight text-violet sm:text-6xl">
                 {nb(s.value)}
               </span>
               <span className="text-base font-semibold text-muted">{s.label}</span>

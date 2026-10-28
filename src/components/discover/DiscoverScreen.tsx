@@ -156,7 +156,7 @@ export function DiscoverScreen({
             aria-selected={segment === s}
             type="button"
             onClick={() => setSegment(s)}
-            className={`min-h-11 rounded-pill px-5 font-bold ${segment === s ? "bg-ink text-surface" : ""}`}
+            className={`min-h-11 rounded-pill px-4 font-bold ${segment === s ? "bg-ink text-surface" : ""}`}
           >
             {t.segmentLabels[s]}
           </button>
@@ -171,7 +171,7 @@ export function DiscoverScreen({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.search}
-        className="min-h-12 rounded-pill border-2 border-line bg-surface px-5 focus:border-violet focus:outline-none"
+        className="min-h-12 rounded-pill border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
       />
 
       {segment === "recipes" ? (
@@ -299,7 +299,7 @@ function RecipeCard({
   };
   return (
     <li
-      className={`flex flex-col gap-2 rounded-card bg-surface p-5 ${r.excluded ? "outline-2 outline-peach-ink" : ""}`}
+      className={`flex flex-col gap-2 rounded-card bg-surface p-4 ${r.excluded ? "outline-2 outline-peach-ink" : ""}`}
       data-testid={`recipe-${r.id}`}
     >
       <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
@@ -341,14 +341,14 @@ function RecipeCard({
       <details open={open || undefined}>
         <summary className="min-h-11 cursor-pointer content-center font-semibold">{t.details}</summary>
         <div className="flex flex-col gap-2 pt-2">
-          <h3 className="font-extrabold">{t.ingredientsFor4}</h3>
-          <ul className="list-disc pl-5 text-sm">
+          <h3 className="font-bold">{t.ingredientsFor4}</h3>
+          <ul className="list-disc pl-4 text-sm">
             {r.ingredients.map((i) => (
               <li key={i}>{i}</li>
             ))}
           </ul>
-          <h3 className="font-extrabold">{fr.menuScreen.steps}</h3>
-          <ol className="list-decimal pl-5 text-sm">
+          <h3 className="font-bold">{fr.menuScreen.steps}</h3>
+          <ol className="list-decimal pl-4 text-sm">
             {r.steps.map((s, i) => (
               <li key={i}>{s}</li>
             ))}

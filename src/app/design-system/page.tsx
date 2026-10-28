@@ -65,6 +65,19 @@ const ICONS: IconName[] = [
   "sparkle",
 ];
 
+/** Seules valeurs d'espacement autorisées (design-system/tokens.json). */
+const SPACING = [0, 2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96];
+
+/** Rayons de l'échelle Tailwind ; `card` et `sheet` en sont des alias (24 et 32 px). */
+const RADII: [string, string][] = [
+  ["lg 8", "rounded-lg"],
+  ["xl 12", "rounded-xl"],
+  ["2xl 16", "rounded-2xl"],
+  ["card 24", "rounded-card"],
+  ["sheet 32", "rounded-sheet"],
+  ["pill", "rounded-pill"],
+];
+
 /** Galerie vivante du design system (docs/DESIGN_SYSTEM.md). Réservée au développement. */
 export default function DesignSystemPage() {
   if (process.env.NODE_ENV === "production") notFound();
@@ -79,7 +92,7 @@ export default function DesignSystemPage() {
       <Group title="Couleurs">
         <ul className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-4">
           {COLORS.map((c) => (
-            <li key={c} className="flex flex-col gap-1.5">
+            <li key={c} className="flex flex-col gap-1">
               <span className="h-14 rounded-2xl border border-line" style={{ background: `var(--${c})` }} />
               <code className="text-xs text-muted">--{c}</code>
             </li>
@@ -89,11 +102,49 @@ export default function DesignSystemPage() {
 
       <Group title="Typographie">
         <div className="flex flex-col gap-2">
-          <p className="font-display text-4xl font-black">Titre de page · Gabarito 36</p>
-          <p className="font-display text-2xl font-black">Titre de section · 24</p>
-          <p className="text-lg font-extrabold">Titre de carte · Figtree 18</p>
-          <p>Texte courant · Figtree 16, interligne confortable pour lire sans effort.</p>
+          <p className="text-4xl font-bold">Titre de page · Archivo Black 36</p>
+          <p className="text-2xl font-bold">Titre de section · 24</p>
+          <p className="text-lg font-semibold">Titre de carte · 18</p>
+          <p>Texte courant · 16, interligne confortable pour lire sans effort.</p>
           <p className="text-sm text-muted">Texte secondaire · 14, couleur discrète</p>
+          <p className="text-xs text-muted">Une seule famille, graisses 400 à 700, jamais d&apos;italique. Tailles : échelle Tailwind.</p>
+        </div>
+      </Group>
+
+      <Group title="Espacements">
+        <ul className="flex flex-col gap-1">
+          {SPACING.map((px) => (
+            <li key={px} className="flex items-center gap-3 text-xs text-muted">
+              <span className="w-12 font-mono">{px} px</span>
+              <span className="h-2 rounded-sm bg-violet" style={{ width: Math.max(px, 2) }} />
+            </li>
+          ))}
+        </ul>
+      </Group>
+
+      <Group title="Rayons">
+        <div className="flex flex-wrap items-end gap-4">
+          {RADII.map(([name, cls]) => (
+            <div key={name} className="flex flex-col items-center gap-1 text-xs text-muted">
+              <span className={`size-24 bg-violet ${cls}`} />
+              <code>{name}</code>
+            </div>
+          ))}
+        </div>
+        <p className="text-sm text-muted">
+          Rayon intérieur = rayon extérieur − marge, quand la marge fait moins de 32 px et que le résultat dépasse 2 px.
+        </p>
+      </Group>
+
+      <Group title="Mouvement">
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="inline-flex min-h-11 items-center rounded-xl bg-violet-soft px-3 py-2 text-base font-semibold text-violet-strong transition duration-300 ease-base hover:bg-violet hover:text-white">
+            Survol 300 ms
+          </span>
+          <span className="text-sm text-muted">
+            Courbe <code>ease-base</code> = cubic-bezier(0.22, 1, 0.36, 1) ; 500 ms pour les déplacements, 700 ms pour
+            les apparitions ; on n&apos;anime que transform et opacity.
+          </span>
         </div>
       </Group>
 
@@ -128,7 +179,7 @@ export default function DesignSystemPage() {
         <div className="grid gap-4 min-[600px]:grid-cols-2">
           {CARDS.map((t) => (
             <Card key={t} tone={t}>
-              <h3 className="text-lg font-extrabold">Carte {t}</h3>
+              <h3 className="text-lg font-bold">Carte {t}</h3>
               <p className="opacity-80">Rayon 28 px, marge intérieure de 24 px.</p>
             </Card>
           ))}

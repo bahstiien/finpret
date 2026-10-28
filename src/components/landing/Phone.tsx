@@ -20,12 +20,12 @@ export function Phone({
     <div
       role="img"
       aria-label={label}
-      className={`theme-light relative w-[300px] shrink-0 rounded-[44px] bg-ink p-2 shadow-float ${className}`}
+      className={`theme-light relative w-[300px] shrink-0 rounded-4xl bg-ink p-2 shadow-float ${className}`}
     >
-      <div aria-hidden="true" className={`relative overflow-hidden rounded-[36px] bg-bg text-ink ${height}`}>
-        <div className="flex items-center justify-between px-6 pt-3 pb-2 text-[12px] font-bold">
+      <div aria-hidden="true" className={`relative overflow-hidden rounded-3xl bg-bg text-ink ${height}`}>
+        <div className="flex items-center justify-between px-6 pt-3 pb-2 text-xs font-bold">
           <span>9:41</span>
-          <span className="h-3 w-5 rounded-[4px] border-[1.5px] border-ink" />
+          <span className="h-3 w-5 rounded-sm border-[1.5px] border-ink" />
         </div>
         {children}
       </div>
@@ -44,12 +44,12 @@ const tabs: { icon: IconName; label: string }[] = [
 /** Barre d'onglets flottante : l'onglet actif est une pilule jaune avec son libellé. */
 export function PhoneTabs({ active }: { active: string }) {
   return (
-    <div className="absolute inset-x-3 bottom-3 flex items-center justify-between rounded-pill bg-nav p-1.5 text-on-nav shadow-float">
+    <div className="absolute inset-x-3 bottom-3 flex items-center justify-between rounded-pill bg-nav p-1 text-on-nav shadow-float">
       {tabs.map((tab) =>
         tab.label === active ? (
           <span
             key={tab.label}
-            className="flex h-10 items-center gap-1.5 rounded-pill bg-banana px-3 text-[12px] font-bold text-[#17151f]"
+            className="flex h-10 items-center gap-1 rounded-pill bg-banana px-3 text-xs font-bold text-[#17151f]"
           >
             <Icon name={tab.icon} className="size-[18px]" />
             {tab.label}

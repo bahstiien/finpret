@@ -64,7 +64,7 @@ export function Stamp({ kind, state, label, code, season, count, ariaLabel, onPr
       <span
         aria-hidden="true"
         style={earned ? { transform: `rotate(${stampRotation(code)}deg)` } : undefined}
-        className={`grid size-18 place-items-center rounded-full border-2 font-display text-xl font-black ${tone} ${
+        className={`grid size-18 place-items-center rounded-full border-2 font-display text-xl font-bold ${tone} ${
           earned ? "motion-safe:animate-[stamp-in_.35s_ease-out]" : ""
         }`}
       >

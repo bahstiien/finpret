@@ -62,7 +62,7 @@ export function PrintSheet({ data }: { data: PrintData }) {
       <div ref={sheet} className="print-sheet" data-testid="print-sheet">
         <header className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-2xl font-black">{data.title}</h1>
+            <h1 className="font-display text-2xl font-bold">{data.title}</h1>
             <p className="text-xs">{t.lead}</p>
           </div>
           <div className="flex shrink-0 gap-2">
@@ -107,25 +107,25 @@ export function PrintSheet({ data }: { data: PrintData }) {
               <tr key={d.label}>
                 <th scope="row">
                   {d.label}
-                  {d.cake && <span className="block text-[0.7em] font-normal">{d.cake}</span>}
+                  {d.cake && <span className="block text-xs font-normal">{d.cake}</span>}
                 </th>
                 {d.meals.map((m, i) =>
                   m ? (
                     <td key={i}>
-                      {m.tag && <span className="block text-[0.75em] italic">{m.tag}</span>}
+                      {m.tag && <span className="block text-xs">{m.tag}</span>}
                       <b className="block">{m.name}</b>
-                      {m.macros && <span className="block text-[0.75em]">{m.macros}</span>}
-                      <span className="block text-[0.75em]">{m.guests}</span>
-                      <span className="block text-[0.8em]">{m.how}</span>
+                      {m.macros && <span className="block text-xs">{m.macros}</span>}
+                      <span className="block text-xs">{m.guests}</span>
+                      <span className="block text-xs">{m.how}</span>
                     </td>
                   ) : (
-                    <td key={i} className="italic">
+                    <td key={i} className="text-muted">
                       {t.nothing}
                     </td>
                   ),
                 )}
                 <td className="whitespace-pre-line">{thaw(d.thaw)}</td>
-                <td className="text-[0.8em]">{d.total}</td>
+                <td className="text-xs">{d.total}</td>
               </tr>
             ))}
           </tbody>

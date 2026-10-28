@@ -6,18 +6,19 @@ export type ButtonVariant = "primary" | "secondary" | "outline" | "dark" | "ghos
 export type ButtonSize = "sm" | "md" | "lg";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-banana text-[#17151F] hover:brightness-95",
-  secondary: "bg-violet-soft text-violet-strong hover:brightness-95",
-  outline: "border-2 border-ink text-ink hover:bg-chip",
-  dark: "bg-ink text-surface hover:opacity-90",
-  ghost: "text-ink hover:bg-chip",
-  danger: "bg-peach text-peach-ink hover:brightness-95",
+  primary: "bg-banana text-[#17151F]",
+  secondary: "bg-violet text-white",
+  outline: "bg-surface text-ink hover:bg-chip",
+  dark: "bg-nav text-on-nav",
+  ghost: "text-ink hover:bg-chip [box-shadow:none] hover:[transform:none]",
+  danger: "bg-pink-soft text-pink-ink",
 };
 
+// Boutons principaux : text-base semibold, 8 px / 12 px de marge ; boutons d'en-tête : text-sm. Hauteur ≥ 44 px pour le toucher.
 const sizes: Record<ButtonSize, string> = {
-  sm: "min-h-11 px-4 text-sm",
-  md: "min-h-11 px-6",
-  lg: "min-h-14 px-8 text-lg",
+  sm: "min-h-11 px-4 py-2 text-sm",
+  md: "min-h-11 px-3 py-2 text-base",
+  lg: "min-h-14 px-3 py-2 text-base",
 };
 
 /** Classes d'un bouton, pour habiller un lien (`<Link className={buttonClass()}>`) comme un bouton. */
@@ -26,7 +27,7 @@ export function buttonClass({
   size = "md",
   className = "",
 }: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}) {
-  return `inline-flex items-center justify-center gap-2 rounded-pill font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${sizes[size]} ${variants[variant]} ${className}`;
+  return `inline-flex items-center justify-center gap-2 btn-hard rounded-r2 border-[length:var(--bw)] border-line font-sans font-bold uppercase tracking-[0.03em] transition duration-90 ease-base disabled:cursor-not-allowed disabled:bg-chip disabled:text-muted ${sizes[size]} ${variants[variant]} ${className}`;
 }
 
 export function Button({
@@ -74,12 +75,12 @@ export function IconButton({
   const tones = {
     surface: "bg-surface hover:bg-chip",
     chip: "bg-chip hover:bg-line",
-    dark: "bg-ink text-surface",
+    dark: "bg-nav text-on-nav",
   };
   return (
     <button
       aria-label={label}
-      className={`grid size-11 shrink-0 place-items-center rounded-full transition disabled:opacity-50 ${tones[tone]} ${className}`}
+      className={`btn-hard grid size-11 shrink-0 place-items-center rounded-r2 border-[length:var(--bw)] border-line transition duration-90 ease-base disabled:bg-chip disabled:text-muted ${tones[tone]} ${className}`}
       {...props}
     >
       <Icon name={icon} className="size-5" />

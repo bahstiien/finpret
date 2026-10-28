@@ -21,9 +21,9 @@ export default function OpengraphImage() {
         fontFamily: "sans-serif",
       }}
     >
-      <div style={{ display: "flex", fontSize: 40, fontWeight: 800, letterSpacing: 2 }}>FIN PRÊT</div>
+      <div style={{ display: "flex", fontSize: 40, fontWeight: 700, letterSpacing: 2 }}>FIN PRÊT</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-        <div style={{ fontSize: 76, fontWeight: 900, lineHeight: 1.05 }}>
+        <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.05 }}>
           Financez les projets de votre APE, sans vendre de chocolats
         </div>
         <div style={{ display: "flex", fontSize: 34, fontWeight: 700 }}>
@@ -37,7 +37,7 @@ export default function OpengraphImage() {
           background: "#ffd23f",
           color: "#17151f",
           fontSize: 34,
-          fontWeight: 800,
+          fontWeight: 700,
           padding: "16px 36px",
           borderRadius: 999,
         }}

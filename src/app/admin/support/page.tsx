@@ -35,7 +35,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
   return (
     <>
       <PageHeader title="Support" />
-      <form className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-5">
+      <form className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-4">
         <TextField
           id="q"
           name="q"

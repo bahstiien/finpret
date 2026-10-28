@@ -9,7 +9,7 @@ const VIOLET = "#7a5af8";
 const BANANA = "#ffd23f";
 const MUTED = "#6b6878";
 
-// TODO(spec) : Gabarito et Figtree à embarquer quand les fichiers de police seront fournis ; Helvetica en attendant.
+// TODO(spec) : Manrope à embarquer quand les fichiers de police seront fournis ; Helvetica en attendant.
 const styles = StyleSheet.create({
   page: { padding: 40, fontFamily: "Helvetica", color: INK, fontSize: 11, lineHeight: 1.4 },
   eyebrow: { fontSize: 10, color: VIOLET, fontFamily: "Helvetica-Bold", marginBottom: 6 },

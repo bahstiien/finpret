@@ -14,7 +14,7 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
   const error = state.status === "error" ? state.message : state.status === "idle" ? initialError : undefined;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       {state.status === "sent" ? (
         <FormMessage tone="success">{t.sent(state.email)}</FormMessage>
       ) : (

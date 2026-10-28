@@ -1,8 +1,13 @@
+import type { IconName } from "@/components/landing/Icon";
+
 /**
  * Textes de la landing /associations, de la page satellite et des pages légales (SPEC_JANVIER §8 bis A).
  * Les textes de référence de la spec sont repris tels quels ; vouvoiement pour les bureaux d'association.
  */
 export const SITE_URL = "https://finpret.app";
+
+/** Texte accompagné de son icône (liste d'étapes, liste d'avantages). */
+type Illustrated = { icon: IconName; text: string };
 
 export const associationsFr = {
   meta: {
@@ -11,8 +16,19 @@ export const associationsFr = {
       "Fin Prêt aide les familles de votre école à organiser leurs repas et verse 8 € par abonné à votre APE chaque année. Sans stock ni commande.",
     ogAlt: "Fin Prêt : financez les projets de votre APE, sans vendre de chocolats",
   },
-  nav: { label: "Navigation", home: "Fin Prêt", how: "Comment ça marche", signup: "Créer le compte" },
+  nav: {
+    label: "Navigation",
+    home: "Fin Prêt",
+    homeAria: "Fin Prêt, accueil",
+    associations: "Associations",
+    how: "Comment ça marche",
+    signup: "Créer le compte",
+    skip: "Aller au contenu",
+    open: "Ouvrir le menu",
+    close: "Fermer le menu",
+  },
   hero: {
+    proofs: ["Sans stock", "Sans engagement", "Données hébergées en Europe"],
     title: "Financez les projets de votre APE, sans vendre de chocolats",
     lead: "Fin Prêt aide les familles de votre école à organiser leurs repas de la semaine. Votre association reçoit 8 € pour chaque famille abonnée, chaque année.",
     cta: "Créer le compte de notre association",
@@ -22,6 +38,9 @@ export const associationsFr = {
     alert: "Même base qu'à la cantine ce midi : riz. Tu peux changer le plat du soir.",
     today: "Aujourd'hui",
   },
+  // Phrase de fond de la page : s'allume mot à mot au défilement (TaglineReveal).
+  tagline:
+    "Une semaine de repas plus simple pour les familles. Un financement régulier pour les projets de votre association. Aucune commande à gérer.",
   problem: {
     title: "Les ventes de chocolats, ça va un moment",
     cards: [
@@ -33,21 +52,22 @@ export const associationsFr = {
   how: {
     id: "comment",
     title: "Une action qui tourne toute seule",
+    // L'icône voyage avec son texte : réordonner une liste ne désaccorde plus le dessin.
     steps: [
-      "Votre bureau crée le compte de l'association (5 minutes)",
-      "Vous partagez votre code aux familles avec le kit fourni",
-      "Un bénévole publie les menus de la cantine chaque mois (10 minutes)",
-      "Vous recevez votre reversement chaque trimestre",
-    ],
+      { icon: "users", text: "Votre bureau crée le compte de l'association (5 minutes)" },
+      { icon: "share", text: "Vous partagez votre code aux familles avec le kit fourni" },
+      { icon: "calendar", text: "Un bénévole publie les menus de la cantine chaque mois (10 minutes)" },
+      { icon: "check", text: "Vous recevez votre reversement chaque trimestre" },
+    ] satisfies Illustrated[],
   },
   families: {
     title: "Un vrai service pour les parents",
     items: [
-      "Les menus de la cantine sur leur téléphone",
-      "Une alerte quand le dîner ressemble au déjeuner",
-      "Une semaine de repas préparée en une session le dimanche",
-      "Une liste de courses partagée",
-    ],
+      { icon: "utensils", text: "Les menus de la cantine sur leur téléphone" },
+      { icon: "timer", text: "Une alerte quand le dîner ressemble au déjeuner" },
+      { icon: "pot", text: "Une semaine de repas préparée en une session le dimanche" },
+      { icon: "basket", text: "Une liste de courses partagée" },
+    ] satisfies Illustrated[],
     benefit: "Avantage réservé : 30 jours d'essai et 39,99 € la première année au lieu de 49,99 €.",
   },
   simulator: {
@@ -127,7 +147,7 @@ export const associationsFr = {
     consent:
       "J'accepte que Fin Prêt me contacte au sujet de ce partenariat et me conserve ces informations le temps de la discussion.",
     submit: "Recevoir la présentation",
-    sent: "C'est envoyé ! Regardez votre boîte de réception (et vos courriers indésirables).",
+    sent: "C'est envoyé. Regardez votre boîte de réception (et vos courriers indésirables).",
     errors: {
       invalid: "Vérifiez les champs : nom, e-mail, association et le consentement sont nécessaires.",
       tooMany: "Trop de demandes depuis cette adresse. Réessayez dans une heure.",

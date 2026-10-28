@@ -98,7 +98,7 @@ export default async function HouseholdSettingsPage() {
 
       {schools?.length && kids.length ? (
         <Card className="flex flex-col gap-4">
-          <h2 className="text-xl font-extrabold">{fr.ecole.school}</h2>
+          <h2 className="text-xl font-bold">{fr.ecole.school}</h2>
           <p className="text-sm text-muted">{fr.ecole.schoolHint}</p>
           <ChildSchoolForm
             schools={schools}
@@ -116,7 +116,7 @@ export default async function HouseholdSettingsPage() {
       ) : null}
 
       <Card className="flex flex-col gap-4">
-        <h2 className="text-xl font-extrabold">{t.accounts}</h2>
+        <h2 className="text-xl font-bold">{t.accounts}</h2>
         <ul className="flex flex-col divide-y divide-line">
           {(memberships ?? []).map((m) => {
             const isMe = m.user_id === user.id;
@@ -150,10 +150,10 @@ export default async function HouseholdSettingsPage() {
       </Card>
 
       <Card className="flex flex-col gap-4">
-        <h2 className="text-xl font-extrabold">{t.invitations}</h2>
+        <h2 className="text-xl font-bold">{t.invitations}</h2>
         <p className="text-muted">{t.inviteLead}</p>
         <InviteForm householdId={household.id} householdName={household.name} />
-        <h3 className="text-lg font-extrabold">{t.pending}</h3>
+        <h3 className="text-lg font-bold">{t.pending}</h3>
         {invitations?.length ? (
           <ul className="flex flex-col divide-y divide-line" data-testid="pending-invitations">
             {invitations.map((inv) => (

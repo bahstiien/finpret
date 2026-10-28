@@ -27,7 +27,7 @@ const t = fr.subscription;
 
 export const metadata: Metadata = { title: t.title };
 
-const pill = "inline-flex min-h-11 items-center rounded-pill px-5 font-bold";
+const pill = "inline-flex min-h-11 items-center rounded-pill px-4 font-bold";
 
 /** Offre du foyer : essai, abonnement, carte, résiliation, factures, code d'association (admin) ; lecture seule sinon. */
 export default async function SubscriptionPage({
@@ -84,7 +84,7 @@ export default async function SubscriptionPage({
         : t.free;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       {okText && <FormMessage tone="success">{okText}</FormMessage>}
       {params.code === "ok" && <FormMessage tone="success">{t.codeOk}</FormMessage>}
       {params.code === "locked" && <FormMessage tone="error">{t.codeLocked}</FormMessage>}
@@ -103,11 +103,11 @@ export default async function SubscriptionPage({
               <form
                 key={plan}
                 action={createCheckoutSession}
-                className="flex flex-col gap-3 rounded-card bg-surface p-5"
+                className="flex flex-col gap-3 rounded-card bg-surface p-4"
               >
                 <input type="hidden" name="plan" value={plan} />
-                <h2 className="text-xl font-extrabold">{plan === "monthly" ? t.monthly : t.yearly}</h2>
-                <p className="font-display text-2xl font-black">
+                <h2 className="text-xl font-bold">{plan === "monthly" ? t.monthly : t.yearly}</h2>
+                <p className="font-display text-2xl font-bold">
                   {plan === "monthly" ? t.monthlyPrice : hasAssociation ? t.yearlyAssociation : t.yearlyPrice}
                 </p>
                 {plan === "yearly" && hasAssociation && (
@@ -136,7 +136,7 @@ export default async function SubscriptionPage({
 
       {isAdmin && subscribed && (
         <Card padding="cozy" className="flex flex-col gap-3" aria-label={t.card.title}>
-          <h2 className="text-lg font-extrabold">{t.card.title}</h2>
+          <h2 className="text-lg font-bold">{t.card.title}</h2>
           {details === null ? (
             <p className="text-sm text-muted">{t.detailsUnavailable}</p>
           ) : details?.card ? (
@@ -189,7 +189,7 @@ export default async function SubscriptionPage({
       )}
 
       {isAdmin && sub?.stripe_customer_id && (
-        <form action={createPortalSession} className="flex flex-col gap-2 rounded-card bg-surface p-5">
+        <form action={createPortalSession} className="flex flex-col gap-2 rounded-card bg-surface p-4">
           <p className="text-sm text-muted">{t.portalHint}</p>
           <Button type="submit" variant="outline" className="self-start">
             {t.portal}
@@ -199,7 +199,7 @@ export default async function SubscriptionPage({
 
       {invoices !== undefined && (
         <Card padding="cozy" className="flex flex-col gap-3" aria-label={t.billing.title}>
-          <h2 className="text-lg font-extrabold">{t.billing.title}</h2>
+          <h2 className="text-lg font-bold">{t.billing.title}</h2>
           {invoices === null ? (
             <p className="text-sm text-muted">{t.billing.unavailable}</p>
           ) : invoices.length === 0 ? (
@@ -245,8 +245,8 @@ export default async function SubscriptionPage({
       )}
 
       <Card padding="cozy" aria-label={t.includedTitle}>
-        <h2 className="mb-2 text-lg font-extrabold">{t.includedTitle}</h2>
-        <ul className="list-disc pl-5">
+        <h2 className="mb-2 text-lg font-bold">{t.includedTitle}</h2>
+        <ul className="list-disc pl-4">
           {t.included.map((i) => (
             <li key={i}>{i}</li>
           ))}

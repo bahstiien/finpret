@@ -87,7 +87,7 @@ export function SessionScreen({
         <PageHeader title={fr.nav.session} />
         <Card tone="blue" className="flex flex-col gap-4" data-testid="session-start">
           <p className="font-semibold">{weekLabel}</p>
-          <p className="font-display text-5xl font-black">{dur(total)}</p>
+          <p className="font-display text-5xl font-bold">{dur(total)}</p>
           <p>{t.startCard(steps.length, hhmm(new Date(Date.now() + total * 60000)))}</p>
           {total > maxMinutes && (
             <p className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink">
@@ -103,11 +103,11 @@ export function SessionScreen({
           )}
         </Card>
         <Card padding="cozy" className="flex flex-col gap-2">
-          <h2 className="font-extrabold">{t.overview}</h2>
+          <h2 className="font-bold">{t.overview}</h2>
           <ol className="flex flex-col divide-y divide-line">
             {steps.map((s, i) => (
               <li key={i} className="flex gap-3 py-2">
-                <span className="w-14 shrink-0 font-display font-black">
+                <span className="w-14 shrink-0 font-display font-bold">
                   {hhmm(new Date(Date.now() + s.start * 60000))}
                 </span>
                 <span>
@@ -137,7 +137,7 @@ export function SessionScreen({
           <p className="text-sm text-muted">
             {hhmm(begin)} → {t.plannedEnd(hhmm(end))}
           </p>
-          <p className="font-extrabold">{t.stepOf(index + 1, steps.length)}</p>
+          <p className="font-bold">{t.stepOf(index + 1, steps.length)}</p>
         </div>
         <span
           className={`rounded-pill px-3 py-1 text-sm font-bold ${delay > 2 ? "bg-peach text-peach-ink" : "bg-green-soft text-green-ink"}`}
@@ -149,11 +149,11 @@ export function SessionScreen({
 
       <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <section
-          className="flex flex-col gap-4 rounded-card bg-blue-soft p-5 text-ink"
+          className="flex flex-col gap-4 rounded-card bg-blue-soft p-4 text-ink"
           data-testid="session-step"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="font-display text-5xl font-black text-blue-ink min-[900px]:text-7xl">
+            <span className="font-display text-5xl font-bold text-blue-ink min-[900px]:text-7xl">
               {hhmm(at(step.start))}
             </span>
             <span className="inline-flex items-center gap-2 rounded-pill bg-surface px-4 py-2 font-bold text-blue-ink">
@@ -161,7 +161,7 @@ export function SessionScreen({
               {step.where}
             </span>
           </div>
-          <h1 className="text-3xl font-black min-[900px]:text-4xl">{step.name}</h1>
+          <h1 className="text-3xl font-bold min-[900px]:text-4xl">{step.name}</h1>
           <ul className="flex flex-col divide-y divide-line rounded-3xl bg-surface px-4">
             {step.tasks.map((task, j) => {
               const key = `${index}-${j}`;
@@ -224,14 +224,14 @@ export function SessionScreen({
           )}
         </section>
         <aside
-          className="hidden flex-col gap-1 rounded-card bg-nav p-5 text-on-nav min-[900px]:flex"
+          className="hidden flex-col gap-1 rounded-card bg-nav p-4 text-on-nav min-[900px]:flex"
           aria-label={t.upcoming}
         >
           <h2 className="pb-2 text-sm font-bold tracking-wide uppercase opacity-70">{t.upcoming}</h2>
           {upcoming.length === 0 && <p className="opacity-70">{t.lastStep}</p>}
           {upcoming.map((s, k) => (
             <div key={k} className="border-t border-white/10 py-3">
-              <p className={`font-display text-lg font-black ${k === 0 ? "text-banana" : ""}`}>
+              <p className={`font-display text-lg font-bold ${k === 0 ? "text-banana" : ""}`}>
                 {hhmm(at(s.start))}
               </p>
               <p className="font-bold">{s.name}</p>

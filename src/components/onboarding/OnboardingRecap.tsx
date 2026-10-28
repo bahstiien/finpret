@@ -24,8 +24,8 @@ export function OnboardingRecap({ result }: { result: { start: string; summary: 
       </div>
       <ul className="grid gap-3 sm:grid-cols-3" data-testid="onboarding-recap">
         {tiles.map((tile) => (
-          <li key={tile.label} className={`flex flex-col gap-1 rounded-card p-5 ${tile.tone}`}>
-            <span className="font-display text-3xl font-black">{tile.value}</span>
+          <li key={tile.label} className={`flex flex-col gap-1 rounded-card p-4 ${tile.tone}`}>
+            <span className="font-display text-3xl font-bold">{tile.value}</span>
             <span className="text-sm font-semibold">{tile.label}</span>
           </li>
         ))}

@@ -22,7 +22,7 @@ export function SectionTitle({
     <div className={`flex max-w-2xl flex-col gap-3 ${className}`}>
       <h2
         id={id}
-        className="text-[28px] leading-[1.15] font-extrabold tracking-[-0.01em] sm:text-4xl lg:text-[44px]"
+        className="text-2xl font-bold sm:text-3xl lg:text-4xl"
       >
         {nb(title)}
       </h2>
@@ -31,12 +31,12 @@ export function SectionTitle({
   );
 }
 
-/** Action principale jaune (texte encre, 52 px). Une seule par écran visible. */
+/** Action principale jaune (texte encre, 56 px). Une seule par écran visible. */
 export function CtaLink({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <Link
       href="/login"
-      className={`inline-flex min-h-[52px] items-center justify-center gap-2 rounded-pill bg-banana px-8 text-base font-extrabold text-[#17151f] transition hover:brightness-95 active:scale-[0.98] ${className}`}
+      className={`inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-banana px-3 py-2 text-base font-semibold text-[#17151f] transition duration-300 ease-base hover:brightness-95 active:scale-[0.98] ${className}`}
     >
       {children}
       <Icon name="arrow" className="size-5" />

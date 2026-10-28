@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
           background: "#ffffff",
           color: VIOLET,
           fontSize: 96,
-          fontWeight: 900,
+          fontWeight: 700,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -76,8 +76,8 @@ export async function GET(request: NextRequest) {
         M
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-        <div style={{ display: "flex", fontSize: 360, fontWeight: 900, lineHeight: 1 }}>{milestone}</div>
-        <div style={{ display: "flex", fontSize: 76, fontWeight: 900, marginTop: 8 }}>
+        <div style={{ display: "flex", fontSize: 360, fontWeight: 700, lineHeight: 1 }}>{milestone}</div>
+        <div style={{ display: "flex", fontSize: 76, fontWeight: 700, marginTop: 8 }}>
           {fr.progress.streak.weeks(milestone).replace(/^\d+ /, "")}
         </div>
         <div
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
             background: BANANA,
             color: INK,
             fontSize: 48,
-            fontWeight: 800,
+            fontWeight: 700,
           }}
         >
           {meals} repas préparés le dimanche

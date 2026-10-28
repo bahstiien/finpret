@@ -28,7 +28,7 @@ function Panel({ title, hint, children }: { title: string; hint?: string; childr
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div>
-        <h2 className="text-xl font-extrabold">{title}</h2>
+        <h2 className="text-xl font-bold">{title}</h2>
         {hint && <p className="text-sm text-muted">{hint}</p>}
       </div>
       {children}

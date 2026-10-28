@@ -82,18 +82,18 @@ export function OnboardingWizard({
           className="h-2 overflow-hidden rounded-pill bg-line"
         >
           <div
-            className="h-full rounded-pill bg-violet transition-all"
+            className="h-full rounded-pill bg-violet transition-all duration-300 ease-base"
             style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
           />
         </div>
       </div>
 
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-black">{t.steps[current].title}</h1>
+        <h1 className="text-3xl font-bold">{t.steps[current].title}</h1>
         <p className="text-muted">{t.steps[current].lead}</p>
       </div>
 
-      <Card padding="cozy" className="flex flex-col gap-5">
+      <Card padding="cozy" className="flex flex-col gap-4">
         {current === "household" && (
           <HouseholdStep data={data} update={update} schools={schools} associationName={associationName} />
         )}
@@ -347,7 +347,7 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
   return (
     <>
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-extrabold">{s.grid}</h2>
+        <h2 className="text-lg font-bold">{s.grid}</h2>
         <SlotGrid
           days={weekdays}
           dayLabels={fr.daysShort}
@@ -372,7 +372,7 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
       </div>
       {data.household.members.length > 1 && (
         <div className="flex flex-col gap-3">
-          <h2 className="text-lg font-extrabold">{s.presence}</h2>
+          <h2 className="text-lg font-bold">{s.presence}</h2>
           <p className="text-sm text-muted">{s.presenceHint}</p>
           {data.household.members.map((m, i) => (
             <details key={i} className="rounded-2xl bg-bg p-3">
@@ -403,7 +403,7 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
         </div>
       )}
       <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-extrabold">{s.session}</h2>
+        <h2 className="text-lg font-bold">{s.session}</h2>
         <div className="flex flex-wrap gap-3">
           <SelectField
             id="session-day"

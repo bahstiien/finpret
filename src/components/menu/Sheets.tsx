@@ -61,7 +61,7 @@ export function GuestsSheet({
         >
           −
         </button>
-        <output aria-live="polite" className="font-display text-3xl font-black">
+        <output aria-live="polite" className="font-display text-3xl font-bold">
           {g[key]}
         </output>
         <button

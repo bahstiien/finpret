@@ -21,7 +21,7 @@ export function NoWeek({
     <>
       <header>
         <p className="text-sm font-semibold text-muted first-letter:uppercase">{header.date}</p>
-        <h1 className="text-4xl font-black [overflow-wrap:anywhere]">
+        <h1 className="text-4xl font-bold [overflow-wrap:anywhere]">
           {header.greeting}, {header.name}
         </h1>
       </header>

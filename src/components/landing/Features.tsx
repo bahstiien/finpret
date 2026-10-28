@@ -36,10 +36,10 @@ export function Features() {
                 aria-hidden="true"
                 className="absolute -bottom-20 left-1/3 size-56 rounded-full bg-banana/30 blur-3xl"
               />
-              <span className="relative grid size-14 place-items-center rounded-[16px] bg-banana text-[#17151f]">
+              <span className="relative grid size-14 place-items-center rounded-2xl bg-banana text-[#17151f]">
                 <Icon name={lead.icon} className="size-7" />
               </span>
-              <h3 className="relative max-w-md text-3xl leading-tight font-black sm:text-4xl">
+              <h3 className="relative max-w-md text-3xl leading-tight font-bold sm:text-4xl">
                 {nb(lead.title)}
               </h3>
               <p className="relative max-w-md text-lg font-bold">{nb(lead.text)}</p>
@@ -47,7 +47,7 @@ export function Features() {
           )}
           {rest.map((item) => (
             <li key={item.title} className={`flex flex-col gap-3 rounded-card p-6 ${tones[item.tone]}`}>
-              <span className="grid size-11 place-items-center rounded-[14px] bg-surface text-ink">
+              <span className="grid size-11 place-items-center rounded-xl bg-surface text-ink">
                 <Icon name={item.icon} className="size-6" />
               </span>
               <h3 className="text-xl leading-tight font-bold">{nb(item.title)}</h3>

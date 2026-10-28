@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 
 const source = new URL("../design-system/tokens.json", import.meta.url);
 const target = new URL("../src/styles/tokens.css", import.meta.url);
-const { color } = JSON.parse(readFileSync(source, "utf8"));
+const { color, radius, motion, border, shadow } = JSON.parse(readFileSync(source, "utf8"));
 
 const vars = (set, pad) =>
   Object.entries(set)
@@ -30,6 +30,32 @@ ${vars(color.dark, "    ")}
 :root[data-theme="dark"] {
   color-scheme: dark;
 ${vars(color.dark, "  ")}
+}
+
+/* Rayons (échelle Tailwind) et courbe de mouvement : utilitaires rounded-card, rounded-sheet, rounded-pill, ease-base. */
+@theme {
+  --radius-card: ${radius.card};
+  --radius-sheet: ${radius.sheet};
+  --radius-pill: ${radius.pill};
+  --radius-r1: ${radius.r1};
+  --radius-r2: ${radius.r2};
+  --ease-base: ${motion.ease};
+}
+
+/* Bordure et ombres dures (néo-brutalisme) : 2 px / 3 px, décalage x = y, flou 0. */
+:root {
+  --bw: ${border.mobile};
+  --shadow-sm-px: ${shadow.sm};
+  --shadow-base-px: ${shadow.base};
+  --shadow-lg-px: ${shadow.lg};
+}
+@media (min-width: 900px) {
+  :root {
+    --bw: ${border.desktop};
+    --shadow-sm-px: 3px;
+    --shadow-base-px: 6px;
+    --shadow-lg-px: 9px;
+  }
 }
 
 /* Zone qui reste en mode clair quel que soit le thème : bandeaux de marque et maquettes d'écrans. */

@@ -62,7 +62,7 @@ export function Simulator() {
           />
         </label>
       </div>
-      <p className="text-2xl font-black sm:text-3xl" aria-live="polite" data-testid="simulator-result">
+      <p className="text-2xl font-bold sm:text-3xl" aria-live="polite" data-testid="simulator-result">
         {t.result(euros.format(amount))}
       </p>
       <p className="text-sm text-muted">{t.note}</p>

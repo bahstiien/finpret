@@ -46,17 +46,17 @@ export function Hero() {
             </Link>
             <Link
               href="/login"
-              className="inline-flex min-h-11 items-center rounded-pill border-2 border-white/70 px-5 text-base font-bold hover:bg-white/15"
+              className="inline-flex min-h-11 items-center rounded-pill border-2 border-white/70 px-4 text-base font-bold hover:bg-white/15"
             >
               {t.nav.login}
             </Link>
           </nav>
         </header>
 
-        <div className="grid items-center gap-10 pt-6 pb-14 sm:pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:pb-20">
+        <div className="grid items-center gap-10 pt-6 pb-12 sm:pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:pb-20">
           <div className="flex flex-col items-start gap-6">
-            <span className="rounded-pill bg-black/25 px-4 py-1.5 text-sm font-bold">{h.eyebrow}</span>
-            <h1 className="text-[44px] leading-[1.02] font-black tracking-[-0.02em] sm:text-6xl lg:text-7xl">
+            <span className="rounded-pill bg-black/25 px-4 py-1 text-sm font-bold">{h.eyebrow}</span>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
               {nb(h.titleLine1)} <span className="text-banana block">{nb(h.titleLine2)}</span>
             </h1>
             <p className="max-w-xl text-lg font-bold">{nb(h.lead)}</p>
@@ -69,7 +69,7 @@ export function Hero() {
                 {h.secondary}
               </a>
             </div>
-            <p className="flex items-center gap-2 text-[15px] font-bold">
+            <p className="flex items-center gap-2 text-sm font-bold">
               <Icon name="check" className="size-5 text-banana" />
               {nb(h.reassurance)}
             </p>
@@ -82,15 +82,15 @@ export function Hero() {
               </Phone>
               <aside
                 aria-label="Exemple de notification"
-                className="theme-light absolute top-44 -left-52 hidden w-64 items-start gap-3 rounded-[22px] bg-nav p-3.5 text-on-nav shadow-float xl:flex"
+                className="theme-light absolute top-24 -left-52 hidden w-64 items-start gap-3 rounded-3xl bg-nav p-3 text-on-nav shadow-float xl:flex"
               >
-                <span className="grid size-10 shrink-0 place-items-center rounded-[12px] bg-banana text-[#17151f]">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-banana text-[#17151f]">
                   <Icon name="pot" className="size-5" />
                 </span>
                 <div>
-                  <p className="text-[11px] font-semibold opacity-80">{nb(h.notification.time)}</p>
-                  <p className="text-[15px] leading-tight font-bold">{nb(h.notification.title)}</p>
-                  <p className="mt-0.5 text-[13px] leading-snug">{nb(h.notification.text)}</p>
+                  <p className="text-xs font-semibold opacity-80">{nb(h.notification.time)}</p>
+                  <p className="text-sm leading-tight font-bold">{nb(h.notification.title)}</p>
+                  <p className="mt-0.5 text-xs leading-snug">{nb(h.notification.text)}</p>
                 </div>
               </aside>
             </div>

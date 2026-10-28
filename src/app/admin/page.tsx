@@ -32,7 +32,7 @@ export default async function AdminHome() {
         {cards.map(([label, n]) => (
           <Card as="div" padding="cozy" key={label}>
             <dt className="text-sm font-semibold text-muted">{label}</dt>
-            <dd className="font-display text-3xl font-black">{n}</dd>
+            <dd className="font-display text-3xl font-bold">{n}</dd>
           </Card>
         ))}
       </dl>

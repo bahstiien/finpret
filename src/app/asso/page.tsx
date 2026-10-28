@@ -41,7 +41,7 @@ export default async function AssoDashboardPage() {
       <StatusBanner association={association} />
       <Card padding="cozy" className="flex flex-col gap-2" aria-label={t.code}>
         <h2 className="text-sm font-semibold text-muted">{t.code}</h2>
-        <p className="font-display text-3xl font-black" data-testid="asso-code">
+        <p className="font-display text-3xl font-bold" data-testid="asso-code">
           {association.code}
         </p>
         <p className="text-sm text-muted">
@@ -54,14 +54,14 @@ export default async function AssoDashboardPage() {
         {cards.map((c) => (
           <Card as="div" padding="cozy" key={c.label}>
             <dt className="text-sm font-semibold text-muted">{c.label}</dt>
-            <dd className="font-display text-3xl font-black">{c.value}</dd>
+            <dd className="font-display text-3xl font-bold">{c.value}</dd>
           </Card>
         ))}
       </dl>
       <p className="text-sm text-muted">{t.fewerHint}</p>
       <Card padding="cozy" aria-label={t.schools}>
-        <h2 className="mb-2 text-lg font-extrabold">{t.schools}</h2>
-        <ul className="list-disc pl-5">
+        <h2 className="mb-2 text-lg font-bold">{t.schools}</h2>
+        <ul className="list-disc pl-4">
           {association.schools.map((s) => (
             <li key={s.id}>
               {s.name} ({s.city})

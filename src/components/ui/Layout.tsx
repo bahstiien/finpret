@@ -17,7 +17,7 @@ export function PageHeader({
     <header className="flex items-start justify-between gap-4 min-[900px]:items-center">
       <div className="min-w-0">
         {eyebrow && <p className="text-sm font-semibold text-muted first-letter:uppercase">{eyebrow}</p>}
-        <h1 className="text-4xl font-black [overflow-wrap:anywhere]">{title}</h1>
+        <h1 className="text-4xl font-bold [overflow-wrap:anywhere]">{title}</h1>
         {description && <p className="mt-1 text-muted">{description}</p>}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
@@ -29,7 +29,7 @@ export function PageHeader({
 export function SectionHeader({ title, aside, id }: { title: ReactNode; aside?: ReactNode; id?: string }) {
   return (
     <div className="flex items-baseline justify-between gap-3">
-      <h2 id={id} className="text-2xl font-black">
+      <h2 id={id} className="text-2xl font-bold">
         {title}
       </h2>
       {aside && <div className="text-sm text-muted">{aside}</div>}
@@ -57,7 +57,7 @@ export function EmptyState({
       >
         <Icon name={icon} className="size-7" />
       </span>
-      <h2 className="text-xl font-extrabold">{title}</h2>
+      <h2 className="text-xl font-bold">{title}</h2>
       {children && <p className="max-w-sm text-muted">{children}</p>}
       {action}
     </div>
@@ -106,9 +106,9 @@ export function StatTile({
   tone?: keyof typeof statTones;
 }) {
   return (
-    <div className={`flex flex-col gap-1 rounded-card p-5 ${statTones[tone]}`}>
+    <div className={`flex flex-col gap-1 rounded-card p-4 ${statTones[tone]}`}>
       <span className="text-sm font-semibold opacity-80">{label}</span>
-      <span className="font-display text-3xl font-black">{value}</span>
+      <span className="font-display text-3xl font-bold">{value}</span>
       {hint && <span className="text-sm opacity-80">{hint}</span>}
     </div>
   );
@@ -160,7 +160,7 @@ export function Avatar({ name, className = "size-12 text-lg" }: { name: string; 
   return (
     <span
       aria-hidden="true"
-      className={`grid shrink-0 place-items-center rounded-full bg-violet font-display font-black text-white uppercase ${className}`}
+      className={`grid shrink-0 place-items-center rounded-full bg-violet font-display font-bold text-white uppercase ${className}`}
     >
       {name.trim().charAt(0) || "·"}
     </span>

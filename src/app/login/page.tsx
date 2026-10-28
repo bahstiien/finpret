@@ -26,7 +26,7 @@ export default async function LoginPage({
     <CenteredPage>
       <Logo />
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black">{fr.login.title}</h1>
+        <h1 className="text-3xl font-bold">{fr.login.title}</h1>
         <p className="text-muted">{fr.login.lead}</p>
       </div>
       <LoginForm next={next} initialError={params.error ? errors[params.error] : undefined} />

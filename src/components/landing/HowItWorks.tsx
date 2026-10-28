@@ -14,7 +14,7 @@ export function HowItWorks() {
             <Card as="li" key={step.title} className="flex flex-col gap-3">
               <span
                 aria-hidden="true"
-                className="grid size-11 place-items-center rounded-full bg-violet font-display text-xl font-extrabold text-white"
+                className="grid size-11 place-items-center rounded-full bg-violet font-display text-xl font-bold text-white"
               >
                 {i + 1}
               </span>

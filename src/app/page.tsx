@@ -23,7 +23,7 @@ export default function HomePage() {
     <>
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-pill focus:bg-banana focus:px-5 focus:py-3 focus:font-bold focus:text-[#17151f]"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-pill focus:bg-banana focus:px-4 focus:py-3 focus:font-bold focus:text-[#17151f]"
       >
         {t.skip}
       </a>

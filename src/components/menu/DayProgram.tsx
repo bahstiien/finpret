@@ -31,14 +31,14 @@ export function DayProgram({
 }) {
   return (
     <Card padding="cozy" className="flex flex-col gap-3" aria-labelledby="day-program">
-      <h2 id="day-program" className="flex items-center gap-2 text-xl font-extrabold">
+      <h2 id="day-program" className="flex items-center gap-2 text-xl font-bold">
         <Icon name="clock" />
         {isToday ? t.programToday : t.programOf(fr.days[day.day - 1]!)}
       </h2>
       {day.meals.length === 0 && !cake ? (
         <p className="text-muted">{day.day > 5 ? t.weekendEmpty : t.noMeal}</p>
       ) : (
-        <ol className="relative flex flex-col gap-5 pl-8">
+        <ol className="relative flex flex-col gap-4 pl-8">
           <span aria-hidden="true" className="absolute top-3 bottom-3 left-[11px] w-0.5 bg-line" />
           {day.meals.map((m) => (
             <MealRow
@@ -105,7 +105,7 @@ function MealRow({
             {m.name}
           </b>
           {!m.removed && <p className="text-sm text-muted">{m.how}</p>}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1">
             <button
               type="button"
               disabled={!canEdit}

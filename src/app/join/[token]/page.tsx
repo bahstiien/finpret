@@ -28,7 +28,7 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
       ) : (
         <>
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-black">{fr.join.title(invitation.household_name)}</h1>
+            <h1 className="text-3xl font-bold">{fr.join.title(invitation.household_name)}</h1>
             <p className="text-muted">{fr.join.lead(fr.roles[invitation.role])}</p>
           </div>
           {user ? (

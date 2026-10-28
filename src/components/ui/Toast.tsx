@@ -22,14 +22,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 bottom-28 z-50 flex justify-center px-4 min-[900px]:bottom-8"
+        className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex justify-center px-4 min-[900px]:bottom-8"
       >
         {toast && (
           <p
             key={toast.id}
             data-testid="toast"
             role={toast.tone === "error" ? "alert" : "status"}
-            className={`pointer-events-auto max-w-md rounded-3xl px-5 py-3 text-sm font-semibold shadow-float ${
+            className={`pointer-events-auto max-w-md rounded-3xl px-4 py-3 text-sm font-semibold shadow-float ${
               toast.tone === "error" ? "bg-peach text-peach-ink" : "bg-nav text-on-nav"
             }`}
           >

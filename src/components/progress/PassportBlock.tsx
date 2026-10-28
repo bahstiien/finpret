@@ -32,7 +32,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
   return (
     <Card className="flex flex-col gap-4" aria-labelledby="passport-title">
       <div className="flex flex-col gap-2">
-        <h2 id="passport-title" className="text-2xl font-black">
+        <h2 id="passport-title" className="text-2xl font-bold">
           {t.title}
         </h2>
         <p className="font-bold" data-testid="passport-count">
@@ -99,7 +99,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
           <div className="flex flex-col gap-4" data-testid="country-sheet">
             <p className="font-bold">{t.count(country.cooked.length, country.total)}</p>
             <div>
-              <h3 className="mb-2 font-black">{t.cooked}</h3>
+              <h3 className="mb-2 font-bold">{t.cooked}</h3>
               <ul className="flex flex-col gap-2">
                 {country.cooked.map((r) => (
                   <li
@@ -113,7 +113,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
               </ul>
             </div>
             <div>
-              <h3 className="mb-2 font-black">{t.remaining}</h3>
+              <h3 className="mb-2 font-bold">{t.remaining}</h3>
               {country.remaining.length === 0 ? (
                 <p className="text-muted">{t.none}</p>
               ) : (

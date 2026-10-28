@@ -37,7 +37,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           ))}
         </ul>
       </nav>
-      <main className="flex flex-col gap-5">{children}</main>
+      <main className="flex flex-col gap-4">{children}</main>
     </div>
   );
 }

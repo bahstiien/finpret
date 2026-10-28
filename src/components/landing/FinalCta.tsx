@@ -11,7 +11,7 @@ export function FinalCta() {
   return (
     <section className="theme-light rounded-t-sheet bg-violet text-white">
       <Container className="flex flex-col items-center gap-6 pt-16 pb-12 text-center sm:pt-24">
-        <h2 className="text-[40px] leading-[1.05] font-black tracking-[-0.02em] sm:text-6xl">
+        <h2 className="text-4xl font-bold tracking-tight sm:text-6xl">
           {nb(c.title)}
         </h2>
         <p className="max-w-xl text-lg font-bold">{nb(c.text)}</p>

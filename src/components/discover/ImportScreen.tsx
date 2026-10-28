@@ -105,7 +105,7 @@ export function ImportScreen({
   };
 
   return (
-    <section className="flex max-w-2xl flex-col gap-5" aria-labelledby="import-title">
+    <section className="flex max-w-2xl flex-col gap-4" aria-labelledby="import-title">
       <h1 id="import-title" className="font-display text-3xl font-bold">
         {t.title}
       </h1>
