@@ -7,7 +7,11 @@ import { WeekStrip } from "@/components/progress/WeekStrip";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { fr } from "@/i18n/fr";
-import { loadProgressView } from "@/server/progress-view";
+import { OriginsList } from "@/components/progress/OriginsList";
+import { ProgressStats } from "@/components/progress/ProgressStats";
+import { PAUSES_PER_QUARTER } from "@/engine/streak";
+import { flagOf } from "@/server/menu-view";
+import { loadProgressStats, loadProgressView } from "@/server/progress-view";
 import { requireHousehold } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.progress.title };
@@ -18,7 +22,11 @@ const FROM = ["tile", "profile", "session"] as const;
 /** « Nos progrès » (SPEC_PROGRES §3.5, §4.4) : série de semaines fin prêtes et passeport des saveurs. */
 export default async function ProgressPage({ searchParams }: { searchParams: Promise<{ from?: string }> }) {
   const { user, household } = await requireHousehold("/app/progress");
-  const [view, params] = await Promise.all([loadProgressView(household.id, user.id), searchParams]);
+  const [view, params, stats] = await Promise.all([
+    loadProgressView(household.id, user.id),
+    searchParams,
+    loadProgressStats(household.id),
+  ]);
   const from = FROM.find((f) => f === params.from) ?? "tile";
   const { streak } = view;
   const percent = streak.nextMilestone
@@ -32,7 +40,14 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
   }[streak.currentWeek];
 
   const [weeksNum, ...weeksRest] = t.streak.weeks(streak.current).split(" ");
-  const pausesTotal = 2;
+  const pausesTotal = PAUSES_PER_QUARTER;
+  const earnedCountries = view.countries.filter((c) => c.earned);
+  const firstDates = earnedCountries.map((c) => c.firstCookedOn ?? "").sort();
+  // Les origines obtenues lors de la dernière session (même date) sont mises en avant.
+  const latest = firstDates[firstDates.length - 1] ?? "";
+  const origins = [...earnedCountries]
+    .sort((a, b) => (b.firstCookedOn ?? "").localeCompare(a.firstCookedOn ?? ""))
+    .map((c) => ({ code: c.code, label: c.label, flag: flagOf(c.code), isNew: !!latest && c.firstCookedOn === latest }));
   return (
     <>
       <ProgressViewed from={from} />
@@ -81,6 +96,7 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
           ) : (
             <p className="t-small">{t.empty}</p>
           )}
+          {streak.hasHistory && <p className="t-small">{t.streak.resumeNote}</p>}
         </Card>
 
         <Card className="flex flex-col gap-4" aria-labelledby="pause-title">
@@ -105,6 +121,7 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
               ),
             )}
           </div>
+          <p className="t-small">{t.streak.pauseHelp}</p>
           <p className="t-small text-muted" data-testid="pauses-left">
             {t.streak.pausesLeft(streak.pausesLeftThisQuarter)}
           </p>
@@ -112,7 +129,11 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
         </Card>
       </div>
 
+      <ProgressStats sessions={stats.sessions} meals={stats.meals} origins={earnedCountries.length} />
+
       <PassportBlock countries={view.countries} seasons={view.seasons} />
+
+      <OriginsList origins={origins} />
     </>
   );
 }

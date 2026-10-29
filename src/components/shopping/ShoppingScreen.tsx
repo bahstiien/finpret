@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
+import { Bento } from "@/components/ui/Extras";
+import { Segmented } from "@/components/ui/Segmented";
 import { ChipToggle } from "@/components/ui/Controls";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
@@ -99,6 +101,8 @@ export function ShoppingScreen({
   const [busy, setBusy] = useState(false);
   const [issueFor, setIssueFor] = useState<string | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [filter, setFilter] = useState<"all" | "todo" | "done">("all");
+  const [openRows, setOpenRows] = useState<Set<string>>(() => new Set());
   const queue = useRef<QueuedOp[]>([]);
   const flushing = useRef(false);
   const checkedSent = useRef(false);
@@ -438,293 +442,400 @@ export function ShoppingScreen({
     }
   };
 
+  const todoCount = visible.length - done;
+  const shownGroups = groups
+    .map((g) => ({
+      ...g,
+      all: g.items,
+      items: g.items.filter((i) => (filter === "all" ? true : filter === "done" ? i.checked : !i.checked)),
+    }))
+    .filter((g) => g.items.length);
+  const lineList = purchases ? Object.values(purchases.lines) : [];
+  const toConfirmCount = lineList.filter((l) => l.status === "to_verify").length;
+  const flaggedCount = lineList.filter((l) => l.issue).length;
+  const readOnly = !online && !FEATURES.offlineWrites;
+  const toggleRow = (id: string) =>
+    setOpenRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
   return (
-    <>
-      <header className="flex flex-col gap-4">
-        <PageHeader
-          title={fr.nav.shopping}
-          actions={
-            <button type="button" onClick={share} aria-label={t.share} className="iconbtn tone-banane">
-              <Icon name="basket" />
-            </button>
-          }
-        />
-        <Card as="div" tone="green" className="flex flex-col gap-3">
-          <p className="t-ui mono" data-testid="shopping-progress">
-            {t.progress(done, visible.length)}
-          </p>
-          <div
-            role="progressbar"
-            aria-label={t.progress(done, visible.length)}
-            aria-valuemin={0}
-            aria-valuemax={visible.length}
-            aria-valuenow={done}
-            className="bar"
-          >
+    <div className="flex flex-col gap-5">
+      <PageHeader
+        eyebrow={t.kicker}
+        title={fr.nav.shopping}
+        actions={
+          <button type="button" onClick={share} aria-label={t.share} className="iconbtn tone-banane">
+            <Icon name="basket" />
+          </button>
+        }
+      />
+
+      {(!online || pending > 0) && (
+        <div
+          role="status"
+          data-testid="offline"
+          className={`flex items-center gap-3 border-[length:var(--bw)] border-line p-3 ${online ? "tone-warning" : "tone-dark"}`}
+        >
+          <span aria-hidden="true" className="nb-flat tone-banane grid size-10 shrink-0 place-items-center">
+            <Icon name="warning" />
+          </span>
+          <div className="min-w-0 flex-1">
+            {!online && <p className="t-kicker text-[color:var(--banane)]">{t.offlineKicker}</p>}
+            <p className="t-small font-bold">
+              {online ? t.syncing(pending) : FEATURES.offlineWrites ? t.offline(pending) : t.offlineReadOnly}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="grid items-start gap-5 min-[900px]:grid-cols-[minmax(0,340px)_minmax(0,1fr)]">
+        {/* Où j'en suis */}
+        <aside className="flex flex-col gap-4 min-[900px]:col-start-1 min-[900px]:row-start-1">
+          <Card as="div" className="tone-courses flex flex-col gap-3" aria-labelledby="where-title">
+            <h2 id="where-title" className="t-label">
+              {t.whereIAm}
+            </h2>
+            <p className="flex items-baseline gap-2">
+              <span aria-hidden="true" className="mono text-[52px] leading-[.85] font-bold tracking-[-.04em]">
+                {done}
+              </span>
+              <span className="t-ui mono" data-testid="shopping-progress">
+                {t.progress(done, visible.length)}
+              </span>
+            </p>
             <div
-              className="bar-fill"
-              style={{ width: `${visible.length ? (done / visible.length) * 100 : 0}%`, background: "var(--nav)" }}
+              role="progressbar"
+              aria-label={t.progress(done, visible.length)}
+              aria-valuemin={0}
+              aria-valuemax={visible.length}
+              aria-valuenow={done}
+              className="bar"
+            >
+              <div
+                className="bar-fill"
+                style={{ width: `${visible.length ? (done / visible.length) * 100 : 0}%`, background: "var(--nav)" }}
+              />
+            </div>
+            {purchases && <p className="t-small font-bold">{t.pointsSummary(toConfirmCount, flaggedCount)}</p>}
+            {purchases && (
+              <Button
+                type="button"
+                className="w-full"
+                aria-expanded={reviewOpen}
+                onClick={() => {
+                  if (!reviewOpen) {
+                    const r = reviewSummary(
+                      Object.entries(purchases.lines).map(([key, l]) => ({
+                        key,
+                        status: l.status,
+                        issue: l.issue,
+                      })),
+                    );
+                    void trackReviewCompleted(r.unresolved);
+                  }
+                  setReviewOpen((o) => !o);
+                }}
+              >
+                <Icon name="check" />
+                {reviewOpen ? tp.close : tp.review}
+              </Button>
+            )}
+          </Card>
+          {purchases && reviewOpen && (
+            <div data-testid="review">
+              <ReviewPanel
+                lines={purchases.lines}
+                nameOfKey={(k) => ingredientLabels[k] ?? names[k] ?? k}
+                canAdapt={canWrite}
+              />
+            </div>
+          )}
+        </aside>
+
+        {/* Liste */}
+        <div className="flex min-w-0 flex-col gap-4 min-[900px]:col-start-2 min-[900px]:row-span-2 min-[900px]:row-start-1">
+          <div className="self-start">
+            <Segmented
+              label={t.viewLabel}
+              value={filter}
+              onChange={setFilter}
+              options={[
+                { value: "all", label: t.all(visible.length) },
+                { value: "todo", label: t.todo(todoCount) },
+                { value: "done", label: t.done(done) },
+              ]}
             />
           </div>
-        </Card>
-        {(!online || pending > 0) && (
-          <p
-            role="status"
-            className="callout tone-warning text-sm font-bold"
-            data-testid="offline"
-          >
-            {online ? t.syncing(pending) : FEATURES.offlineWrites ? t.offline(pending) : t.offlineReadOnly}
-          </p>
-        )}
-      </header>
 
-      <form
-        className="card flex flex-wrap items-end gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          add(label, qty);
-          setLabel("");
-          setQty("");
-        }}
-      >
-        <label htmlFor="item-label" className="sr-only">
-          {t.addLabel}
-        </label>
-        <input
-          id="item-label"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          placeholder={t.addPlaceholder}
-          maxLength={80}
-          className="input w-full min-w-0 sm:w-auto sm:flex-[3]"
-        />
-        <label htmlFor="item-qty" className="sr-only">
-          {t.qtyLabel}
-        </label>
-        <input
-          id="item-qty"
-          value={qty}
-          onChange={(e) => setQty(e.target.value)}
-          placeholder={t.qtyPlaceholder}
-          maxLength={30}
-          className="input mono w-24 min-w-0 flex-1"
-        />
-        <Button type="submit">{t.add}</Button>
-        {frequent.length > 0 && (
-          <div className="flex w-full flex-wrap gap-2 pt-1">
-            {frequent.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => add(f)}
-                className="chiptg"
-              >
-                + {f}
-              </button>
-            ))}
-          </div>
-        )}
-      </form>
-
-      {baseUsed.length > 0 && (
-        <Card padding="sm" className="flex flex-col gap-2">
-          <h2 className="t-3">{t.base}</h2>
-          <p className="t-small muted">{t.baseHint}</p>
-          <div className="flex flex-wrap gap-2">
-            {baseUsed.map((b) => (
-              <ChipToggle
-                key={b.key}
-                pressed={list.some((i) => i.source === "pantry_check" && i.ingredient_key === b.key)}
-                onToggle={() => toggleBase(b)}
-              >
-                {b.label}
-              </ChipToggle>
-            ))}
-          </div>
-        </Card>
-      )}
-
-      {purchases && (
-        <Card padding="sm" className="flex flex-col gap-2" data-testid="review">
-          <Button
-            type="button"
-            variant="outline"
-            className="self-start"
-            onClick={() => {
-              if (!reviewOpen) {
-                const r = reviewSummary(
-                  Object.entries(purchases.lines).map(([key, l]) => ({
-                    key,
-                    status: l.status,
-                    issue: l.issue,
-                  })),
-                );
-                void trackReviewCompleted(r.unresolved);
-              }
-              setReviewOpen((o) => !o);
+          <form
+            className="card flex flex-wrap items-end gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              add(label, qty);
+              setLabel("");
+              setQty("");
             }}
           >
-            {reviewOpen ? tp.close : tp.review}
-          </Button>
-          {reviewOpen && <ReviewPanel lines={purchases.lines} />}
-        </Card>
-      )}
+            <label htmlFor="item-label" className="sr-only">
+              {t.addLabel}
+            </label>
+            <input
+              id="item-label"
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              placeholder={t.addPlaceholder}
+              maxLength={80}
+              disabled={readOnly}
+              className="input w-full min-w-0 sm:w-auto sm:flex-[3]"
+            />
+            <label htmlFor="item-qty" className="sr-only">
+              {t.qtyLabel}
+            </label>
+            <input
+              id="item-qty"
+              value={qty}
+              onChange={(e) => setQty(e.target.value)}
+              placeholder={t.qtyPlaceholder}
+              maxLength={30}
+              disabled={readOnly}
+              className="input mono w-24 min-w-0 flex-1"
+            />
+            <Button type="submit" disabled={readOnly}>
+              {t.add}
+            </Button>
+            {frequent.length > 0 && (
+              <div className="flex w-full flex-wrap gap-2 pt-1">
+                {frequent.map((f) => (
+                  <button key={f} type="button" onClick={() => add(f)} disabled={readOnly} className="chiptg">
+                    + {f}
+                  </button>
+                ))}
+              </div>
+            )}
+          </form>
 
-      {purchases && canWrite && (
-        <WeekOpsPanel
-          weekId={weekId}
-          online={online}
-          preparations={preparations}
-          transfers={transfers}
-          otherWeeks={otherWeeks}
-        />
-      )}
+          {baseUsed.length > 0 && (
+            <Card padding="sm" className="flex flex-col gap-2">
+              <h2 className="t-3">{t.base}</h2>
+              <p className="t-small muted">{t.baseHint}</p>
+              <div className="flex flex-wrap gap-2">
+                {baseUsed.map((b) => (
+                  <ChipToggle
+                    key={b.key}
+                    pressed={list.some((i) => i.source === "pantry_check" && i.ingredient_key === b.key)}
+                    onToggle={() => toggleBase(b)}
+                  >
+                    {b.label}
+                  </ChipToggle>
+                ))}
+              </div>
+            </Card>
+          )}
 
-      {purchases && canWrite && (
-        <AdaptationPanel
-          weekId={weekId}
-          online={online}
-          history={adaptationHistory}
-          candidates={Object.entries(purchases.lines)
-            .filter(([, l]) => l.status === "partial" || l.status === "uncovered")
-            .map(([key]) => ({ key, label: ingredientLabels[key] ?? names[key] ?? key }))}
-        />
-      )}
-
-      {groups.length === 0 ? (
-        <p className="muted">{t.empty}</p>
-      ) : (
-        groups.map((g) => (
-          <Card padding="none" key={g.key} className="flex flex-col overflow-hidden">
-            <h2 className="t-kicker tone-chip flex items-center justify-between border-b-[length:var(--bw)] border-line px-3.5 py-2.5">
-              {g.label}
-              <span className="mono">
-                {g.items.filter((i) => i.checked).length}/{g.items.length}
-              </span>
-            </h2>
-            <ul className="flex flex-col divide-y-[length:var(--bw)] divide-line px-3.5">
-              {g.items.map((i) => (
-                <li key={i.id} className="flex flex-wrap items-center gap-3 py-1" data-testid="shopping-item">
-                  <label className="flex min-h-12 flex-1 cursor-pointer items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={i.checked}
-                      onChange={(e) => void onCheck(i, e.target.checked)}
-                      className="cb"
-                    />
-                    <span className={`flex flex-col ${i.checked ? "muted line-through" : ""}`}>
-                      <span className="t-ui">{nameOf(i)}</span>
-                      <span className="t-small muted mono">
-                        {[
-                          i.qty_text,
-                          i.source === "manual"
-                            ? i.added_by === userId
-                              ? t.addedByYou
-                              : i.added_by && names[i.added_by]
-                                ? t.addedBy(names[i.added_by]!)
-                                : null
-                            : i.source === "pantry_check"
-                              ? t.fromPantry
-                              : null,
-                        ]
-                          .filter(Boolean)
-                          .join(" · ")}
-                      </span>
+          {groups.length === 0 ? (
+            <p className="muted">{t.empty}</p>
+          ) : (
+            <Card padding="none" as="div" className="flex flex-col overflow-hidden">
+              {shownGroups.map((g, gi) => (
+                <section key={g.key} aria-labelledby={`aisle-${g.key}`}>
+                  <h2
+                    id={`aisle-${g.key}`}
+                    className={`t-kicker tone-chip flex items-center justify-between border-b-[length:var(--bw)] border-line px-3.5 py-2.5 ${gi > 0 ? "border-t-[length:var(--bw)]" : ""}`}
+                  >
+                    {g.label}
+                    <span className="mono">
+                      {g.all.filter((i) => i.checked).length}/{g.all.length}
                     </span>
-                  </label>
-                  {purchases && i.ingredient_key && purchases.lines[i.ingredient_key] && (
-                    <PurchaseBlock
-                      line={purchases.lines[i.ingredient_key]!}
-                      name={nameOf(i)}
-                      open={editing === i.ingredient_key}
-                      canWrite={canWrite}
-                      choosing={issueFor === i.ingredient_key}
-                      onIssue={(d) => void setIssue(i.ingredient_key!, d)}
-                      onReport={() => void setIssue(i.ingredient_key!, "open")}
-                      onClear={() => void clearIssue(i.ingredient_key!)}
-                      onConfirm={() => void confirmAssez(i.ingredient_key!)}
-                      onOpen={() => {
-                        const l = purchases.lines[i.ingredient_key!]!;
-                        setEditing(i.ingredient_key);
-                        setMode("total");
-                        setPQty("");
-                        setPUnit(l.units[0]!);
-                      }}
-                    />
-                  )}
-                  {purchases && i.ingredient_key && editing === i.ingredient_key && (
-                    <form
-                      className="nb-dash tone-chip flex w-full flex-col gap-2 p-3"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void savePurchase(i.ingredient_key!, purchases.lines[i.ingredient_key!]!);
-                      }}
-                    >
-                      <fieldset className="flex flex-wrap gap-2">
-                        <legend className="sr-only">{tp.modifyAria(nameOf(i))}</legend>
-                        <ChipToggle pressed={mode === "total"} onToggle={() => setMode("total")}>
-                          {tp.formTotal}
-                        </ChipToggle>
-                        <ChipToggle pressed={mode === "add"} onToggle={() => setMode("add")}>
-                          {tp.formAdd}
-                        </ChipToggle>
-                      </fieldset>
-                      <div className="flex flex-wrap gap-2">
-                        <label className="sr-only" htmlFor={`pq-${i.id}`}>
-                          {tp.qty}
-                        </label>
-                        <input
-                          id={`pq-${i.id}`}
-                          inputMode="decimal"
-                          value={pQty}
-                          onChange={(e) => setPQty(e.target.value)}
-                          aria-describedby={`pu-${i.id}`}
-                          className="input mono w-28"
-                        />
-                        <label className="sr-only" htmlFor={`pu-${i.id}`}>
-                          {tp.unit}
-                        </label>
-                        <select
-                          id={`pu-${i.id}`}
-                          value={pUnit}
-                          onChange={(e) => setPUnit(e.target.value)}
-                          className="input w-auto"
-                        >
-                          {purchases.lines[i.ingredient_key]!.units.map((u) => (
-                            <option key={u} value={u}>
-                              {tp.units[u as keyof typeof tp.units] ?? u}
-                            </option>
-                          ))}
-                        </select>
-                        <Button type="submit" variant="secondary" disabled={busy}>
-                          {busy ? tp.saving : tp.save}
-                        </Button>
-                        <Button type="button" variant="outline" onClick={() => setEditing(null)}>
-                          {tp.cancel}
-                        </Button>
-                      </div>
-                    </form>
-                  )}
-                  {i.source === "manual" && (
-                    <button
-                      type="button"
-                      aria-label={t.remove(nameOf(i))}
-                      onClick={() => run({ op: "delete", id: i.id })}
-                      className="iconbtn"
-                    >
-                      <Icon name="close" className="size-5" />
-                    </button>
-                  )}
-                </li>
+                  </h2>
+                  <ul className="flex flex-col divide-y-[length:var(--bw)] divide-line px-3.5">
+                    {g.items.map((i) => {
+                      const key = i.ingredient_key;
+                      const line = purchases && key ? purchases.lines[key] : undefined;
+                      const name = nameOf(i);
+                      const isOpen = !!line && (openRows.has(i.id) || editing === key || issueFor === key);
+                      const sub = [
+                        i.source === "manual"
+                          ? i.added_by === userId
+                            ? t.addedByYou
+                            : i.added_by && names[i.added_by]
+                              ? t.addedBy(names[i.added_by]!)
+                              : null
+                          : i.source === "pantry_check"
+                            ? t.fromPantry
+                            : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ");
+                      const summary = (
+                        <>
+                          <span className={`flex min-w-0 flex-1 flex-col ${i.checked ? "muted line-through" : ""}`}>
+                            <span className="t-ui font-semibold">{name}</span>
+                            {sub && <span className="t-small muted">{sub}</span>}
+                          </span>
+                          {line?.issue ? (
+                            <span className="pill tone-alerte">{tp.notFound}</span>
+                          ) : line?.status === "to_verify" ? (
+                            <span className="pill tone-warning">{tp.toConfirm}</span>
+                          ) : line?.status === "partial" && line.deficit ? (
+                            <span className="mono nb-flat tone-warning px-1.5 py-0.5 font-bold">
+                              {tp.remaining(line.deficit)}
+                            </span>
+                          ) : i.qty_text ? (
+                            <span className="mono font-bold">{i.qty_text}</span>
+                          ) : null}
+                        </>
+                      );
+                      return (
+                        <li key={i.id} className="flex flex-col" data-testid="shopping-item">
+                          <div className="flex items-center gap-3 py-1">
+                            <input
+                              type="checkbox"
+                              checked={i.checked}
+                              disabled={readOnly}
+                              aria-label={t.taken(name)}
+                              onChange={(e) => void onCheck(i, e.target.checked)}
+                              className="cb"
+                            />
+                            {line ? (
+                              <button
+                                type="button"
+                                aria-expanded={isOpen}
+                                aria-controls={`pb-${i.id}`}
+                                aria-label={t.toggleLine(name)}
+                                onClick={() => toggleRow(i.id)}
+                                className="flex min-h-12 min-w-0 flex-1 cursor-pointer items-center gap-2.5 border-0 bg-transparent p-0 text-left"
+                              >
+                                {summary}
+                                <Icon name="chevronDown" className={`size-4 shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+                              </button>
+                            ) : (
+                              <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5">{summary}</div>
+                            )}
+                            {i.source === "manual" && (
+                              <button
+                                type="button"
+                                aria-label={t.remove(name)}
+                                disabled={readOnly}
+                                onClick={() => run({ op: "delete", id: i.id })}
+                                className="iconbtn"
+                              >
+                                <Icon name="close" className="size-5" />
+                              </button>
+                            )}
+                          </div>
+                          {isOpen && line && key && (
+                            <div id={`pb-${i.id}`} className="flex flex-col gap-3 pb-4 pl-10">
+                              <PurchaseBlock
+                                line={line}
+                                name={name}
+                                open={editing === key}
+                                canWrite={canWrite && !readOnly}
+                                choosing={issueFor === key}
+                                onIssue={(d) => void setIssue(key, d)}
+                                onReport={() => void setIssue(key, "open")}
+                                onClear={() => void clearIssue(key)}
+                                onConfirm={() => void confirmAssez(key)}
+                                onOpen={() => {
+                                  setEditing(key);
+                                  setMode("total");
+                                  setPQty("");
+                                  setPUnit(line.units[0]!);
+                                }}
+                              />
+                              {editing === key && (
+                                <form
+                                  className="nb-dash tone-chip flex w-full flex-col gap-3 p-3"
+                                  onSubmit={(e) => {
+                                    e.preventDefault();
+                                    void savePurchase(key, line);
+                                  }}
+                                >
+                                  <fieldset className="flex flex-wrap gap-2 border-0 p-0">
+                                    <legend className="sr-only">{tp.modifyAria(name)}</legend>
+                                    <ChipToggle pressed={mode === "total"} onToggle={() => setMode("total")}>
+                                      {tp.formTotal}
+                                    </ChipToggle>
+                                    <ChipToggle pressed={mode === "add"} onToggle={() => setMode("add")}>
+                                      {tp.formAdd}
+                                    </ChipToggle>
+                                  </fieldset>
+                                  <div className="flex flex-wrap items-end gap-2">
+                                    <label className="sr-only" htmlFor={`pq-${i.id}`}>
+                                      {tp.qty}
+                                    </label>
+                                    <input
+                                      id={`pq-${i.id}`}
+                                      inputMode="decimal"
+                                      value={pQty}
+                                      onChange={(e) => setPQty(e.target.value)}
+                                      aria-describedby={`pu-${i.id}`}
+                                      className="input mono w-28"
+                                    />
+                                    <label className="sr-only" htmlFor={`pu-${i.id}`}>
+                                      {tp.unit}
+                                    </label>
+                                    <select
+                                      id={`pu-${i.id}`}
+                                      value={pUnit}
+                                      onChange={(e) => setPUnit(e.target.value)}
+                                      className="input mono w-auto"
+                                    >
+                                      {line.units.map((u) => (
+                                        <option key={u} value={u}>
+                                          {tp.units[u as keyof typeof tp.units] ?? u}
+                                        </option>
+                                      ))}
+                                    </select>
+                                    <Button type="submit" variant="secondary" disabled={busy}>
+                                      {busy ? tp.saving : tp.save}
+                                    </Button>
+                                    <Button type="button" variant="outline" onClick={() => setEditing(null)}>
+                                      {tp.cancel}
+                                    </Button>
+                                  </div>
+                                </form>
+                              )}
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
               ))}
-            </ul>
-          </Card>
-        ))
-      )}
-      <Button type="button" variant="outline" size="sm" onClick={share} className="self-start">
-        {t.share}
-      </Button>
-    </>
+            </Card>
+          )}
+          <Button type="button" variant="outline" size="sm" onClick={share} className="self-start">
+            <Icon name="share" />
+            {t.share}
+          </Button>
+        </div>
+
+        {purchases && canWrite && (
+          <div className="flex min-w-0 flex-col gap-4 min-[900px]:col-start-1 min-[900px]:row-start-2">
+            <WeekOpsPanel
+              weekId={weekId}
+              online={online}
+              preparations={preparations}
+              transfers={transfers}
+              otherWeeks={otherWeeks}
+            />
+            <AdaptationPanel
+              weekId={weekId}
+              online={online}
+              history={adaptationHistory}
+              candidates={Object.entries(purchases.lines)
+                .filter(([, l]) => l.status === "partial" || l.status === "uncovered")
+                .map(([key]) => ({ key, label: ingredientLabels[key] ?? names[key] ?? key }))}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -760,28 +871,32 @@ function PurchaseBlock({
         : line.status === "covered" || line.status === "surplus"
           ? tp.covered
           : null;
+  const extra = [line.surplus && tp.surplus(line.surplus), line.suggestion && tp.toBuy(line.suggestion)].filter(
+    Boolean,
+  );
   return (
-    <div className="flex w-full flex-col gap-2 pb-3 pl-9 text-sm" data-testid="purchase-line">
+    <div className="flex w-full flex-col gap-3 text-sm" data-testid="purchase-line">
       <p className="t-ui">
         {state && <span className="pill tone-warning mr-2">{state}</span>}
         {line.deficit ? tp.remaining(line.deficit) : line.status === "to_verify" ? null : tp.covered}
       </p>
-      <p className="muted mono">
-        {[
-          tp.need(line.need),
-          line.bought && tp.bought(line.bought),
-          line.surplus && tp.surplus(line.surplus),
-          line.suggestion && tp.toBuy(line.suggestion),
-        ]
-          .filter(Boolean)
-          .join(" · ")}
-      </p>
+      <Bento columns={3}>
+        <div className="px-2.5 py-1.5">
+          <span className="t-kicker block">{t.need}</span>
+          <span className="mono text-lg font-bold">{line.need}</span>
+        </div>
+        <div className="px-2.5 py-1.5">
+          <span className="t-kicker block">{t.bought}</span>
+          <span className="mono text-lg font-bold">{line.bought ?? "—"}</span>
+        </div>
+        <div className={`px-2.5 py-1.5 ${line.deficit ? "tone-warning" : ""}`}>
+          <span className="t-kicker block">{t.rest}</span>
+          <span className="mono text-lg font-bold">{line.deficit ?? "—"}</span>
+        </div>
+      </Bento>
+      {extra.length > 0 && <p className="muted mono">{extra.join(" · ")}</p>}
       {canWrite && line.canConfirm && (
-        <button
-          type="button"
-          onClick={onConfirm}
-          className="btn btn--outline btn--sm self-start"
-        >
+        <button type="button" onClick={onConfirm} className="btn btn--outline btn--sm self-start">
           {tp.confirmCoverage}
         </button>
       )}
@@ -797,16 +912,12 @@ function PurchaseBlock({
             type="button"
             onClick={onOpen}
             aria-label={tp.modifyAria(name)}
-            className="btn btn--outline btn--sm"
+            className="btn btn--secondary btn--sm"
           >
             {tp.modify}
           </button>
           {line.issue ? (
-            <button
-              type="button"
-              onClick={onClear}
-              className="btn btn--outline btn--sm"
-            >
+            <button type="button" onClick={onClear} className="btn btn--outline btn--sm">
               {tp.foundIt}
             </button>
           ) : (
@@ -823,18 +934,10 @@ function PurchaseBlock({
       )}
       {canWrite && (choosing || line.issue === "open") && (
         <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => onIssue("search_elsewhere")}
-            className="btn btn--outline btn--sm"
-          >
+          <button type="button" onClick={() => onIssue("search_elsewhere")} className="chiptg">
             {tp.searchElsewhere}
           </button>
-          <button
-            type="button"
-            onClick={() => onIssue("no_more")}
-            className="btn btn--outline btn--sm"
-          >
+          <button type="button" onClick={() => onIssue("no_more")} className="chiptg">
             {tp.noMore}
           </button>
         </div>
@@ -844,14 +947,54 @@ function PurchaseBlock({
 }
 
 /** « Vérifier mes courses » (§8.4) : bilan sans promesse que le menu est réalisable. */
-function ReviewPanel({ lines }: { lines: Record<string, PurchaseLine> }) {
-  const r = reviewSummary(
-    Object.entries(lines).map(([key, l]) => ({ key, status: l.status, issue: l.issue })),
-  );
+function ReviewPanel({
+  lines,
+  nameOfKey,
+  canAdapt,
+}: {
+  lines: Record<string, PurchaseLine>;
+  nameOfKey: (key: string) => string;
+  canAdapt: boolean;
+}) {
+  const r = reviewSummary(Object.entries(lines).map(([key, l]) => ({ key, status: l.status, issue: l.issue })));
+  const points = [
+    ...r.toConfirm.map((key) => ({ key, note: tp.toConfirm, missing: false })),
+    ...r.missing.map((key) => ({
+      key,
+      note: lines[key]!.deficit ? tp.remaining(lines[key]!.deficit!) : tp.missing(lines[key]!.need),
+      missing: true,
+    })),
+  ];
   return (
-    <div className="flex flex-col gap-1" role="status">
-      <h2 className="t-3">{tp.reviewTitle}</h2>
-      <p className="t-ui">{r.ready ? tp.reviewClean : tp.reviewDone(r.unresolved)}</p>
+    <div className="flex flex-col gap-4" role="status">
+      <p className="t-kicker">{tp.reviewKicker}</p>
+      <Card as="div" className={`flex flex-col gap-3 ${r.ready ? "tone-courses" : "tone-alerte"}`}>
+        <h2 className="t-label">{tp.reviewTitle}</h2>
+        <div className="flex items-center gap-3.5">
+          <span aria-hidden="true" className="mono text-[56px] leading-[.85] font-bold tracking-[-.05em]">
+            {r.unresolved}
+          </span>
+          <p className="t-ui">{r.ready ? tp.reviewClean : tp.reviewDone(r.unresolved)}</p>
+        </div>
+      </Card>
+      {points.length > 0 && (
+        <ol className="card flex flex-col py-0">
+          {points.map((p, n) => (
+            <li key={p.key} className="row flex-wrap">
+              <span className="mono w-6 text-xl font-bold">{n + 1}</span>
+              <div className="row-main">
+                <p className="t-ui">{nameOfKey(p.key)}</p>
+                <p className="t-small">{p.note}</p>
+              </div>
+              {p.missing && canAdapt && (
+                <a href="#adaptation" className="btn btn--secondary btn--sm">
+                  {tp.reviewMove}
+                </a>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
       <ul className="list-disc pl-4 text-sm mono">
         <li>{tp.reviewKnown(r.known.length)}</li>
         {r.toConfirm.length > 0 && <li>{tp.reviewToConfirm(r.toConfirm.length)}</li>}
@@ -859,6 +1002,9 @@ function ReviewPanel({ lines }: { lines: Record<string, PurchaseLine> }) {
         {r.surplus.length > 0 && <li>{tp.reviewSurplus(r.surplus.length)}</li>}
       </ul>
       <p className="t-small muted">{tp.reviewNote}</p>
+      <LinkButton href="/app/session" size="lg" className="w-full">
+        {tp.reviewStart}
+      </LinkButton>
     </div>
   );
 }

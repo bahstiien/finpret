@@ -17,6 +17,8 @@ import {
 } from "@/server/actions/menu";
 import type { DishCard, MenuView } from "@/server/menu-view";
 import { DayProgram } from "./DayProgram";
+import type { StreakState } from "@/engine/streak";
+import { SeriesBanner } from "./SeriesBanner";
 import { WeekBoard, type BoardFilter } from "./WeekBoard";
 import { Flag } from "./Flag";
 import { GuestsSheet, MoveSheet, RecipePickerSheet } from "./Sheets";
@@ -95,6 +97,7 @@ export function MenuScreen({
   childFactor,
   weeks,
   canteen = {},
+  streak,
 }: {
   header: { date: string; greeting: string; name: string };
   view: MenuView;
@@ -113,6 +116,8 @@ export function MenuScreen({
   };
   /** Cantine des enfants par date (§13), avec les bases en commun avec le dîner. */
   canteen?: Record<string, CanteenEntry[]>;
+  /** Série fin prête (Progrès), si le foyer la montre. */
+  streak?: Pick<StreakState, "current" | "currentWeek"> | null;
 }) {
   const inWeek = view.todayIndex >= 1 && view.todayIndex <= 7;
   const [selected, setSelected] = useState(inWeek ? view.todayIndex : 1);
@@ -121,6 +126,13 @@ export function MenuScreen({
   const { run, pending } = useMenuAction();
   const day = view.days[selected - 1]!;
   const today = inWeek ? view.days[view.todayIndex - 1] : null;
+  // Alerte doublon cantine / dîner (§13) : un bandeau par jour concerné, « Changer » sur le plat du soir.
+  const alerts = view.days.flatMap((d) => {
+    const groups = [...new Set((canteen[d.iso] ?? []).flatMap((c) => c.duplicates))];
+    if (!groups.length) return [];
+    const dinner = d.meals.find((m) => m.meal === "dinner" && !m.removed);
+    return [{ day: d.day, groups, dinner: dinner && dinner.kind !== "weekend" ? dinner : null }];
+  });
   const tonightName = today?.meals.find((m) => m.meal === "dinner" && !m.removed)?.name;
 
   return (
@@ -133,7 +145,8 @@ export function MenuScreen({
           <h1 className="t-1 [overflow-wrap:anywhere]">{t.title}</h1>
           {tonightName && (
             <p className="t-small muted">
-              {header.greeting}, {header.name}. {t.tonightLead} <b className="text-ink">{tonightName.toLowerCase()}</b>
+              {header.greeting}, {header.name}. {t.tonightLead}{" "}
+              <b className="text-ink">{tonightName.toLowerCase()}</b>
             </p>
           )}
         </div>
@@ -154,6 +167,33 @@ export function MenuScreen({
         </div>
       </div>
 
+      {alerts.map((a) => (
+        <div
+          key={a.day}
+          role="status"
+          className="callout tone-alerte items-center text-sm font-bold"
+          data-testid="menu-alert"
+        >
+          <span className="callout-ic">
+            <Icon name="warning" />
+          </span>
+          <span className="flex-1">{t.duplicateAlert(fr.days[a.day - 1]!, a.groups.join(", "))}</span>
+          {canEdit && a.dinner && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={pending}
+              onClick={() =>
+                run(() => swapDish(view.weekId, a.dinner!.kind as DishCard["kind"], a.dinner!.index))
+              }
+            >
+              {t.change}
+            </Button>
+          )}
+        </div>
+      ))}
+
       <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-col gap-1.5">
           <p className="t-kicker">{t.sessionBanner.kicker}</p>
@@ -163,6 +203,8 @@ export function MenuScreen({
           {t.sessionBanner.go}
         </LinkButton>
       </Card>
+
+      {streak && <SeriesBanner streak={streak} />}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="seg" role="group" aria-label={t.filter.label}>
@@ -248,7 +290,10 @@ export function MenuScreen({
       </div>
 
       <section className="flex flex-col gap-4">
-        <SectionHeader title={t.dishes} aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>} />
+        <SectionHeader
+          title={t.dishes}
+          aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>}
+        />
         <ul
           className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-1 pb-4 min-[900px]:mx-0 min-[900px]:px-0"
           data-testid="dishes"
@@ -399,7 +444,9 @@ function Tiles({
           <span className="nb-sm tone-banane grid size-10 place-items-center">
             <Icon name="pot" />
           </span>
-          <span className="t-label">{isToday ? t.tiles.tonight : t.tiles.dayEvening(fr.days[day.day - 1]!)}</span>
+          <span className="t-label">
+            {isToday ? t.tiles.tonight : t.tiles.dayEvening(fr.days[day.day - 1]!)}
+          </span>
           <b className="t-3">{day.tonight}</b>
         </Card>
       )}
@@ -448,10 +495,12 @@ function PlanGrid({
         <h2 className="t-2">{t.grid.title}</h2>
         <span className="t-small flex gap-3">
           <span className="flex items-center gap-1.5">
-            <span className="size-3 border-[length:var(--bw)] border-line bg-violet" aria-hidden="true" /> {t.grid.batch}
+            <span className="size-3 border-[length:var(--bw)] border-line bg-violet" aria-hidden="true" />{" "}
+            {t.grid.batch}
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="size-3 border-[length:var(--bw)] border-line bg-banane" aria-hidden="true" /> {t.grid.weekend}
+            <span className="size-3 border-[length:var(--bw)] border-line bg-banane" aria-hidden="true" />{" "}
+            {t.grid.weekend}
           </span>
         </span>
       </div>
@@ -460,11 +509,7 @@ function PlanGrid({
           <tr>
             <th />
             {[1, 2, 3, 4, 5, 6, 7].map((d) => (
-              <th
-                key={d}
-                scope="col"
-                className={`t-label ${d === view.todayIndex ? "tone-banane" : ""}`}
-              >
+              <th key={d} scope="col" className={`t-label ${d === view.todayIndex ? "tone-banane" : ""}`}>
                 {fr.daysShort[d - 1]}
               </th>
             ))}
@@ -501,6 +546,7 @@ function PlanGrid({
                   );
                 }
                 const on = c.state === "on";
+                const replace = c.state === "removed";
                 return (
                   <td key={d}>
                     <button
@@ -510,7 +556,13 @@ function PlanGrid({
                       onClick={() => onToggle(d, m)}
                       aria-label={on ? t.grid.on(slot, c.name ?? "") : t.grid.off(slot)}
                       className={`mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
-                        on ? (d === view.todayIndex ? "tone-dark" : "tone-violet") : "tone-chip muted"
+                        on
+                          ? d === view.todayIndex
+                            ? "tone-banane"
+                            : "tone-violet"
+                          : replace
+                            ? "tone-yellow border-dashed border-violet"
+                            : "tone-chip muted"
                       }`}
                     >
                       {on ? <Icon name="check" className="size-5" /> : "–"}

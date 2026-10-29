@@ -1,5 +1,6 @@
 import "server-only";
-import { hasBatch } from "@/engine/cooks";
+import { coveredMeals, hasBatch } from "@/engine/cooks";
+import type { WeekPlan } from "@/engine/types";
 import { countryLabel, seasonCounts, type CookRecord } from "@/engine/passport";
 import {
   buildCountries,
@@ -197,5 +198,28 @@ export async function loadCelebrations(householdId: string, userId: string): Pro
       .filter((a): a is { kind: "country" | "season"; key: string } => a.kind !== "streak")
       .map((a) => ({ ...a, label: achievementLabel(a.kind, a.key) })),
     milestone: top ? { weeks: top, meals: await milestoneMeals(householdId, top) } : null,
+  };
+}
+
+export type ProgressStats = { sessions: number; meals: number };
+
+/** Bandeau de chiffres de « Nos progrès » : sessions terminées et repas couverts (deux lectures, RLS). */
+export async function loadProgressStats(householdId: string): Promise<ProgressStats> {
+  const supabase = await createClient();
+  const { data: done } = await supabase
+    .from("streak_weeks")
+    .select("week_start")
+    .eq("household_id", householdId)
+    .eq("outcome", "done");
+  const starts = (done ?? []).map((w) => w.week_start);
+  if (starts.length === 0) return { sessions: 0, meals: 0 };
+  const { data: weeks } = await supabase
+    .from("weeks")
+    .select("plan")
+    .eq("household_id", householdId)
+    .in("start_date", starts);
+  return {
+    sessions: starts.length,
+    meals: (weeks ?? []).reduce((sum, w) => sum + coveredMeals(w.plan as unknown as WeekPlan), 0),
   };
 }
