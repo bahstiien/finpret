@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Audiences } from "@/components/landing/Audiences";
-import { Benefits } from "@/components/landing/Benefits";
-import { Faq } from "@/components/landing/Faq";
-import { Features } from "@/components/landing/Features";
-import { FinalCta } from "@/components/landing/FinalCta";
-import { Hero } from "@/components/landing/Hero";
-import { HowItWorks } from "@/components/landing/HowItWorks";
-import { Proof } from "@/components/landing/Proof";
-import { Showcase } from "@/components/landing/Showcase";
+import {
+  Catalogue,
+  Faq,
+  Features,
+  FinalCta,
+  Hero,
+  Households,
+  HowItWorks,
+  Pricing,
+  SiteFooter,
+  SiteHeader,
+} from "@/components/landing/Landing";
 import { fr } from "@/i18n/fr";
 
 const t = fr.landing;
@@ -27,17 +30,18 @@ export default function HomePage() {
       >
         {t.skip}
       </a>
-      <Hero />
+      <SiteHeader />
       <main id="contenu">
-        <Proof />
-        <Benefits />
+        <Hero />
+        <Catalogue />
         <HowItWorks />
-        <Showcase />
         <Features />
-        <Audiences />
+        <Households />
+        <Pricing />
         <Faq />
+        <FinalCta />
       </main>
-      <FinalCta />
+      <SiteFooter />
     </>
   );
 }

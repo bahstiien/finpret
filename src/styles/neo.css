@@ -67,7 +67,7 @@
 }
 
 /* ---------- 5. Icônes + drapeaux ---------- */
-.ic{width:24px;height:24px;flex:none;display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:square;stroke-linejoin:miter}
+.ic{width:24px;height:24px;flex:none;display:inline-block;vertical-align:middle;fill:currentColor}
 .ic-sm{width:16px;height:16px}
 .ic-lg{width:32px;height:32px}
 .ic-xl{width:48px;height:48px}
