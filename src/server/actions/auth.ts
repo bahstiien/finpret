@@ -6,7 +6,7 @@ import { z } from "zod";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { safeNext } from "@/lib/redirect";
-import { createClient } from "@/lib/supabase/server";
+import { auth } from "@/server/auth";
 import { allow } from "@/server/rate-limit";
 
 export type LoginState =
@@ -17,18 +17,10 @@ const emailSchema = z.object({
   next: z.string().optional(),
 });
 
-async function siteOrigin() {
-  const h = await headers();
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  return `${proto}://${host}`;
-}
+/** En cas d'échec, Better Auth revient sur cette page avec `?error=…` (lien expiré, refus du fournisseur). */
+const errorUrl = (next: string) => `/login?next=${encodeURIComponent(next)}`;
 
-function callbackUrl(origin: string, next: string) {
-  return `${origin}/auth/callback?next=${encodeURIComponent(safeNext(next))}`;
-}
-
-/** Lien magique par e-mail (Supabase OTP). */
+/** Lien magique par e-mail (Better Auth). */
 export async function signInWithEmail(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const parsed = emailSchema.safeParse({
     email: String(formData.get("email") ?? "")
@@ -41,12 +33,15 @@ export async function signInWithEmail(_prev: LoginState, formData: FormData): Pr
   // 5 liens par heure et par adresse (SPEC_JANVIER §8) : freine l'envoi en rafale.
   if (!allow(`login:${parsed.data.email}`, 5, 3_600_000))
     return { status: "error", message: fr.login.tooMany };
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
-    email: parsed.data.email,
-    options: { emailRedirectTo: callbackUrl(await siteOrigin(), parsed.data.next ?? "/app") },
-  });
-  if (error) return { status: "error", message: fr.login.failed };
+  const next = safeNext(parsed.data.next ?? "/app");
+  try {
+    await auth().api.signInMagicLink({
+      body: { email: parsed.data.email, callbackURL: next, errorCallbackURL: errorUrl(next) },
+      headers: await headers(),
+    });
+  } catch {
+    return { status: "error", message: fr.login.failed };
+  }
   return { status: "sent", email: parsed.data.email };
 }
 
@@ -63,17 +58,18 @@ export async function signInWithProvider(formData: FormData) {
   });
   if (!parsed.success) redirect("/login?error=provider");
 
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: parsed.data.provider,
-    options: { redirectTo: callbackUrl(await siteOrigin(), parsed.data.next ?? "/app") },
-  });
-  if (error || !data.url) redirect("/login?error=provider");
-  redirect(data.url);
+  const next = safeNext(parsed.data.next ?? "/app");
+  const result = await auth()
+    .api.signInSocial({
+      body: { provider: parsed.data.provider, callbackURL: next, errorCallbackURL: errorUrl(next) },
+      headers: await headers(),
+    })
+    .catch(() => null);
+  if (!result?.url) redirect("/login?error=provider");
+  redirect(result.url);
 }
 
 export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  await auth().api.signOut({ headers: await headers() });
   redirect("/");
 }

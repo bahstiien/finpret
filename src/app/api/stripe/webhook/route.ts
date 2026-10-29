@@ -5,6 +5,7 @@ import { alertWebhookFailure } from "@/server/alerts";
 import { sendPaymentFailed } from "@/server/emails";
 import { stripeClient, stripeConfig } from "@/server/stripe";
 import { handleStripeEvent, type StripeEventLike } from "@/server/stripe-webhook";
+import { emailOf } from "@/server/users";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
           .eq("household_id", householdId)
           .eq("role", "admin");
         for (const a of admins ?? []) {
-          const email = (await db.auth.admin.getUserById(a.user_id)).data.user?.email;
+          const email = await emailOf(a.user_id);
           if (email) await sendPaymentFailed(email);
         }
       },

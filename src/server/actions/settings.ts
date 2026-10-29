@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
@@ -9,10 +9,11 @@ import { mondayOf, todayIn } from "@/lib/dates";
 import { notificationsSchema, SETTINGS_SCHEMAS, SETTINGS_VERSION } from "@/lib/settings";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@/server/auth";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
 import { ACTIVE_HOUSEHOLD_COOKIE, requireHousehold, requireUser } from "@/server/session";
+import { deleteUser } from "@/server/users";
 import { generateAndStore } from "@/server/weeks";
 
 type Section = keyof typeof SETTINGS_SCHEMAS;
@@ -204,9 +205,11 @@ export async function saveNotifications(value: unknown): Promise<ActionResult> {
 /** Déconnexion de tous les autres appareils (§4, « appareils connectés »). */
 export async function signOutOtherDevices(): Promise<ActionResult> {
   await requireUser("/settings/profile");
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signOut({ scope: "others" });
-  if (error) return { ok: false, error: fr.errors.generic };
+  try {
+    await auth().api.revokeOtherSessions({ headers: await headers() });
+  } catch {
+    return { ok: false, error: fr.errors.generic };
+  }
   return { ok: true, data: undefined };
 }
 
@@ -237,11 +240,15 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
       .eq("role", "admin");
     if ((count ?? 0) <= 1) await supabase.from("households").delete().eq("id", m.household_id);
   }
-  const admin = createAdminClient();
-  const { error } = await admin.auth.admin.deleteUser(user.id);
-  if (error) return { ok: false, error: fr.errors.generic };
-  await supabase.auth.signOut();
-  (await cookies()).delete(ACTIVE_HOUSEHOLD_COOKIE);
+  try {
+    // La suppression du compte emporte ses sessions : il ne reste qu'à effacer les cookies.
+    await deleteUser(user.id);
+  } catch {
+    return { ok: false, error: fr.errors.generic };
+  }
+  const jar = await cookies();
+  for (const c of jar.getAll()) if (c.name.includes("better-auth")) jar.delete(c.name);
+  jar.delete(ACTIVE_HOUSEHOLD_COOKIE);
   redirect("/");
 }
 

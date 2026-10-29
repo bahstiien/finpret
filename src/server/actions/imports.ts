@@ -15,7 +15,7 @@ import { createClient } from "@/lib/supabase/server";
 import { loadLibrary } from "@/server/catalog";
 import type { ActionResult } from "@/server/errors";
 import { extractRecipe, extractWithModel, fetchRecipePage, rewriteSteps } from "@/server/recipe-fetch";
-import { requireHousehold } from "@/server/session";
+import { getUser, requireHousehold } from "@/server/session";
 
 /** Import de recette par lien (§8.8) : analyse, puis enregistrement après validation par l'utilisateur. */
 
@@ -183,10 +183,10 @@ export async function saveImport(input: {
     id = editId;
   } else {
     id = `imp_${randomUUID().replace(/-/g, "").slice(0, 12)}`;
-    const { data: me } = await supabase.auth.getUser();
+    const me = await getUser();
     const { error } = await supabase
       .from("recipes")
-      .insert({ ...row, id, household_id: household.id, imported_by: me.user?.id ?? null });
+      .insert({ ...row, id, household_id: household.id, imported_by: me?.id ?? null });
     if (error) return { ok: false, error: fr.errors.generic };
     if (importId) {
       await supabase.from("recipe_imports").update({ status: "validated", recipe_id: id }).eq("id", importId);

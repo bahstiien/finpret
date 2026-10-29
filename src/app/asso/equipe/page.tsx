@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { InviteEditorForm } from "@/components/asso/InviteEditorForm";
 import { ActionForm } from "@/components/ui/ActionForm";
 import { fr } from "@/i18n/fr";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { removeEditor, revokeEditorInvitation } from "@/server/actions/asso";
 import { requireManager } from "@/server/asso-session";
+import { emailOf } from "@/server/users";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
 
@@ -26,12 +26,11 @@ export default async function TeamPage() {
       .is("accepted_at", null)
       .gt("expires_at", new Date().toISOString()),
   ]);
-  // L'e-mail d'un membre de sa propre équipe est lisible du responsable (clé de service, réservée au serveur).
-  const admin = createAdminClient();
+  // L'e-mail d'un membre de sa propre équipe est lisible du responsable (lecture privilégiée, réservée au serveur).
   const people = await Promise.all(
     (members ?? []).map(async (m) => ({
       ...m,
-      email: (await admin.auth.admin.getUserById(m.user_id)).data.user?.email ?? "",
+      email: (await emailOf(m.user_id)) ?? "",
     })),
   );
   return (

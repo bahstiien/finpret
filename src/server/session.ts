@@ -1,21 +1,24 @@
 import "server-only";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import type { HouseholdRole } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
+import { auth } from "@/server/auth";
 
 /** Foyer actif mémorisé par appareil (SPEC §4). */
 export const ACTIVE_HOUSEHOLD_COOKIE = "active_household";
 
 export type HouseholdSummary = { id: string; name: string; role: HouseholdRole };
 
-export const getUser = cache(async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+export type SessionUser = { id: string; email: string };
+
+/** Session Better Auth de la requête (lue en base : une session révoquée l'est immédiatement). */
+export const getAuthSession = cache(async () => auth().api.getSession({ headers: await headers() }));
+
+export const getUser = cache(async (): Promise<SessionUser | null> => {
+  const session = await getAuthSession();
+  return session ? { id: session.user.id, email: session.user.email } : null;
 });
 
 export async function requireUser(next = "/app") {

@@ -4,6 +4,7 @@ import { TextField } from "@/components/ui/Field";
 import { formatShort } from "@/lib/dates";
 import { extendTrial } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { findUserByEmail } from "@/server/users";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
 
@@ -13,15 +14,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
   const { q } = await searchParams;
   const email = q?.trim().toLowerCase() ?? "";
   let found: { id: string; email: string } | null = null;
-  if (email) {
-    // Liste paginée de l'API d'administration : suffisant à l'échelle du lancement (quelques centaines de comptes).
-    for (let page = 1; page <= 20 && !found; page++) {
-      const { data } = await db.auth.admin.listUsers({ page, perPage: 200 });
-      const u = data.users.find((x) => x.email?.toLowerCase() === email);
-      if (u) found = { id: u.id, email: u.email ?? "" };
-      if (data.users.length < 200) break;
-    }
-  }
+  if (email) found = await findUserByEmail(email);
   const { data: memberships } = found
     ? await db.from("memberships").select("household_id, role").eq("user_id", found.id)
     : { data: [] };

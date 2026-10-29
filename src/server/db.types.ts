@@ -144,6 +144,41 @@ export interface AssociationSchools {
   school_id: string;
 }
 
+export interface AuthAccounts {
+  access_token: string | null;
+  access_token_expires_at: Timestamp | null;
+  account_id: string;
+  created_at: Generated<Timestamp>;
+  id: Generated<string>;
+  id_token: string | null;
+  password: string | null;
+  provider_id: string;
+  refresh_token: string | null;
+  refresh_token_expires_at: Timestamp | null;
+  scope: string | null;
+  updated_at: Generated<Timestamp>;
+  user_id: string;
+}
+
+export interface AuthAdminTotp {
+  created_at: Generated<Timestamp>;
+  secret_encrypted: string;
+  user_id: string;
+  verified_at: Timestamp | null;
+}
+
+export interface AuthSessions {
+  created_at: Generated<Timestamp>;
+  expires_at: Timestamp;
+  id: Generated<string>;
+  ip_address: string | null;
+  mfa_verified_at: Timestamp | null;
+  token: string;
+  updated_at: Generated<Timestamp>;
+  user_agent: string | null;
+  user_id: string;
+}
+
 export interface AuthUsers {
   aud: string | null;
   created_at: Generated<Timestamp>;
@@ -156,6 +191,15 @@ export interface AuthUsers {
   raw_user_meta_data: Generated<Json>;
   role: string | null;
   updated_at: Generated<Timestamp>;
+}
+
+export interface AuthVerifications {
+  created_at: Generated<Timestamp>;
+  expires_at: Timestamp;
+  id: Generated<string>;
+  identifier: string;
+  updated_at: Generated<Timestamp>;
+  value: string;
 }
 
 export interface CanteenMenus {
@@ -546,7 +590,11 @@ export interface DB {
   association_members: AssociationMembers;
   association_schools: AssociationSchools;
   associations: Associations;
+  "auth.accounts": AuthAccounts;
+  "auth.admin_totp": AuthAdminTotp;
+  "auth.sessions": AuthSessions;
   "auth.users": AuthUsers;
+  "auth.verifications": AuthVerifications;
   canteen_menus: CanteenMenus;
   canteen_notifications: CanteenNotifications;
   coverage_confirmations: CoverageConfirmations;

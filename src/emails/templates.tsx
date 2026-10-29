@@ -67,6 +67,24 @@ const cta = {
   textDecoration: "none",
 } as const;
 
+export function MagicLinkEmail({ url }: { url: string }) {
+  return (
+    <Layout preview="Ton lien de connexion à Fin Prêt">
+      <Text style={h1}>Ton lien de connexion</Text>
+      <Text style={p}>
+        Ouvre ce lien depuis l&apos;appareil où tu as demandé à te connecter. Il est valable 15 minutes et ne
+        sert qu&apos;une fois.
+      </Text>
+      <Button href={url} style={cta}>
+        Me connecter
+      </Button>
+      <Text style={{ ...p, color: MUTED, fontSize: 13, marginTop: 16 }}>
+        Tu n&apos;as rien demandé ? Ignore cet e-mail, personne ne pourra se connecter sans ce lien.
+      </Text>
+    </Layout>
+  );
+}
+
 export function HouseholdInvitationEmail({ householdName, url }: { householdName: string; url: string }) {
   return (
     <Layout preview={`Rejoins le foyer « ${householdName} » sur Fin Prêt`}>

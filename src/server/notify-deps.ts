@@ -9,6 +9,7 @@ import { householdCan } from "@/server/entitlements-load";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
 import type { NotifyDeps, Payload, Recipient, Subscription } from "@/server/notify";
+import { emailOf } from "@/server/users";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
 
 /** Dépendances réelles de l'envoi : base (clé de service), Web Push (VAPID) et e-mail (Resend). */
@@ -182,7 +183,7 @@ export function createNotifyDeps(baseUrl: string): NotifyDeps {
     removeSubscription: async (id) => {
       await db.from("push_subscriptions").delete().eq("id", id);
     },
-    emailOf: async (userId) => (await db.auth.admin.getUserById(userId)).data.user?.email ?? null,
+    emailOf,
     sendEmail: emailSender(baseUrl),
   };
 }
