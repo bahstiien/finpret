@@ -143,12 +143,16 @@ export function MenuScreen({
             {fr.menu.weekOf(formatShort(view.start))}
           </p>
           <h1 className="t-1 [overflow-wrap:anywhere]">{t.title}</h1>
-          {tonightName && (
-            <p className="t-small muted">
-              {header.greeting}, {header.name}. {t.tonightLead}{" "}
-              <b className="text-ink">{tonightName.toLowerCase()}</b>
-            </p>
-          )}
+          <p className="t-small muted">
+            {header.greeting}, <span className="break-words">{header.name}</span>{" "}
+            <span aria-hidden="true">👋</span>
+            {tonightName && (
+              <>
+                {" "}
+                {t.tonightLead} <b className="text-ink">{tonightName.toLowerCase()}</b>
+              </>
+            )}
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
           {weeks.hasNext && (
