@@ -17,10 +17,12 @@ import {
 } from "@/server/actions/menu";
 import type { DishCard, MenuView } from "@/server/menu-view";
 import { DayProgram } from "./DayProgram";
+import { WeekBoard, type BoardFilter } from "./WeekBoard";
 import { Flag } from "./Flag";
 import { GuestsSheet, MoveSheet, RecipePickerSheet } from "./Sheets";
 import { useMenuAction } from "./useMenuAction";
 import { Card } from "@/components/ui/Card";
+import { LinkButton } from "@/components/ui/Button";
 
 const t = fr.menuScreen;
 const tv = fr.menuView;
@@ -113,6 +115,7 @@ export function MenuScreen({
 }) {
   const inWeek = view.todayIndex >= 1 && view.todayIndex <= 7;
   const [selected, setSelected] = useState(inWeek ? view.todayIndex : 1);
+  const [filter, setFilter] = useState<BoardFilter>("week");
   const [sheet, setSheet] = useState<Sheet>(null);
   const { run, pending } = useMenuAction();
   const day = view.days[selected - 1]!;
@@ -121,59 +124,60 @@ export function MenuScreen({
 
   return (
     <>
-      <header className="flex items-start justify-between gap-4 min-[900px]:items-center">
-        <div>
-          <p className="text-sm font-semibold text-muted first-letter:uppercase">{header.date}</p>
-          <h1 className="text-4xl font-bold tracking-tight [overflow-wrap:anywhere]">
-            {header.greeting}, <span className="break-words">{header.name}</span>{" "}
-            <span aria-hidden="true">👋</span>
-          </h1>
+      <div className="ph">
+        <div className="flex flex-col gap-2.5">
+          <p className="t-kicker first-letter:uppercase" data-testid="week-title">
+            {fr.menu.weekOf(formatShort(view.start))}
+          </p>
+          <h1 className="t-1 [overflow-wrap:anywhere]">{t.title}</h1>
           {tonightName && (
-            <p className="text-muted">
-              {t.tonightLead} <b className="text-ink">{tonightName.toLowerCase()}</b>
+            <p className="t-small muted">
+              {header.greeting}, {header.name}. {t.tonightLead} <b className="text-ink">{tonightName.toLowerCase()}</b>
             </p>
           )}
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <Link
-            href={`/app/print?week=${view.start}`}
-            aria-label={t.print}
-            className="grid size-12 place-items-center rounded-full bg-surface hover:bg-chip"
-          >
+        <div className="flex flex-wrap items-center gap-2.5">
+          {weeks.hasNext && (
+            <LinkButton href="/app?week=next" variant="secondary" size="sm">
+              {t.nextWeek}
+            </LinkButton>
+          )}
+          {weeks.hasCurrent && (
+            <LinkButton href="/app" variant="outline" size="sm">
+              {t.currentWeek}
+            </LinkButton>
+          )}
+          <Link href={`/app/print?week=${view.start}`} aria-label={t.print} className="iconbtn">
             <Icon name="print" />
           </Link>
-          <Link
-            href="/settings"
-            aria-label={fr.nav.account}
-            className="hidden size-12 place-items-center rounded-full bg-violet font-display text-lg font-bold text-white uppercase min-[900px]:grid"
-          >
-            {header.name.charAt(0) || "·"}
-          </Link>
         </div>
-      </header>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-lg font-bold" data-testid="week-title">
-          {fr.menu.weekOf(formatShort(view.start))}
-        </h2>
-        {weeks.hasNext && (
-          <Link
-            href="/app?week=next"
-            className="rounded-r2 bg-violet px-4 py-2 text-sm font-bold text-white"
-          >
-            {t.nextWeek}
-          </Link>
-        )}
-        {weeks.hasCurrent && (
-          <Link href="/app" className="rounded-r2 bg-surface px-4 py-2 text-sm font-bold">
-            {t.currentWeek}
-          </Link>
-        )}
       </div>
+
+      <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <p className="t-kicker">{t.sessionBanner.kicker}</p>
+          <p className="t-2">{t.sessionBanner.title(view.plannedMeals, dur(sessionMinutes))}</p>
+        </div>
+        <LinkButton href="/app/session" size="lg">
+          {t.sessionBanner.go}
+        </LinkButton>
+      </Card>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="seg" role="group" aria-label={t.filter.label}>
+          {(["week", "lunch", "dinner", "weekend"] as const).map((f) => (
+            <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)}>
+              {t.filter[f]}
+            </button>
+          ))}
+        </div>
+        <p className="t-kicker muted">{t.board.meals(view.plannedMeals)}</p>
+      </div>
+
+      <WeekBoard view={view} filter={filter} selected={selected} onSelect={setSelected} />
 
       <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <div className="flex flex-col gap-4">
-          <DayStrip view={view} selected={selected} onSelect={setSelected} />
           <DayProgram
             day={day}
             isToday={selected === view.todayIndex}
@@ -378,48 +382,6 @@ export function MenuScreen({
         />
       )}
     </>
-  );
-}
-
-function DayStrip({
-  view,
-  selected,
-  onSelect,
-}: {
-  view: MenuView;
-  selected: number;
-  onSelect: (d: number) => void;
-}) {
-  return (
-    <nav aria-label={t.days} className="-mx-1 overflow-x-auto px-1">
-      <ul className="grid grid-cols-7 gap-1">
-        {view.days.map((d) => {
-          const isToday = d.day === view.todayIndex;
-          const past = view.todayIndex > d.day && view.todayIndex <= 7;
-          const weekend = d.day > 5;
-          return (
-            <li key={d.day}>
-              <button
-                type="button"
-                aria-pressed={selected === d.day}
-                aria-label={`${fr.days[d.day - 1]} ${Number(d.iso.slice(8))}${isToday ? `, ${t.today}` : ""}`}
-                onClick={() => onSelect(d.day)}
-                className={`flex h-16 w-full flex-col items-center justify-center rounded-card border-2 font-display transition duration-300 ease-base ${
-                  isToday
-                    ? "border-banana bg-banana text-[#17151F]"
-                    : weekend
-                      ? "border-banana bg-surface"
-                      : "border-transparent bg-surface"
-                } ${past && !isToday ? "text-muted" : ""} ${selected === d.day && !isToday ? "outline-3 outline-violet" : ""}`}
-              >
-                <span className="text-lg font-bold">{Number(d.iso.slice(8))}</span>
-                <span className="text-xs font-bold">{fr.daysAbbr[d.day - 1]}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
   );
 }
 

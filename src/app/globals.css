@@ -4,7 +4,7 @@
 @import "../styles/tokens.css";
 
 /* Primitives néo-brutalistes de la maquette v2.1 (.btn, .card, .pill, .input, .seg, .stamp…). */
-@import "../styles/neo.css";
+@import "../styles/neo.css" layer(components);
 
 @custom-variant dark {
   @media (prefers-color-scheme: dark) {
