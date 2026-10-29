@@ -70,12 +70,12 @@ const SPACING = [0, 2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96];
 
 /** Rayons de l'échelle Tailwind ; `card` et `sheet` en sont des alias (24 et 32 px). */
 const RADII: [string, string][] = [
-  ["lg 8", "rounded-lg"],
-  ["xl 12", "rounded-xl"],
-  ["2xl 16", "rounded-2xl"],
+  ["lg 8", "rounded-card"],
+  ["xl 12", "rounded-card"],
+  ["2xl 16", "rounded-card"],
   ["card 24", "rounded-card"],
   ["sheet 32", "rounded-sheet"],
-  ["pill", "rounded-pill"],
+  ["pill", "rounded-r2"],
 ];
 
 /** Galerie vivante du design system (docs/DESIGN_SYSTEM.md). Réservée au développement. */
@@ -93,7 +93,7 @@ export default function DesignSystemPage() {
         <ul className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-4">
           {COLORS.map((c) => (
             <li key={c} className="flex flex-col gap-1">
-              <span className="h-14 rounded-2xl border border-line" style={{ background: `var(--${c})` }} />
+              <span className="h-14 rounded-card border border-line" style={{ background: `var(--${c})` }} />
               <code className="text-xs text-muted">--{c}</code>
             </li>
           ))}
@@ -138,7 +138,7 @@ export default function DesignSystemPage() {
 
       <Group title="Mouvement">
         <div className="flex flex-wrap items-center gap-4">
-          <span className="inline-flex min-h-11 items-center rounded-xl bg-violet-soft px-3 py-2 text-base font-semibold text-violet-strong transition duration-300 ease-base hover:bg-violet hover:text-white">
+          <span className="inline-flex min-h-11 items-center rounded-card bg-violet-soft px-3 py-2 text-base font-semibold text-violet-strong transition duration-300 ease-base hover:bg-violet hover:text-white border-[length:var(--bw)] border-line">
             Survol 300 ms
           </span>
           <span className="text-sm text-muted">
@@ -242,7 +242,7 @@ export default function DesignSystemPage() {
       <Group title="Icônes">
         <ul className="flex flex-wrap gap-3">
           {ICONS.map((i) => (
-            <li key={i} title={i} className="grid size-12 place-items-center rounded-2xl bg-surface">
+            <li key={i} title={i} className="grid size-12 place-items-center rounded-card bg-surface border-[length:var(--bw)] border-line">
               <Icon name={i} />
             </li>
           ))}

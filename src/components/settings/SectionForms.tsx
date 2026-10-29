@@ -410,7 +410,7 @@ export function ShoppingForm({
                 const from = Number(e.dataTransfer.getData("text/plain"));
                 if (!Number.isNaN(from) && from !== i) move(from, i - from);
               }}
-              className="flex min-h-11 cursor-grab items-center justify-between gap-2 rounded-2xl bg-bg px-4"
+              className="flex min-h-11 cursor-grab items-center justify-between gap-2 rounded-card bg-bg px-4"
             >
               <span className="font-semibold">
                 <span aria-hidden="true" className="mr-2 text-muted">
@@ -472,7 +472,7 @@ export function ShoppingForm({
               <button
                 type="button"
                 aria-label={s.remove(r)}
-                className="min-h-11 rounded-pill bg-chip px-4 text-sm font-semibold"
+                className="min-h-11 rounded-r2 bg-chip px-4 text-sm font-semibold"
                 onClick={() => update((d) => ({ ...d, recurring: d.recurring.filter((x) => x !== r) }))}
               >
                 {r} ×

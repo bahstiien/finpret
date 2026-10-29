@@ -69,7 +69,7 @@ export function PrintSheet({ data }: { data: PrintData }) {
             {data.chips.map((c) => (
               <span
                 key={c}
-                className="rounded-pill border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
+                className="rounded-r2 border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
               >
                 {c}
               </span>

@@ -136,7 +136,7 @@ export function WeekOpsPanel({
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 {t.ingredient}
                 <select
-                  className="min-h-11 rounded-md border border-line bg-surface px-3"
+                  className="min-h-11 rounded-card border border-line bg-surface px-3"
                   value={chosen?.key}
                   onChange={(e) => setPick(e.target.value)}
                 >
@@ -150,7 +150,7 @@ export function WeekOpsPanel({
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 {t.toWeek}
                 <select
-                  className="min-h-11 rounded-md border border-line bg-surface px-3"
+                  className="min-h-11 rounded-card border border-line bg-surface px-3"
                   value={target}
                   onChange={(e) => setTarget(e.target.value)}
                 >
@@ -165,7 +165,7 @@ export function WeekOpsPanel({
                 {`${t.quantity} (${chosen?.unit ?? ""})`}
                 <input
                   inputMode="decimal"
-                  className="min-h-11 rounded-md border border-line bg-surface px-3"
+                  className="min-h-11 rounded-card border border-line bg-surface px-3"
                   placeholder={String(chosen?.balance ?? "")}
                   value={qty}
                   onChange={(e) => setQty(e.target.value)}

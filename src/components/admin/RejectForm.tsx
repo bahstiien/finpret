@@ -29,7 +29,7 @@ export function RejectForm({ id }: { id: string }) {
           required
           minLength={3}
           maxLength={300}
-          className="min-h-11 rounded-2xl border-2 border-line bg-surface px-3"
+          className="min-h-11 rounded-card border-2 border-line bg-surface px-3"
         />
       </label>
       <Button type="submit" variant="outline" disabled={pending}>

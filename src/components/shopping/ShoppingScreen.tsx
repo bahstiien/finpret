@@ -463,17 +463,17 @@ export function ShoppingScreen({
           aria-valuemin={0}
           aria-valuemax={visible.length}
           aria-valuenow={done}
-          className="h-2 overflow-hidden rounded-pill bg-line"
+          className="h-2 overflow-hidden rounded-r2 bg-line"
         >
           <div
-            className="h-full rounded-pill bg-[#FF6B8B] transition-all duration-300 ease-base"
+            className="h-full rounded-r2 bg-[#FF6B8B] transition-all duration-300 ease-base"
             style={{ width: `${visible.length ? (done / visible.length) * 100 : 0}%` }}
           />
         </div>
         {(!online || pending > 0) && (
           <p
             role="status"
-            className="rounded-2xl bg-yellow-soft px-4 py-2 text-sm font-semibold"
+            className="rounded-card bg-yellow-soft px-4 py-2 text-sm font-semibold border-[length:var(--bw)] border-line"
             data-testid="offline"
           >
             {online ? t.syncing(pending) : FEATURES.offlineWrites ? t.offline(pending) : t.offlineReadOnly}
@@ -482,7 +482,7 @@ export function ShoppingScreen({
       </header>
 
       <form
-        className="flex flex-wrap gap-2 rounded-card bg-surface p-4"
+        className="flex flex-wrap gap-2 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line"
         onSubmit={(e) => {
           e.preventDefault();
           add(label, qty);
@@ -499,7 +499,7 @@ export function ShoppingScreen({
           onChange={(e) => setLabel(e.target.value)}
           placeholder={t.addPlaceholder}
           maxLength={80}
-          className="min-h-11 w-full min-w-0 rounded-2xl sm:w-auto sm:flex-[3] border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+          className="min-h-11 w-full min-w-0 rounded-card sm:w-auto sm:flex-[3] border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
         />
         <label htmlFor="item-qty" className="sr-only">
           {t.qtyLabel}
@@ -510,7 +510,7 @@ export function ShoppingScreen({
           onChange={(e) => setQty(e.target.value)}
           placeholder={t.qtyPlaceholder}
           maxLength={30}
-          className="min-h-11 w-24 min-w-0 flex-1 rounded-2xl border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+          className="min-h-11 w-24 min-w-0 flex-1 rounded-card border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
         />
         <Button type="submit">{t.add}</Button>
         {frequent.length > 0 && (
@@ -520,7 +520,7 @@ export function ShoppingScreen({
                 key={f}
                 type="button"
                 onClick={() => add(f)}
-                className="min-h-9 rounded-pill bg-chip px-3 text-sm font-semibold"
+                className="min-h-9 rounded-r2 bg-chip px-3 text-sm font-semibold"
               >
                 + {f}
               </button>
@@ -657,7 +657,7 @@ export function ShoppingScreen({
                   )}
                   {purchases && i.ingredient_key && editing === i.ingredient_key && (
                     <form
-                      className="flex w-full flex-col gap-2 rounded-2xl bg-chip p-3"
+                      className="flex w-full flex-col gap-2 rounded-card bg-chip p-3 border-[length:var(--bw)] border-line"
                       onSubmit={(e) => {
                         e.preventDefault();
                         void savePurchase(i.ingredient_key!, purchases.lines[i.ingredient_key!]!);
@@ -682,7 +682,7 @@ export function ShoppingScreen({
                           value={pQty}
                           onChange={(e) => setPQty(e.target.value)}
                           aria-describedby={`pu-${i.id}`}
-                          className="min-h-11 w-28 rounded-2xl border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+                          className="min-h-11 w-28 rounded-card border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
                         />
                         <label className="sr-only" htmlFor={`pu-${i.id}`}>
                           {tp.unit}
@@ -691,7 +691,7 @@ export function ShoppingScreen({
                           id={`pu-${i.id}`}
                           value={pUnit}
                           onChange={(e) => setPUnit(e.target.value)}
-                          className="min-h-11 rounded-2xl border-2 border-line bg-surface px-3"
+                          className="min-h-11 rounded-card border-2 border-line bg-surface px-3"
                         >
                           {purchases.lines[i.ingredient_key]!.units.map((u) => (
                             <option key={u} value={u}>
@@ -766,7 +766,7 @@ function PurchaseBlock({
   return (
     <div className="flex w-full flex-col gap-1 pb-2 pl-8 text-sm" data-testid="purchase-line">
       <p className="font-semibold">
-        {state && <span className="mr-2 rounded-pill bg-chip px-2 py-0.5">{state}</span>}
+        {state && <span className="mr-2 rounded-r2 bg-chip px-2 py-0.5">{state}</span>}
         {line.deficit ? tp.remaining(line.deficit) : line.status === "to_verify" ? null : tp.covered}
       </p>
       <p className="text-muted">
@@ -783,14 +783,14 @@ function PurchaseBlock({
         <button
           type="button"
           onClick={onConfirm}
-          className="min-h-11 self-start rounded-pill bg-chip px-4 font-semibold"
+          className="min-h-11 self-start rounded-r2 bg-chip px-4 font-semibold"
         >
           {tp.confirmCoverage}
         </button>
       )}
       {line.issue && (
         <p className="font-semibold" data-testid="issue-note">
-          <span className="mr-2 rounded-pill bg-yellow-soft px-2 py-0.5">{tp.toResolve}</span>
+          <span className="mr-2 rounded-r2 bg-yellow-soft px-2 py-0.5">{tp.toResolve}</span>
           {tp.issueNote[line.issue]}
         </p>
       )}
@@ -800,7 +800,7 @@ function PurchaseBlock({
             type="button"
             onClick={onOpen}
             aria-label={tp.modifyAria(name)}
-            className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+            className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
           >
             {tp.modify}
           </button>
@@ -808,7 +808,7 @@ function PurchaseBlock({
             <button
               type="button"
               onClick={onClear}
-              className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+              className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
             >
               {tp.foundIt}
             </button>
@@ -817,7 +817,7 @@ function PurchaseBlock({
               type="button"
               onClick={onReport}
               aria-label={tp.notFoundAria(name)}
-              className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+              className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
             >
               {tp.notFound}
             </button>
@@ -829,14 +829,14 @@ function PurchaseBlock({
           <button
             type="button"
             onClick={() => onIssue("search_elsewhere")}
-            className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+            className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
           >
             {tp.searchElsewhere}
           </button>
           <button
             type="button"
             onClick={() => onIssue("no_more")}
-            className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+            className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
           >
             {tp.noMore}
           </button>

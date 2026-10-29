@@ -57,7 +57,7 @@ function CanteenBlock({ entry }: { entry: CanteenEntry }) {
       )}
       {entry.duplicates.length > 0 && (
         <p
-          className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink"
+          className="rounded-card bg-peach px-3 py-2 text-sm font-semibold text-peach-ink border-[length:var(--bw)] border-line"
           role="note"
           data-testid="canteen-duplicate"
         >
@@ -159,13 +159,13 @@ export function MenuScreen({
         {weeks.hasNext && (
           <Link
             href="/app?week=next"
-            className="rounded-pill bg-violet px-4 py-2 text-sm font-bold text-white"
+            className="rounded-r2 bg-violet px-4 py-2 text-sm font-bold text-white"
           >
             {t.nextWeek}
           </Link>
         )}
         {weeks.hasCurrent && (
-          <Link href="/app" className="rounded-pill bg-surface px-4 py-2 text-sm font-bold">
+          <Link href="/app" className="rounded-r2 bg-surface px-4 py-2 text-sm font-bold">
             {t.currentWeek}
           </Link>
         )}
@@ -210,7 +210,7 @@ export function MenuScreen({
             }
           />
           <Card tone="violet" className="flex flex-col gap-4">
-            <span className="self-start rounded-pill border border-white/40 px-3 py-1 text-xs font-bold">
+            <span className="self-start rounded-r2 border border-white/40 px-3 py-1 text-xs font-bold">
               {t.weekend.eyebrow}
             </span>
             <h2 className="text-2xl font-bold">{t.weekend.title}</h2>
@@ -233,7 +233,7 @@ export function MenuScreen({
                 type="button"
                 disabled={pending}
                 onClick={() => run(() => suggestWeekendAction(view.weekId))}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-pill bg-surface px-6 font-bold text-ink"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-r2 bg-surface px-6 font-bold text-ink"
               >
                 <Icon name="sparkle" className="size-5" />
                 {t.weekend.suggest}
@@ -243,7 +243,7 @@ export function MenuScreen({
         </div>
       </div>
 
-      <section className="flex flex-col gap-3 min-[900px]:rounded-card min-[900px]:bg-surface min-[900px]:p-6">
+      <section className="flex flex-col gap-3 min-[900px]:rounded-card min-[900px]:bg-surface min-[900px]:p-6 border-[length:var(--bw)] border-line">
         <div className="flex items-baseline justify-between">
           <h2 className="text-2xl font-bold">{t.dishes}</h2>
           <span className="text-sm text-muted">{t.dishCount(view.dishes.length)}</span>
@@ -269,7 +269,7 @@ export function MenuScreen({
       <section className="flex flex-col gap-3">
         <h2 className="text-2xl font-bold">{t.recipes}</h2>
         {view.recipes.map((r, i) => (
-          <details key={i} className="rounded-card bg-surface p-4">
+          <details key={i} className="rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
             <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-2">
               <span className="text-xs font-bold text-violet-strong uppercase">{r.title}</span>
               <b className="text-lg">
@@ -335,7 +335,7 @@ export function MenuScreen({
           </Button>
           <Link
             href="/settings/menu"
-            className="inline-flex min-h-11 items-center rounded-pill bg-surface px-6 font-bold"
+            className="inline-flex min-h-11 items-center rounded-r2 bg-surface px-6 font-bold"
           >
             {t.quickSettings}
           </Link>
@@ -404,7 +404,7 @@ function DayStrip({
                 aria-pressed={selected === d.day}
                 aria-label={`${fr.days[d.day - 1]} ${Number(d.iso.slice(8))}${isToday ? `, ${t.today}` : ""}`}
                 onClick={() => onSelect(d.day)}
-                className={`flex h-16 w-full flex-col items-center justify-center rounded-2xl border-2 font-display transition duration-300 ease-base ${
+                className={`flex h-16 w-full flex-col items-center justify-center rounded-card border-2 font-display transition duration-300 ease-base ${
                   isToday
                     ? "border-banana bg-banana text-[#17151F]"
                     : weekend
@@ -438,7 +438,7 @@ function Tiles({
     <div className="grid grid-cols-2 gap-3" data-testid="week-summary">
       {day.tonight && (
         <div className="flex flex-col gap-2 rounded-card bg-ink p-4 text-surface">
-          <span className="grid size-10 place-items-center rounded-xl bg-banana text-[#17151F]">
+          <span className="grid size-10 place-items-center rounded-card bg-banana text-[#17151F] border-[length:var(--bw)] border-line">
             <Icon name="pot" />
           </span>
           <span className="text-sm text-surface/70">
@@ -449,7 +449,7 @@ function Tiles({
       )}
       {day.thaw.length > 0 && (
         <Card as="div" tone="yellow" padding="cozy" className="flex flex-col gap-2">
-          <span className="grid size-10 place-items-center rounded-xl bg-surface">
+          <span className="grid size-10 place-items-center rounded-card bg-surface border-[length:var(--bw)] border-line">
             <Icon name="snow" />
           </span>
           <span className="text-sm text-muted">{isToday ? t.tiles.beforeBed : t.tiles.eveBefore}</span>
@@ -531,7 +531,7 @@ function PlanGrid({
                         disabled={!canEdit}
                         onClick={() => onWeekend(`${d}-${m}`)}
                         aria-label={c.name ? t.grid.weekendSet(slot, c.name) : t.grid.weekendEmpty(slot)}
-                        className={`grid h-11 w-full place-items-center rounded-xl border-2 border-banana text-xs font-bold ${
+                        className={`grid h-11 w-full place-items-center rounded-card border-2 border-banana text-xs font-bold ${
                           c.state === "set" ? "bg-banana text-[#17151F]" : "bg-surface"
                         }`}
                       >
@@ -553,7 +553,7 @@ function PlanGrid({
                       aria-pressed={on}
                       onClick={() => onToggle(d, m)}
                       aria-label={on ? t.grid.on(slot, c.name ?? "") : t.grid.off(slot)}
-                      className={`grid h-11 w-full place-items-center rounded-xl ${
+                      className={`grid h-11 w-full place-items-center rounded-card ${
                         on
                           ? d === view.todayIndex
                             ? "bg-ink text-surface"
@@ -585,7 +585,7 @@ function CakeLine({
   onChange: () => void;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-yellow-soft p-4">
+    <div className="flex flex-wrap items-center gap-3 rounded-card bg-yellow-soft p-4 border-[length:var(--bw)] border-line">
       <Icon name="cake" className="size-6 shrink-0" />
       <p className="flex-1">
         <b>{t.cake(fr.days[cake.day - 1]!)}</b> {cake.name.toLowerCase()} · {cake.parts}
@@ -594,7 +594,7 @@ function CakeLine({
         <button
           type="button"
           onClick={onChange}
-          className="min-h-11 rounded-pill border-2 border-ink px-4 text-sm font-bold"
+          className="min-h-11 rounded-r2 border-2 border-ink px-4 text-sm font-bold"
         >
           {t.change}
         </button>
@@ -655,7 +655,7 @@ function DishCardView({
               aria-pressed={dish.doubled}
               disabled={pending}
               onClick={onDouble}
-              className={`min-h-11 rounded-pill px-3 text-sm font-bold ${dish.doubled ? "bg-blue-soft text-blue-ink" : "bg-chip"}`}
+              className={`min-h-11 rounded-r2 px-3 text-sm font-bold ${dish.doubled ? "bg-blue-soft text-blue-ink" : "bg-chip"}`}
             >
               {t.double}
             </button>
@@ -665,7 +665,7 @@ function DishCardView({
             disabled={pending}
             onClick={onSwap}
             aria-label={`${t.change} ${dish.name}`}
-            className="min-h-11 flex-1 rounded-pill border-2 border-ink px-4 font-bold"
+            className="min-h-11 flex-1 rounded-r2 border-2 border-ink px-4 font-bold"
           >
             {t.change}
           </button>

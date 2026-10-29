@@ -35,7 +35,7 @@ export function WeekStrip({ weeks }: { weeks: FriseWeek[] }) {
           data-state={w.state}
           aria-current={w.current ? "date" : undefined}
           aria-label={`${fr.progress.streak.pauseWeek(formatShort(w.weekStart))}${LABEL[w.state] ? `, ${LABEL[w.state]}` : ""}`}
-          className={`grid h-12 place-items-center rounded-2xl ${STYLE[w.state]}`}
+          className={`grid h-12 place-items-center rounded-card ${STYLE[w.state]}`}
         >
           {w.state === "paused" && <Icon name="pause" className="size-5" />}
           {w.state === "done" && <Icon name="check" className="size-5" />}

@@ -29,7 +29,7 @@ export function InviteEditorForm() {
             readOnly
             value={state.link}
             onFocus={(e) => e.currentTarget.select()}
-            className="min-h-11 w-full rounded-xl bg-bg px-3 text-sm"
+            className="min-h-11 w-full rounded-card bg-bg px-3 text-sm"
           />
         </div>
       )}

@@ -59,7 +59,7 @@ export function SaveStatus({ status }: { status: Status }) {
   return (
     <p
       role="status"
-      className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-pill bg-ink px-4 py-3 text-sm font-bold text-surface shadow-float"
+      className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-r2 bg-ink px-4 py-3 text-sm font-bold text-surface shadow-hard"
     >
       {status.kind === "saving" ? t.saving : `✓ ${t.saved}`}
     </p>

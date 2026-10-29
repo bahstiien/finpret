@@ -20,7 +20,7 @@ export function StreakTile({ streak }: { streak: Pick<StreakState, "current" | "
   return (
     <Link
       href="/app/progress?from=tile"
-      className="flex min-h-16 items-center gap-4 rounded-card bg-violet-soft p-4 text-violet-strong"
+      className="flex min-h-16 items-center gap-4 rounded-card bg-violet-soft p-4 text-violet-strong border-[length:var(--bw)] border-line"
       data-testid="streak-tile"
     >
       <span className="grid size-12 shrink-0 place-items-center rounded-full bg-surface">

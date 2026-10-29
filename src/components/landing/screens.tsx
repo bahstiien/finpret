@@ -30,7 +30,7 @@ function Badge({ tone, children }: { tone: "yellow" | "violet" | "chip"; childre
     violet: "bg-violet-soft text-violet-strong",
     chip: "bg-chip text-ink",
   };
-  return <span className={`rounded-pill px-2 py-1 text-xs font-bold ${tones[tone]}`}>{children}</span>;
+  return <span className={`rounded-r2 px-2 py-1 text-xs font-bold ${tones[tone]}`}>{children}</span>;
 }
 
 /** Menu du jour : bandeau des jours, frise du jour, tuiles « Ce soir » et « Avant de dormir ». */
@@ -45,7 +45,7 @@ export function MenuScreen() {
           {days.map((day) => (
             <div
               key={day.n}
-              className={`rounded-xl py-1 text-center ${
+              className={`rounded-card py-1 text-center ${
                 day.today
                   ? "bg-banana text-[#17151f]"
                   : day.weekend
@@ -59,7 +59,7 @@ export function MenuScreen() {
           ))}
         </div>
 
-        <div className="mt-3 rounded-3xl bg-surface p-3">
+        <div className="mt-3 rounded-card bg-surface p-3 border-[length:var(--bw)] border-line">
           <div className="flex gap-3">
             <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-white">
               <Icon name="check" className="size-3" />
@@ -89,15 +89,15 @@ export function MenuScreen() {
         </div>
 
         <div className="mt-3 grid grid-cols-2 gap-2">
-          <div className="rounded-3xl bg-nav p-3 text-on-nav">
-            <span className="grid size-8 place-items-center rounded-lg bg-banana text-[#17151f]">
+          <div className="rounded-card bg-nav p-3 text-on-nav border-[length:var(--bw)] border-line">
+            <span className="grid size-8 place-items-center rounded-card bg-banana text-[#17151f] border-[length:var(--bw)] border-line">
               <Icon name="pot" className="size-[18px]" />
             </span>
             <p className="mt-4 text-xs font-semibold opacity-80">Ce soir</p>
             <p className="font-display text-sm leading-tight font-bold">Cuis 200 g de pâtes</p>
           </div>
-          <div className="rounded-3xl bg-yellow-soft p-3 text-cream-ink">
-            <span className="grid size-8 place-items-center rounded-lg bg-white">
+          <div className="rounded-card bg-yellow-soft p-3 text-cream-ink border-[length:var(--bw)] border-line">
+            <span className="grid size-8 place-items-center rounded-card bg-white">
               <Icon name="snowflake" className="size-[18px]" />
             </span>
             <p className="mt-4 text-xs font-semibold">Avant de dormir</p>
@@ -123,7 +123,7 @@ export function WeekScreen() {
   return (
     <div className="px-4">
       <p className="font-display text-xl leading-tight font-bold">Repas à prévoir</p>
-      <div className="mt-2 rounded-3xl bg-surface p-3">
+      <div className="mt-2 rounded-card bg-surface p-3 border-[length:var(--bw)] border-line">
         <div className="grid grid-cols-[34px_repeat(7,1fr)] gap-1 text-center text-xs font-bold">
           <span />
           {weekdayLetters.map((l, i) => (
@@ -136,7 +136,7 @@ export function WeekScreen() {
             {row.cells.map((cell, i) => (
               <span
                 key={i}
-                className={`grid h-8 place-items-center rounded-lg text-xs font-bold ${
+                className={`grid h-8 place-items-center rounded-card text-xs font-bold ${
                   cell === "on"
                     ? "bg-violet text-white"
                     : cell === "today"
@@ -163,18 +163,18 @@ export function WeekScreen() {
         ))}
       </div>
 
-      <div className="mt-3 rounded-3xl bg-violet p-4 text-white">
+      <div className="mt-3 rounded-card bg-violet p-4 text-white border-[length:var(--bw)] border-line">
         <p className="font-display text-base leading-tight font-bold">
           Samedi et dimanche soir à remplir
         </p>
         <p className="mt-1 text-xs font-bold">Cuisiné le jour même</p>
-        <span className="mt-3 flex h-10 items-center justify-center gap-1 rounded-pill bg-white text-xs font-bold text-[#17151f]">
+        <span className="mt-3 flex h-10 items-center justify-center gap-1 rounded-r2 bg-white text-xs font-bold text-[#17151f]">
           <Icon name="sparkle" className="size-4" /> Suggérer des idées
         </span>
       </div>
 
       <p className="mt-4 text-xs font-bold">Plats de la semaine</p>
-      <div className="mt-2 rounded-3xl bg-surface p-3">
+      <div className="mt-2 rounded-card bg-surface p-3 border-[length:var(--bw)] border-line">
         <p className="flex items-center gap-1 text-sm font-bold">
           <Origin code="MX" /> Chili con carne
         </p>
@@ -190,18 +190,18 @@ export function WeekScreen() {
 export function ShoppingScreen() {
   return (
     <div className="px-4">
-      <div className="rounded-3xl bg-pink-soft p-3 text-pink-ink">
+      <div className="rounded-card bg-pink-soft p-3 text-pink-ink border-[length:var(--bw)] border-line">
         <div className="flex items-baseline justify-between">
           <p className="font-display text-xl font-bold">Courses</p>
           <p className="font-display text-xl font-bold">12/31</p>
         </div>
         <p className="text-xs font-bold">Partagée avec Julien · triée par rayon</p>
-        <div className="mt-2 h-2 rounded-pill bg-pink-ink/20">
-          <div className="h-full w-[39%] rounded-pill bg-pink-ink" />
+        <div className="mt-2 h-2 rounded-r2 bg-pink-ink/20">
+          <div className="h-full w-[39%] rounded-r2 bg-pink-ink" />
         </div>
       </div>
 
-      <div className="mt-3 rounded-3xl bg-surface p-3">
+      <div className="mt-3 rounded-card bg-surface p-3 border-[length:var(--bw)] border-line">
         <p className="text-xs font-bold tracking-wider text-muted uppercase">Fruits et légumes</p>
         {[
           { name: "Butternut", qty: "1 grosse" },
@@ -210,7 +210,7 @@ export function ShoppingScreen() {
         ].map((item) => (
           <div key={item.name} className="flex items-center gap-3 border-b border-line py-2 last:border-0">
             <span
-              className={`grid size-6 shrink-0 place-items-center rounded-lg ${
+              className={`grid size-6 shrink-0 place-items-center rounded-card ${
                 item.done ? "bg-green text-white" : "border-2 border-line"
               }`}
             >
@@ -228,18 +228,18 @@ export function ShoppingScreen() {
           { name: "Lentilles corail", qty: "1 paquet de 500 g" },
         ].map((item) => (
           <div key={item.name} className="flex items-center gap-3 border-b border-line py-2 last:border-0">
-            <span className="size-6 shrink-0 rounded-lg border-2 border-line" />
+            <span className="size-6 shrink-0 rounded-card border-2 border-line" />
             <span className="flex-1 text-xs font-bold">{item.name}</span>
             <span className="text-xs text-muted">{item.qty}</span>
           </div>
         ))}
       </div>
 
-      <div className="mt-3 rounded-3xl bg-yellow-soft p-3 text-cream-ink">
+      <div className="mt-3 rounded-card bg-yellow-soft p-3 text-cream-ink border-[length:var(--bw)] border-line">
         <p className="font-display text-sm font-bold">Placard, à vérifier avant de partir</p>
         <div className="mt-2 flex gap-1 text-xs font-bold text-[#17151f]">
-          <span className="rounded-pill bg-white px-3 py-1">Cumin</span>
-          <span className="flex items-center gap-1 rounded-pill bg-nav px-3 py-1 text-on-nav">
+          <span className="rounded-r2 bg-white px-3 py-1">Cumin</span>
+          <span className="flex items-center gap-1 rounded-r2 bg-nav px-3 py-1 text-on-nav">
             <Icon name="check" className="size-3" /> Bouillon
           </span>
         </div>
@@ -253,16 +253,16 @@ export function SessionScreen() {
   return (
     <div className="px-3">
       <div className="flex gap-2">
-        <div className="timer-ready flex flex-1 items-center justify-between rounded-pill bg-banana py-1 pr-1 pl-3 text-[#17151f]">
+        <div className="timer-ready flex flex-1 items-center justify-between rounded-r2 bg-banana py-1 pr-1 pl-3 text-[#17151f]">
           <div>
             <p className="text-xs font-semibold">Lentilles</p>
             <p className="font-display text-sm leading-none font-bold">Prêt !</p>
           </div>
-          <span className="grid h-8 w-11 place-items-center rounded-pill bg-[#17151f]/70 text-xs font-bold text-white">
+          <span className="grid h-8 w-11 place-items-center rounded-r2 bg-[#17151f]/70 text-xs font-bold text-white">
             OK
           </span>
         </div>
-        <div className="flex flex-1 items-center justify-between rounded-pill bg-surface py-1 pr-1 pl-3">
+        <div className="flex flex-1 items-center justify-between rounded-r2 bg-surface py-1 pr-1 pl-3">
           <div>
             <p className="text-xs font-semibold">Chili · plaque 1</p>
             <p className="font-display text-sm leading-none font-bold">18:42</p>
@@ -275,20 +275,20 @@ export function SessionScreen() {
           <p className="text-xs font-semibold text-muted">14:00 → fin prévue 16:36</p>
           <p className="font-display text-sm font-bold">Étape 5 sur 12</p>
         </div>
-        <span className="rounded-pill bg-peach px-2 py-1 text-xs font-bold text-peach-ink">+6 min</span>
+        <span className="rounded-r2 bg-peach px-2 py-1 text-xs font-bold text-peach-ink">+6 min</span>
       </div>
 
-      <div className="mt-2 rounded-3xl bg-blue-soft p-3 text-blue-ink">
+      <div className="mt-2 rounded-card bg-blue-soft p-3 text-blue-ink border-[length:var(--bw)] border-line">
         <div className="flex items-center justify-between">
           <p className="font-display text-4xl leading-none font-bold">15:10</p>
-          <span className="flex items-center gap-1 rounded-pill bg-white px-2 py-1 text-xs font-bold">
+          <span className="flex items-center gap-1 rounded-r2 bg-white px-2 py-1 text-xs font-bold">
             <Icon name="fridge" className="size-3.5" /> Four, grille 1
           </span>
         </div>
         <p className="mt-3 font-display text-xl leading-tight font-bold text-ink">
           Enfourne la butternut
         </p>
-        <div className="mt-3 rounded-2xl bg-surface px-3 text-ink">
+        <div className="mt-3 rounded-card bg-surface px-3 text-ink border-[length:var(--bw)] border-line">
           {[
             { t: "Cubes de 2 cm", done: true },
             { t: "Huile d’olive, sel, cumin", done: true },
@@ -308,7 +308,7 @@ export function SessionScreen() {
             </div>
           ))}
         </div>
-        <span className="mt-3 flex h-11 items-center justify-center gap-1 rounded-pill bg-banana text-xs font-bold text-[#17151f]">
+        <span className="mt-3 flex h-11 items-center justify-center gap-1 rounded-r2 bg-banana text-xs font-bold text-[#17151f]">
           <Icon name="timer" className="size-4" /> Lancer le minuteur de 25 min
         </span>
       </div>

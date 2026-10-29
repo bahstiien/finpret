@@ -105,7 +105,7 @@ export default function AssociationsPage() {
               </SignupLink>
               <a
                 href="#comment"
-                className="inline-flex min-h-11 items-center justify-center rounded-lg px-3 py-2 text-base font-semibold underline underline-offset-4"
+                className="inline-flex min-h-11 items-center justify-center rounded-card px-3 py-2 text-base font-semibold underline underline-offset-4"
               >
                 {t.hero.secondary}
               </a>
@@ -119,7 +119,7 @@ export default function AssociationsPage() {
               ))}
             </ul>
           </div>
-          <div className="flex justify-center rounded-4xl bg-violet py-8 lg:px-8">
+          <div className="flex justify-center rounded-card bg-violet py-8 lg:px-8 border-[length:var(--bw)] border-line">
             <Phone label={t.hero.visualAlt} height="h-[420px]">
               <div className="flex flex-col gap-3 px-4 pt-2">
                 <p className="text-xs font-bold text-muted">{t.hero.today}</p>
@@ -127,10 +127,10 @@ export default function AssociationsPage() {
                   <p className="text-xs font-semibold text-muted">{t.hero.cantine}</p>
                   <p className="mt-1 text-lg font-bold">Poulet rôti, riz</p>
                 </Card>
-                <p className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink">
+                <p className="rounded-card bg-peach px-3 py-2 text-sm font-semibold text-peach-ink border-[length:var(--bw)] border-line">
                   {t.hero.alert}
                 </p>
-                <div className="rounded-3xl bg-violet-soft p-4 text-violet-strong">
+                <div className="rounded-card bg-violet-soft p-4 text-violet-strong border-[length:var(--bw)] border-line">
                   <p className="text-xs font-semibold">Ce soir</p>
                   <p className="font-bold">Gratin de courge</p>
                 </div>
@@ -146,7 +146,7 @@ export default function AssociationsPage() {
               <ul className="grid gap-4 md:grid-cols-3">
                 {t.problem.cards.map((c) => (
                   <Card as="li" key={c} padding="cozy" className="flex items-start gap-3 text-lg font-semibold">
-                    <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-peach text-peach-ink">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-card bg-peach text-peach-ink border-[length:var(--bw)] border-line">
                       <Icon name="close" className="size-4" />
                     </span>
                     <span>{nb(c)}</span>
@@ -162,7 +162,7 @@ export default function AssociationsPage() {
                 <SectionTitle id="comment" title={t.how.title} />
                 <Link
                   href="/associations/comment-ca-marche"
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg py-2 text-base font-semibold text-violet-strong underline underline-offset-4"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-card py-2 text-base font-semibold text-violet-strong underline underline-offset-4"
                 >
                   {t.footer.howItWorks}
                   <Icon name="arrow" className="size-4" />
@@ -179,7 +179,7 @@ export default function AssociationsPage() {
                       {i + 1}
                     </span>
                     <Card as="div" padding="cozy" className="flex items-center gap-4">
-                      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-violet-soft text-violet-strong">
+                      <span className="grid size-10 shrink-0 place-items-center rounded-card bg-violet-soft text-violet-strong border-[length:var(--bw)] border-line">
                         <Icon name={s.icon} className="size-5" />
                       </span>
                       <span className="font-semibold">{nb(s.text)}</span>
@@ -229,7 +229,7 @@ export default function AssociationsPage() {
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {t.zero.items.map((c) => (
                   <Card as="li" tone="green" key={c} padding="cozy" className="flex items-center gap-3 font-semibold">
-                    <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-green text-white">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-card bg-green text-white">
                       <Icon name="check" className="size-4" />
                     </span>
                     {nb(c)}
@@ -272,10 +272,10 @@ export default function AssociationsPage() {
               <SectionTitle id="faq" title={t.faq.title} />
               <div className="flex flex-col gap-3">
                 {t.faq.items.map((f) => (
-                  <details key={f.q} className="group rounded-card bg-surface open:shadow-float">
+                  <details key={f.q} className="group rounded-card bg-surface open:shadow-hard border-[length:var(--bw)] border-line">
                     <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-card p-4 text-lg font-semibold marker:hidden [&::-webkit-details-marker]:hidden">
                       <span>{nb(f.q)}</span>
-                      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-violet-soft text-violet-strong transition-transform duration-500 ease-base group-open:rotate-180">
+                      <span className="grid size-8 shrink-0 place-items-center rounded-card bg-violet-soft text-violet-strong transition-transform duration-500 ease-base group-open:rotate-180 border-[length:var(--bw)] border-line">
                         <Icon name="chevron" className="size-5" />
                       </span>
                     </summary>
@@ -289,7 +289,7 @@ export default function AssociationsPage() {
           <Reveal>
             <section
               aria-labelledby="final"
-              className="theme-light on-violet flex flex-col items-start gap-6 rounded-4xl bg-violet p-8 text-white sm:p-12"
+              className="theme-light on-violet flex flex-col items-start gap-6 rounded-card bg-violet p-8 text-white sm:p-12 border-[length:var(--bw)] border-line"
             >
               <h2 id="final" className="max-w-[680px] text-3xl font-bold sm:text-4xl">
                 {nb(t.final.title)}
@@ -299,7 +299,7 @@ export default function AssociationsPage() {
               </SignupLink>
               <a
                 href="#presentation"
-                className="inline-flex min-h-11 items-center rounded-lg py-2 text-base font-semibold underline underline-offset-4"
+                className="inline-flex min-h-11 items-center rounded-card py-2 text-base font-semibold underline underline-offset-4"
               >
                 {nb(t.final.lead)}
               </a>

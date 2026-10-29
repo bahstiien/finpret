@@ -35,7 +35,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
       </div>
       <nav
         aria-label={fr.nav.label}
-        className="fixed inset-x-3 bottom-3 z-40 rounded-pill bg-nav p-2 shadow-float min-[900px]:hidden"
+        className="fixed inset-x-3 bottom-3 z-40 rounded-r2 bg-nav p-2 shadow-hard min-[900px]:hidden"
         style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
         <ul className="flex items-center justify-between">
@@ -47,7 +47,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
                   aria-label={active ? undefined : fr.nav[tab.label]}
-                  className={`flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-pill px-3 font-bold ${
+                  className={`flex min-h-12 min-w-12 items-center justify-center gap-2 rounded-r2 px-3 font-bold ${
                     active ? "bg-banana text-[#17151F]" : "text-on-nav"
                   }`}
                 >
@@ -67,12 +67,12 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
       </nav>
       <nav
         aria-label={fr.nav.label}
-        className="hidden min-[900px]:sticky min-[900px]:top-4 min-[900px]:flex min-[900px]:h-[calc(100dvh-2rem)] min-[900px]:flex-col min-[900px]:self-start min-[900px]:gap-6 min-[900px]:overflow-y-auto min-[900px]:[scrollbar-width:none] min-[900px]:[&::-webkit-scrollbar]:hidden min-[900px]:rounded-3xl min-[900px]:bg-nav min-[900px]:p-4 min-[900px]:text-on-nav"
+        className="hidden min-[900px]:sticky min-[900px]:top-4 min-[900px]:flex min-[900px]:h-[calc(100dvh-2rem)] min-[900px]:flex-col min-[900px]:self-start min-[900px]:gap-6 min-[900px]:overflow-y-auto min-[900px]:[scrollbar-width:none] min-[900px]:[&::-webkit-scrollbar]:hidden min-[900px]:rounded-card min-[900px]:bg-nav min-[900px]:p-4 min-[900px]:text-on-nav border-[length:var(--bw)] border-line"
       >
         <Link href="/app" className="flex items-center gap-3 px-1 pt-1" aria-label={fr.app.name}>
           <span
             aria-hidden="true"
-            className="grid size-11 place-items-center rounded-2xl bg-violet font-display text-2xl font-bold text-white"
+            className="grid size-11 place-items-center rounded-card bg-violet font-display text-2xl font-bold text-white border-[length:var(--bw)] border-line"
           >
             M
           </span>
@@ -86,7 +86,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
                 <Link
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors duration-300 ease-base ${
+                  className={`flex min-h-12 items-center gap-3 rounded-r2 px-4 font-bold transition-colors duration-300 ease-base ${
                     active ? "bg-banana text-[#17151F]" : "text-on-nav/80 hover:bg-white/10 hover:text-on-nav"
                   }`}
                 >
@@ -103,11 +103,11 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
           })}
         </ul>
         <div className="mt-auto flex flex-col gap-4">
-          <div className="rounded-3xl bg-banana p-4 text-[#17151F] [@media(max-height:820px)]:hidden">
+          <div className="rounded-card bg-banana p-4 text-[#17151F] [@media(max-height:820px)]:hidden border-[length:var(--bw)] border-line">
             <p className="font-display text-lg leading-tight font-bold">{fr.nav.sessionPromo}</p>
             <Link
               href="/app/session"
-              className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-pill bg-[#17151F] px-4 text-sm font-bold text-white"
+              className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-r2 bg-[#17151F] px-4 text-sm font-bold text-white"
             >
               <Icon name="timer" className="size-4" />
               {fr.nav.session}
@@ -116,7 +116,7 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
           <Link
             href="/settings"
             aria-current={accountActive ? "page" : undefined}
-            className={`flex min-h-12 items-center gap-3 rounded-pill px-4 font-bold transition-colors duration-300 ease-base ${
+            className={`flex min-h-12 items-center gap-3 rounded-r2 px-4 font-bold transition-colors duration-300 ease-base ${
               accountActive
                 ? "bg-banana text-[#17151F]"
                 : "text-on-nav/80 hover:bg-white/10 hover:text-on-nav"

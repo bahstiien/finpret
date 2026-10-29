@@ -110,7 +110,7 @@ function MealRow({
               type="button"
               disabled={!canEdit}
               onClick={() => onGuests(m)}
-              className={`inline-flex min-h-8 items-center gap-1 rounded-pill px-3 text-sm font-semibold ${m.guestsCustom ? "bg-blue-soft text-blue-ink" : "bg-chip"}`}
+              className={`inline-flex min-h-8 items-center gap-1 rounded-r2 px-3 text-sm font-semibold ${m.guestsCustom ? "bg-blue-soft text-blue-ink" : "bg-chip"}`}
             >
               <Icon name="users" className="size-4" />
               {m.guests}
@@ -118,7 +118,7 @@ function MealRow({
             {badges.map((b) => (
               <span
                 key={b.label}
-                className={`inline-flex min-h-8 items-center rounded-pill px-3 text-sm font-semibold ${b.tone}`}
+                className={`inline-flex min-h-8 items-center rounded-r2 px-3 text-sm font-semibold ${b.tone}`}
               >
                 {b.label}
               </span>
@@ -140,14 +140,14 @@ function MealRow({
             {open && (
               <ul
                 role="menu"
-                className="absolute top-12 right-0 z-30 flex w-52 flex-col rounded-2xl bg-surface p-2 shadow-float"
+                className="absolute top-12 right-0 z-30 flex w-52 flex-col rounded-card bg-surface p-2 shadow-hard border-[length:var(--bw)] border-line"
               >
                 {!m.removed && (
                   <li role="none">
                     <button
                       role="menuitem"
                       type="button"
-                      className="min-h-11 w-full rounded-xl px-3 text-left font-semibold hover:bg-chip"
+                      className="min-h-11 w-full rounded-card px-3 text-left font-semibold hover:bg-chip border-[length:var(--bw)] border-line"
                       onClick={() => {
                         setOpen(false);
                         onMove(m.key);
@@ -161,7 +161,7 @@ function MealRow({
                   <button
                     role="menuitem"
                     type="button"
-                    className="min-h-11 w-full rounded-xl px-3 text-left font-semibold hover:bg-chip"
+                    className="min-h-11 w-full rounded-card px-3 text-left font-semibold hover:bg-chip border-[length:var(--bw)] border-line"
                     onClick={() => {
                       setOpen(false);
                       onGuests(m);
@@ -175,7 +175,7 @@ function MealRow({
                     role="menuitem"
                     type="button"
                     disabled={pending}
-                    className="min-h-11 w-full rounded-xl px-3 text-left font-semibold hover:bg-chip"
+                    className="min-h-11 w-full rounded-card px-3 text-left font-semibold hover:bg-chip border-[length:var(--bw)] border-line"
                     onClick={() => {
                       setOpen(false);
                       run(() => toggleMealAction(weekId, m.day, m.meal));

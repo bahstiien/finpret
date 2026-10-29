@@ -266,7 +266,7 @@ function ReviewForm({
       </header>
 
       {askServings && lines.length > 0 && (
-        <div className="flex flex-wrap items-end gap-2 rounded-card bg-banana/30 p-4">
+        <div className="flex flex-wrap items-end gap-2 rounded-card bg-banana/30 p-4 border-[length:var(--bw)] border-line">
           <TextField
             id="servings"
             label={t.servingsAsk}
@@ -577,7 +577,7 @@ function ReviewForm({
                     form.steps.map((x, j) => (j === i ? e.target.value : x)),
                   )
                 }
-                className="min-h-11 w-full rounded-2xl border-2 border-line bg-surface px-4 py-2 focus:border-violet focus:outline-none"
+                className="min-h-11 w-full rounded-card border-2 border-line bg-surface px-4 py-2 focus:border-violet focus:outline-none"
               />
               <div className="flex flex-col">
                 <StepButton

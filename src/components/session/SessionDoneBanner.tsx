@@ -29,7 +29,7 @@ export function SessionDoneBanner({ weekId }: { weekId: string }) {
   if (!result?.visible || result.current < 1) return null;
   return (
     <p
-      className="flex flex-wrap items-center gap-2 rounded-card bg-violet-soft p-4 font-bold text-violet-strong"
+      className="flex flex-wrap items-center gap-2 rounded-card bg-violet-soft p-4 font-bold text-violet-strong border-[length:var(--bw)] border-line"
       data-testid="session-streak"
     >
       <Icon name="streak" />

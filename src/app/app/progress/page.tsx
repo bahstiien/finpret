@@ -71,9 +71,9 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
                     aria-valuemax={streak.nextMilestone}
                     aria-valuenow={streak.current}
                     aria-label={t.streak.next(streak.nextMilestone)}
-                    className="h-3 overflow-hidden rounded-pill bg-chip"
+                    className="h-3 overflow-hidden rounded-r2 bg-chip"
                   >
-                    <div className="h-full rounded-pill bg-violet" style={{ width: `${percent}%` }} />
+                    <div className="h-full rounded-r2 bg-violet" style={{ width: `${percent}%` }} />
                   </div>
                 </>
               )}

@@ -13,7 +13,7 @@ export function PublicHeader({ signup = true }: { signup?: boolean }) {
     <>
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-xl focus:bg-banana focus:px-4 focus:py-2 focus:font-semibold focus:text-[#17151f]"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-card focus:bg-banana focus:px-4 focus:py-2 focus:font-semibold focus:text-[#17151f] border-[length:var(--bw)] border-line"
       >
         {t.nav.skip}
       </a>

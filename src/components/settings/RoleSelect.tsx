@@ -44,7 +44,7 @@ export function RoleSelect({
             } else setError(undefined);
           });
         }}
-        className="min-h-11 rounded-pill border-2 border-line bg-surface px-4 font-semibold"
+        className="min-h-11 rounded-r2 border-2 border-line bg-surface px-4 font-semibold"
       >
         {(FEATURES.viewerRole || role === "viewer"
           ? (["admin", "member", "viewer"] as const)

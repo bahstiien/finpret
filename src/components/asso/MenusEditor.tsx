@@ -58,7 +58,7 @@ function DayForm({ schoolId, row, isNew = false }: { schoolId: string; row: Menu
             <p className="flex flex-wrap items-center gap-2 font-bold">
               {row.label}
               <span
-                className={`rounded-pill px-3 py-0.5 text-sm ${row.status === "published" ? "bg-green-soft text-green-ink" : "bg-chip"}`}
+                className={`rounded-r2 px-3 py-0.5 text-sm ${row.status === "published" ? "bg-green-soft text-green-ink" : "bg-chip"}`}
               >
                 {row.status === "published" ? t.published : t.draft}
               </span>
@@ -143,7 +143,7 @@ export function MenusEditor({
   if (!active) return <FormMessage tone="success">{t.inactive}</FormMessage>;
   return (
     <div className="flex flex-col gap-4">
-      <form action={importAction} className="flex flex-col gap-3 rounded-card bg-surface p-4">
+      <form action={importAction} className="flex flex-col gap-3 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
         <input type="hidden" name="schoolId" value={schoolId} />
         <label htmlFor="pdf" className="text-sm font-semibold">
           {t.importLabel}

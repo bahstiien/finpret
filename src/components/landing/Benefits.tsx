@@ -22,7 +22,7 @@ export function Benefits() {
             if (!item) return null;
             return (
               <li key={item.title} className={`flex flex-col gap-4 rounded-card p-6 sm:p-8 ${tone.card}`}>
-                <span className="grid size-12 place-items-center rounded-xl bg-surface text-ink">
+                <span className="grid size-12 place-items-center rounded-card bg-surface text-ink border-[length:var(--bw)] border-line">
                   <Icon name={tone.icon} className="size-6" />
                 </span>
                 <p className={`text-sm font-bold tracking-wider uppercase ${tone.kicker}`}>

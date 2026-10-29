@@ -40,7 +40,7 @@ export default async function AdminAssociationsPage() {
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-xl font-bold">{a.name}</h2>
-                <span className="rounded-pill bg-chip px-3 py-1 text-sm font-bold">{STATUS[a.status]}</span>
+                <span className="rounded-r2 bg-chip px-3 py-1 text-sm font-bold">{STATUS[a.status]}</span>
               </div>
               <p className="text-sm">
                 Code <b>{a.code}</b> · {a.manager_name} · {a.email}

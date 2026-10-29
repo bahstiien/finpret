@@ -29,7 +29,7 @@ export default async function AdminPayoutsPage() {
           <a
             key={q}
             href={`/admin/reversements/export?quarter=${q}`}
-            className="inline-flex min-h-11 items-center rounded-pill border-2 border-ink px-4 font-bold"
+            className="inline-flex min-h-11 items-center rounded-r2 border-2 border-ink px-4 font-bold"
           >
             Export CSV {q}
           </a>

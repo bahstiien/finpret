@@ -79,10 +79,10 @@ export function OnboardingWizard({
           aria-valuemax={STEPS.length}
           aria-valuenow={step + 1}
           aria-label={t.progress(step + 1, STEPS.length)}
-          className="h-2 overflow-hidden rounded-pill bg-line"
+          className="h-2 overflow-hidden rounded-r2 bg-line"
         >
           <div
-            className="h-full rounded-pill bg-violet transition-all duration-300 ease-base"
+            className="h-full rounded-r2 bg-violet transition-all duration-300 ease-base"
             style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
           />
         </div>
@@ -157,7 +157,7 @@ function HouseholdStep({
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-2 text-sm font-semibold">{s.members}</legend>
         {members.map((m, i) => (
-          <div key={i} className="flex flex-wrap items-end gap-2 rounded-2xl bg-bg p-3">
+          <div key={i} className="flex flex-wrap items-end gap-2 rounded-card bg-bg p-3">
             <TextField
               id={`member-${i}`}
               label={`${s.memberName} (${m.kind === "adult" ? s.adult : s.child})`}
@@ -375,7 +375,7 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
           <h2 className="text-lg font-bold">{s.presence}</h2>
           <p className="text-sm text-muted">{s.presenceHint}</p>
           {data.household.members.map((m, i) => (
-            <details key={i} className="rounded-2xl bg-bg p-3">
+            <details key={i} className="rounded-card bg-bg p-3">
               <summary className="min-h-11 cursor-pointer content-center font-semibold">
                 {m.name || `#${i + 1}`}
               </summary>

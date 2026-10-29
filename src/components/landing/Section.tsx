@@ -22,7 +22,7 @@ export function SectionTitle({
     <div className={`flex max-w-2xl flex-col gap-3 ${className}`}>
       <h2
         id={id}
-        className="text-2xl font-bold sm:text-3xl lg:text-4xl"
+        className="text-2xl sm:text-3xl lg:text-4xl"
       >
         {nb(title)}
       </h2>
@@ -36,7 +36,7 @@ export function CtaLink({ children, className = "" }: { children: ReactNode; cla
   return (
     <Link
       href="/login"
-      className={`inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-banana px-3 py-2 text-base font-semibold text-[#17151f] transition duration-300 ease-base hover:brightness-95 active:scale-[0.98] ${className}`}
+      className={`inline-flex min-h-14 items-center justify-center gap-2 btn-hard rounded-r2 border-[length:var(--bw)] border-line bg-banana px-3 py-2 text-base font-bold tracking-[0.03em] text-[#17151f] uppercase transition duration-90 ease-base ${className}`}
     >
       {children}
       <Icon name="arrow" className="size-5" />

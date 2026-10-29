@@ -32,7 +32,7 @@ export function Toggle({
       />
       <span
         aria-hidden="true"
-        className="relative h-7 w-12 shrink-0 rounded-pill bg-line transition duration-300 ease-base peer-checked:bg-violet peer-focus-visible:outline-3 peer-focus-visible:outline-violet after:absolute after:top-1 after:left-1 after:size-5 after:rounded-full after:bg-white after:transition duration-300 ease-base peer-checked:after:translate-x-5"
+        className="relative h-7 w-12 shrink-0 rounded-r2 bg-line transition duration-300 ease-base peer-checked:bg-violet peer-focus-visible:outline-3 peer-focus-visible:outline-violet after:absolute after:top-1 after:left-1 after:size-5 after:rounded-full after:bg-white after:transition duration-300 ease-base peer-checked:after:translate-x-5"
       />
     </label>
   );
@@ -106,7 +106,7 @@ export function ChipToggle({
       type="button"
       aria-pressed={pressed}
       onClick={onToggle}
-      className={`min-h-11 rounded-pill px-4 text-sm font-semibold transition duration-300 ease-base ${
+      className={`min-h-11 rounded-r2 px-4 text-sm font-semibold transition duration-300 ease-base ${
         pressed ? "bg-violet text-white" : "bg-chip text-ink hover:bg-line"
       }`}
     >
@@ -158,7 +158,7 @@ export function SlotGrid({
                     aria-pressed={on}
                     aria-label={label(d, meal, on)}
                     onClick={() => onToggle(d, meal)}
-                    className={`grid h-11 w-full min-w-9 place-items-center rounded-2xl text-lg font-bold transition duration-300 ease-base ${
+                    className={`grid h-11 w-full min-w-9 place-items-center rounded-card text-lg font-bold transition duration-300 ease-base ${
                       on ? "bg-violet text-white" : "bg-chip text-muted"
                     }`}
                   >

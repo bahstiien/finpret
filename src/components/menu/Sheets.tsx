@@ -156,7 +156,7 @@ export function MoveSheet({
           {targets.map((x) => (
             <label
               key={x.key}
-              className={`flex min-h-12 items-center gap-3 rounded-2xl px-4 py-2 ${x.ok ? "cursor-pointer bg-bg" : "bg-bg opacity-50"} ${choice === x.key ? "outline-3 outline-violet" : ""}`}
+              className={`flex min-h-12 items-center gap-3 rounded-card px-4 py-2 ${x.ok ? "cursor-pointer bg-bg" : "bg-bg opacity-50"} ${choice === x.key ? "outline-3 outline-violet" : ""}`}
             >
               <input
                 type="radio"
@@ -257,7 +257,7 @@ export function RecipePickerSheet({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.picker.search}
-        className="min-h-11 rounded-2xl border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+        className="min-h-11 rounded-card border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
       />
       <div className="flex flex-wrap gap-2">
         {filters.map((f) => (
@@ -280,7 +280,7 @@ export function RecipePickerSheet({
         {list.map((o) => (
           <label
             key={o.id}
-            className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl px-3 py-2 ${choice === o.id ? "bg-yellow-soft" : "hover:bg-chip"}`}
+            className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-card px-3 py-2 ${choice === o.id ? "bg-yellow-soft" : "hover:bg-chip"}`}
           >
             <input
               type="radio"

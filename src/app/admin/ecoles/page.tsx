@@ -21,7 +21,7 @@ export default async function AdminSchoolsPage() {
   return (
     <>
       <PageHeader title="Écoles" />
-      <form action={add} className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-4">
+      <form action={add} className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
         <TextField id="s-name" name="name" label="Nom" required className="min-w-48 flex-1" />
         <TextField id="s-city" name="city" label="Commune" required className="min-w-40 flex-1" />
         <TextField id="s-uai" name="uai" label="UAI (facultatif)" maxLength={8} className="w-40" />

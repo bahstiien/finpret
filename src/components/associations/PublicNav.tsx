@@ -14,7 +14,7 @@ const links = [
 ] as const;
 
 const itemBase =
-  "inline-flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold transition duration-300 ease-base hover:bg-chip aria-[current=page]:bg-chip";
+  "inline-flex min-h-11 items-center rounded-card px-4 py-2 text-sm font-semibold transition duration-300 ease-base hover:bg-chip aria-[current=page]:bg-chip";
 
 /**
  * Barre de navigation des pages publiques : compacte, centrée, flottante, sur surface translucide floutée.
@@ -46,11 +46,11 @@ export function PublicNav({ signup = true }: { signup?: boolean }) {
   return (
     <>
       <div className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4">
-        <header className="pointer-events-auto flex max-w-full items-center gap-2 rounded-2xl border border-line bg-surface/70 p-2 shadow-float backdrop-blur-md">
+        <header className="pointer-events-auto flex max-w-full items-center gap-2 rounded-card border border-line bg-surface/70 p-2 shadow-hard ">
           <Link
             href="/"
             aria-label={t.homeAria}
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-base font-bold"
+            className="inline-flex min-h-11 items-center gap-2 rounded-card px-2 text-base font-bold"
           >
             <Image src="/brand/finpret-symbole.svg" alt="" width={32} height={32} className="size-8" />
             {t.home}
@@ -70,7 +70,7 @@ export function PublicNav({ signup = true }: { signup?: boolean }) {
           {signup && (
             <Link
               href="/asso/inscription"
-              className="inline-flex min-h-11 items-center rounded-lg bg-banana px-4 py-2 text-sm font-semibold text-[#17151f] transition duration-300 ease-base hover:brightness-95"
+              className="inline-flex min-h-11 items-center rounded-card bg-banana px-4 py-2 text-sm font-semibold text-[#17151f] transition duration-300 ease-base hover:brightness-95 border-[length:var(--bw)] border-line"
             >
               {t.signup}
             </Link>
@@ -82,7 +82,7 @@ export function PublicNav({ signup = true }: { signup?: boolean }) {
             aria-controls="menu-public"
             aria-label={open ? t.close : t.open}
             onClick={() => setOpen((v) => !v)}
-            className="relative size-11 shrink-0 rounded-lg hover:bg-chip md:hidden"
+            className="relative size-11 shrink-0 rounded-card hover:bg-chip md:hidden border-[length:var(--bw)] border-line"
           >
             <span className={`${line} ${open ? "rotate-45" : "-translate-y-1"}`} />
             <span className={`${line} ${open ? "-rotate-45" : "translate-y-1"}`} />
@@ -93,7 +93,7 @@ export function PublicNav({ signup = true }: { signup?: boolean }) {
       <div
         id="menu-public"
         inert={!open}
-        className={`fixed inset-0 z-40 flex flex-col justify-center bg-bg/95 px-6 backdrop-blur-xl transition-opacity duration-500 ease-base md:hidden ${
+        className={`fixed inset-0 z-40 flex flex-col justify-center bg-bg/95 px-6  transition-opacity duration-500 ease-base md:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >

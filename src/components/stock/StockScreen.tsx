@@ -101,7 +101,7 @@ export function StockScreen({
 
       {FEATURES.freezerAndLeftovers && (
         <section
-          className="flex flex-col gap-3 rounded-card bg-green-soft p-4 text-ink"
+          className="flex flex-col gap-3 rounded-card bg-green-soft p-4 text-ink border-[length:var(--bw)] border-line"
           data-testid="freezer"
         >
           <div className="flex items-baseline justify-between">
@@ -111,7 +111,7 @@ export function StockScreen({
           {freezer.length === 0 && <p className="text-sm text-muted">{t.freezerEmpty}</p>}
           <ul className="flex flex-col gap-2">
             {freezer.map((f) => (
-              <li key={f.id} className="flex items-center gap-3 rounded-2xl bg-surface/60 p-3">
+              <li key={f.id} className="flex items-center gap-3 rounded-card bg-surface/60 p-3 border-[length:var(--bw)] border-line">
                 <div className="min-w-0 flex-1">
                   <b className="block leading-tight">
                     <Flag flag={f.flag} />
@@ -237,7 +237,7 @@ export function StockScreen({
                     aria-pressed={p.qty === null}
                     disabled={pending}
                     onClick={() => run(() => setPantry(p.key, p.qty === null ? p.step : null))}
-                    className={`min-h-11 rounded-pill px-3 text-sm font-bold ${p.qty === null ? "bg-green-soft text-green-ink" : "bg-chip"}`}
+                    className={`min-h-11 rounded-r2 px-3 text-sm font-bold ${p.qty === null ? "bg-green-soft text-green-ink" : "bg-chip"}`}
                   >
                     {t.enough}
                   </button>

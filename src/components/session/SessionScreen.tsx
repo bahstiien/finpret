@@ -90,7 +90,7 @@ export function SessionScreen({
           <p className="font-display text-5xl font-bold">{dur(total)}</p>
           <p>{t.startCard(steps.length, hhmm(new Date(Date.now() + total * 60000)))}</p>
           {total > maxMinutes && (
-            <p className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink">
+            <p className="rounded-card bg-peach px-3 py-2 text-sm font-semibold text-peach-ink border-[length:var(--bw)] border-line">
               {t.overMax(dur(maxMinutes))}
             </p>
           )}
@@ -140,7 +140,7 @@ export function SessionScreen({
           <p className="font-bold">{t.stepOf(index + 1, steps.length)}</p>
         </div>
         <span
-          className={`rounded-pill px-3 py-1 text-sm font-bold ${delay > 2 ? "bg-peach text-peach-ink" : "bg-green-soft text-green-ink"}`}
+          className={`rounded-r2 px-3 py-1 text-sm font-bold ${delay > 2 ? "bg-peach text-peach-ink" : "bg-green-soft text-green-ink"}`}
           data-testid="session-delay"
         >
           {delay > 2 ? t.late(delay) : delay < -2 ? t.ahead(-delay) : t.onTime}
@@ -149,20 +149,20 @@ export function SessionScreen({
 
       <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <section
-          className="flex flex-col gap-4 rounded-card bg-blue-soft p-4 text-ink"
+          className="flex flex-col gap-4 rounded-card bg-blue-soft p-4 text-ink border-[length:var(--bw)] border-line"
           data-testid="session-step"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="font-display text-5xl font-bold text-blue-ink min-[900px]:text-7xl">
               {hhmm(at(step.start))}
             </span>
-            <span className="inline-flex items-center gap-2 rounded-pill bg-surface px-4 py-2 font-bold text-blue-ink">
+            <span className="inline-flex items-center gap-2 rounded-r2 bg-surface px-4 py-2 font-bold text-blue-ink">
               <Icon name="pot" className="size-5" />
               {step.where}
             </span>
           </div>
           <h1 className="text-3xl font-bold min-[900px]:text-4xl">{step.name}</h1>
-          <ul className="flex flex-col divide-y divide-line rounded-3xl bg-surface px-4">
+          <ul className="flex flex-col divide-y divide-line rounded-card bg-surface px-4 border-[length:var(--bw)] border-line">
             {step.tasks.map((task, j) => {
               const key = `${index}-${j}`;
               return (
@@ -224,7 +224,7 @@ export function SessionScreen({
           )}
         </section>
         <aside
-          className="hidden flex-col gap-1 rounded-card bg-nav p-4 text-on-nav min-[900px]:flex"
+          className="hidden flex-col gap-1 rounded-card bg-nav p-4 text-on-nav min-[900px]:flex border-[length:var(--bw)] border-line"
           aria-label={t.upcoming}
         >
           <h2 className="pb-2 text-sm font-bold tracking-wide uppercase opacity-70">{t.upcoming}</h2>
@@ -249,7 +249,7 @@ export function SessionScreen({
             aria-label={t.previous}
             disabled={index === 0}
             onClick={() => session?.setStep(index - 1)}
-            className="grid size-16 shrink-0 place-items-center rounded-pill bg-surface text-2xl font-bold shadow-float disabled:opacity-40"
+            className="grid size-16 shrink-0 place-items-center rounded-r2 bg-surface text-2xl font-bold shadow-hard disabled:opacity-40"
           >
             ←
           </button>
@@ -257,7 +257,7 @@ export function SessionScreen({
             type="button"
             disabled={index >= steps.length - 1}
             onClick={() => session?.setStep(index + 1)}
-            className={`flex min-h-16 flex-1 items-center justify-between rounded-pill pr-2 pl-6 text-left font-bold shadow-float disabled:opacity-40 ${
+            className={`flex min-h-16 flex-1 items-center justify-between rounded-r2 pr-2 pl-6 text-left font-bold shadow-hard disabled:opacity-40 ${
               allDone ? "bg-green text-white" : "bg-nav text-on-nav"
             }`}
             data-ready={allDone}

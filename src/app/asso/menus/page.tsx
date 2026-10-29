@@ -59,7 +59,7 @@ export default async function AssoMenusPage({
               key={s.id}
               href={`/asso/menus?school=${s.id}`}
               aria-current={s.id === school?.id ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center rounded-pill px-4 font-bold ${s.id === school?.id ? "bg-ink text-surface" : "bg-surface"}`}
+              className={`inline-flex min-h-11 items-center rounded-r2 px-4 font-bold ${s.id === school?.id ? "bg-ink text-surface" : "bg-surface"}`}
             >
               {s.name}
             </Link>

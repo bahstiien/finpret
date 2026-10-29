@@ -289,3 +289,10 @@
     background: transparent !important;
   }
 }
+
+/* Archivo Black n'a qu'une graisse : on évite le faux gras des utilitaires font-bold sur les titres. */
+h1,
+h2,
+h3 {
+  font-weight: 400 !important;
+}

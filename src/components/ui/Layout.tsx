@@ -50,7 +50,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-card bg-surface p-8 text-center">
+    <div className="flex flex-col items-center gap-3 rounded-card bg-surface p-8 text-center border-[length:var(--bw)] border-line">
       <span
         aria-hidden="true"
         className="grid size-14 place-items-center rounded-full bg-violet-soft text-violet-strong"
@@ -77,7 +77,7 @@ export function Callout({ tone = "info", children }: { tone?: keyof typeof callo
   return (
     <p
       role={c.role}
-      className={`flex items-start gap-3 rounded-2xl px-4 py-3 text-sm font-semibold ${c.cls}`}
+      className={`flex items-start gap-3 rounded-card px-4 py-3 text-sm font-semibold ${c.cls}`}
     >
       <Icon name={c.icon} className="mt-0.5 size-5 shrink-0" />
       <span>{children}</span>
@@ -137,11 +137,11 @@ export function ListRow({
   tone?: keyof typeof rowTones;
 }) {
   return (
-    <div className="flex min-h-14 items-center gap-4 rounded-2xl bg-surface p-3">
+    <div className="flex min-h-14 items-center gap-4 rounded-card bg-surface p-3 border-[length:var(--bw)] border-line">
       {icon && (
         <span
           aria-hidden="true"
-          className={`grid size-11 shrink-0 place-items-center rounded-2xl ${rowTones[tone]}`}
+          className={`grid size-11 shrink-0 place-items-center rounded-card ${rowTones[tone]}`}
         >
           <Icon name={icon} className="size-5" />
         </span>
@@ -179,10 +179,10 @@ export function ProgressBar({ value, label }: { value: number; label: string }) 
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={v}
-      className="h-3 w-full overflow-hidden rounded-pill bg-chip"
+      className="h-3 w-full overflow-hidden rounded-r2 bg-chip"
     >
       <div
-        className="h-full rounded-pill bg-green transition-[width] duration-300"
+        className="h-full rounded-r2 bg-green transition-[width] duration-300"
         style={{ width: `${v}%` }}
       />
     </div>

@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <li key={href}>
               <Link
                 href={href}
-                className="inline-flex min-h-11 items-center rounded-pill bg-surface px-4 font-bold hover:bg-chip"
+                className="inline-flex min-h-11 items-center rounded-r2 bg-surface px-4 font-bold hover:bg-chip"
               >
                 {label}
               </Link>

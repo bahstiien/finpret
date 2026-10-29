@@ -71,7 +71,7 @@ export function TimerBar() {
           <div
             key={x.id}
             role={isReady ? "alert" : undefined}
-            className={`flex items-center gap-2 rounded-pill py-1 pr-1 pl-4 font-bold shadow-float ${
+            className={`flex items-center gap-2 rounded-r2 py-1 pr-1 pl-4 font-bold shadow-hard ${
               isReady ? "bg-banana text-[#17151F]" : "bg-blue-soft text-blue-ink"
             }`}
           >
@@ -81,7 +81,7 @@ export function TimerBar() {
                 <button
                   type="button"
                   onClick={() => session.timerAction(x.id, "snooze")}
-                  className="min-h-10 rounded-pill bg-surface/70 px-3 text-sm"
+                  className="min-h-10 rounded-r2 bg-surface/70 px-3 text-sm"
                 >
                   {t.snooze}
                 </button>
@@ -89,7 +89,7 @@ export function TimerBar() {
                   <button
                     type="button"
                     onClick={() => session.timerAction(x.id, "done")}
-                    className="min-h-10 rounded-pill bg-nav px-4 text-sm text-on-nav"
+                    className="min-h-10 rounded-r2 bg-nav px-4 text-sm text-on-nav"
                   >
                     {t.ok}
                   </button>

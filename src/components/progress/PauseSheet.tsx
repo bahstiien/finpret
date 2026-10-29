@@ -48,7 +48,7 @@ export function PauseSheet({ options, canEdit }: { options: PauseOption[]; canEd
                 onClick={() => toggle(o)}
                 aria-pressed={o.planned}
                 data-planned={o.planned}
-                className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl px-4 text-left font-semibold disabled:opacity-50 ${
+                className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-card px-4 text-left font-semibold disabled:opacity-50 ${
                   o.planned ? "bg-violet-soft text-violet-strong" : "bg-chip"
                 }`}
               >

@@ -145,7 +145,7 @@ export function AdaptationPanel({
                     </Button>
                     <Link
                       href="/app/discover"
-                      className="inline-flex min-h-11 items-center rounded-pill bg-chip px-4 font-semibold"
+                      className="inline-flex min-h-11 items-center rounded-r2 bg-chip px-4 font-semibold"
                     >
                       {t.browseRecipes}
                     </Link>
@@ -153,7 +153,7 @@ export function AdaptationPanel({
                 </div>
               ) : (
                 preview.proposals.map((p, i) => (
-                  <article key={i} className="flex flex-col gap-1 rounded-2xl bg-chip p-3">
+                  <article key={i} className="flex flex-col gap-1 rounded-card bg-chip p-3 border-[length:var(--bw)] border-line">
                     <h3 className="font-bold">{t.resolves(p.resolved, p.total)}</h3>
                     <ul className="list-disc pl-4 text-sm">
                       {p.lines.map((l, j) => (
@@ -213,7 +213,7 @@ export function AdaptationPanel({
                     type="button"
                     disabled={busy !== null}
                     onClick={() => void undo(h.id)}
-                    className="min-h-11 rounded-pill bg-chip px-4 font-semibold"
+                    className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
                   >
                     {t.undo}
                   </button>

@@ -29,7 +29,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={toast.id}
             data-testid="toast"
             role={toast.tone === "error" ? "alert" : "status"}
-            className={`pointer-events-auto max-w-md rounded-3xl px-4 py-3 text-sm font-semibold shadow-float ${
+            className={`pointer-events-auto max-w-md rounded-card px-4 py-3 text-sm font-semibold shadow-hard ${
               toast.tone === "error" ? "bg-peach text-peach-ink" : "bg-nav text-on-nav"
             }`}
           >

@@ -44,7 +44,7 @@ export function IngredientPicker({
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.refusedSearch}
         autoComplete="off"
-        className="min-h-11 rounded-2xl border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+        className="min-h-11 rounded-card border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
       />
       {query.trim() && (
         <ul className="flex flex-wrap gap-2" aria-label={t.refusedSearch}>
@@ -53,7 +53,7 @@ export function IngredientPicker({
               <li key={o.key}>
                 <button
                   type="button"
-                  className="min-h-11 rounded-pill bg-chip px-4 text-sm font-semibold hover:bg-line"
+                  className="min-h-11 rounded-r2 bg-chip px-4 text-sm font-semibold hover:bg-line"
                   onClick={() => {
                     onChange([...selected, o.key]);
                     setQuery("");
@@ -75,7 +75,7 @@ export function IngredientPicker({
               <button
                 type="button"
                 aria-label={t.removeRefused(byKey.get(k) ?? k)}
-                className="min-h-11 rounded-pill bg-peach px-4 text-sm font-semibold text-peach-ink"
+                className="min-h-11 rounded-r2 bg-peach px-4 text-sm font-semibold text-peach-ink"
                 onClick={() => onChange(selected.filter((x) => x !== k))}
               >
                 {byKey.get(k) ?? k} ×

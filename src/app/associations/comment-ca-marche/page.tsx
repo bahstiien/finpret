@@ -105,7 +105,7 @@ export default function HowItWorksPage() {
           <div className="flex flex-wrap items-center gap-4">
             <SignupLink
               href="/asso/inscription"
-              className="inline-flex min-h-[52px] items-center justify-center rounded-pill bg-banana px-8 font-bold text-[#17151f]"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-r2 bg-banana px-8 font-bold text-[#17151f]"
             >
               {t.cta}
             </SignupLink>

@@ -44,9 +44,9 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
           aria-valuemax={countries.length}
           aria-valuenow={earned}
           aria-label={t.countries(earned, countries.length)}
-          className="h-3 overflow-hidden rounded-pill bg-chip"
+          className="h-3 overflow-hidden rounded-r2 bg-chip"
         >
-          <div className="h-full rounded-pill bg-violet" style={{ width: `${percent}%` }} />
+          <div className="h-full rounded-r2 bg-violet" style={{ width: `${percent}%` }} />
         </div>
       </div>
 
@@ -104,7 +104,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
                 {country.cooked.map((r) => (
                   <li
                     key={r.id}
-                    className="flex justify-between gap-3 rounded-2xl bg-violet-soft px-4 py-2 text-violet-strong"
+                    className="flex justify-between gap-3 rounded-card bg-violet-soft px-4 py-2 text-violet-strong border-[length:var(--bw)] border-line"
                   >
                     <span className="font-semibold">{r.name}</span>
                     <span className="text-sm">{formatShort(r.on)}</span>

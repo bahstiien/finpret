@@ -12,7 +12,7 @@ const t = fr.asso.statements;
 export function IbanForm({ last4 }: { last4: string | null }) {
   const [state, action, pending] = useActionState<SimpleState, FormData>(saveIbanAction, {});
   return (
-    <form action={action} className="flex flex-col gap-3 rounded-card bg-surface p-4">
+    <form action={action} className="flex flex-col gap-3 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
       <p className="font-semibold">{last4 ? `${t.iban} : •••• ${last4}` : t.ibanMissing}</p>
       <TextField
         id="iban"

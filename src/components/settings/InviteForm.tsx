@@ -36,7 +36,7 @@ export function InviteForm({ householdId, householdName }: { householdId: string
       </form>
 
       {link && (
-        <div className="flex flex-col gap-3 rounded-2xl bg-yellow-soft p-4">
+        <div className="flex flex-col gap-3 rounded-card bg-yellow-soft p-4 border-[length:var(--bw)] border-line">
           <label htmlFor="invite-link" className="text-sm font-semibold">
             {t.inviteLink}
           </label>
@@ -45,7 +45,7 @@ export function InviteForm({ householdId, householdName }: { householdId: string
             readOnly
             value={link}
             onFocus={(e) => e.currentTarget.select()}
-            className="min-h-11 w-full rounded-xl bg-surface px-3 text-sm"
+            className="min-h-11 w-full rounded-card bg-surface px-3 text-sm border-[length:var(--bw)] border-line"
           />
           <div className="flex flex-wrap gap-2">
             <Button

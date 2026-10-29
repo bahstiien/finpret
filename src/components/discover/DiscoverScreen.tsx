@@ -147,7 +147,7 @@ export function DiscoverScreen({
       <div
         role="tablist"
         aria-label={t.segments}
-        className="flex gap-2 self-start rounded-pill bg-surface p-1"
+        className="flex gap-2 self-start rounded-r2 bg-surface p-1"
       >
         {(["recipes", "breakfasts"] as const).map((s) => (
           <button
@@ -156,7 +156,7 @@ export function DiscoverScreen({
             aria-selected={segment === s}
             type="button"
             onClick={() => setSegment(s)}
-            className={`min-h-11 rounded-pill px-4 font-bold ${segment === s ? "bg-ink text-surface" : ""}`}
+            className={`min-h-11 rounded-r2 px-4 font-bold ${segment === s ? "bg-ink text-surface" : ""}`}
           >
             {t.segmentLabels[s]}
           </button>
@@ -171,7 +171,7 @@ export function DiscoverScreen({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.search}
-        className="min-h-12 rounded-pill border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+        className="min-h-12 rounded-r2 border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
       />
 
       {segment === "recipes" ? (
@@ -181,7 +181,7 @@ export function DiscoverScreen({
               type="button"
               onClick={() => setOrigin("")}
               data-testid="origin-chip"
-              className="inline-flex min-h-11 items-center gap-2 self-start rounded-pill bg-violet-soft px-4 font-bold text-violet-strong"
+              className="inline-flex min-h-11 items-center gap-2 self-start rounded-r2 bg-violet-soft px-4 font-bold text-violet-strong"
             >
               {t.originChip(countryLabel(origin))}
               <Icon name="close" className="size-4" label={t.clearOrigin} />
@@ -305,13 +305,13 @@ function RecipeCard({
       <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
         <span className="text-violet-strong uppercase">{t.kinds[r.kind]}</span>
         {r.seasonal && (
-          <span className="rounded-pill bg-green-soft px-2 py-0.5 text-green-ink">{t.inSeason}</span>
+          <span className="rounded-r2 bg-green-soft px-2 py-0.5 text-green-ink">{t.inSeason}</span>
         )}
         {r.freezes && (
-          <span className="rounded-pill bg-blue-soft px-2 py-0.5 text-blue-ink">{t.freezes}</span>
+          <span className="rounded-r2 bg-blue-soft px-2 py-0.5 text-blue-ink">{t.freezes}</span>
         )}
-        {r.favorite && <span className="rounded-pill bg-yellow-soft px-2 py-0.5">{t.favorite}</span>}
-        {r.imported && <span className="rounded-pill bg-violet px-2 py-0.5 text-white">{t.mine}</span>}
+        {r.favorite && <span className="rounded-r2 bg-yellow-soft px-2 py-0.5">{t.favorite}</span>}
+        {r.imported && <span className="rounded-r2 bg-violet px-2 py-0.5 text-white">{t.mine}</span>}
       </div>
       <b className="text-lg leading-tight">
         <Flag flag={r.flag} />
@@ -332,7 +332,7 @@ function RecipeCard({
       )}
       {r.excluded && (
         <p
-          className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink"
+          className="rounded-card bg-peach px-3 py-2 text-sm font-semibold text-peach-ink border-[length:var(--bw)] border-line"
           data-testid="excluded"
         >
           {t.excluded(r.reasons.join(", ") || t.notYourDiet)}
@@ -369,7 +369,7 @@ function RecipeCard({
           <>
             <Link
               href={`/app/discover/import?edit=${r.id}`}
-              className="inline-flex min-h-11 items-center rounded-pill px-4 font-bold underline"
+              className="inline-flex min-h-11 items-center rounded-r2 px-4 font-bold underline"
             >
               {t.edit}
             </Link>
@@ -377,7 +377,7 @@ function RecipeCard({
               type="button"
               disabled={removing}
               onClick={remove}
-              className="min-h-11 rounded-pill px-4 font-bold text-peach-ink underline"
+              className="min-h-11 rounded-r2 px-4 font-bold text-peach-ink underline"
             >
               {t.remove}
             </button>
@@ -421,7 +421,7 @@ function PlanSheet({
               return (
                 <label
                   key={k}
-                  className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl bg-bg px-4 ${slot === k ? "outline-3 outline-violet" : ""}`}
+                  className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-card bg-bg px-4 ${slot === k ? "outline-3 outline-violet" : ""}`}
                 >
                   <input
                     type="radio"

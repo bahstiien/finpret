@@ -169,7 +169,7 @@ export function MembersForm({
       {members
         .filter((m) => !m.archived)
         .map((m) => (
-          <details key={m.id} className="rounded-2xl bg-bg p-3">
+          <details key={m.id} className="rounded-card bg-bg p-3">
             <summary className="min-h-11 cursor-pointer content-center font-semibold">
               {t.presence(m.name)}
             </summary>
@@ -204,7 +204,7 @@ function MemberRow({
   const auto = memberPortion({ ...m, portionOverride: null }, weekStart);
   const dirty = JSON.stringify(m) !== JSON.stringify(member);
   return (
-    <li className={`flex flex-col gap-3 rounded-2xl bg-bg p-4 ${m.archived ? "opacity-60" : ""}`}>
+    <li className={`flex flex-col gap-3 rounded-card bg-bg p-4 ${m.archived ? "opacity-60" : ""}`}>
       <div className="flex flex-wrap items-end gap-2">
         <TextField
           id={`m-${m.id}-name`}

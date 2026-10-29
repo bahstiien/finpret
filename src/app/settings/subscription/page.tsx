@@ -27,7 +27,7 @@ const t = fr.subscription;
 
 export const metadata: Metadata = { title: t.title };
 
-const pill = "inline-flex min-h-11 items-center rounded-pill px-4 font-bold";
+const pill = "inline-flex min-h-11 items-center rounded-r2 px-4 font-bold";
 
 /** Offre du foyer : essai, abonnement, carte, résiliation, factures, code d'association (admin) ; lecture seule sinon. */
 export default async function SubscriptionPage({
@@ -103,7 +103,7 @@ export default async function SubscriptionPage({
               <form
                 key={plan}
                 action={createCheckoutSession}
-                className="flex flex-col gap-3 rounded-card bg-surface p-4"
+                className="flex flex-col gap-3 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line"
               >
                 <input type="hidden" name="plan" value={plan} />
                 <h2 className="text-xl font-bold">{plan === "monthly" ? t.monthly : t.yearly}</h2>
@@ -189,7 +189,7 @@ export default async function SubscriptionPage({
       )}
 
       {isAdmin && sub?.stripe_customer_id && (
-        <form action={createPortalSession} className="flex flex-col gap-2 rounded-card bg-surface p-4">
+        <form action={createPortalSession} className="flex flex-col gap-2 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
           <p className="text-sm text-muted">{t.portalHint}</p>
           <Button type="submit" variant="outline" className="self-start">
             {t.portal}

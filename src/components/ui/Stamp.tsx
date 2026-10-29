@@ -59,7 +59,7 @@ export function Stamp({ kind, state, label, code, season, count, ariaLabel, onPr
       aria-label={ariaLabel}
       data-state={state}
       data-stamp={`${kind}:${code}`}
-      className="flex min-h-22 w-22 flex-col items-center gap-1 rounded-2xl p-0 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet"
+      className="flex min-h-22 w-22 flex-col items-center gap-1 rounded-card p-0 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet"
     >
       <span
         aria-hidden="true"

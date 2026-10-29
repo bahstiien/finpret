@@ -11,18 +11,12 @@ export function Hero() {
   const t = fr.landing;
   const h = t.hero;
   return (
-    <section className="theme-light rounded-b-sheet bg-violet text-white">
+    <section className="theme-light border-b-[length:var(--bw)] border-line bg-bg text-ink">
       <Container>
-        <header className="flex items-center justify-between gap-4 py-4 sm:py-6">
-          <Link href="/" aria-label="Fin Prêt, accueil" className="rounded-pill">
-            <Image
-              src="/brand/finpret-logo-inverse.png"
-              alt="Fin Prêt"
-              width={1040}
-              height={300}
-              priority
-              className="h-11 w-auto"
-            />
+        <header className="-mx-4 flex items-center justify-between gap-4 border-b-[length:var(--bw)] border-line bg-surface px-4 py-3 sm:-mx-8 sm:px-8">
+          <Link href="/" aria-label="Fin Prêt, accueil" className="flex items-center gap-2 rounded-r2">
+            <Image src="/brand/finpret-symbole.svg" alt="" width={36} height={36} priority className="size-9" />
+            <span className="font-display text-xl uppercase">Fin Prêt</span>
           </Link>
           <nav aria-label={t.nav.label} className="flex items-center gap-1 sm:gap-2">
             {[
@@ -33,20 +27,20 @@ export function Hero() {
               <a
                 key={link.href}
                 href={link.href}
-                className="hidden min-h-11 items-center rounded-pill px-4 text-base font-bold hover:bg-white/15 md:inline-flex"
+                className="hidden min-h-11 items-center rounded-r2 px-4 text-base font-bold uppercase hover:bg-chip md:inline-flex"
               >
                 {link.label}
               </a>
             ))}
             <Link
               href="/associations"
-              className="hidden min-h-11 items-center rounded-pill px-4 text-base font-bold hover:bg-white/15 md:inline-flex"
+              className="hidden min-h-11 items-center rounded-r2 px-4 text-base font-bold uppercase hover:bg-chip md:inline-flex"
             >
               Associations
             </Link>
             <Link
               href="/login"
-              className="inline-flex min-h-11 items-center rounded-pill border-2 border-white/70 px-4 text-base font-bold hover:bg-white/15"
+              className="btn-hard inline-flex min-h-11 items-center rounded-r2 border-[length:var(--bw)] border-line bg-banana px-4 text-base font-bold text-[#17151f] uppercase"
             >
               {t.nav.login}
             </Link>
@@ -55,22 +49,22 @@ export function Hero() {
 
         <div className="grid items-center gap-10 pt-6 pb-12 sm:pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:pb-20">
           <div className="flex flex-col items-start gap-6">
-            <span className="rounded-pill bg-black/25 px-4 py-1 text-sm font-bold">{h.eyebrow}</span>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-              {nb(h.titleLine1)} <span className="text-banana block">{nb(h.titleLine2)}</span>
+            <span className="rounded-pill border-2 border-line bg-banana px-4 py-1 font-mono text-xs font-bold tracking-[0.08em] uppercase">{h.eyebrow}</span>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl">
+              {nb(h.titleLine1)} <span className="block w-fit bg-violet px-2 text-white">{nb(h.titleLine2)}</span>
             </h1>
             <p className="max-w-xl text-lg font-bold">{nb(h.lead)}</p>
             <div className="flex flex-col items-stretch gap-3 self-stretch sm:flex-row sm:items-center sm:self-start">
               <CtaLink>{nb(h.cta)}</CtaLink>
               <a
                 href="#comment"
-                className="inline-flex min-h-[52px] items-center justify-center rounded-pill border-2 border-white/70 px-6 text-base font-bold hover:bg-white/15"
+                className="btn-hard inline-flex min-h-[52px] items-center justify-center rounded-r2 border-[length:var(--bw)] border-line bg-surface px-6 text-base font-bold uppercase"
               >
                 {h.secondary}
               </a>
             </div>
             <p className="flex items-center gap-2 text-sm font-bold">
-              <Icon name="check" className="size-5 text-banana" />
+              <Icon name="check" className="size-5 text-green-strong" />
               {nb(h.reassurance)}
             </p>
           </div>
@@ -82,9 +76,9 @@ export function Hero() {
               </Phone>
               <aside
                 aria-label="Exemple de notification"
-                className="theme-light absolute top-24 -left-52 hidden w-64 items-start gap-3 rounded-3xl bg-nav p-3 text-on-nav shadow-float xl:flex"
+                className="theme-light absolute top-24 -left-52 hidden w-64 items-start gap-3 rounded-card bg-nav p-3 text-on-nav shadow-hard xl:flex border-[length:var(--bw)] border-line"
               >
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-banana text-[#17151f]">
+                <span className="grid size-10 shrink-0 place-items-center rounded-card bg-banana text-[#17151f] border-[length:var(--bw)] border-line">
                   <Icon name="pot" className="size-5" />
                 </span>
                 <div>

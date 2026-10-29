@@ -17,7 +17,7 @@ export function Flag({ flag }: { flag: FlagData }) {
     return (
       <abbr
         title={flag.name}
-        className="mr-1 inline-grid h-5 min-w-7 place-items-center rounded-md bg-chip px-1 align-[0.1em] text-xs font-bold no-underline"
+        className="mr-1 inline-grid h-5 min-w-7 place-items-center rounded-card bg-chip px-1 align-[0.1em] text-xs font-bold no-underline border-[length:var(--bw)] border-line"
       >
         {flag.code.toUpperCase()}
       </abbr>

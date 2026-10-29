@@ -28,7 +28,7 @@ export function SignupForm() {
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-2 text-sm font-semibold">{t.schools}</legend>
         {Array.from({ length: schools }, (_, i) => (
-          <div key={i} className="flex flex-wrap items-end gap-2 rounded-2xl bg-bg p-3">
+          <div key={i} className="flex flex-wrap items-end gap-2 rounded-card bg-bg p-3">
             <TextField
               id={`school-${i}-name`}
               name={`school-${i}-name`}

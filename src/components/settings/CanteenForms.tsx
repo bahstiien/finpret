@@ -194,7 +194,7 @@ function PendingMenus({
 }) {
   const [rows, setRows] = useState(kid.pending.map((p) => ({ ...p, keep: true })));
   return (
-    <fieldset className="flex flex-col gap-3 rounded-card bg-banana/25 p-4" data-testid="canteen-pending">
+    <fieldset className="flex flex-col gap-3 rounded-card bg-banana/25 p-4 border-[length:var(--bw)] border-line" data-testid="canteen-pending">
       <legend className="sr-only">{t.pending(rows.length)}</legend>
       <p className="font-bold">{t.pending(rows.length)}</p>
       <p className="text-sm">{t.pendingLead}</p>
