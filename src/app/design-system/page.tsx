@@ -3,10 +3,17 @@ import { notFound } from "next/navigation";
 import {
   Avatar,
   Badge,
+  Bento,
+  Breadcrumbs,
   Button,
   Callout,
   Card,
+  Checkbox,
+  Coachmark,
+  Difficulty,
+  Dot,
   EmptyState,
+  Faq,
   Icon,
   type IconName,
   LinkButton,
@@ -18,7 +25,9 @@ import {
   SectionHeader,
   Skeleton,
   StatTile,
+  Sticker,
   TextField,
+  TextLink,
 } from "@/components/ui";
 import type { ButtonVariant } from "@/components/ui";
 import { InteractiveDemo } from "@/components/ui/Gallery";
@@ -180,9 +189,56 @@ export default function DesignSystemPage() {
           {CARDS.map((t) => (
             <Card key={t} tone={t}>
               <h3 className="text-lg font-bold">Carte {t}</h3>
-              <p className="opacity-80">Rayon 28 px, marge intérieure de 24 px.</p>
+              <p className="opacity-80">Rayon 2 px, bordure encre, ombre dure.</p>
             </Card>
           ))}
+        </div>
+      </Group>
+
+      <Group title="Néo-brutalisme">
+        <div className="flex flex-wrap items-center gap-4">
+          <Sticker tone="banane">Nouveau</Sticker>
+          <Sticker>Passeport · Italie</Sticker>
+          <Sticker tone="pink">−30 %</Sticker>
+          {[1, 2, 3, 4].map((l) => (
+            <Difficulty key={l} level={l as 1 | 2 | 3 | 4} />
+          ))}
+          <Dot label="12 articles restants" />
+          <p className="t-body">
+            Ta liste suit ton menu. <TextLink href="#">Voir le menu</TextLink>.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-6">
+          <Checkbox label="Poireaux" defaultChecked />
+          <Checkbox label="Lentilles corail" />
+          <Checkbox label="Grande case" large defaultChecked />
+          <Checkbox label="Indisponible" disabled />
+        </div>
+        <Bento columns={3} shadow="md">
+          <div className="flex flex-col gap-1 p-3">
+            <span className="t-kicker">Besoin</span>
+            <span className="num-l">600 g</span>
+          </div>
+          <div className="flex flex-col gap-1 p-3">
+            <span className="t-kicker">Acheté</span>
+            <span className="num-l">500 g</span>
+          </div>
+          <div className="tone-warning flex flex-col gap-1 p-3">
+            <span className="t-kicker">Reste</span>
+            <span className="num-l">100 g</span>
+          </div>
+        </Bento>
+        <Breadcrumbs items={[{ label: "Recettes", href: "/recettes" }, { label: "Inde" }, { label: "Dhal de lentilles corail" }]} />
+        <div className="grid gap-4 min-[600px]:grid-cols-2">
+          <div className="flex flex-col gap-3">
+            <Faq question="Combien coûte Fin Prêt ?" defaultOpen>
+              5,99 € par mois, ou 49,99 € par an (soit 4,17 € par mois).
+            </Faq>
+            <Faq question="Je peux arrêter quand je veux ?">Oui, en deux clics depuis Réglages.</Faq>
+          </div>
+          <Coachmark step="Astuce 2 / 6" title="Ta liste se remplit toute seule" secondaryLabel="Plus tard">
+            Elle suit ton menu. Coche au fil des rayons.
+          </Coachmark>
         </div>
       </Group>
 

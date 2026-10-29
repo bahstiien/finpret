@@ -1,67 +1,64 @@
-# Design system Fin Prêt
+# Design system Fin Prêt Néo
 
-Une seule source pour l'apparence : les tokens viennent de `design-system/tokens.json` (`pnpm tokens` génère `src/styles/tokens.css`), les composants de `src/components/ui/`, importés depuis `@/components/ui`. Une galerie vivante est visible en développement sur `/design-system` (404 en production).
+Néo-brutalisme : aplats francs, bordures noires épaisses, ombres dures, rien de flou. Source de référence : le projet « Fin Prêt Néo » dans Claude Design (palette A, feuille finpret-neo v2.1). Dans le code :
 
-**Les règles du skill `landing-page-design` (partie B) priment sur SPEC §11 et sur les maquettes** pour tout ce qui suit. Elles remplacent l'ancienne charte (Gabarito + Figtree, graisses 800/900, rayons 28 px, tailles libres).
+- `design-system/tokens.json` est la seule source des jetons ; `pnpm tokens` génère `src/styles/tokens.css` (`pnpm tokens:check` en CI). Ne modifie jamais `tokens.css` à la main.
+- `src/styles/neo.css` porte les classes des primitives (`.btn`, `.card`, `.pill`, `.seg`, `.stamp`, `.faq`…). Elle ne définit plus aucun jeton, sauf les trois familles de polices.
+- Les composants React vivent dans `src/components/ui/`, importés depuis `@/components/ui`.
+- Une galerie vivante est visible en développement sur `/design-system` (404 en production).
 
 ## Principes
-1. **Clarté d'abord.** Un titre, une action principale par écran. Les actions secondaires sont plus discrètes.
-2. **Douceur.** Rayons de l'échelle Tailwind (cartes 24 px, feuilles 32 px), teintes douces, fonds plats (jamais de dégradé en fond), bordures complètes ou absentes, jamais d'un seul côté.
-3. **Retour immédiat.** Squelette de chargement, léger enfoncement au toucher (`scale(0.98)`), apparitions de 500 à 700 ms sur la courbe `ease-base`. Tout s'arrête ou devient un simple fondu avec `prefers-reduced-motion`.
-4. **Accessible par défaut.** Zones tactiles ≥ 44 px, contrastes AA, libellé ARIA obligatoire sur les boutons-icônes, focus visible (violet, jaune sur fond violet via `.on-violet`), navigation au clavier, lien d'évitement sur les pages publiques.
-5. **Clair et sombre.** On n'écrit jamais une couleur en dur : on utilise les tokens (`bg-surface`, `text-muted`…). Exception : le texte sombre sur fond banane (`text-[#17151F]`).
+1. **Clarté d'abord.** Un titre, une action principale par écran (une seule action banane par écran).
+2. **Bordure noire partout.** Cartes, boutons, champs, images, feuilles : `--bw` (2 px mobile, 3 px desktop ≥ 900 px). Pointillés réservés aux états désactivés, emplacements vides et squelettes.
+3. **Ombre dure, jamais floue.** Décalage x = y, flou 0, couleur `--line` : `--sh-sm`, `--sh`, `--sh-lg` (2 / 3 / 5 px mobile, 3 / 6 / 9 px desktop), `--sh-violet`, `--sh-banane`. Aucun dégradé, aucune transparence.
+4. **Rayons quasi nuls.** `--r0` 0, `--r1` 2 px (défaut), `--r2` 4 px (maximum). La pilule (`--r-pill`) est réservée à `Pill`.
+5. **Mouvement mécanique.** Survol : l'élément s'enfonce de 2 px et son ombre raccourcit ; clic : il s'écrase sur son ombre ; un nouveau tampon s'abat par paliers. Pas de fondu. Tout s'arrête avec `prefers-reduced-motion`.
+6. **Accessible par défaut.** Contraste AA, cibles ≥ 44 px (`--touch-min`), focus visible (`--focus`, 3 px plein décalé de 3 px), libellé ARIA obligatoire sur les boutons-icônes. L'état se lit aussi en forme et en texte, jamais par la couleur seule.
+7. **Pas d'emoji, jamais d'enfant représenté.** Les origines sont des drapeaux dessinés, les pictogrammes des `Icon`.
 
-## Tokens
-- **Couleurs** : `bg`, `surface`, `ink`, `muted`, `line`, `chip`, `violet` (+ `-soft`, `-strong`), `banana`, `green` (+ `-soft`, `-ink`, `-strong`), `blue`, `pink`, `peach`, `yellow` (teintes `-soft` / `-ink`), `nav`. **Mode sombre** : fonds neutres limités à #000000, #181818, #1F1F1F, #272727, #313131 et #131209 (`bg` #181818, `surface` #1F1F1F, `chip` #272727, `line` #313131, `nav` #000000). Exception documentée : les teintes douces (`blue-soft`, `pink-soft`, `peach`, `yellow-soft`, `green-soft`, `violet-soft`) restent des surfaces colorées sémantiques en sombre.
-- **Police** : Manrope, une seule famille pour les titres et le texte (`font-display` et `font-sans` y pointent). Graisses 400 à 700 ; jamais d'italique, jamais 800 ou 900.
-- **Échelle typographique** : uniquement les paliers Tailwind (`text-xs` 12/16 à `text-9xl`). Une taille qui n'en est pas un se ramène au palier inférieur, avec son interligne. Boutons principaux : `text-base` semibold ; boutons d'en-tête : `text-sm` semibold. Corps de texte en `text-wrap: pretty`, titres en `balance`.
-- **Espacements** : 0, 2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96 px (classes `0`, `0.5`, `1`, `2`, `3`, `4`, `6`, `8`, `10`, `12`, `16`, `20`, `24`). Boutons principaux : 8 px en vertical, 12 px en horizontal, hauteur minimale 44 px.
-- **Rayons** : échelle Tailwind. `rounded-card` = 24 px (`rounded-3xl`), `rounded-sheet` = 32 px (`rounded-4xl`), `rounded-xl` pour les boutons, `rounded-2xl` pour les champs, `rounded-pill` pour les pastilles. **Rayon imbriqué** : intérieur = extérieur − marge, si la marge est inférieure à 32 px et le résultat supérieur à 2 px ; sinon, angle droit.
-- **Mouvement** : courbe `ease-base` = cubic-bezier(0.22, 1, 0.36, 1), jamais `ease`, `linear` ni `ease-in-out`. 500 ms pour les déplacements, 300 ms pour les couleurs et l'opacité au survol (jamais moins de 200 ms), 700 ms pour les apparitions. On n'anime que `transform` et `opacity`.
-- **Icônes** : Phosphor (graisse « regular »), via `Icon` (`@/components/ui` dans l'application, `@/components/landing/Icon` sur les pages marketing). Jamais Material.
-- **Ombre** : `shadow-float` (barre flottante, feuilles).
+## Jetons
+- **Couleurs** : `bg` (crème #FFF8E7), `surface`, `chip`, `line`, `ink`, `muted`, `nav`, `on-nav`, `violet` (+ `-strong`, `on-violet`), `banane` (+ `on-banane`), `green`, `blue`, `pink`, `peach`, `yellow`, `on-fill`, `ink-fixed`, `focus`. Jamais de couleur en dur dans le code.
+- **Deux signatures** : `banane` = action principale (`cta`), `violet` = sélection (`sel`).
+- **Un domaine, un aplat** : `menu` violet, `courses` vert, `stock` bleu, `progres` banane, `session` pêche, `alerte` rose. Statuts : `info`, `success`, `warning`, `danger` (toujours avec une icône et un texte). Chaque rôle a son `on-*` : texte `on-fill` (encre) sur vert, bleu, rose, pêche, banane, jaune ; `on-violet` (blanc, 16 px gras minimum) sur violet ; jamais de blanc sur vert (3,09:1).
+- **Support imprimé** : `kit-band`, `on-kit-band`, `kit-offer`, `on-kit-offer`, `kit-annot` (repères de maquette, jamais imprimés).
+- **Polices** : Archivo Black (`font-display`, titres en capitales), Space Grotesk (`font-body` / `font-sans`, texte), Space Mono (`font-mono`, tous les nombres, dates, quantités, minuteurs).
+- **Styles de texte** (classes) : `t-hero` 52 → 112, `t-1` 34 → 56, `t-2` 24 → 32, `t-3` 18 → 20, `t-body` 16, `t-ui` 16 gras, `t-small` 14, `t-label` 13 capitales, `t-kicker` 12 capitales mono, `num-l` 36 → 48, `num-xl` 64 → 120 (mobile → desktop). Un seul `t-hero` par écran ; corps jamais sous 14 px dans l'app.
+- **Espacements** : pas de 4 (4, 8, 12, 16, 20, 24, 32, 40, 48, 64). Marge d'écran 16 px mobile, 40 px desktop.
+- **Cibles tactiles** : `--touch-min` 44, `--touch-main` 52 (boutons md, champs), `--touch-session` 60 (session guidée).
+- **Inclinaisons** : `--tilt-l`, `--tilt-1`, `--tilt-r`, `--tilt-2`, `--tilt-sticker`. Une ou deux pièces inclinées par écran, jamais un texte long.
+- **Durées** : `--t-fast` 90 ms (survol, clic), `--t-stamp` 360 ms ; courbes par paliers (`steps`).
+- **Z-index** : `--z-timers` 25, `--z-nav` 30, `--z-coach` 40, `--z-sheet` 60.
 
-## Pages publiques (landing)
-- Barre de navigation flottante, centrée, translucide et floutée (`PublicNav`) ; sur mobile, panneau plein écran dont les liens arrivent l'un après l'autre (60 ms de décalage, 24 px de montée). La page courante porte `aria-current="page"`.
-- Sections qui montent de 32 px en fondu à l'entrée dans l'écran, une seule fois (`Reveal`, `IntersectionObserver`, jamais d'écouteur de défilement).
-- Une section « phrase de fond » en grand texte (`TaglineReveal`) : les mots passent de 30 % d'encre à l'encre pleine un par un en franchissant une ligne à 60 % de l'écran.
-- Titre du hero en dégradé de texte de gauche à droite (#000000 → #666666 en clair, #FFFFFF → #9B9B9B en sombre), largeur max 680 px, saut de ligne là où la phrase respire. Le dégradé n'existe que sur ce texte.
-- Livraison : lien d'évitement, page 404 de marque (`not-found.tsx`), icône d'onglet (`app/icon.png`), pages légales liées dans le pied de page.
+## Thème
+Le design system est en **thème clair uniquement**. Le code garde pour l'instant les valeurs du thème sombre dans `tokens.json` (`color.dark`) : à retirer ou à redessiner (question ouverte, voir le récapitulatif de la mise à niveau). Les nouveaux jetons n'ont pas de valeur sombre.
 
 ## Composants
 
 | Composant | Rôle |
 |---|---|
-| `AppFrame` | Cadre des pages connectées : barre latérale (≥ 900 px) ou barre flottante (mobile), contenu animé |
-| `PageHeader` | Titre de page (h1), surtitre, description, actions |
-| `SectionHeader` | Titre de section (h2) + compteur ou action |
-| `Card` | Surface de base ; `tone` : surface, violet, dark, yellow, blue, pink, peach, green ; `padding` : none, sm (16 px), cozy (16 px), md (24 px), lg (32 px) |
-| `Button`, `LinkButton`, `buttonClass()` | Variantes primary, secondary, outline, dark, ghost, danger ; tailles sm, md, lg |
-| `IconButton` | Bouton rond à icône, `label` obligatoire |
-| `Pill` / `Badge` | Étiquette d'état, huit teintes |
-| `Callout` | Message en ligne (info, success, warning, error), annoncé aux lecteurs d'écran ; `FormMessage` en est un alias |
-| `EmptyState` | Écran vide : icône, explication, action |
-| `StatTile` | Chiffre clé |
-| `ListRow` | Ligne avec pastille d'icône, titre, sous-titre, fin |
-| `ProgressBar`, `ProgressRing` | Progression 0–100 |
-| `Avatar` | Initiale du prénom |
-| `Segmented` | Choix unique entre 2 à 4 options |
-| `TextField`, `SelectField`, `Toggle`, `Stepper`, `ChipToggle`, `SlotGrid` | Formulaires |
+| `AppFrame`, `AppNav` | Cadre des pages connectées : barre latérale (≥ 900 px) ou barre d'onglets (mobile) |
+| `PageHeader`, `SectionHeader` | Titre de page (h1), titre de section (h2) |
+| `Card` | Surface de base ; `tone` : surface, violet, dark, yellow, blue, pink, peach, green, banane |
+| `Button`, `LinkButton`, `buttonClass()` | primary (banane), secondary (violet), outline, dark, ghost, danger ; tailles sm 44, md 52, lg 60 |
+| `IconButton` | Bouton à icône, `label` obligatoire |
+| `Pill` / `Badge` | Étiquette d'état (seul usage de la pilule) |
+| `Sticker` | Étiquette inclinée à ombre dure (nouveautés, offres) |
+| `Difficulty`, `Dot` | Difficulté de 1 à 4 ; point de notification |
+| `Callout`, `EmptyState`, `Toast` (`useToast()`), `Coachmark` | Messages, états vides, confirmations, bulle d'aide (une seule à la fois) |
+| `StatTile`, `Bento` | Chiffres clés ; grille collée sur des filets (Besoin / Acheté / Reste) |
+| `ListRow`, `ProgressBar`, `ProgressRing`, `Avatar` | Lignes, progression, initiale |
+| `Segmented`, `TextField`, `SelectField`, `Checkbox`, `Toggle`, `Stepper`, `ChipToggle`, `SlotGrid` | Saisie |
 | `Sheet` | Feuille modale (`<dialog>`) |
-| `Skeleton` | Chargement ; `app/loading.tsx` en donne un par défaut |
-| `Toast` | `useToast()` pour les confirmations |
-| `Icon` | Icônes Phosphor, décoratives sauf `label` |
+| `Faq`, `Breadcrumbs`, `TextLink` | Contenu des pages publiques |
+| `Stamp` | Tampon du passeport (rond ou carré, encre `ink-fixed`) |
+| `Skeleton` | Chargement |
+| `Icon` | Pictogrammes en ligne, décoratifs sauf `label` |
+
+Pas encore portés depuis le design system : `OfferBox` et `MealFrieze` (kit associations imprimé), `Topbar` / `Tabbar` en composants autonomes (`AppNav` les couvre).
 
 ## Règles d'usage
 - Pas de `<h1 className="text-4xl …">` à la main : utilise `PageHeader`.
 - Pas de bouton fait à la main : `Button`, ou `LinkButton` / `buttonClass()` pour un lien.
 - Un nouveau composant d'interface va dans `src/components/ui/`, est exporté par `index.ts` et ajouté à la galerie.
-- Un nouveau token se déclare dans `design-system/tokens.json`, puis `pnpm tokens`.
-- Les textes restent dans `src/i18n/fr.ts`.
-
-## État de la migration
-Migrés : titres de page (`PageHeader`) et cartes simples (`Card`) sur tous les écrans ; boutons-liens jaunes (`buttonClass()`).
-
-**Passe « landing-page-design » (octobre 2026).** Appliquée mécaniquement à toute l'interface : police unique, graisses plafonnées à 700, tailles et rayons arbitraires ramenés à l'échelle Tailwind, espacements ramenés à la table, interlignes et crénages arbitraires supprimés, transitions sur `ease-base`, icônes Phosphor, neutres sombres. Les écrans connectés n'ont pas été relus un à un : une vérification visuelle écran par écran reste à faire (surtout densité des listes après le passage de 20 px à 16 px, et hauteur des boutons).
-
-Reste, volontairement : les cartes à classes calculées, les listes `<ul className="rounded-card divide-y …">`, les `<form>` et `<details>` qui portent leur propre habillage. Les migrer au fil des retouches.
+- Un nouveau jeton se déclare dans `design-system/tokens.json`, puis `pnpm tokens`.
+- Les textes restent dans `src/i18n/fr.ts` : tutoiement, chaleureux, jamais culpabilisant, verbe d'action sur les boutons, espace insécable avant `: ; ? !`.

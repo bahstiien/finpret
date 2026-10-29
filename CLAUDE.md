@@ -7,7 +7,7 @@ La spécification complète est dans `docs/SPEC.md` : **lis-la en entier avant d
 - `docs/RECAP_JANVIER.md` : état des jalons, reste à faire hors code, écarts et questions ouvertes. `docs/RESTAURATION.md` : sauvegarde et test de restauration.
 - `docs/SPEC_JANVIER.md` : **prioritaire** pour le lancement du 4 janvier 2027 (périmètre, jalons J0 à J9). En cas de contradiction : SPEC_JANVIER > SPEC > prototype. L'écart avec le code est suivi dans `docs/AUDIT_ECART_JANVIER.md`.
 - `src/lib/features.ts` : drapeaux des fonctionnalités REPORTÉES par SPEC_JANVIER (code conservé, masqué).
-- `design-system/tokens.json` : couleurs, police, rayons, mouvement, espacements ; `pnpm tokens` génère `src/styles/tokens.css`. `docs/DESIGN_SYSTEM.md` : règles visuelles (skill `landing-page-design`, qui prime sur SPEC §11 et les maquettes pour la typographie, les espacements, les rayons, les icônes et le mouvement).
+- `design-system/tokens.json` : couleurs, rôles et domaines, polices, rayons, tactile, durées ; `pnpm tokens` génère `src/styles/tokens.css`. `docs/DESIGN_SYSTEM.md` : règles visuelles du design system « Fin Prêt Néo » (néo-brutalisme, projet Claude Design).
 - `docs/SPEC.md` : périmètre, règles métier, modèle de données, écrans, critères d'acceptation.
 - `seed/*.json` : données réelles (133 ingrédients, 184 recettes de repas, 35 goûters, 25 petits-déjeuners, contenants). Leur format est décrit dans `seed/README.md`.
 - `reference/menu-legacy.html` : prototype mono-utilisateur qui fonctionne en production. **Le moteur de génération, la session et les calculs de quantités doivent reproduire son comportement.** Les fonctions à porter sont listées en section 7 de la spec, avec leur nom dans ce fichier.

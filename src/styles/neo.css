@@ -1,44 +1,10 @@
 /* Primitives néo-brutalistes v2.1, portées telles quelles de la maquette (feuille partagée des artboards).
-   Les jetons (--bw, --off*, --sh*, --r*, rôles et domaines) sont définis ci-dessous ; couleurs dans tokens.css.
+   Tous les jetons (couleurs, rôles et domaines, --bw, --off*, --sh*, --r*, tactile, durées) viennent de tokens.css, généré depuis design-system/tokens.json.
    Mobile < 900 px (bordure 2 / ombre 3) · Desktop ≥ 900 px (3 / 6). Thème clair uniquement. */
 :root {
   --font-display: var(--font-archivo), "Arial Black", Impact, sans-serif;
   --font-body: var(--font-grotesk), system-ui, sans-serif;
   --font-mono: var(--font-space-mono), ui-monospace, Menlo, monospace;
-  --banane: #ffd23f;
-  --on-banane: #17151f;
-  --on-violet: #ffffff;
-  --blue: #4d96ff;
-  --pink: #ff6b9d;
-  --peach: #ff8c42;
-  --yellow: #fff6d6;
-  --on-fill: #17151f;
-  --ink-fixed: #17151f;
-  --focus: #7a5af8;
-  --menu: var(--violet); --on-menu: var(--on-violet);
-  --courses: var(--green); --on-courses: var(--on-fill);
-  --stock: var(--blue); --on-stock: var(--on-fill);
-  --progres: var(--banane); --on-progres: var(--on-fill);
-  --session: var(--peach); --on-session: var(--on-fill);
-  --alerte: var(--pink); --on-alerte: var(--on-fill);
-  --cta: var(--banane); --on-cta: var(--on-banane);
-  --sel: var(--violet); --on-sel: var(--on-violet);
-  --info: var(--blue); --on-info: var(--on-fill);
-  --success: var(--green); --on-success: var(--on-fill);
-  --warning: var(--banane); --on-warning: var(--on-fill);
-  --danger: var(--pink); --on-danger: var(--on-fill);
-  --bw: 2px; --off-sm: 2px; --off: 3px; --off-lg: 5px;
-  --r0: 0px; --r1: 2px; --r2: 4px; --r-pill: 999px;
-  --touch-min: 44px; --touch-main: 52px; --touch-session: 60px;
-  --t-fast: 90ms; --t-stamp: 360ms;
-  --sh-sm: var(--off-sm) var(--off-sm) 0 var(--line);
-  --sh: var(--off) var(--off) 0 var(--line);
-  --sh-lg: var(--off-lg) var(--off-lg) 0 var(--line);
-  --sh-violet: var(--off) var(--off) 0 var(--violet);
-  --sh-banane: var(--off) var(--off) 0 var(--banane);
-}
-@media (min-width: 900px) {
-  :root { --bw: 3px; --off-sm: 3px; --off: 6px; --off-lg: 9px; }
 }
 .sr-fp { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0; }
 
