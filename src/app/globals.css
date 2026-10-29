@@ -55,6 +55,14 @@
   --shadow-float: var(--shadow-lg-px) var(--shadow-lg-px) 0 0 var(--line);
 }
 
+/* Drapeaux emoji : Windows ne les dessine pas, on charge la police Twemoji Country Flags (CC-BY 4.0, © Twitter, Inc. et contributeurs ; build via country-flag-emoji-polyfill). Seuls les indicateurs régionaux passent par elle. */
+@font-face {
+  font-family: "Twemoji Country Flags";
+  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E007F;
+  src: url("/fonts/TwemojiCountryFlags.woff2") format("woff2");
+  font-display: swap;
+}
+
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
