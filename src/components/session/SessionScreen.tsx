@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useMenuAction } from "@/components/menu/useMenuAction";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { Pill } from "@/components/ui/Pill";
 import { dur } from "@/engine/format";
 import type { SessionStep } from "@/engine/session";
 import { fr } from "@/i18n/fr";
@@ -46,6 +47,7 @@ function useWakeLock(active: boolean) {
   }, [active]);
 }
 
+/** Session guidée (maquette Session) : domaine Session = pêche, étape en grand, cases de 36 px, boutons de 60 px. */
 export function SessionScreen({
   weekId,
   weekLabel,
@@ -85,33 +87,30 @@ export function SessionScreen({
     return (
       <>
         <PageHeader title={fr.nav.session} />
-        <Card tone="blue" className="flex flex-col gap-4" data-testid="session-start">
-          <p className="font-semibold">{weekLabel}</p>
-          <p className="font-display text-5xl font-bold">{dur(total)}</p>
-          <p>{t.startCard(steps.length, hhmm(new Date(Date.now() + total * 60000)))}</p>
-          {total > maxMinutes && (
-            <p className="rounded-card bg-peach px-3 py-2 text-sm font-semibold text-peach-ink border-[length:var(--bw)] border-line">
-              {t.overMax(dur(maxMinutes))}
-            </p>
-          )}
+        <Card tone="peach" className="flex flex-col gap-4" data-testid="session-start">
+          <p className="t-kicker">{weekLabel}</p>
+          <p className="num-xl">{dur(total)}</p>
+          <p className="t-ui">{t.startCard(steps.length, hhmm(new Date(Date.now() + total * 60000)))}</p>
+          {total > maxMinutes && <p className="callout tone-warning t-ui">{t.overMax(dur(maxMinutes))}</p>}
           {canEdit ? (
-            <Button type="button" className="self-start" onClick={() => session?.start()}>
+            <Button type="button" size="lg" className="self-start" onClick={() => session?.start()}>
               {t.start}
             </Button>
           ) : (
-            <p className="text-sm">{t.viewerWait}</p>
+            <p className="t-small">{t.viewerWait}</p>
           )}
         </Card>
-        <Card padding="cozy" className="flex flex-col gap-2">
-          <h2 className="font-bold">{t.overview}</h2>
-          <ol className="flex flex-col divide-y divide-line">
+        <Card className="flex flex-col gap-2">
+          <div className="sh">
+            <h2 className="t-2">{t.overview}</h2>
+            <span className="rule" />
+          </div>
+          <ol>
             {steps.map((s, i) => (
-              <li key={i} className="flex gap-3 py-2">
-                <span className="w-14 shrink-0 font-display font-bold">
-                  {hhmm(new Date(Date.now() + s.start * 60000))}
-                </span>
-                <span>
-                  <b>{s.name}</b> <span className="text-sm text-muted">· {s.where}</span>
+              <li key={i} className="row">
+                <span className="mono w-14 shrink-0 font-bold">{hhmm(new Date(Date.now() + s.start * 60000))}</span>
+                <span className="row-main">
+                  <b>{s.name}</b> <span className="t-small text-muted">· {s.where}</span>
                 </span>
               </li>
             ))}
@@ -132,66 +131,94 @@ export function SessionScreen({
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-2">
+      <div className="tone-session nb flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div>
-          <p className="text-sm text-muted">
+          <p className="t-kicker mono">
             {hhmm(begin)} → {t.plannedEnd(hhmm(end))}
           </p>
-          <p className="font-bold">{t.stepOf(index + 1, steps.length)}</p>
+          <p className="t-ui">{t.stepOf(index + 1, steps.length)}</p>
         </div>
-        <span
-          className={`rounded-r2 px-3 py-1 text-sm font-bold ${delay > 2 ? "bg-peach text-peach-ink" : "bg-green-soft text-green-ink"}`}
-          data-testid="session-delay"
-        >
+        <Pill tone={delay > 2 ? "peach" : "green"} data-testid="session-delay">
           {delay > 2 ? t.late(delay) : delay < -2 ? t.ahead(-delay) : t.onTime}
-        </span>
+        </Pill>
       </div>
 
-      <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <section
-          className="flex flex-col gap-4 rounded-card bg-blue-soft p-4 text-ink border-[length:var(--bw)] border-line"
-          data-testid="session-step"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="font-display text-5xl font-bold text-blue-ink min-[900px]:text-7xl">
-              {hhmm(at(step.start))}
+      <div
+        className="grid gap-[var(--bw)] border-[length:var(--bw)] border-line bg-line"
+        style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}
+        role="progressbar"
+        aria-valuemin={1}
+        aria-valuemax={steps.length}
+        aria-valuenow={index + 1}
+        aria-label={t.stepOf(index + 1, steps.length)}
+      >
+        {steps.map((_, k) => (
+          <span
+            key={k}
+            className={`block h-3.5 ${k < index ? "bg-ink" : k === index ? "bg-[var(--cta)]" : "bg-surface"}`}
+          />
+        ))}
+      </div>
+
+      <div className="grid gap-5 min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] min-[900px]:items-start">
+        <section className="flex min-w-0 flex-col gap-5" data-testid="session-step" aria-labelledby="session-step-title">
+          <div className="flex items-end gap-3">
+            <span aria-hidden="true" className="t-hero mono !text-[96px] !leading-[.8] min-[900px]:!text-[120px]">
+              {String(index + 1).padStart(2, "0")}
             </span>
-            <span className="inline-flex items-center gap-2 rounded-r2 bg-surface px-4 py-2 font-bold text-blue-ink">
-              <Icon name="pot" className="size-5" />
-              {step.where}
-            </span>
+            <div className="flex flex-col items-start gap-2 pb-1.5">
+              <span aria-hidden="true" className="mono text-xl font-bold">
+                / {steps.length}
+              </span>
+              <Pill>
+                <Icon name="pot" />
+                {step.where}
+              </Pill>
+              <span className="mono t-kicker">{hhmm(at(step.start))}</span>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold min-[900px]:text-4xl">{step.name}</h1>
-          <ul className="flex flex-col divide-y divide-line rounded-card bg-surface px-4 border-[length:var(--bw)] border-line">
+          <h1 id="session-step-title" className="t-1 balance">
+            {step.name}
+          </h1>
+          <ul className="card !py-1">
             {step.tasks.map((task, j) => {
               const key = `${index}-${j}`;
               return (
                 <li key={key}>
-                  <label className="flex min-h-14 cursor-pointer items-center gap-3 py-2">
+                  <label className="row min-h-[var(--touch-session)] cursor-pointer">
                     <input
                       type="checkbox"
                       checked={!!done[key]}
                       disabled={!canEdit}
                       onChange={(e) => session?.setTask(key, e.target.checked)}
-                      className="size-7 shrink-0 accent-green"
+                      className="cb cb-lg"
                     />
-                    <span className={done[key] ? "text-muted line-through" : "font-semibold"}>{task}</span>
+                    <span className={`row-main t-ui !text-lg ${done[key] ? "text-muted line-through" : ""}`}>
+                      {task}
+                    </span>
                   </label>
                 </li>
               );
             })}
           </ul>
           {step.timer && canEdit && (
-            <Button
-              type="button"
-              disabled={!!activeTimer}
-              onClick={() =>
-                session?.startTimer(`${step.name} · ${step.where.toLowerCase()}`, step.timer!.minutes, index)
-              }
-            >
-              <Icon name="timer" />
-              {activeTimer ? t.timerRunning : t.startTimer(step.timer.minutes)}
-            </Button>
+            <Card tone="peach" className="flex flex-col items-center gap-3 text-center">
+              <p className="num-xl !text-[72px] min-[900px]:!text-[96px]" aria-hidden="true">
+                {String(step.timer.minutes).padStart(2, "0")}:00
+              </p>
+              <Button
+                type="button"
+                size="lg"
+                className="w-full"
+                disabled={!!activeTimer}
+                onClick={() =>
+                  session?.startTimer(`${step.name} · ${step.where.toLowerCase()}`, step.timer!.minutes, index)
+                }
+              >
+                <Icon name="timer" />
+                {activeTimer ? t.timerRunning : t.startTimer(step.timer.minutes)}
+              </Button>
+            </Card>
           )}
           {FEATURES.freezerAndLeftovers && step.actions && canEdit && (
             <div className="flex flex-wrap gap-2">
@@ -218,57 +245,57 @@ export function SessionScreen({
             </div>
           )}
           {nextStep && (
-            <p className="text-sm min-[900px]:hidden">
-              <b>{t.then(hhmm(at(nextStep.start)))}</b> {nextStep.name} · {nextStep.where}
+            <p className="t-small min-[900px]:hidden">
+              <b className="mono">{t.then(hhmm(at(nextStep.start)))}</b> {nextStep.name} · {nextStep.where}
             </p>
           )}
         </section>
-        <aside
-          className="hidden flex-col gap-1 rounded-card bg-nav p-4 text-on-nav min-[900px]:flex border-[length:var(--bw)] border-line"
-          aria-label={t.upcoming}
-        >
-          <h2 className="pb-2 text-sm font-bold tracking-wide uppercase opacity-70">{t.upcoming}</h2>
-          {upcoming.length === 0 && <p className="opacity-70">{t.lastStep}</p>}
-          {upcoming.map((s, k) => (
-            <div key={k} className="border-t border-white/10 py-3">
-              <p className={`font-display text-lg font-bold ${k === 0 ? "text-banana" : ""}`}>
-                {hhmm(at(s.start))}
-              </p>
-              <p className="font-bold">{s.name}</p>
-              <p className="text-sm opacity-70">{s.where}</p>
-            </div>
-          ))}
+        <aside className="card hidden flex-col gap-1 min-[900px]:flex" aria-label={t.upcoming}>
+          <div className="sh mb-1">
+            <h2 className="t-2">{t.upcoming}</h2>
+            <span className="rule" />
+          </div>
+          {upcoming.length === 0 && <p className="t-small text-muted">{t.lastStep}</p>}
+          <ol>
+            {upcoming.map((s, k) => (
+              <li key={k} className="row">
+                <span className="mono w-12 text-[22px] font-bold">{String(index + 2 + k).padStart(2, "0")}</span>
+                <div className="row-main">
+                  <p className="t-ui">{s.name}</p>
+                  <p className="mono t-small">
+                    {hhmm(at(s.start))} · {s.where}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </aside>
       </div>
 
       {canEdit && index >= steps.length - 1 && allDone && <SessionDoneBanner weekId={weekId} />}
       {canEdit && (
-        <nav className="sticky bottom-24 flex gap-3 min-[900px]:bottom-4" aria-label={t.navigation}>
+        <nav
+          className="tone-bg sticky bottom-24 grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-3 border-t-[length:var(--bw)] border-line py-3 min-[900px]:bottom-0"
+          aria-label={t.navigation}
+        >
           <button
             type="button"
             aria-label={t.previous}
             disabled={index === 0}
             onClick={() => session?.setStep(index - 1)}
-            className="grid size-16 shrink-0 place-items-center rounded-r2 bg-surface text-2xl font-bold shadow-hard disabled:opacity-40"
+            className="btn btn--outline btn--lg !px-3"
           >
-            ←
+            <Icon name="arrowBack" />
           </button>
           <button
             type="button"
             disabled={index >= steps.length - 1}
             onClick={() => session?.setStep(index + 1)}
-            className={`flex min-h-16 flex-1 items-center justify-between rounded-r2 pr-2 pl-6 text-left font-bold shadow-hard disabled:opacity-40 ${
-              allDone ? "bg-green text-white" : "bg-nav text-on-nav"
-            }`}
+            className={`btn btn--lg ${allDone ? "btn--primary" : "btn--dark"}`}
             data-ready={allDone}
           >
             <span>{nextStep ? t.next(allDone ? nextStep.name : null) : t.finished}</span>
-            <span
-              aria-hidden="true"
-              className="grid size-12 place-items-center rounded-full bg-surface text-xl text-ink"
-            >
-              →
-            </span>
+            <Icon name="chevronRight" />
           </button>
         </nav>
       )}

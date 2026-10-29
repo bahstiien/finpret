@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AssociationCodeForm } from "@/components/billing/CodeForm";
 import { ActionForm } from "@/components/ui/ActionForm";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClass } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormMessage } from "@/components/ui/Field";
+import { Pill } from "@/components/ui/Pill";
 import { fr } from "@/i18n/fr";
 import { brandLabel, cardExpired } from "@/lib/billing";
 import { formatLong } from "@/lib/dates";
@@ -26,8 +27,6 @@ import { requireHousehold } from "@/server/session";
 const t = fr.subscription;
 
 export const metadata: Metadata = { title: t.title };
-
-const pill = "inline-flex min-h-11 items-center rounded-r2 px-4 font-bold";
 
 /** Offre du foyer : essai, abonnement, carte, résiliation, factures, code d'association (admin) ; lecture seule sinon. */
 export default async function SubscriptionPage({
@@ -89,7 +88,7 @@ export default async function SubscriptionPage({
       {params.code === "ok" && <FormMessage tone="success">{t.codeOk}</FormMessage>}
       {params.code === "locked" && <FormMessage tone="error">{t.codeLocked}</FormMessage>}
       {errorText && <FormMessage tone="error">{errorText}</FormMessage>}
-      <Card as="p" padding="cozy" className="font-bold" data-testid="offer-status">
+      <Card as="p" tone="violet" padding="cozy" className="t-ui" data-testid="offer-status">
         {status}
       </Card>
 
@@ -103,16 +102,16 @@ export default async function SubscriptionPage({
               <form
                 key={plan}
                 action={createCheckoutSession}
-                className="flex flex-col gap-3 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line"
+                className="card flex flex-col gap-3"
               >
                 <input type="hidden" name="plan" value={plan} />
-                <h2 className="text-xl font-bold">{plan === "monthly" ? t.monthly : t.yearly}</h2>
-                <p className="font-display text-2xl font-bold">
+                <h2 className="t-2">{plan === "monthly" ? t.monthly : t.yearly}</h2>
+                <p className="num-l">
                   {plan === "monthly" ? t.monthlyPrice : hasAssociation ? t.yearlyAssociation : t.yearlyPrice}
                 </p>
                 {plan === "yearly" && hasAssociation && (
-                  <p className="text-sm font-semibold text-green-ink">
-                    {t.associationBadge("de ton association")}
+                  <p>
+                    <Pill tone="green">{t.associationBadge("de ton association")}</Pill>
                   </p>
                 )}
                 <Button type="submit" data-testid={`choose-${plan}`}>
@@ -123,11 +122,11 @@ export default async function SubscriptionPage({
           </section>
           <p className="text-sm text-muted" data-testid="legal-links">
             {t.legal.secure}{" "}
-            <Link href="/cgv" className="underline">
+            <Link href="/cgv" className="lnk">
               {t.legal.cgv}
             </Link>{" "}
             ·{" "}
-            <Link href="/confidentialite" className="underline">
+            <Link href="/confidentialite" className="lnk">
               {t.legal.privacy}
             </Link>
           </p>
@@ -136,15 +135,15 @@ export default async function SubscriptionPage({
 
       {isAdmin && subscribed && (
         <Card padding="cozy" className="flex flex-col gap-3" aria-label={t.card.title}>
-          <h2 className="text-lg font-bold">{t.card.title}</h2>
+          <h2 className="t-3">{t.card.title}</h2>
           {details === null ? (
             <p className="text-sm text-muted">{t.detailsUnavailable}</p>
           ) : details?.card ? (
             <div className="flex flex-col gap-1" data-testid="payment-card">
-              <p className="font-semibold">
+              <p className="t-ui mono">
                 {t.card.line(brandLabel(details.card.brand), details.card.last4)}
               </p>
-              <p className="text-sm text-muted">
+              <p className="mono text-sm text-muted">
                 {t.card.expires(details.card.expMonth, details.card.expYear)}
               </p>
               {cardExpired(details.card) && <FormMessage tone="error">{t.card.expired}</FormMessage>}
@@ -189,7 +188,7 @@ export default async function SubscriptionPage({
       )}
 
       {isAdmin && sub?.stripe_customer_id && (
-        <form action={createPortalSession} className="flex flex-col gap-2 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
+        <form action={createPortalSession} className="card flex flex-col gap-2">
           <p className="text-sm text-muted">{t.portalHint}</p>
           <Button type="submit" variant="outline" className="self-start">
             {t.portal}
@@ -199,25 +198,25 @@ export default async function SubscriptionPage({
 
       {invoices !== undefined && (
         <Card padding="cozy" className="flex flex-col gap-3" aria-label={t.billing.title}>
-          <h2 className="text-lg font-bold">{t.billing.title}</h2>
+          <h2 className="t-3">{t.billing.title}</h2>
           {invoices === null ? (
             <p className="text-sm text-muted">{t.billing.unavailable}</p>
           ) : invoices.length === 0 ? (
             <p className="text-sm text-muted">{t.billing.empty}</p>
           ) : (
-            <ul className="flex flex-col divide-y divide-line" data-testid="invoices">
+            <ul className="flex flex-col" data-testid="invoices">
               {invoices.map((inv) => (
-                <li key={inv.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                <li key={inv.id} className="row flex-wrap justify-between">
                   <div className="flex flex-col">
-                    <span className="font-semibold">{t.billing.number(inv.number)}</span>
-                    <span className="text-sm text-muted">
+                    <span className="t-ui mono">{t.billing.number(inv.number)}</span>
+                    <span className="mono text-sm text-muted">
                       {formatLong(inv.date)} · {money(inv.amount, inv.currency)} ·{" "}
                       {t.billing.statuses[inv.status]}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {inv.status === "open" && inv.hostedUrl && (
-                      <a href={inv.hostedUrl} className={`${pill} bg-banana text-[#17151F]`}>
+                      <a href={inv.hostedUrl} className={buttonClass({ size: "sm" })}>
                         {t.billing.pay}
                       </a>
                     )}
@@ -226,13 +225,13 @@ export default async function SubscriptionPage({
                         href={inv.hostedUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`${pill} border-2 border-ink`}
+                        className={buttonClass({ variant: "outline", size: "sm" })}
                       >
                         {t.billing.view}
                       </a>
                     )}
                     {inv.pdfUrl && (
-                      <a href={inv.pdfUrl} className={`${pill} border-2 border-ink`}>
+                      <a href={inv.pdfUrl} className={buttonClass({ variant: "outline", size: "sm" })}>
                         {t.billing.download}
                       </a>
                     )}
@@ -245,8 +244,8 @@ export default async function SubscriptionPage({
       )}
 
       <Card padding="cozy" aria-label={t.includedTitle}>
-        <h2 className="mb-2 text-lg font-bold">{t.includedTitle}</h2>
-        <ul className="list-disc pl-4">
+        <h2 className="t-3 mb-2">{t.includedTitle}</h2>
+        <ul className="list-disc pl-4 marker:text-ink">
           {t.included.map((i) => (
             <li key={i}>{i}</li>
           ))}

@@ -59,7 +59,7 @@ export function SaveStatus({ status }: { status: Status }) {
   return (
     <p
       role="status"
-      className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-r2 bg-ink px-4 py-3 text-sm font-bold text-surface shadow-hard"
+      className="toast fixed bottom-24 left-1/2 z-40 -translate-x-1/2 text-sm font-bold min-[900px]:bottom-6"
     >
       {status.kind === "saving" ? t.saving : `✓ ${t.saved}`}
     </p>
@@ -73,13 +73,13 @@ export function ApplyPrompt({ start, onDone }: { start: string; onDone: () => vo
   return (
     <Card
       as="div"
-      tone="yellow"
+      tone="banane"
       padding="cozy"
       className="flex flex-col gap-3"
       role="region"
       aria-live="polite"
     >
-      <p className="font-semibold">{t.apply.question(formatShort(start))}</p>
+      <p className="font-bold">{t.apply.question(formatShort(start))}</p>
       <div className="flex flex-wrap gap-2">
         <Button
           type="button"

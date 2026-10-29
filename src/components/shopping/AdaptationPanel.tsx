@@ -90,7 +90,7 @@ export function AdaptationPanel({
   };
 
   return (
-    <Card padding="sm" className="flex flex-col gap-3" data-testid="adaptation">
+    <Card className="flex flex-col gap-4" data-testid="adaptation">
       {candidates.length > 0 && (
         <Button
           type="button"
@@ -105,15 +105,15 @@ export function AdaptationPanel({
 
       {open && (
         <div className="flex flex-col gap-3">
-          <h2 className="font-bold">{t.title}</h2>
-          <p className="text-sm text-muted">{t.intro}</p>
-          <fieldset className="flex flex-col gap-1">
+          <h2 className="t-2">{t.title}</h2>
+          <p className="t-small muted">{t.intro}</p>
+          <fieldset className="flex flex-col gap-1 border-0 p-0">
             <legend className="sr-only">{t.title}</legend>
             {candidates.map((c) => (
               <label key={c.key} className="flex min-h-11 items-center gap-3">
                 <input
                   type="checkbox"
-                  className="size-6 accent-green"
+                  className="cb"
                   checked={picked.has(c.key)}
                   onChange={(e) =>
                     setPicked((prev) => {
@@ -124,7 +124,7 @@ export function AdaptationPanel({
                     })
                   }
                 />
-                <span className="font-semibold">{c.label}</span>
+                <span className="t-ui">{c.label}</span>
               </label>
             ))}
           </fieldset>
@@ -134,18 +134,18 @@ export function AdaptationPanel({
 
           {preview && (
             <div className="flex flex-col gap-3" role="region" aria-label={t.title}>
-              {preview.limited && <p className="text-sm font-semibold">{t.limited}</p>}
+              {preview.limited && <p className="callout tone-warning text-sm font-bold" role="status">{t.limited}</p>}
               {preview.proposals.length === 0 ? (
                 <div role="status" className="flex flex-col gap-1">
-                  <p className="font-semibold">{t.none}</p>
-                  <p className="text-sm text-muted">{t.noneHint}</p>
+                  <p className="t-ui">{t.none}</p>
+                  <p className="t-small muted">{t.noneHint}</p>
                   <div className="flex flex-wrap gap-2 pt-1">
                     <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                       {t.keepMenu}
                     </Button>
                     <Link
                       href="/app/discover"
-                      className="inline-flex min-h-11 items-center rounded-r2 bg-chip px-4 font-semibold"
+                      className="btn btn--outline btn--sm"
                     >
                       {t.browseRecipes}
                     </Link>
@@ -153,13 +153,13 @@ export function AdaptationPanel({
                 </div>
               ) : (
                 preview.proposals.map((p, i) => (
-                  <article key={i} className="flex flex-col gap-1 rounded-card bg-chip p-3 border-[length:var(--bw)] border-line">
-                    <h3 className="font-bold">{t.resolves(p.resolved, p.total)}</h3>
+                  <article key={i} className="card flex flex-col gap-2">
+                    <h3 className="t-3">{t.resolves(p.resolved, p.total)}</h3>
                     <ul className="list-disc pl-4 text-sm">
                       {p.lines.map((l, j) => (
                         <li key={j}>
                           {t.replaces(l.from, l.to)}
-                          {l.slots.length > 0 && <span className="text-muted"> ({l.slots.join(", ")})</span>}
+                          {l.slots.length > 0 && <span className="muted mono"> ({l.slots.join(", ")})</span>}
                         </li>
                       ))}
                     </ul>
@@ -185,7 +185,7 @@ export function AdaptationPanel({
                 ))
               )}
               {preview.excluded.length > 0 && (
-                <ul className="text-sm text-muted">
+                <ul className="t-small muted">
                   {preview.excluded.map((e, i) => (
                     <li key={i}>
                       {e.name} : {e.reason === "locked" ? t.locked : ""}
@@ -200,20 +200,20 @@ export function AdaptationPanel({
 
       {history.length > 0 && (
         <div className="flex flex-col gap-1">
-          <h2 className="font-bold">{t.history}</h2>
-          <ul className="flex flex-col gap-1 text-sm">
+          <h2 className="t-3">{t.history}</h2>
+          <ul className="flex flex-col text-sm">
             {history.map((h) => (
-              <li key={h.id} className="flex flex-wrap items-center gap-2">
-                <span className={h.undone || h.kind === "undo" ? "text-muted" : ""}>
+              <li key={h.id} className="row flex-wrap">
+                <span className={`t-ui ${h.undone || h.kind === "undo" ? "muted" : ""}`}>
                   {h.lines.join(" · ")}
                 </span>
-                {h.kind === "apply" && h.undone && <span className="text-muted">({t.undone})</span>}
+                {h.kind === "apply" && h.undone && <span className="muted">({t.undone})</span>}
                 {h.kind === "apply" && !h.undone && online && (
                   <button
                     type="button"
                     disabled={busy !== null}
                     onClick={() => void undo(h.id)}
-                    className="min-h-11 rounded-r2 bg-chip px-4 font-semibold"
+                    className="btn btn--outline btn--sm"
                   >
                     {t.undo}
                   </button>

@@ -113,17 +113,6 @@
     transform: none;
   }
   /* Bouton à ombre dure : survol = translate(2,2) ombre réduite, clic = translate(6,6) sans ombre. */
-  .btn-hard {
-    box-shadow: var(--shadow-hard);
-  }
-  .btn-hard:hover:not(:disabled) {
-    transform: translate(2px, 2px);
-    box-shadow: 4px 4px 0 0 var(--line);
-  }
-  .btn-hard:active:not(:disabled) {
-    transform: translate(6px, 6px);
-    box-shadow: 0 0 0 0 var(--line);
-  }
   :focus-visible {
     outline: 3px solid var(--violet);
     outline-offset: 3px;
@@ -150,79 +139,17 @@
 }
 
 /* Chaque écran apparaît en douceur : repère visuel de la navigation, sans bloquer. */
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 .page-enter {
-  animation: page-enter 500ms var(--ease-base) both;
-}
-@keyframes skeleton {
-  50% {
-    opacity: 0.55;
-  }
-}
-.skeleton {
-  animation: skeleton 1.4s var(--ease-base) infinite alternate;
-  background: var(--chip);
-  border-radius: var(--radius-card);
-}
-
-@keyframes stamp-in {
-  from {
-    opacity: 0;
-    scale: 1.4;
-  }
-  to {
-    opacity: 1;
-    scale: 1;
-  }
-}
-
-/* Apparition au défilement (Reveal) : 32 px et fondu, courbe de base, une seule fois. */
-[data-reveal="hidden"] {
-  opacity: 0;
-  translate: 0 32px;
-}
-[data-reveal="shown"] {
-  opacity: 1;
-  translate: 0 0;
-  transition:
-    opacity 700ms var(--ease-base),
-    translate 700ms var(--ease-base);
-}
-
-/* Phrase de fond (TaglineReveal) : mots atténués à 30 % tant que la ligne de déclenchement n'est pas franchie. */
-.tagline[data-ready="true"] .tagline-word {
-  color: color-mix(in srgb, var(--ink) 30%, transparent);
-  transition: color 300ms var(--ease-base);
-}
-.tagline[data-ready="true"] .tagline-word[data-on="true"] {
-  color: var(--ink);
+  /* Pas de fondu : la maquette interdit opacity et fade. */
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal="hidden"] {
-    translate: none;
-  }
-  [data-reveal="shown"] {
-    transition: opacity 700ms var(--ease-base);
-  }
   .timer-ready,
-  .page-enter,
-  .skeleton {
+  .page-enter {
     animation: none;
   }
   a:active,
-  button:active,
-  .btn-hard:hover,
-  .btn-hard:active {
+  button:active {
     transform: none !important;
   }
   html {

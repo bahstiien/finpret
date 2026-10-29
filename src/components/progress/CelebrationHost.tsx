@@ -39,7 +39,7 @@ export function CelebrationHost({ data }: { data: Celebrations }) {
         onClose={closeStamps}
         title={data.stamps.length === 1 ? t.passport.newStamp(data.stamps[0]!.label) : t.passport.newStamps}
       >
-        <ul className="flex flex-wrap justify-center gap-3" data-testid="new-stamps">
+        <ul className="tone-yellow nb-flat flex flex-wrap justify-center gap-7 py-5" data-testid="new-stamps">
           {data.stamps.map((s) => (
             <li key={`${s.kind}:${s.key}`}>
               <Stamp
@@ -64,10 +64,10 @@ export function CelebrationHost({ data }: { data: Celebrations }) {
           title={t.streak.milestoneTitle(data.milestone.weeks)}
         >
           <div className="flex flex-col items-center gap-3 text-center" data-testid="milestone-sheet">
-            <span className="grid size-20 place-items-center rounded-full bg-violet-soft text-violet-strong">
+            <span className="nb tone-progres grid size-20 place-items-center">
               <Icon name="streak" className="size-10" />
             </span>
-            <p className="text-lg">{t.streak.milestoneBody(data.milestone.meals)}</p>
+            <p className="t-body !text-lg">{t.streak.milestoneBody(data.milestone.meals)}</p>
             <ShareButton milestone={data.milestone.weeks} />
           </div>
         </Sheet>

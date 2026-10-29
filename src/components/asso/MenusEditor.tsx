@@ -11,6 +11,7 @@ import {
   saveSchoolMenu,
 } from "@/server/actions/asso";
 import { Card } from "@/components/ui/Card";
+import { Pill } from "@/components/ui/Pill";
 
 const t = fr.asso.menus;
 
@@ -36,13 +37,13 @@ function DayForm({ schoolId, row, isNew = false }: { schoolId: string; row: Menu
   if (row.readOnly) {
     return (
       <Card as="li" padding="sm">
-        <p className="font-bold">{row.label}</p>
+        <p className="t-ui">{row.label}</p>
         <p>
           {FIELDS.map((f) => row[f])
             .filter(Boolean)
             .join(", ")}
         </p>
-        <p className="text-sm text-muted">{t.readOnly}</p>
+        <p className="t-small muted">{t.readOnly}</p>
       </Card>
     );
   }
@@ -55,14 +56,12 @@ function DayForm({ schoolId, row, isNew = false }: { schoolId: string; row: Menu
         ) : (
           <>
             <input type="hidden" name="date" value={row.date} />
-            <p className="flex flex-wrap items-center gap-2 font-bold">
+            <p className="t-ui flex flex-wrap items-center gap-2">
               {row.label}
-              <span
-                className={`rounded-r2 px-3 py-0.5 text-sm ${row.status === "published" ? "bg-green-soft text-green-ink" : "bg-chip"}`}
-              >
+              <Pill tone={row.status === "published" ? "green" : "chip"}>
                 {row.status === "published" ? t.published : t.draft}
-              </span>
-              {row.edited && <span className="text-sm font-semibold text-muted">{t.edited}</span>}
+              </Pill>
+              {row.edited && <span className="t-small muted">{t.edited}</span>}
             </p>
           </>
         )}
@@ -143,13 +142,13 @@ export function MenusEditor({
   if (!active) return <FormMessage tone="success">{t.inactive}</FormMessage>;
   return (
     <div className="flex flex-col gap-4">
-      <form action={importAction} className="flex flex-col gap-3 rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
+      <form action={importAction} className="card flex flex-col gap-3">
         <input type="hidden" name="schoolId" value={schoolId} />
-        <label htmlFor="pdf" className="text-sm font-semibold">
+        <label htmlFor="pdf" className="field-label">
           {t.importLabel}
         </label>
-        <input id="pdf" name="pdf" type="file" accept="application/pdf" required className="min-h-11" />
-        <p className="text-sm text-muted">{t.importQuota(importsUsed, importsMax)}</p>
+        <input id="pdf" name="pdf" type="file" accept="application/pdf" required className="input !pt-2.5" />
+        <p className="t-small muted">{t.importQuota(importsUsed, importsMax)}</p>
         {importState.error && <FormMessage tone="error">{importState.error}</FormMessage>}
         {importState.ok && <FormMessage tone="success">{importState.ok}</FormMessage>}
         <Button
@@ -184,7 +183,7 @@ export function MenusEditor({
           <DayForm key={r.date} schoolId={schoolId} row={r} />
         ))}
       </ul>
-      {!rows.length && !adding && <p className="text-muted">{t.empty}</p>}
+      {!rows.length && !adding && <p className="muted">{t.empty}</p>}
     </div>
   );
 }

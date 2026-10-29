@@ -12,25 +12,25 @@ const t = fr.onboarding;
 export function OnboardingRecap({ result }: { result: { start: string; summary: WeekSummary } }) {
   const r = t.recap;
   const tiles = [
-    { value: String(result.summary.meals), label: r.meals, tone: "bg-violet text-white" },
-    { value: dur(result.summary.sessionMinutes), label: r.session, tone: "bg-blue-soft text-blue-ink" },
-    { value: String(result.summary.shoppingItems), label: r.shopping, tone: "bg-pink-soft text-pink-ink" },
+    { value: String(result.summary.meals), label: r.meals, tone: "tone-violet" },
+    { value: dur(result.summary.sessionMinutes), label: r.session, tone: "tone-blue" },
+    { value: String(result.summary.shoppingItems), label: r.shopping, tone: "tone-pink" },
   ];
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center gap-6 px-4 py-6">
       <div className="flex flex-col gap-1">
         <PageHeader title={r.title} />
-        <p className="text-muted">{r.lead(formatShort(result.start))}</p>
+        <p className="muted">{r.lead(formatShort(result.start))}</p>
       </div>
       <ul className="grid gap-3 sm:grid-cols-3" data-testid="onboarding-recap">
         {tiles.map((tile) => (
-          <li key={tile.label} className={`flex flex-col gap-1 rounded-card p-4 ${tile.tone}`}>
-            <span className="font-display text-3xl font-bold">{tile.value}</span>
-            <span className="text-sm font-semibold">{tile.label}</span>
+          <li key={tile.label} className={`card flex flex-col gap-1 ${tile.tone}`}>
+            <span className="num-l">{tile.value}</span>
+            <span className="t-label">{tile.label}</span>
           </li>
         ))}
       </ul>
-      <Link href="/app" className={buttonClass()}>
+      <Link href="/app" className={buttonClass({ size: "lg" })}>
         {r.cta}
       </Link>
     </div>

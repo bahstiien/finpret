@@ -25,7 +25,7 @@ export function HouseholdDetailsForm({ initial, timezones }: { initial: Details;
   const { value: v, update, status } = useAutosave(initial, save);
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold">{t.details}</h2>
+      <h2 className="t-2">{t.details}</h2>
       <TextField
         id="household-name"
         label={t.name}
@@ -131,7 +131,7 @@ export function MembersForm({
 
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
-      <h2 className="text-xl font-bold">{t.members}</h2>
+      <h2 className="t-2">{t.members}</h2>
       {error && <FormMessage tone="error">{error}</FormMessage>}
       <ul className="flex flex-col gap-3">
         {members.map((m) => (
@@ -169,8 +169,8 @@ export function MembersForm({
       {members
         .filter((m) => !m.archived)
         .map((m) => (
-          <details key={m.id} className="rounded-card bg-bg p-3">
-            <summary className="min-h-11 cursor-pointer content-center font-semibold">
+          <details key={m.id} className="nb-dash p-3">
+            <summary className="t-ui min-h-11 cursor-pointer content-center">
               {t.presence(m.name)}
             </summary>
             <SlotGrid
@@ -204,7 +204,7 @@ function MemberRow({
   const auto = memberPortion({ ...m, portionOverride: null }, weekStart);
   const dirty = JSON.stringify(m) !== JSON.stringify(member);
   return (
-    <li className={`flex flex-col gap-3 rounded-card bg-bg p-4 ${m.archived ? "opacity-60" : ""}`}>
+    <li className={`flex flex-col gap-3 p-4 ${m.archived ? "nb-dash" : "nb-flat bg-chip"}`}>
       <div className="flex flex-wrap items-end gap-2">
         <TextField
           id={`m-${m.id}-name`}

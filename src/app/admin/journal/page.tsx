@@ -13,16 +13,16 @@ export default async function AdminAuditPage() {
   return (
     <>
       <PageHeader title="Journal" />
-      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line text-sm">
+      <Card as="ul" className="t-small !shadow-none">
         {(data ?? []).map((a) => (
-          <li key={a.id} className="py-2">
+          <li key={a.id} className="row">
             <b>{a.action}</b> · {a.target ?? "—"} ·{" "}
-            <span className="text-muted">
+            <span className="mono muted">
               {new Date(a.created_at).toLocaleString("fr-FR")} · {a.admin_id?.slice(0, 8)}
             </span>
           </li>
         ))}
-        {!data?.length && <li className="text-muted">Aucune action.</li>}
+        {!data?.length && <li className="muted">Aucune action.</li>}
       </Card>
     </>
   );

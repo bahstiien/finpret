@@ -22,14 +22,14 @@ export function RejectForm({ id }: { id: string }) {
       }}
     >
       <input type="hidden" name="id" value={id} />
-      <label className="flex flex-col gap-1 text-sm font-semibold">
+      <label className="field-label flex flex-col gap-1">
         Motif du refus
         <input
           name="reason"
           required
           minLength={3}
           maxLength={300}
-          className="min-h-11 rounded-card border-2 border-line bg-surface px-3"
+          className="input"
         />
       </label>
       <Button type="submit" variant="outline" disabled={pending}>

@@ -49,27 +49,23 @@ export function GuestsSheet({
   const { run, pending } = useMenuAction();
   const parts = g.a + g.c * childFactor;
   const tile = (key: "a" | "c", label: string, tone: string) => (
-    <div className={`flex flex-col items-center gap-3 rounded-card p-4 ${tone}`}>
-      <span className="font-bold">{label}</span>
-      <div className="flex items-center gap-3">
+    <div className={`nb-sm flex flex-col items-center gap-3 p-4 ${tone}`}>
+      <span className="t-label">{label}</span>
+      <div className="stepper">
         <button
           type="button"
           aria-label={`${label} : moins`}
           disabled={g[key] <= 0}
           onClick={() => setG({ ...g, [key]: g[key] - 1 })}
-          className="grid size-11 place-items-center rounded-full bg-surface text-xl font-bold disabled:opacity-40"
         >
           −
         </button>
-        <output aria-live="polite" className="font-display text-3xl font-bold">
-          {g[key]}
-        </output>
+        <output aria-live="polite">{g[key]}</output>
         <button
           type="button"
           aria-label={`${label} : plus`}
           disabled={g[key] >= 20}
           onClick={() => setG({ ...g, [key]: g[key] + 1 })}
-          className="grid size-11 place-items-center rounded-full bg-surface text-xl font-bold"
         >
           +
         </button>
@@ -79,8 +75,8 @@ export function GuestsSheet({
   return (
     <Sheet open onClose={onClose} title={t.guests.title(slotLabel(`${day}-${meal}`))}>
       <div className="grid grid-cols-2 gap-3">
-        {tile("a", t.guests.adults, "bg-blue-soft text-blue-ink")}
-        {tile("c", t.guests.children, "bg-pink-soft text-pink-ink")}
+        {tile("a", t.guests.adults, "tone-blue")}
+        {tile("c", t.guests.children, "tone-pink")}
       </div>
       <div className="flex flex-wrap gap-2">
         <ChipToggle
@@ -149,14 +145,14 @@ export function MoveSheet({
   return (
     <Sheet open onClose={onClose} title={t.move.title(nameAt(from) ?? slotLabel(from))}>
       {error && <FormMessage tone="error">{error}</FormMessage>}
-      {!targets && !error && <p className="text-muted">{t.loading}</p>}
+      {!targets && !error && <p className="t-small muted">{t.loading}</p>}
       {targets && (
         <fieldset className="flex flex-col gap-2">
           <legend className="sr-only">{t.move.legend}</legend>
           {targets.map((x) => (
             <label
               key={x.key}
-              className={`flex min-h-12 items-center gap-3 rounded-card px-4 py-2 ${x.ok ? "cursor-pointer bg-bg" : "bg-bg opacity-50"} ${choice === x.key ? "outline-3 outline-violet" : ""}`}
+              className={`row border-[length:var(--bw)] border-line px-3 ${x.ok ? "cursor-pointer" : "tone-chip border-dashed"} ${choice === x.key ? "tone-violet" : ""}`}
             >
               <input
                 type="radio"
@@ -165,12 +161,12 @@ export function MoveSheet({
                 disabled={!x.ok}
                 checked={choice === x.key}
                 onChange={() => setChoice(x.key)}
-                className="size-5 accent-violet"
+                className="size-5 accent-ink"
               />
-              <span className="flex flex-col">
-                <b className="first-letter:uppercase">{slotLabel(x.key)}</b>
-                <span className="text-sm text-muted">{nameAt(x.key) ?? fr.menu.nothing}</span>
-                {!x.ok && x.reason && <span className="text-sm text-peach-ink">{x.reason}</span>}
+              <span className="row-main flex flex-col">
+                <b className="t-ui first-letter:uppercase">{slotLabel(x.key)}</b>
+                <span className="t-small">{nameAt(x.key) ?? fr.menu.nothing}</span>
+                {!x.ok && x.reason && <span className="t-small font-bold">{x.reason}</span>}
               </span>
             </label>
           ))}
@@ -257,7 +253,7 @@ export function RecipePickerSheet({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.picker.search}
-        className="min-h-11 rounded-card border-2 border-line bg-surface px-4 focus:border-violet focus:outline-none"
+        className="input"
       />
       <div className="flex flex-wrap gap-2">
         {filters.map((f) => (
@@ -274,13 +270,13 @@ export function RecipePickerSheet({
           </ChipToggle>
         )}
       </div>
-      <fieldset className="flex max-h-[40dvh] flex-col gap-1 overflow-y-auto">
+      <fieldset className="flex max-h-[40dvh] flex-col gap-2 overflow-y-auto p-1">
         <legend className="sr-only">{t.picker.legend}</legend>
-        {list.length === 0 && <p className="text-muted">{t.picker.empty}</p>}
+        {list.length === 0 && <p className="t-small muted">{t.picker.empty}</p>}
         {list.map((o) => (
           <label
             key={o.id}
-            className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-card px-3 py-2 ${choice === o.id ? "bg-yellow-soft" : "hover:bg-chip"}`}
+            className={`row cursor-pointer border-[length:var(--bw)] border-line px-3 ${choice === o.id ? "tone-banane" : "hover:bg-chip"}`}
           >
             <input
               type="radio"
@@ -288,9 +284,9 @@ export function RecipePickerSheet({
               value={o.id}
               checked={choice === o.id}
               onChange={() => setChoice(o.id)}
-              className="size-5 accent-violet"
+              className="size-5 accent-ink"
             />
-            <span>
+            <span className="row-main t-ui">
               <Flag flag={o.flag} />
               {o.name}
             </span>

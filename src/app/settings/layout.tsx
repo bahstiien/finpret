@@ -27,7 +27,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
   }
   return (
     <AppFrame shoppingLeft={left}>
-      <Link href="/app" className="self-start text-sm font-semibold text-muted underline min-[900px]:hidden">
+      <Link href="/app" className="lnk t-ui inline-flex min-h-11 items-center self-start text-sm min-[900px]:hidden">
         ← {fr.settings.back}
       </Link>
       <PageHeader title={fr.settings.title} />

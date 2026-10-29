@@ -1,45 +1,18 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { nb } from "@/lib/typography";
-import { Icon } from "./Icon";
 
-export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1240px] px-4 sm:px-8 ${className}`}>{children}</div>;
-}
-
-export function SectionTitle({
-  id,
-  title,
-  lead,
+/** Colonne centrée des pages publiques : 1 240 px, ou 768 px (`narrow`) pour les textes longs. */
+export function Container({
+  children,
   className = "",
+  narrow = false,
 }: {
-  id?: string;
-  title: string;
-  lead?: string;
+  children: ReactNode;
   className?: string;
+  narrow?: boolean;
 }) {
   return (
-    <div className={`flex max-w-2xl flex-col gap-3 ${className}`}>
-      <h2
-        id={id}
-        className="text-2xl sm:text-3xl lg:text-4xl"
-      >
-        {nb(title)}
-      </h2>
-      {lead && <p className="text-base text-muted sm:text-lg">{nb(lead)}</p>}
-    </div>
-  );
-}
-
-/** Action principale jaune (texte encre, 56 px). Une seule par écran visible. */
-export function CtaLink({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return (
-    <Link
-      href="/login"
-      className={`inline-flex min-h-14 items-center justify-center gap-2 btn btn--primary btn--lg ${className}`}
-    >
+    <div className={`mx-auto w-full px-4 min-[900px]:px-10 ${narrow ? "max-w-3xl" : "max-w-[1240px]"} ${className}`}>
       {children}
-      <Icon name="arrow" className="size-5" />
-    </Link>
+    </div>
   );
 }

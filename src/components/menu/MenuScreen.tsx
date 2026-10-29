@@ -23,6 +23,7 @@ import { GuestsSheet, MoveSheet, RecipePickerSheet } from "./Sheets";
 import { useMenuAction } from "./useMenuAction";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
+import { SectionHeader } from "@/components/ui/Layout";
 
 const t = fr.menuScreen;
 const tv = fr.menuView;
@@ -49,17 +50,17 @@ export type CanteenEntry = {
 function CanteenBlock({ entry }: { entry: CanteenEntry }) {
   return (
     <Card padding="cozy" className="flex flex-col gap-2" data-testid="canteen-today">
-      <h3 className="text-sm font-semibold text-muted">{fr.canteen.today(entry.name)}</h3>
-      <p className="font-bold">{entry.text}</p>
-      {entry.note && <p className="text-sm text-muted">{entry.note}</p>}
+      <h3 className="t-label">{fr.canteen.today(entry.name)}</h3>
+      <p className="t-ui">{entry.text}</p>
+      {entry.note && <p className="t-small muted">{entry.note}</p>}
       {entry.edited && (
-        <p className="text-sm font-semibold text-muted" data-testid="canteen-edited">
+        <p className="t-small muted" data-testid="canteen-edited">
           {fr.canteen.edited}
         </p>
       )}
       {entry.duplicates.length > 0 && (
         <p
-          className="rounded-card bg-peach px-3 py-2 text-sm font-semibold text-peach-ink border-[length:var(--bw)] border-line"
+          className="nb-sm tone-peach t-small px-3 py-2 font-bold"
           role="note"
           data-testid="canteen-duplicate"
         >
@@ -214,15 +215,13 @@ export function MenuScreen({
             }
           />
           <Card tone="violet" className="flex flex-col gap-4">
-            <span className="self-start rounded-r2 border border-white/40 px-3 py-1 text-xs font-bold">
-              {t.weekend.eyebrow}
-            </span>
-            <h2 className="text-2xl font-bold">{t.weekend.title}</h2>
-            <p className="text-white">{t.weekend.lead}</p>
+            <span className="sticker tone-banane self-start">{t.weekend.eyebrow}</span>
+            <h2 className="t-2">{t.weekend.title}</h2>
+            <p>{t.weekend.lead}</p>
             {view.weekend.length > 0 && (
-              <ul className="flex flex-col gap-1">
+              <ul className="flex flex-col gap-1.5">
                 {view.weekend.map((w) => (
-                  <li key={w.key}>
+                  <li key={w.key} className="t-ui">
                     <b>
                       {fr.days[w.day - 1]} {fr.meals[w.meal].toLowerCase()}
                     </b>{" "}
@@ -233,27 +232,25 @@ export function MenuScreen({
               </ul>
             )}
             {canEdit && (
-              <button
+              <Button
                 type="button"
+                variant="primary"
                 disabled={pending}
                 onClick={() => run(() => suggestWeekendAction(view.weekId))}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-r2 bg-surface px-6 font-bold text-ink"
+                className="self-start"
               >
                 <Icon name="sparkle" className="size-5" />
                 {t.weekend.suggest}
-              </button>
+              </Button>
             )}
           </Card>
         </div>
       </div>
 
-      <section className="flex flex-col gap-3 min-[900px]:rounded-card min-[900px]:bg-surface min-[900px]:p-6 border-[length:var(--bw)] border-line">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-2xl font-bold">{t.dishes}</h2>
-          <span className="text-sm text-muted">{t.dishCount(view.dishes.length)}</span>
-        </div>
+      <section className="flex flex-col gap-4">
+        <SectionHeader title={t.dishes} aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>} />
         <ul
-          className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 min-[900px]:mx-0 min-[900px]:px-0"
+          className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-1 pb-4 min-[900px]:mx-0 min-[900px]:px-0"
           data-testid="dishes"
         >
           {view.dishes.map((d) => (
@@ -270,44 +267,46 @@ export function MenuScreen({
         </ul>
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-2xl font-bold">{t.recipes}</h2>
+      <section className="flex flex-col gap-4">
+        <SectionHeader title={t.recipes} />
         {view.recipes.map((r, i) => (
-          <details key={i} className="rounded-card bg-surface p-4 border-[length:var(--bw)] border-line">
-            <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-violet-strong uppercase">{r.title}</span>
-              <b className="text-lg">
-                <Flag flag={r.flag} />
-                {r.name}
-              </b>
-              <span className="text-sm text-muted">{r.portions}</span>
-              <span
-                className="text-sm text-muted"
-                role="img"
-                aria-label={`${tv.difficulty.label(r.difficulty)} : ${tv.difficulty.levels[r.difficulty - 1]}`}
-              >
-                {"●".repeat(r.difficulty)}
-                <span aria-hidden className="opacity-30">
-                  {"●".repeat(4 - r.difficulty)}
+          <details key={i} className="faq">
+            <summary>
+              <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="t-kicker">{r.title}</span>
+                <b className="t-3">
+                  <Flag flag={r.flag} />
+                  {r.name}
+                </b>
+                <span className="t-small mono">{r.portions}</span>
+                <span
+                  className="diff"
+                  role="img"
+                  aria-label={`${tv.difficulty.label(r.difficulty)} : ${tv.difficulty.levels[r.difficulty - 1]}`}
+                >
+                  {[1, 2, 3, 4].map((n) => (
+                    <span key={n} aria-hidden="true" className={n <= r.difficulty ? "on" : ""} />
+                  ))}
                 </span>
               </span>
+              <Icon name="chevronDown" />
             </summary>
-            <div className="mt-3 flex flex-col gap-3">
-              {r.description && <p className="text-muted">{r.description}</p>}
-              <h3 className="font-bold">{t.ingredients}</h3>
+            <div className="faq-body flex flex-col gap-3">
+              {r.description && <p className="muted">{r.description}</p>}
+              <h3 className="t-3">{t.ingredients}</h3>
               <ul className="list-disc pl-4">
                 {r.ingredients.map((x) => (
                   <li key={x}>{x}</li>
                 ))}
               </ul>
-              <h3 className="font-bold">{t.steps}</h3>
+              <h3 className="t-3">{t.steps}</h3>
               <ol className="list-decimal pl-4">
                 {r.steps.map((x, j) => (
                   <li key={j}>{x}</li>
                 ))}
               </ol>
               {r.notes.map((n) => (
-                <p key={n} className="text-sm text-muted">
+                <p key={n} className="t-small muted">
                   {n}
                 </p>
               ))}
@@ -337,12 +336,9 @@ export function MenuScreen({
           >
             {fr.menu.regenerate}
           </Button>
-          <Link
-            href="/settings/menu"
-            className="inline-flex min-h-11 items-center rounded-r2 bg-surface px-6 font-bold"
-          >
+          <LinkButton href="/settings/menu" variant="ghost">
             {t.quickSettings}
-          </Link>
+          </LinkButton>
         </section>
       )}
 
@@ -399,32 +395,30 @@ function Tiles({
   return (
     <div className="grid grid-cols-2 gap-3" data-testid="week-summary">
       {day.tonight && (
-        <div className="flex flex-col gap-2 rounded-card bg-ink p-4 text-surface">
-          <span className="grid size-10 place-items-center rounded-card bg-banana text-[#17151F] border-[length:var(--bw)] border-line">
+        <Card as="div" tone="dark" padding="cozy" className="flex flex-col gap-2">
+          <span className="nb-sm tone-banane grid size-10 place-items-center">
             <Icon name="pot" />
           </span>
-          <span className="text-sm text-surface/70">
-            {isToday ? t.tiles.tonight : t.tiles.dayEvening(fr.days[day.day - 1]!)}
-          </span>
-          <b className="text-lg leading-tight">{day.tonight}</b>
-        </div>
+          <span className="t-label">{isToday ? t.tiles.tonight : t.tiles.dayEvening(fr.days[day.day - 1]!)}</span>
+          <b className="t-3">{day.tonight}</b>
+        </Card>
       )}
       {day.thaw.length > 0 && (
         <Card as="div" tone="yellow" padding="cozy" className="flex flex-col gap-2">
-          <span className="grid size-10 place-items-center rounded-card bg-surface border-[length:var(--bw)] border-line">
+          <span className="nb-sm tone-surface grid size-10 place-items-center">
             <Icon name="snow" />
           </span>
-          <span className="text-sm text-muted">{isToday ? t.tiles.beforeBed : t.tiles.eveBefore}</span>
-          <b className="text-lg leading-tight">{t.tiles.thaw(day.thaw)}</b>
+          <span className="t-label">{isToday ? t.tiles.beforeBed : t.tiles.eveBefore}</span>
+          <b className="t-3">{t.tiles.thaw(day.thaw)}</b>
         </Card>
       )}
       <Card as="div" tone="blue" padding="cozy" className="flex flex-col gap-1">
-        <span className="text-sm font-semibold">{t.tiles.session}</span>
-        <b className="font-display text-3xl font-bold">{dur(sessionMinutes)}</b>
+        <span className="t-label">{t.tiles.session}</span>
+        <b className="num-l">{dur(sessionMinutes)}</b>
       </Card>
       <Card as="div" padding="cozy" className="flex flex-col gap-1">
-        <span className="text-sm font-semibold text-muted">{t.tiles.planned}</span>
-        <b className="font-display text-3xl font-bold" data-testid="summary-meals">
+        <span className="t-label">{t.tiles.planned}</span>
+        <b className="num-l" data-testid="summary-meals">
           {planned}
         </b>
       </Card>
@@ -451,13 +445,13 @@ function PlanGrid({
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-bold">{t.grid.title}</h2>
-        <span className="flex gap-3 text-sm text-muted">
-          <span className="flex items-center gap-1">
-            <span className="size-2.5 rounded-full bg-violet" aria-hidden="true" /> {t.grid.batch}
+        <h2 className="t-2">{t.grid.title}</h2>
+        <span className="t-small flex gap-3">
+          <span className="flex items-center gap-1.5">
+            <span className="size-3 border-[length:var(--bw)] border-line bg-violet" aria-hidden="true" /> {t.grid.batch}
           </span>
-          <span className="flex items-center gap-1">
-            <span className="size-2.5 rounded-full bg-banana" aria-hidden="true" /> {t.grid.weekend}
+          <span className="flex items-center gap-1.5">
+            <span className="size-3 border-[length:var(--bw)] border-line bg-banane" aria-hidden="true" /> {t.grid.weekend}
           </span>
         </span>
       </div>
@@ -469,7 +463,7 @@ function PlanGrid({
               <th
                 key={d}
                 scope="col"
-                className={`text-xs font-bold ${d === view.todayIndex ? "text-ink" : "text-muted"}`}
+                className={`t-label ${d === view.todayIndex ? "tone-banane" : ""}`}
               >
                 {fr.daysShort[d - 1]}
               </th>
@@ -479,7 +473,7 @@ function PlanGrid({
         <tbody>
           {(["lunch", "dinner"] as const).map((m) => (
             <tr key={m}>
-              <th scope="row" className="pr-1 text-left text-xs font-semibold text-muted">
+              <th scope="row" className="t-label pr-1 text-left">
                 {fr.meals[m]}
               </th>
               {[1, 2, 3, 4, 5, 6, 7].map((d) => {
@@ -493,8 +487,8 @@ function PlanGrid({
                         disabled={!canEdit}
                         onClick={() => onWeekend(`${d}-${m}`)}
                         aria-label={c.name ? t.grid.weekendSet(slot, c.name) : t.grid.weekendEmpty(slot)}
-                        className={`grid h-11 w-full place-items-center rounded-card border-2 border-banana text-xs font-bold ${
-                          c.state === "set" ? "bg-banana text-[#17151F]" : "bg-surface"
+                        className={`grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
+                          c.state === "set" ? "tone-banane" : "tone-surface border-dashed"
                         }`}
                       >
                         {c.state === "set" ? (
@@ -515,12 +509,8 @@ function PlanGrid({
                       aria-pressed={on}
                       onClick={() => onToggle(d, m)}
                       aria-label={on ? t.grid.on(slot, c.name ?? "") : t.grid.off(slot)}
-                      className={`grid h-11 w-full place-items-center rounded-card ${
-                        on
-                          ? d === view.todayIndex
-                            ? "bg-ink text-surface"
-                            : "bg-violet text-white"
-                          : "bg-chip text-muted"
+                      className={`mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
+                        on ? (d === view.todayIndex ? "tone-dark" : "tone-violet") : "tone-chip muted"
                       }`}
                     >
                       {on ? <Icon name="check" className="size-5" /> : "–"}
@@ -547,19 +537,15 @@ function CakeLine({
   onChange: () => void;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-card bg-yellow-soft p-4 border-[length:var(--bw)] border-line">
+    <div className="nb-sm tone-yellow flex flex-wrap items-center gap-3 p-4">
       <Icon name="cake" className="size-6 shrink-0" />
-      <p className="flex-1">
+      <p className="t-ui flex-1">
         <b>{t.cake(fr.days[cake.day - 1]!)}</b> {cake.name.toLowerCase()} · {cake.parts}
       </p>
       {canEdit && (
-        <button
-          type="button"
-          onClick={onChange}
-          className="min-h-11 rounded-r2 border-2 border-ink px-4 text-sm font-bold"
-        >
+        <Button type="button" variant="outline" size="sm" onClick={onChange}>
           {t.change}
-        </button>
+        </Button>
       )}
     </div>
   );
@@ -583,11 +569,11 @@ function DishCardView({
   return (
     <Card as="li" padding="cozy" className="flex w-72 shrink-0 snap-start flex-col gap-3">
       <div>
-        <b className="text-lg leading-tight">
+        <b className="t-3">
           <Flag flag={dish.flag} />
           {dish.name}
         </b>
-        <p className="text-sm text-muted">{dish.detail}</p>
+        <p className="t-small muted">{dish.detail}</p>
       </div>
       {canEdit && (
         <div className="mt-auto flex flex-wrap items-center gap-2">
@@ -597,7 +583,7 @@ function DishCardView({
             aria-label={t.like(dish.name)}
             disabled={pending}
             onClick={() => onRate(1)}
-            className={`grid size-11 place-items-center rounded-full border-2 ${dish.rating === 1 ? "border-green bg-green-soft" : "border-transparent bg-chip"}`}
+            className={`iconbtn ${dish.rating === 1 ? "[background:var(--green)]" : ""}`}
           >
             <Icon name="thumbUp" className="size-5" />
           </button>
@@ -607,7 +593,7 @@ function DishCardView({
             aria-label={t.dislike(dish.name)}
             disabled={pending}
             onClick={() => onRate(-1)}
-            className={`grid size-11 place-items-center rounded-full border-2 ${dish.rating === -1 ? "border-peach-ink bg-peach" : "border-transparent bg-chip"}`}
+            className={`iconbtn ${dish.rating === -1 ? "[background:var(--peach)]" : ""}`}
           >
             <Icon name="thumbDown" className="size-5" />
           </button>
@@ -617,20 +603,22 @@ function DishCardView({
               aria-pressed={dish.doubled}
               disabled={pending}
               onClick={onDouble}
-              className={`min-h-11 rounded-r2 px-3 text-sm font-bold ${dish.doubled ? "bg-blue-soft text-blue-ink" : "bg-chip"}`}
+              className="chiptg"
             >
               {t.double}
             </button>
           )}
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             disabled={pending}
             onClick={onSwap}
             aria-label={`${t.change} ${dish.name}`}
-            className="min-h-11 flex-1 rounded-r2 border-2 border-ink px-4 font-bold"
+            className="flex-1"
           >
             {t.change}
-          </button>
+          </Button>
         </div>
       )}
     </Card>

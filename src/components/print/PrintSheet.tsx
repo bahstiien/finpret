@@ -48,28 +48,32 @@ export function PrintSheet({ data }: { data: PrintData }) {
   return (
     <>
       <div className="flex flex-wrap gap-2 print:hidden">
-        <Button type="button" onClick={() => window.print()}>
+        <Button type="button" variant="primary" onClick={() => window.print()}>
           {t.print}
         </Button>
         <Button type="button" variant="outline" onClick={() => router.refresh()}>
           {t.otherBreakfasts}
         </Button>
-        <Link href="/app" className="inline-flex min-h-11 items-center px-4 font-bold underline">
+        <Link href="/app" className="btn btn--ghost">
           {t.back}
         </Link>
       </div>
 
-      <div ref={sheet} className="print-sheet" data-testid="print-sheet">
+      <div
+        ref={sheet}
+        className="print-sheet border-[length:var(--bw)] border-line shadow-[var(--sh)] print:border-0 print:shadow-none"
+        data-testid="print-sheet"
+      >
         <header className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-2xl font-bold">{data.title}</h1>
+            <h1 className="t-1">{data.title}</h1>
             <p className="text-xs">{t.lead}</p>
           </div>
           <div className="flex shrink-0 gap-2">
             {data.chips.map((c) => (
               <span
                 key={c}
-                className="rounded-r2 border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
+                className="mono rounded-r1 border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
               >
                 {c}
               </span>

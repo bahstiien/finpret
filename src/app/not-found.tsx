@@ -11,10 +11,10 @@ export const metadata: Metadata = { title: t.title, robots: { index: false } };
 export default function NotFound() {
   return (
     <main id="contenu" className="mx-auto flex min-h-dvh w-full max-w-xl flex-col items-start justify-center gap-6 px-4 py-12">
-      <p className="text-6xl font-bold text-violet-strong" aria-hidden="true">
+      <p className="num-xl nb tone-violet px-4 py-2" aria-hidden="true">
         404
       </p>
-      <h1 className="text-3xl font-bold">{t.title}</h1>
+      <h1 className="t-1">{t.title}</h1>
       <p className="text-lg text-muted">{t.lead}</p>
       <Link href="/" className={buttonClass({ size: "lg" })}>
         {t.home}

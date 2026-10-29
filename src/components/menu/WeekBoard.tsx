@@ -48,7 +48,7 @@ function DayCard({
       {meals.map((m) => (
         <div key={m.key} className="flex flex-col gap-2 border-t-[length:var(--bw)] border-line p-3">
           <span className="t-label">{fr.meals[m.meal]}</span>
-          <p className={`t-3 ${m.removed ? "line-through opacity-60" : ""}`}>
+          <p className={`t-3 ${m.removed ? "line-through" : ""}`}>
             <Flag flag={m.flag} />
             {m.name}
           </p>

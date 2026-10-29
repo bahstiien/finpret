@@ -19,13 +19,13 @@ export default async function KitPage() {
   return (
     <>
       <PageHeader title={t.title} />
-      <p className="text-muted">{t.lead}</p>
+      <p className="muted">{t.lead}</p>
       <StatusBanner association={association} />
       {ready ? (
         <>
-          <Card padding="cozy" className="flex flex-col gap-3">
-            <h2 className="text-lg font-bold">{t.tuto}</h2>
-            <p className="text-sm text-muted">{t.tutoHint}</p>
+          <Card className="flex flex-col gap-3">
+            <h2 className="t-2">{t.tuto}</h2>
+            <p className="t-small muted">{t.tutoHint}</p>
             <div className="flex flex-wrap gap-2">
               <a href="/asso/kit/tuto" className={buttonClass()}>
                 {t.tutoDownload}
@@ -43,10 +43,10 @@ export default async function KitPage() {
             text={t.emailBody(association.name, association.code)}
           />
           <CopyBlock title={t.groupTitle} text={t.groupBody(association.name, association.code)} />
-          <p className="text-sm text-muted">{t.rules}</p>
+          <p className="t-small muted">{t.rules}</p>
         </>
       ) : (
-        <p className="text-muted">{t.pending}</p>
+        <p className="muted">{t.pending}</p>
       )}
     </>
   );

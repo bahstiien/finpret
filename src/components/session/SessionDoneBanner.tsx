@@ -28,15 +28,15 @@ export function SessionDoneBanner({ weekId }: { weekId: string }) {
   }, [weekId, router]);
   if (!result?.visible || result.current < 1) return null;
   return (
-    <p
-      className="flex flex-wrap items-center gap-2 rounded-card bg-violet-soft p-4 font-bold text-violet-strong border-[length:var(--bw)] border-line"
-      data-testid="session-streak"
-    >
-      <Icon name="streak" />
-      {fr.progress.streak.sessionDone(result.current)}
-      <Link href="/app/progress?from=session" className="ml-auto min-h-11 content-center underline">
+    <section className="card tone-progres flex flex-wrap items-center gap-4" data-testid="session-streak">
+      <Icon name="streak" className="size-8" />
+      <p className="t-ui min-w-0 flex-1 !text-lg">{fr.progress.streak.sessionDone(result.current)}</p>
+      <span aria-hidden="true" className="num-l">
+        {result.current}
+      </span>
+      <Link href="/app/progress?from=session" className="lnk min-h-11 content-center">
         {fr.progress.title}
       </Link>
-    </p>
+    </section>
   );
 }

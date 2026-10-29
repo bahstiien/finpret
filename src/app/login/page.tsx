@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { CenteredPage, Logo } from "@/components/ui/Card";
+import { Card, CenteredPage, Logo } from "@/components/ui/Card";
 import { fr } from "@/i18n/fr";
 import { safeNext } from "@/lib/redirect";
 import { getUser } from "@/server/session";
@@ -26,10 +26,12 @@ export default async function LoginPage({
     <CenteredPage>
       <Logo />
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold">{fr.login.title}</h1>
-        <p className="text-muted">{fr.login.lead}</p>
+        <h1 className="t-1">{fr.login.title}</h1>
+        <p className="muted">{fr.login.lead}</p>
       </div>
-      <LoginForm next={next} initialError={params.error ? errors[params.error] : undefined} />
+      <Card className="flex flex-col gap-4">
+        <LoginForm next={next} initialError={params.error ? errors[params.error] : undefined} />
+      </Card>
     </CenteredPage>
   );
 }

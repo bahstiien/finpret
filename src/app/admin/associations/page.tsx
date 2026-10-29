@@ -4,6 +4,8 @@ import { checkAssociationEmail, checkRnaOrSiren } from "@/lib/rna";
 import { approveAssociation, setAssociationSuspended } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
+import { Pill, type PillTone } from "@/components/ui/Pill";
 
 const STATUS = {
   pending: "En attente",
@@ -11,6 +13,13 @@ const STATUS = {
   rejected: "Refusée",
   suspended: "Suspendue",
 } as const;
+
+const STATUS_TONE: Record<keyof typeof STATUS, PillTone> = {
+  pending: "yellow",
+  approved: "green",
+  rejected: "pink",
+  suspended: "peach",
+};
 
 /** Validation des associations : contrôle du RNA/SIREN et de l'e-mail, puis validation ou refus motivé. */
 export default async function AdminAssociationsPage() {
@@ -24,8 +33,8 @@ export default async function AdminAssociationsPage() {
   const rows = [...(data ?? [])].sort((a, b) => order[a.status] - order[b.status]);
   return (
     <>
-      <h1 className="text-4xl font-bold">Associations</h1>
-      {!rows.length && <p className="text-muted">Aucune association pour l&apos;instant.</p>}
+      <PageHeader title="Associations" />
+      {!rows.length && <p className="muted">Aucune association pour l&apos;instant.</p>}
       <ul className="flex flex-col gap-3">
         {rows.map((a) => {
           const rna = checkRnaOrSiren(a.rna_or_siren);
@@ -33,24 +42,23 @@ export default async function AdminAssociationsPage() {
           return (
             <Card
               as="li"
-              padding="cozy"
               key={a.id}
               className="flex flex-col gap-3"
               data-testid={`asso-${a.code}`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-xl font-bold">{a.name}</h2>
-                <span className="rounded-r2 bg-chip px-3 py-1 text-sm font-bold">{STATUS[a.status]}</span>
+                <h2 className="t-2">{a.name}</h2>
+                <Pill tone={STATUS_TONE[a.status]}>{STATUS[a.status]}</Pill>
               </div>
-              <p className="text-sm">
-                Code <b>{a.code}</b> · {a.manager_name} · {a.email}
+              <p className="t-small">
+                Code <b className="mono">{a.code}</b> · {a.manager_name} · {a.email}
               </p>
-              <p className="text-sm">
-                {a.rna_or_siren} :{" "}
-                <b className={rna.valid ? "text-green-ink" : "text-peach-ink"}>{rna.message}</b> · E-mail :{" "}
-                <b className={mail.valid ? "text-green-ink" : "text-peach-ink"}>{mail.message}</b>
+              <p className="t-small">
+                <span className="mono">{a.rna_or_siren}</span> :{" "}
+                <b className={`px-1 ${rna.valid ? "tone-green" : "tone-pink"}`}>{rna.message}</b> · E-mail :{" "}
+                <b className={`px-1 ${mail.valid ? "tone-green" : "tone-pink"}`}>{mail.message}</b>
               </p>
-              {a.reject_reason && <p className="text-sm text-muted">Motif : {a.reject_reason}</p>}
+              {a.reject_reason && <p className="t-small muted">Motif : {a.reject_reason}</p>}
               <div className="flex flex-wrap items-end gap-3">
                 {(a.status === "pending" || a.status === "rejected") && (
                   <ActionForm

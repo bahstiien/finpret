@@ -18,26 +18,31 @@ const LINKS = [
 /** Back-office : réservé aux comptes de la table `admins` (les autres obtiennent une page introuvable). */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   await requireAdminIdentity();
+  // Back-office : bordures de 2 px partout (le jeton --bw est figé sur toute la zone), ombres retirées des tableaux.
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-8">
-      <Link href="/admin" className="self-start text-sm font-bold tracking-wide text-violet uppercase">
-        Fin Prêt · Back-office
-      </Link>
-      <nav aria-label="Back-office">
-        <ul className="flex flex-wrap gap-2">
-          {LINKS.map(([href, label]) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="inline-flex min-h-11 items-center rounded-r2 bg-surface px-4 font-bold hover:bg-chip"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <main className="flex flex-col gap-4">{children}</main>
+    <div className="min-h-dvh [--bw:2px]">
+      <header className="topbar">
+        <Link href="/admin" className="inline-flex items-center gap-3">
+          <span className="logo-mark" aria-hidden="true">
+            M
+          </span>
+          <span className="t-kicker">Fin Prêt · Back-office</span>
+        </Link>
+      </header>
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 min-[900px]:px-10">
+        <nav aria-label="Back-office">
+          <ul className="flex flex-wrap gap-2">
+            {LINKS.map(([href, label]) => (
+              <li key={href}>
+                <Link href={href} className="btn btn--outline btn--sm">
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <main className="flex flex-col gap-4">{children}</main>
+      </div>
     </div>
   );
 }

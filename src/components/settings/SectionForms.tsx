@@ -28,7 +28,7 @@ function Panel({ title, hint, children }: { title: string; hint?: string; childr
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div>
-        <h2 className="text-xl font-bold">{title}</h2>
+        <h2 className="t-2">{title}</h2>
         {hint && <p className="text-sm text-muted">{hint}</p>}
       </div>
       {children}
@@ -62,7 +62,7 @@ export function DietForm({
           ))}
         </SelectField>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 text-sm font-semibold">{s.allergens}</legend>
+          <legend className="field-label mb-2">{s.allergens}</legend>
           <div className="flex flex-wrap gap-2">
             {(Object.entries(ALLERGENS) as [DietSettings["allergens"][number], string][]).map(
               ([key, label]) => (
@@ -237,7 +237,7 @@ export function MenuForm({ initial }: { initial: MenuSettingsForm }) {
               ))}
             </SelectField>
             <fieldset className="flex flex-wrap gap-2">
-              <legend className="mb-2 text-sm font-semibold">{m.cakeTypes}</legend>
+              <legend className="field-label mb-2">{m.cakeTypes}</legend>
               {CAKE_TYPES.map((type) => (
                 <ChipToggle
                   key={type}
@@ -410,9 +410,9 @@ export function ShoppingForm({
                 const from = Number(e.dataTransfer.getData("text/plain"));
                 if (!Number.isNaN(from) && from !== i) move(from, i - from);
               }}
-              className="flex min-h-11 cursor-grab items-center justify-between gap-2 rounded-card bg-bg px-4"
+              className="nb-flat flex min-h-11 cursor-grab items-center justify-between gap-2 bg-chip px-4"
             >
-              <span className="font-semibold">
+              <span className="t-ui">
                 <span aria-hidden="true" className="mr-2 text-muted">
                   ⋮⋮
                 </span>
@@ -424,7 +424,7 @@ export function ShoppingForm({
                   aria-label={s.up(label(k))}
                   disabled={i === 0}
                   onClick={() => move(i, -1)}
-                  className="grid size-11 place-items-center rounded-full disabled:opacity-30 hover:bg-chip"
+                  className="iconbtn iconbtn--ghost"
                 >
                   ↑
                 </button>
@@ -433,7 +433,7 @@ export function ShoppingForm({
                   aria-label={s.down(label(k))}
                   disabled={i === order.length - 1}
                   onClick={() => move(i, 1)}
-                  className="grid size-11 place-items-center rounded-full disabled:opacity-30 hover:bg-chip"
+                  className="iconbtn iconbtn--ghost"
                 >
                   ↓
                 </button>
@@ -472,7 +472,7 @@ export function ShoppingForm({
               <button
                 type="button"
                 aria-label={s.remove(r)}
-                className="min-h-11 rounded-r2 bg-chip px-4 text-sm font-semibold"
+                className="chiptg"
                 onClick={() => update((d) => ({ ...d, recurring: d.recurring.filter((x) => x !== r) }))}
               >
                 {r} ×

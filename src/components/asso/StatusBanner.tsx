@@ -21,9 +21,8 @@ export function StatusBanner({
     <Card
       as="p"
       tone="yellow"
-      padding="cozy"
       role="status"
-      className="font-semibold"
+      className="t-ui"
       data-testid="asso-status"
     >
       {text}

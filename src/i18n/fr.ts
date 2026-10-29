@@ -1295,6 +1295,9 @@ export const fr = {
             ? "1 pause disponible ce trimestre"
             : `${n} pauses disponibles ce trimestre`,
       planPause: "Planifier une pause",
+      pauseTokens: "Jetons de pause",
+      shareUnlocked: "Palier débloqué",
+      shareTagline: "Le dimanche, tu cuisines. La semaine est fin prête.",
       planPauseHelp: "Vacances, déplacement, semaine chargée : ta série t’attend.",
       cancelPause: "Annuler la pause",
       pauseWeek: (label: string) => `Semaine du ${label}`,

@@ -82,7 +82,7 @@
 .tone-danger{background:var(--danger);color:var(--on-danger)}
 
 /* ---------- 8. Card ---------- */
-.card{background:var(--surface);color:var(--ink);border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh);padding:var(--s4)}
+.card{background:var(--surface);color:var(--ink);border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh);padding:16px}
 .card.tone-bg{background:var(--bg)}.card.tone-chip{background:var(--chip)}.card.tone-dark{background:var(--nav);color:var(--on-nav)}
 .card.tone-violet{background:var(--violet);color:var(--on-violet)}.card.tone-banane{background:var(--banane);color:var(--on-banane)}
 .card.tone-yellow{background:var(--yellow);color:var(--on-fill)}.card.tone-blue{background:var(--blue);color:var(--on-fill)}
@@ -93,7 +93,7 @@
 .card.tone-session{background:var(--session);color:var(--on-session)}.card.tone-alerte{background:var(--alerte);color:var(--on-alerte)}
 .card.tone-sel{background:var(--sel);color:var(--on-sel)}.card.tone-cta{background:var(--cta);color:var(--on-cta)}
 .card--flat{box-shadow:none}
-@media (min-width: 900px){ .card{padding:var(--s6)} }
+@media (min-width: 900px){ .card{padding:24px} }
 
 /* ---------- 9. Button / LinkButton ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:var(--touch-main);padding:0 20px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);color:var(--ink);box-shadow:var(--sh);font-family:var(--font-body);font-weight:700;font-size:16px;line-height:1.1;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform var(--t-fast) steps(2,end),box-shadow var(--t-fast) steps(2,end)}

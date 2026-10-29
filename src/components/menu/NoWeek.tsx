@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/Layout";
 import { fr } from "@/i18n/fr";
 import { prepareWeekAction } from "@/server/actions/menu";
 import { useMenuAction } from "./useMenuAction";
@@ -19,14 +20,16 @@ export function NoWeek({
   const { run, pending } = useMenuAction();
   return (
     <>
-      <header>
-        <p className="text-sm font-semibold text-muted first-letter:uppercase">{header.date}</p>
-        <h1 className="text-4xl font-bold [overflow-wrap:anywhere]">
-          {header.greeting}, {header.name}
-        </h1>
-      </header>
-      <Card className="flex flex-col gap-4">
-        <p className="text-muted">{fr.menu.noWeek}</p>
+      <PageHeader
+        eyebrow={header.date}
+        title={
+          <>
+            {header.greeting}, {header.name}
+          </>
+        }
+      />
+      <Card tone="peach" className="flex flex-col gap-4">
+        <p className="t-ui">{fr.menu.noWeek}</p>
         {canEdit && (
           <Button
             type="button"

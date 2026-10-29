@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "@/components/ui/Icon";
 import { fr } from "@/i18n/fr";
 import { useSession } from "./SessionProvider";
 
@@ -61,7 +62,7 @@ export function TimerBar() {
     <div
       role="region"
       aria-label={t.label}
-      className="sticky top-2 z-30 flex flex-wrap gap-2"
+      className="tone-dark sticky top-2 z-30 flex flex-wrap gap-2.5 border-[length:var(--bw)] border-line p-2.5"
       data-testid="timer-bar"
     >
       {timers.map((x) => {
@@ -71,26 +72,18 @@ export function TimerBar() {
           <div
             key={x.id}
             role={isReady ? "alert" : undefined}
-            className={`flex items-center gap-2 rounded-r2 py-1 pr-1 pl-4 font-bold shadow-hard ${
-              isReady ? "bg-banana text-[#17151F]" : "bg-blue-soft text-blue-ink"
-            }`}
+            className={`nb-sm flex items-center gap-2 py-1 pr-1 pl-3 ${isReady ? "tone-banane" : "tone-surface"}`}
           >
-            <span>{isReady ? t.ready(x.label) : `${x.label} · ${mmss(left)}`}</span>
+            <Icon name={isReady ? "check" : "timer"} className="size-4" />
+            <span className="t-small font-bold">{isReady ? t.ready(x.label) : x.label}</span>
+            {!isReady && <span className="mono font-bold">{mmss(left)}</span>}
             {session.canEdit && (
               <>
-                <button
-                  type="button"
-                  onClick={() => session.timerAction(x.id, "snooze")}
-                  className="min-h-10 rounded-r2 bg-surface/70 px-3 text-sm"
-                >
+                <button type="button" onClick={() => session.timerAction(x.id, "snooze")} className="btn btn--outline btn--sm !px-3">
                   {t.snooze}
                 </button>
                 {isReady && (
-                  <button
-                    type="button"
-                    onClick={() => session.timerAction(x.id, "done")}
-                    className="min-h-10 rounded-r2 bg-nav px-4 text-sm text-on-nav"
-                  >
+                  <button type="button" onClick={() => session.timerAction(x.id, "done")} className="btn btn--dark btn--sm !px-4">
                     {t.ok}
                   </button>
                 )}

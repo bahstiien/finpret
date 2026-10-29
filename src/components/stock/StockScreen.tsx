@@ -64,17 +64,14 @@ export function StockScreen({
   const { run, pending } = useMenuAction();
   const [addRecipe, setAddRecipe] = useState("");
   const total = freezer.reduce((s, f) => s + f.portions, 0);
-  const roundBtn =
-    "grid size-11 shrink-0 place-items-center rounded-full text-xl font-bold disabled:opacity-40";
-
   return (
     <>
       <PageHeader title={fr.nav.stock} />
 
       {FEATURES.freezerAndLeftovers && week && canEdit && (!week.pantryDone || week.doublesToBank) && (
-        <Card tone="yellow" padding="cozy" className="flex flex-col gap-3">
-          <h2 className="text-lg font-bold">{t.afterSession(week.start)}</h2>
-          <p className="text-sm text-muted">{t.afterSessionHint}</p>
+        <Card tone="banane" padding="cozy" className="flex flex-col gap-3">
+          <h2 className="t-3">{t.afterSession(week.start)}</h2>
+          <p className="text-sm">{t.afterSessionHint}</p>
           <div className="flex flex-wrap gap-2">
             {!week.pantryDone && (
               <Button
@@ -100,26 +97,27 @@ export function StockScreen({
       )}
 
       {FEATURES.freezerAndLeftovers && (
-        <section
-          className="flex flex-col gap-3 rounded-card bg-green-soft p-4 text-ink border-[length:var(--bw)] border-line"
-          data-testid="freezer"
-        >
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-xl font-bold text-green-ink">{t.freezer}</h2>
-            <span className="font-display text-xl font-bold text-green-ink">{t.meals(total)}</span>
+        <Card tone="blue" padding="cozy" className="flex flex-col gap-3" data-testid="freezer">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="t-2">{t.freezer}</h2>
+            <span className="mono text-lg font-bold">{t.meals(total)}</span>
           </div>
-          {freezer.length === 0 && <p className="text-sm text-muted">{t.freezerEmpty}</p>}
+          {freezer.length === 0 && <p className="text-sm font-bold">{t.freezerEmpty}</p>}
           <ul className="flex flex-col gap-2">
             {freezer.map((f) => (
-              <li key={f.id} className="flex items-center gap-3 rounded-card bg-surface/60 p-3 border-[length:var(--bw)] border-line">
+              <li key={f.id} className="nb-sm flex items-center gap-3 bg-surface p-3 text-ink">
                 <div className="min-w-0 flex-1">
                   <b className="block leading-tight">
                     <Flag flag={f.flag} />
                     {f.name}
                   </b>
-                  <span className={`text-sm ${f.tooLong ? "font-semibold text-peach-ink" : "text-muted"}`}>
-                    {f.tooLong ? t.tooLong(f.weeks) : t.frozenOn(f.frozenAt)}
-                  </span>
+                  {f.tooLong ? (
+                    <span className="tone-peach nb-flat mt-1 inline-block px-2 py-0.5 text-sm font-bold">
+                      {t.tooLong(f.weeks)}
+                    </span>
+                  ) : (
+                    <span className="mono text-sm text-muted">{t.frozenOn(f.frozenAt)}</span>
+                  )}
                 </div>
                 {canEdit ? (
                   <div className="flex items-center gap-2">
@@ -128,23 +126,23 @@ export function StockScreen({
                       aria-label={t.less(f.name)}
                       disabled={pending}
                       onClick={() => run(() => adjustFreezer(f.id, -1))}
-                      className={`${roundBtn} bg-nav text-on-nav`}
+                      className="iconbtn iconbtn--dark text-xl font-bold"
                     >
                       −
                     </button>
-                    <output className="w-6 text-center font-display text-lg font-bold">{f.portions}</output>
+                    <output className="num-l w-8 text-center">{f.portions}</output>
                     <button
                       type="button"
                       aria-label={t.more(f.name)}
                       disabled={pending}
                       onClick={() => run(() => adjustFreezer(f.id, 1))}
-                      className={`${roundBtn} bg-green-strong text-white`}
+                      className="iconbtn iconbtn--banane text-xl font-bold"
                     >
                       +
                     </button>
                   </div>
                 ) : (
-                  <span className="font-display text-lg font-bold">{f.portions}</span>
+                  <span className="num-l">{f.portions}</span>
                 )}
               </li>
             ))}
@@ -181,26 +179,26 @@ export function StockScreen({
               </Button>
             </form>
           )}
-        </section>
+        </Card>
       )}
 
       <Card padding="cozy" className="flex flex-col gap-3" data-testid="pantry">
-        <h2 className="text-xl font-bold">{t.pantry}</h2>
+        <h2 className="t-2">{t.pantry}</h2>
         {pantry.length === 0 && <p className="text-sm text-muted">{t.pantryEmpty}</p>}
-        <ul className="flex flex-col divide-y divide-line">
+        <ul className="flex flex-col">
           {pantry.map((p) => (
             <li
               key={p.key}
-              className="flex flex-wrap items-center gap-3 py-3"
+              className="row flex-wrap"
               data-testid={`pantry-${p.key}`}
             >
               <div className="min-w-40 flex-1">
-                <b>
+                <b className="mono">
                   {p.label} : {p.display}
                 </b>
                 {p.usedText && (
                   <p
-                    className={`text-sm font-semibold ${p.missingText ? "text-peach-ink" : "text-green-ink"}`}
+                    className={`nb-flat mt-1 inline-block px-2 py-0.5 text-sm font-bold ${p.missingText ? "tone-peach" : "tone-green"}`}
                   >
                     {p.missingText ? t.usesMissing(p.usedText, p.missingText) : t.usesOk(p.usedText)}
                   </p>
@@ -217,7 +215,7 @@ export function StockScreen({
                         onClick={() =>
                           run(() => setPantry(p.key, round(p.unit, Math.max(0, p.qty! - p.step))))
                         }
-                        className={`${roundBtn} bg-chip`}
+                        className="iconbtn text-xl font-bold"
                       >
                         −
                       </button>
@@ -226,7 +224,7 @@ export function StockScreen({
                         aria-label={t.more(p.label)}
                         disabled={pending}
                         onClick={() => run(() => setPantry(p.key, round(p.unit, p.qty! + p.step)))}
-                        className={`${roundBtn} bg-chip`}
+                        className="iconbtn text-xl font-bold"
                       >
                         +
                       </button>
@@ -237,7 +235,7 @@ export function StockScreen({
                     aria-pressed={p.qty === null}
                     disabled={pending}
                     onClick={() => run(() => setPantry(p.key, p.qty === null ? p.step : null))}
-                    className={`min-h-11 rounded-r2 px-3 text-sm font-bold ${p.qty === null ? "bg-green-soft text-green-ink" : "bg-chip"}`}
+                    className="chiptg"
                   >
                     {t.enough}
                   </button>
@@ -246,9 +244,9 @@ export function StockScreen({
                     aria-label={t.remove(p.label)}
                     disabled={pending}
                     onClick={() => run(() => setPantry(p.key, "remove"))}
-                    className={`${roundBtn} hover:bg-chip`}
+                    className="iconbtn iconbtn--ghost"
                   >
-                    <Icon name="close" className="size-5" />
+                    <Icon name="close" className="ic" />
                   </button>
                 </div>
               )}

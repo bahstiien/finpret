@@ -55,7 +55,7 @@ export function Stepper({
 }) {
   return (
     <div className="flex min-h-11 items-center justify-between gap-4">
-      <span className="font-semibold">{label}</span>
+      <span className="font-bold">{label}</span>
       <div className="stepper">
         <button
           type="button"
@@ -137,7 +137,7 @@ export function SlotGrid({
       <tbody>
         {(["lunch", "dinner"] as const).map((meal) => (
           <tr key={meal}>
-            <th scope="row" className="pr-1 text-left text-sm font-semibold text-muted">
+            <th scope="row" className="pr-1 text-left t-label">
               {mealLabels[meal]}
             </th>
             {days.map((d) => {

@@ -3,13 +3,14 @@ import type { FriseWeek } from "@/engine/progress-view";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 
+// Maquette Progrès : fin prête = encre, pause = banane, semaine en cours = sélection (violet), reste = surface.
 const STYLE: Record<FriseWeek["state"], string> = {
-  done: "bg-violet text-white",
-  paused: "bg-violet-soft text-violet-strong",
-  neutral: "bg-yellow-soft text-cream-ink",
-  missed: "border-2 border-line text-muted",
-  todo: "border-2 border-dashed border-violet text-violet-strong",
-  none: "bg-chip text-muted opacity-50",
+  done: "tone-dark",
+  paused: "tone-banane",
+  neutral: "tone-chip",
+  missed: "tone-surface",
+  todo: "tone-sel",
+  none: "tone-chip",
 };
 
 const LABEL: Record<FriseWeek["state"], string> = {
@@ -25,7 +26,7 @@ const LABEL: Record<FriseWeek["state"], string> = {
 export function WeekStrip({ weeks }: { weeks: FriseWeek[] }) {
   return (
     <ol
-      className="grid grid-cols-6 gap-2 min-[600px]:grid-cols-12"
+      className="bento grid-cols-6 min-[600px]:grid-cols-12"
       aria-label={fr.progress.streak.frise}
       data-testid="week-strip"
     >
@@ -35,10 +36,15 @@ export function WeekStrip({ weeks }: { weeks: FriseWeek[] }) {
           data-state={w.state}
           aria-current={w.current ? "date" : undefined}
           aria-label={`${fr.progress.streak.pauseWeek(formatShort(w.weekStart))}${LABEL[w.state] ? `, ${LABEL[w.state]}` : ""}`}
-          className={`grid h-12 place-items-center rounded-card ${STYLE[w.state]}`}
+          className={`flex min-h-10 items-center justify-center ${STYLE[w.state]}`}
         >
-          {w.state === "paused" && <Icon name="pause" className="size-5" />}
-          {w.state === "done" && <Icon name="check" className="size-5" />}
+          {w.state === "paused" && <Icon name="pause" className="size-4" />}
+          {w.state === "done" && <Icon name="check" className="size-4" />}
+          {w.state === "missed" && (
+            <span aria-hidden="true" className="mono font-bold">
+              –
+            </span>
+          )}
         </li>
       ))}
     </ol>
