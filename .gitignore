@@ -37,3 +37,6 @@ Thumbs.db
 
 # Rapports Lighthouse (pnpm audit:lighthouse)
 lighthouse-report/
+
+# Base PostgreSQL locale (pnpm db:local)
+.pgdata/

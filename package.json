@@ -29,7 +29,10 @@
     "test:db:ci": "supabase test db",
     "db:push": "node scripts/supabase-remote.mjs push",
     "db:push:dry": "node scripts/supabase-remote.mjs push:dry",
-    "audit:lighthouse": "node scripts/lighthouse.mjs"
+    "audit:lighthouse": "node scripts/lighthouse.mjs",
+    "db:local": "node scripts/db-local.mjs",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:types:pg": "node scripts/db-types.mjs"
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",
@@ -39,7 +42,9 @@
     "@serwist/next": "^9.5.13",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
+    "kysely": "^0.29.7",
     "next": "15.5.28",
+    "pg": "^8.23.1",
     "qrcode": "^1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
@@ -68,7 +73,7 @@
     "eslint-config-next": "15.5.28",
     "jsdom": "^30.1.3",
     "jsqr": "^1.4.0",
-    "pg": "^8.23.1",
+    "kysely-codegen": "^0.20.0",
     "pngjs": "^7.0.0",
     "postcss": "^8.5.30",
     "prettier": "^3.9.10",

@@ -1,6 +1,5 @@
 // Vérification rapide sans Docker : applique les migrations et joue les tests pgTAP sur PGlite
-// (Postgres en WebAssembly), avec un stub minimal de ce que Supabase fournit (rôles, schéma auth).
-// La référence reste le vrai Supabase : `pnpm test:db` (projet hébergé) et la CI.
+// (Postgres en WebAssembly). Les rôles et le schéma auth viennent de la migration de compatibilité.
 // Usage : pnpm test:db:lite
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -13,29 +12,6 @@ import { reportTap } from "./lib/pgtap.mjs";
 
 const root = process.cwd();
 const db = await PGlite.create({ extensions: { pgcrypto, pg_trgm, unaccent, pgtap } });
-
-// Ce que Supabase met en place avant les migrations du projet.
-await db.exec(`
-  create schema extensions;
-  set search_path = "$user", public, extensions;
-  create extension pgcrypto with schema extensions;
-  create role anon nologin;
-  create role authenticated nologin;
-  create role service_role nologin bypassrls;
-  grant usage on schema public, extensions to anon, authenticated;
-  alter default privileges in schema public grant all on tables to anon, authenticated;
-  alter default privileges in schema public grant all on functions to anon, authenticated;
-  create schema auth;
-  grant usage on schema auth to anon, authenticated;
-  create table auth.users (
-    id uuid primary key, instance_id uuid, aud text, role text, email text,
-    raw_user_meta_data jsonb, created_at timestamptz, updated_at timestamptz
-  );
-  create function auth.uid() returns uuid language sql stable as $$
-    select nullif(current_setting('request.jwt.claims', true)::json ->> 'sub', '')::uuid
-  $$;
-  grant execute on function auth.uid() to anon, authenticated;
-`);
 
 const migrations = join(root, "supabase/migrations");
 for (const file of readdirSync(migrations).sort()) {
