@@ -3,6 +3,9 @@
 /* Couleurs : design-system/tokens.json → src/styles/tokens.css (pnpm tokens). Rayons et courbe de mouvement : même fichier généré. */
 @import "../styles/tokens.css";
 
+/* Primitives néo-brutalistes de la maquette v2.1 (.btn, .card, .pill, .input, .seg, .stamp…). */
+@import "../styles/neo.css";
+
 @custom-variant dark {
   @media (prefers-color-scheme: dark) {
     &:where(:root:not([data-theme="light"]) *) {

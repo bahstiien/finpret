@@ -36,7 +36,7 @@ export function CtaLink({ children, className = "" }: { children: ReactNode; cla
   return (
     <Link
       href="/login"
-      className={`inline-flex min-h-14 items-center justify-center gap-2 btn-hard rounded-r2 border-[length:var(--bw)] border-line bg-banana px-3 py-2 text-base font-bold tracking-[0.03em] text-[#17151f] uppercase transition duration-90 ease-base ${className}`}
+      className={`inline-flex min-h-14 items-center justify-center gap-2 btn btn--primary btn--lg ${className}`}
     >
       {children}
       <Icon name="arrow" className="size-5" />

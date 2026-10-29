@@ -13,7 +13,7 @@ export function Hero() {
   return (
     <section className="theme-light border-b-[length:var(--bw)] border-line bg-bg text-ink">
       <Container>
-        <header className="-mx-4 flex items-center justify-between gap-4 border-b-[length:var(--bw)] border-line bg-surface px-4 py-3 sm:-mx-8 sm:px-8">
+        <header className="topbar -mx-4 sm:-mx-8">
           <Link href="/" aria-label="Fin Prêt, accueil" className="flex items-center gap-2 rounded-r2">
             <Image src="/brand/finpret-symbole.svg" alt="" width={36} height={36} priority className="size-9" />
             <span className="font-display text-xl uppercase">Fin Prêt</span>
@@ -40,7 +40,7 @@ export function Hero() {
             </Link>
             <Link
               href="/login"
-              className="btn-hard inline-flex min-h-11 items-center rounded-r2 border-[length:var(--bw)] border-line bg-banana px-4 text-base font-bold text-[#17151f] uppercase"
+              className="btn btn--primary btn--sm"
             >
               {t.nav.login}
             </Link>
@@ -49,7 +49,7 @@ export function Hero() {
 
         <div className="grid items-center gap-10 pt-6 pb-12 sm:pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:pb-20">
           <div className="flex flex-col items-start gap-6">
-            <span className="rounded-pill border-2 border-line bg-banana px-4 py-1 font-mono text-xs font-bold tracking-[0.08em] uppercase">{h.eyebrow}</span>
+            <span className="sticker">{h.eyebrow}</span>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl">
               {nb(h.titleLine1)} <span className="block w-fit bg-violet px-2 text-white">{nb(h.titleLine2)}</span>
             </h1>
@@ -58,7 +58,7 @@ export function Hero() {
               <CtaLink>{nb(h.cta)}</CtaLink>
               <a
                 href="#comment"
-                className="btn-hard inline-flex min-h-[52px] items-center justify-center rounded-r2 border-[length:var(--bw)] border-line bg-surface px-6 text-base font-bold uppercase"
+                className="btn btn--lg"
               >
                 {h.secondary}
               </a>

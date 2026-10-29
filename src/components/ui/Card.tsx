@@ -1,25 +1,25 @@
 import type { HTMLAttributes } from "react";
 
-export type CardTone = "surface" | "violet" | "dark" | "yellow" | "blue" | "pink" | "peach" | "green";
+export type CardTone = "surface" | "violet" | "dark" | "yellow" | "blue" | "pink" | "peach" | "green" | "banane";
 
 const tones: Record<CardTone, string> = {
-  surface: "bg-surface",
-  violet: "bg-violet text-white",
-  dark: "bg-nav text-on-nav",
-  yellow: "bg-yellow-soft",
-  blue: "bg-blue-soft text-blue-ink",
-  pink: "bg-pink-soft text-pink-ink",
-  peach: "bg-peach text-peach-ink",
-  green: "bg-green-soft text-green-ink",
+  surface: "",
+  violet: "tone-violet",
+  dark: "tone-dark",
+  yellow: "tone-yellow",
+  blue: "tone-blue",
+  pink: "tone-pink",
+  peach: "tone-peach",
+  green: "tone-green",
+  banane: "tone-banane",
 };
 
-const edge = "border-[length:var(--bw)] border-line shadow-hard-sm";
-
-const paddings = { none: "", sm: "p-4", cozy: "p-4", md: "p-6", lg: "p-8" } as const;
+// Marge intérieure de la maquette : 16 px mobile, 24 px desktop (par défaut) ; « none » pour les cartes à bord perdu.
+const paddings = { none: "!p-0", sm: "!p-3", cozy: "", md: "", lg: "!p-8" } as const;
 
 type CardTag = "section" | "div" | "li" | "article" | "figure" | "p" | "ul" | "dl";
 
-/** Surface de base de l'interface : rayon 4 px, bordure encre et ombre dure, huit teintes ; `as` choisit l'élément HTML (section par défaut). */
+/** Surface de base (maquette .card) : bordure encre, rayon 2 px, ombre dure ; `as` choisit l'élément HTML (section par défaut). */
 export function Card({
   as: Tag = "section",
   tone = "surface",
@@ -27,7 +27,7 @@ export function Card({
   className = "",
   ...props
 }: HTMLAttributes<HTMLElement> & { as?: CardTag; tone?: CardTone; padding?: keyof typeof paddings }) {
-  return <Tag className={`rounded-card ${edge} ${tones[tone]} ${paddings[padding]} ${className}`} {...props} />;
+  return <Tag className={`card ${tones[tone]} ${paddings[padding]} ${className}`} {...props} />;
 }
 
 /** Page centrée simple (connexion, création de foyer, invitation). */
@@ -39,11 +39,12 @@ export function CenteredPage({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** Logo : marque violette à bordure encre et ombre dure, comme la maquette. */
 export function Logo({ className = "size-12 text-2xl" }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
-      className={`grid place-items-center rounded-r2 border-[length:var(--bw)] border-line bg-violet font-display text-white shadow-hard-sm ${className}`}
+      className={`grid place-items-center rounded-r1 border-[length:var(--bw)] border-line bg-violet font-display text-banana shadow-[var(--sh-sm)] ${className}`}
     >
       M
     </span>

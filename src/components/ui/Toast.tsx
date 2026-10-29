@@ -29,9 +29,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={toast.id}
             data-testid="toast"
             role={toast.tone === "error" ? "alert" : "status"}
-            className={`pointer-events-auto max-w-md rounded-card px-4 py-3 text-sm font-semibold shadow-hard ${
-              toast.tone === "error" ? "bg-peach text-peach-ink" : "bg-nav text-on-nav"
-            }`}
+            className={`toast pointer-events-auto max-w-md text-sm font-bold ${toast.tone === "error" ? "!bg-pink !text-[var(--on-fill)]" : ""}`}
           >
             {toast.text}
           </p>

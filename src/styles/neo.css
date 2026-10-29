@@ -1,0 +1,317 @@
+/* Primitives néo-brutalistes v2.1, portées telles quelles de la maquette (feuille partagée des artboards).
+   Les jetons (--bw, --off*, --sh*, --r*, rôles et domaines) sont définis ci-dessous ; couleurs dans tokens.css.
+   Mobile < 900 px (bordure 2 / ombre 3) · Desktop ≥ 900 px (3 / 6). Thème clair uniquement. */
+:root {
+  --font-display: var(--font-archivo), "Arial Black", Impact, sans-serif;
+  --font-body: var(--font-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, Menlo, monospace;
+  --banane: #ffd23f;
+  --on-banane: #17151f;
+  --on-violet: #ffffff;
+  --blue: #4d96ff;
+  --pink: #ff6b9d;
+  --peach: #ff8c42;
+  --yellow: #fff6d6;
+  --on-fill: #17151f;
+  --ink-fixed: #17151f;
+  --focus: #7a5af8;
+  --menu: var(--violet); --on-menu: var(--on-violet);
+  --courses: var(--green); --on-courses: var(--on-fill);
+  --stock: var(--blue); --on-stock: var(--on-fill);
+  --progres: var(--banane); --on-progres: var(--on-fill);
+  --session: var(--peach); --on-session: var(--on-fill);
+  --alerte: var(--pink); --on-alerte: var(--on-fill);
+  --cta: var(--banane); --on-cta: var(--on-banane);
+  --sel: var(--violet); --on-sel: var(--on-violet);
+  --info: var(--blue); --on-info: var(--on-fill);
+  --success: var(--green); --on-success: var(--on-fill);
+  --warning: var(--banane); --on-warning: var(--on-fill);
+  --danger: var(--pink); --on-danger: var(--on-fill);
+  --bw: 2px; --off-sm: 2px; --off: 3px; --off-lg: 5px;
+  --r0: 0px; --r1: 2px; --r2: 4px; --r-pill: 999px;
+  --touch-min: 44px; --touch-main: 52px; --touch-session: 60px;
+  --t-fast: 90ms; --t-stamp: 360ms;
+  --sh-sm: var(--off-sm) var(--off-sm) 0 var(--line);
+  --sh: var(--off) var(--off) 0 var(--line);
+  --sh-lg: var(--off-lg) var(--off-lg) 0 var(--line);
+  --sh-violet: var(--off) var(--off) 0 var(--violet);
+  --sh-banane: var(--off) var(--off) 0 var(--banane);
+}
+@media (min-width: 900px) {
+  :root { --bw: 3px; --off-sm: 3px; --off: 6px; --off-lg: 9px; }
+}
+.sr-fp { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0; }
+
+/* ---------- 4. Typographie ---------- */
+.t-hero{font-family:var(--font-display);font-weight:400;text-transform:uppercase;font-size:52px;line-height:.9;letter-spacing:-.01em}
+.t-1{font-family:var(--font-display);font-weight:400;text-transform:uppercase;font-size:34px;line-height:.95;letter-spacing:-.005em}
+.t-2{font-family:var(--font-display);font-weight:400;text-transform:uppercase;font-size:24px;line-height:1}
+.t-3{font-weight:700;font-size:18px;line-height:1.2}
+.t-body{font-size:16px;line-height:1.5}
+.t-ui{font-weight:700;font-size:16px;line-height:1.2}
+.t-small{font-size:14px;line-height:1.4}
+.t-label{font-weight:700;font-size:13px;line-height:1.3;letter-spacing:.05em;text-transform:uppercase}
+.t-kicker{font-family:var(--font-mono);font-weight:700;font-size:12px;line-height:1.2;letter-spacing:.08em;text-transform:uppercase}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.num-xl{font-family:var(--font-mono);font-weight:700;font-size:64px;line-height:.9;letter-spacing:-.04em}
+.num-l{font-family:var(--font-mono);font-weight:700;font-size:36px;line-height:1;letter-spacing:-.03em}
+.muted{color:var(--muted)}
+.balance{text-wrap:balance}
+@media (min-width: 900px){
+  .t-hero{font-size:112px}
+  .t-1{font-size:56px}
+  .t-2{font-size:32px}
+  .t-3{font-size:20px}
+  .num-xl{font-size:120px}
+  .num-l{font-size:48px}
+}
+
+/* ---------- 5. Icônes + drapeaux ---------- */
+.ic{width:24px;height:24px;flex:none;display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:square;stroke-linejoin:miter}
+.ic-sm{width:16px;height:16px}
+.ic-lg{width:32px;height:32px}
+.ic-xl{width:48px;height:48px}
+.flag{display:block;flex:none;width:30px;height:20px;border:var(--bw) solid var(--line);border-radius:0;background:var(--surface)}
+.flag--sm{width:24px;height:16px}
+.flag--lg{width:48px;height:32px}
+
+/* ---------- 6. Blocs, filets, inclinaisons ---------- */
+.nb{border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh)}
+.nb-sm{border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh-sm)}
+.nb-lg{border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh-lg)}
+.nb-flat{border:var(--bw) solid var(--line);border-radius:var(--r1)}
+.nb-dash{border:var(--bw) dashed var(--line);border-radius:var(--r1)}
+.rule{height:var(--bw);background:var(--line);flex:1}
+.bento{display:grid;gap:var(--bw);background:var(--line);border:var(--bw) solid var(--line);border-radius:var(--r1)}
+.bento > *{background:var(--surface);min-width:0}
+.tilt-l{transform:rotate(-1.5deg)}
+.tilt-r{transform:rotate(1.5deg)}
+.tilt-1{transform:rotate(-1deg)}
+.tilt-2{transform:rotate(2deg)}
+.sticker{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:var(--bw) solid var(--line);box-shadow:var(--sh-sm);font-family:var(--font-mono);font-weight:700;font-size:12px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;transform:rotate(-3deg);background:var(--surface);color:var(--ink)}
+
+/* ---------- 7. Tons (fond + texte toujours appariés) ---------- */
+.tone-bg{background:var(--bg);color:var(--ink)}
+.tone-surface{background:var(--surface);color:var(--ink)}
+.tone-chip{background:var(--chip);color:var(--ink)}
+.tone-dark{background:var(--nav);color:var(--on-nav)}
+.tone-violet{background:var(--violet);color:var(--on-violet)}
+.tone-banane{background:var(--banane);color:var(--on-banane)}
+.tone-yellow{background:var(--yellow);color:var(--on-fill)}
+.tone-blue{background:var(--blue);color:var(--on-fill)}
+.tone-pink{background:var(--pink);color:var(--on-fill)}
+.tone-peach{background:var(--peach);color:var(--on-fill)}
+.tone-green{background:var(--green);color:var(--on-fill)}
+.tone-menu{background:var(--menu);color:var(--on-menu)}
+.tone-courses{background:var(--courses);color:var(--on-courses)}
+.tone-stock{background:var(--stock);color:var(--on-stock)}
+.tone-progres{background:var(--progres);color:var(--on-progres)}
+.tone-session{background:var(--session);color:var(--on-session)}
+.tone-alerte{background:var(--alerte);color:var(--on-alerte)}
+.tone-cta{background:var(--cta);color:var(--on-cta)}
+.tone-sel{background:var(--sel);color:var(--on-sel)}
+.tone-info{background:var(--info);color:var(--on-info)}
+.tone-success{background:var(--success);color:var(--on-success)}
+.tone-warning{background:var(--warning);color:var(--on-warning)}
+.tone-danger{background:var(--danger);color:var(--on-danger)}
+
+/* ---------- 8. Card ---------- */
+.card{background:var(--surface);color:var(--ink);border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh);padding:var(--s4)}
+.card.tone-bg{background:var(--bg)}.card.tone-chip{background:var(--chip)}.card.tone-dark{background:var(--nav);color:var(--on-nav)}
+.card.tone-violet{background:var(--violet);color:var(--on-violet)}.card.tone-banane{background:var(--banane);color:var(--on-banane)}
+.card.tone-yellow{background:var(--yellow);color:var(--on-fill)}.card.tone-blue{background:var(--blue);color:var(--on-fill)}
+.card.tone-pink{background:var(--pink);color:var(--on-fill)}.card.tone-peach{background:var(--peach);color:var(--on-fill)}
+.card.tone-green{background:var(--green);color:var(--on-fill)}
+.card.tone-menu{background:var(--menu);color:var(--on-menu)}.card.tone-courses{background:var(--courses);color:var(--on-courses)}
+.card.tone-stock{background:var(--stock);color:var(--on-stock)}.card.tone-progres{background:var(--progres);color:var(--on-progres)}
+.card.tone-session{background:var(--session);color:var(--on-session)}.card.tone-alerte{background:var(--alerte);color:var(--on-alerte)}
+.card.tone-sel{background:var(--sel);color:var(--on-sel)}.card.tone-cta{background:var(--cta);color:var(--on-cta)}
+.card--flat{box-shadow:none}
+@media (min-width: 900px){ .card{padding:var(--s6)} }
+
+/* ---------- 9. Button / LinkButton ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:var(--touch-main);padding:0 20px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);color:var(--ink);box-shadow:var(--sh);font-family:var(--font-body);font-weight:700;font-size:16px;line-height:1.1;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform var(--t-fast) steps(2,end),box-shadow var(--t-fast) steps(2,end)}
+.btn .ic{width:20px;height:20px}
+.btn:hover,.btn.is-hover{transform:translate(2px,2px);box-shadow:calc(var(--off) - 2px) calc(var(--off) - 2px) 0 var(--line)}
+.btn:active,.btn.is-active{transform:translate(var(--off),var(--off));box-shadow:0 0 0 var(--line)}
+.btn:focus-visible,.btn.is-focus{outline:3px solid var(--focus);outline-offset:3px}
+.btn--primary{background:var(--cta);color:var(--on-cta)}
+.btn--secondary{background:var(--violet);color:var(--on-violet)}
+.btn--outline{background:transparent;box-shadow:none}
+.btn--outline:hover,.btn--outline.is-hover{transform:none;background:var(--chip);box-shadow:var(--sh-sm)}
+.btn--outline:active,.btn--outline.is-active{transform:translate(var(--off-sm),var(--off-sm));box-shadow:none}
+.btn--dark{background:var(--nav);color:var(--on-nav);box-shadow:var(--off) var(--off) 0 var(--violet)}
+.btn--dark:hover,.btn--dark.is-hover{box-shadow:calc(var(--off) - 2px) calc(var(--off) - 2px) 0 var(--violet)}
+.btn--ghost{background:transparent;border-color:transparent;box-shadow:none;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:5px}
+.btn--ghost:hover,.btn--ghost.is-hover{transform:none;background:var(--chip);color:var(--ink);border-color:var(--line);box-shadow:none}
+.btn--ghost:active,.btn--ghost.is-active{transform:translate(2px,2px);box-shadow:none}
+.btn--danger{background:var(--danger);color:var(--on-danger)}
+.btn--sm{min-height:var(--touch-min);padding:0 14px;font-size:14px;gap:8px}
+.btn--sm .ic{width:18px;height:18px}
+.btn--lg{min-height:var(--touch-session);padding:0 28px;font-size:18px}
+.btn--block{display:flex;width:100%}
+.btn:disabled,.btn.is-disabled{background:var(--chip);color:var(--muted);border-style:dashed;border-color:var(--line);box-shadow:none;transform:none;text-decoration:none;cursor:not-allowed}
+
+/* ---------- 10. IconButton ---------- */
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--touch-min);height:var(--touch-min);padding:0;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);color:var(--ink);box-shadow:var(--sh-sm);cursor:pointer;text-decoration:none;transition:transform var(--t-fast) steps(2,end),box-shadow var(--t-fast) steps(2,end)}
+.iconbtn .ic{width:22px;height:22px}
+.iconbtn:hover,.iconbtn.is-hover{transform:translate(1px,1px);box-shadow:calc(var(--off-sm) - 1px) calc(var(--off-sm) - 1px) 0 var(--line)}
+.iconbtn:active,.iconbtn.is-active{transform:translate(var(--off-sm),var(--off-sm));box-shadow:none}
+.iconbtn.is-focus{outline:3px solid var(--focus);outline-offset:3px}
+.iconbtn--dark{background:var(--nav);color:var(--on-nav)}
+.iconbtn--violet{background:var(--violet);color:var(--on-violet)}
+.iconbtn--banane{background:var(--banane);color:var(--on-banane)}
+.iconbtn--ghost{background:transparent;border-color:transparent;box-shadow:none}
+.iconbtn:disabled,.iconbtn.is-disabled{background:var(--chip);color:var(--muted);border-style:dashed;box-shadow:none;transform:none;cursor:not-allowed}
+
+/* ---------- 11. Pill / Badge (seuls éléments arrondis) ---------- */
+.pill{display:inline-flex;align-items:center;gap:6px;min-height:26px;padding:3px 10px;border:var(--bw) solid var(--line);border-radius:var(--r-pill);background:var(--surface);color:var(--ink);font-weight:700;font-size:12px;line-height:1;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.pill .ic{width:14px;height:14px;stroke-width:3}
+.pill.mono{font-family:var(--font-mono);letter-spacing:.02em}
+.dot{display:inline-block;width:12px;height:12px;border:2px solid var(--line);background:var(--alerte)}
+.diff{display:inline-flex;align-items:center;gap:3px}
+.diff span{display:block;width:9px;height:14px;border:2px solid currentColor}
+.diff span.on{background:currentColor}
+.code{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 6px;border:var(--bw) solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.04em}
+
+/* ---------- 12. Champs ---------- */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field-label{font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase}
+.field-help{font-size:13px;line-height:1.35;color:var(--muted)}
+.field-error{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700}
+.input{width:100%;min-height:var(--touch-main);padding:0 14px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);color:var(--ink);font-family:var(--font-body);font-size:16px;outline:none}
+.input::placeholder{color:var(--muted);opacity:1}
+.input:focus,.input.is-focus{outline:3px solid var(--focus);outline-offset:2px;box-shadow:var(--sh)}
+.input.is-error{box-shadow:var(--off) var(--off) 0 var(--danger)}
+.input:disabled,.input.is-disabled{background:var(--chip);color:var(--muted);border-style:dashed}
+.input.mono{font-family:var(--font-mono);font-weight:700}
+.select-wrap{position:relative;display:block}
+.select-wrap .input{appearance:none;-webkit-appearance:none;padding-right:48px;cursor:pointer}
+.select-wrap .ic{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+.cb{appearance:none;-webkit-appearance:none;flex:none;display:inline-grid;place-content:center;width:28px;height:28px;margin:0;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);cursor:pointer}
+.cb:checked{background:var(--ink)}
+.cb:checked::after{content:"";width:12px;height:7px;border-left:3px solid var(--banane);border-bottom:3px solid var(--banane);transform:translate(0,-2px) rotate(-45deg)}
+.cb:disabled{border-style:dashed;cursor:not-allowed}
+.cb-lg{width:36px;height:36px}
+.cb-lg:checked::after{width:16px;height:9px;border-width:0 0 4px 4px}
+
+/* ---------- 13. Toggle / Stepper / ChipToggle / Segmented ---------- */
+.toggle{position:relative;flex:none;display:inline-block;width:60px;height:34px;padding:0;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--chip);box-shadow:var(--sh-sm);cursor:pointer}
+.toggle-knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border:var(--bw) solid var(--line);background:var(--surface);transition:transform var(--t-fast) steps(2,end)}
+.toggle[aria-checked="true"]{background:var(--violet)}
+.toggle[aria-checked="true"] .toggle-knob{transform:translateX(24px);background:var(--banane)}
+.toggle:disabled{border-style:dashed;box-shadow:none;cursor:not-allowed}
+.stepper{display:inline-flex;align-items:stretch;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);box-shadow:var(--sh-sm)}
+.stepper button{display:inline-flex;align-items:center;justify-content:center;width:var(--touch-min);min-height:var(--touch-min);padding:0;border:0;background:var(--chip);color:var(--ink);cursor:pointer}
+.stepper button:first-child{border-right:var(--bw) solid var(--line)}
+.stepper button:last-child{border-left:var(--bw) solid var(--line)}
+.stepper button:disabled{color:var(--muted);cursor:not-allowed}
+.stepper output{display:flex;align-items:center;justify-content:center;min-width:56px;padding:0 8px;font-family:var(--font-mono);font-weight:700;font-size:20px}
+.chiptg{display:inline-flex;align-items:center;gap:8px;min-height:var(--touch-min);padding:0 14px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);color:var(--ink);box-shadow:var(--sh-sm);font-weight:700;font-size:14px;cursor:pointer;transition:transform var(--t-fast) steps(2,end),box-shadow var(--t-fast) steps(2,end)}
+.chiptg .ic{width:18px;height:18px}
+.chiptg:hover,.chiptg.is-hover{background:var(--chip)}
+.chiptg[aria-pressed="true"]{background:var(--sel);color:var(--on-sel);transform:translate(var(--off-sm),var(--off-sm));box-shadow:none}
+.chiptg:disabled{border-style:dashed;box-shadow:none;color:var(--muted);cursor:not-allowed}
+.seg{display:inline-flex;max-width:100%;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);box-shadow:var(--sh-sm);overflow:hidden}
+.seg button{flex:1 1 auto;min-height:var(--touch-min);padding:0 14px;border:0;background:transparent;color:var(--ink);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.seg button + button{border-left:var(--bw) solid var(--line)}
+.seg button:hover{background:var(--chip)}
+.seg button[aria-pressed="true"]{background:var(--sel);color:var(--on-sel)}
+
+/* ---------- 14. Progress ---------- */
+.bar{display:flex;height:22px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);overflow:hidden}
+.bar-fill{height:100%;background:var(--ink);border-right:var(--bw) solid var(--line)}
+.bar--lg{height:32px}
+.ring{display:block}
+.ring .ring-track{fill:none;stroke:var(--chip)}
+.ring .ring-edge{fill:none;stroke:var(--line)}
+
+/* ---------- 15. Avatar ---------- */
+.avatar{display:inline-flex;align-items:center;justify-content:center;flex:none;width:40px;height:40px;border:var(--bw) solid var(--line);border-radius:var(--r1);font-family:var(--font-display);font-size:18px;line-height:1}
+.avatar--sm{width:32px;height:32px;font-size:14px}
+
+/* ---------- 16. ListRow ---------- */
+.row{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 0;border-bottom:var(--bw) solid var(--line)}
+.row:last-child{border-bottom:0}
+.row-main{flex:1;min-width:0}
+
+/* ---------- 17. Callout / Toast / Coachmark ---------- */
+.callout{display:flex;align-items:flex-start;gap:12px;padding:14px;border:var(--bw) solid var(--line);border-radius:var(--r1);box-shadow:var(--sh)}
+.callout-ic{flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:var(--bw) solid var(--line);background:var(--nav);color:var(--on-nav)}
+.callout-ic .ic{width:20px;height:20px}
+.toast{display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--nav);color:var(--on-nav);box-shadow:var(--sh-banane)}
+.coach{position:relative;display:flex;flex-direction:column;gap:10px;max-width:300px;padding:14px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--nav);color:var(--on-nav);box-shadow:var(--sh-violet)}
+.coach-arrow{position:absolute;width:18px;height:18px;background:var(--nav);border-right:var(--bw) solid var(--line);border-bottom:var(--bw) solid var(--line);transform:rotate(45deg)}
+.lnk{color:inherit;font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.lnk:hover{background:var(--banane);color:var(--on-banane)}
+
+/* ---------- 18. EmptyState / Skeleton ---------- */
+.empty{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:24px;border:var(--bw) dashed var(--line);border-radius:var(--r1);background:var(--surface)}
+.skel{display:block;background:var(--chip);border:var(--bw) dashed var(--line);border-radius:var(--r1);animation:fp-skel 1.2s steps(1,end) infinite}
+@keyframes fp-skel{50%{background:var(--surface)}}
+
+/* ---------- 19. Sheet (feuille modale, sans voile transparent) ---------- */
+.sheet{background:var(--surface);color:var(--ink);border:var(--bw) solid var(--line);border-bottom:0;border-radius:var(--r2) var(--r2) 0 0;box-shadow:var(--off-lg) calc(var(--off-lg) * -1) 0 var(--violet);padding:0 16px 16px}
+.sheet-handle{display:block;width:56px;height:6px;margin:10px auto 6px;background:var(--ink)}
+@media (min-width: 900px){ .sheet{border-bottom:var(--bw) solid var(--line);border-radius:var(--r2);box-shadow:var(--sh-lg);padding:0 24px 24px} }
+
+/* ---------- 20. Stamp (tampons du passeport) ---------- */
+.stamp{position:relative;flex:none;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:108px;height:108px;border:3px solid var(--ink-fixed);border-radius:50%;color:var(--ink-fixed);text-align:center;transform:rotate(-8deg)}
+.stamp::before{content:"";position:absolute;inset:5px;border:2px dashed currentColor;border-radius:inherit}
+.stamp--sq{border-radius:var(--r2);transform:rotate(5deg)}
+.stamp--sq::before{border-radius:0}
+.stamp-code{font-family:var(--font-display);font-size:30px;line-height:1}
+.stamp-name{font-family:var(--font-mono);font-weight:700;font-size:10px;line-height:1.1;letter-spacing:.06em;text-transform:uppercase;max-width:84px}
+.stamp--empty{border-style:dashed;border-color:var(--ink-fixed);color:var(--ink-fixed);transform:none;background:transparent}
+.stamp--empty::before{display:none}
+.stamp--new{animation:fp-stamp var(--t-stamp) steps(4,end) both}
+.stamp--sq.stamp--new{animation-name:fp-stamp-sq}
+@keyframes fp-stamp{0%{transform:scale(1.9) rotate(-14deg)}70%{transform:scale(.9) rotate(-8deg)}100%{transform:scale(1) rotate(-8deg)}}
+@keyframes fp-stamp-sq{0%{transform:scale(1.9) rotate(12deg)}70%{transform:scale(.9) rotate(5deg)}100%{transform:scale(1) rotate(5deg)}}
+
+/* ---------- 21. AppFrame ---------- */
+.frame{display:flex;min-height:100vh}
+.frame-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.side{flex:none;width:256px;display:flex;flex-direction:column;gap:6px;padding:20px 16px;border-right:var(--bw) solid var(--line);background:var(--surface)}
+.side-link{display:flex;align-items:center;gap:12px;min-height:var(--touch-main);padding:0 14px;border:var(--bw) solid transparent;border-radius:var(--r1);color:var(--ink);font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none}
+.side-link:hover{background:var(--chip);border-color:var(--line)}
+.side-link[aria-current="page"]{background:var(--sel);color:var(--on-sel);border-color:var(--line);box-shadow:var(--sh)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:var(--bw) solid var(--line);background:var(--surface)}
+.tabbar{position:sticky;bottom:12px;z-index:30;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:16px 12px 12px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);box-shadow:var(--sh)}
+.tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:60px;padding:6px 2px;color:var(--ink);font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none}
+.tab + .tab{border-left:var(--bw) solid var(--line)}
+.tab[aria-current="page"]{background:var(--sel);color:var(--on-sel);outline:var(--bw) solid var(--line);transform:translate(-3px,-5px);box-shadow:var(--sh);z-index:1}
+.tab .dot{position:absolute;top:7px;left:calc(50% + 8px)}
+.logo{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-family:var(--font-display);font-size:20px;line-height:1;text-transform:uppercase;text-decoration:none}
+.logo-mark{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:var(--bw) solid var(--line);background:var(--violet);color:var(--banane);box-shadow:var(--sh-sm)}
+.logo-mark .ic{width:24px;height:24px;stroke-width:2.75}
+.pad{padding:16px 16px 8px}
+.wrap{width:100%;max-width:1240px;margin:0 auto}
+.ph{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:var(--bw) solid var(--line)}
+.sh{display:flex;align-items:center;gap:12px}
+.sh-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;background:var(--nav);color:var(--on-nav);font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:var(--bw) solid var(--line)}
+
+/* ---------- 23. Pages publiques (SEO, landing) ---------- */
+.crumbs{display:flex;flex-wrap:wrap;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);box-shadow:var(--sh-sm)}
+.crumbs > *{display:inline-flex;align-items:center;min-height:var(--touch-min);padding:0 14px;border-right:var(--bw) solid var(--line);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+.crumbs > *:last-child{border-right:0;background:var(--banane);color:var(--on-banane)}
+.crumbs a:hover{background:var(--chip)}
+.faq{border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);box-shadow:var(--sh-sm)}
+.faq summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:var(--touch-main);padding:12px 16px;font-weight:700;font-size:16px;list-style:none;cursor:pointer}
+.faq summary::-webkit-details-marker{display:none}
+.faq[open] summary{background:var(--banane);color:var(--on-banane);border-bottom:var(--bw) solid var(--line)}
+.faq-body{padding:16px;line-height:1.55}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .iconbtn, .chiptg, .toggle-knob, .stamp, .skel { animation: none !important; transition: none !important; }
+}
+
+/* Radiogroup (Segmented) : même rendu que .seg button[aria-pressed]. */
+.seg button[aria-checked="true"]{background:var(--sel);color:var(--on-sel)}
+/* Tons de pastille : .pill vient après .tone-* dans la feuille, on réaffirme les fonds. */
+.pill.tone-chip{background:var(--chip);color:var(--ink)}.pill.tone-dark{background:var(--nav);color:var(--on-nav)}
+.pill.tone-violet{background:var(--violet);color:var(--on-violet)}.pill.tone-banane{background:var(--banane);color:var(--on-banane)}
+.pill.tone-yellow{background:var(--yellow);color:var(--on-fill)}.pill.tone-blue{background:var(--blue);color:var(--on-fill)}
+.pill.tone-pink{background:var(--pink);color:var(--on-fill)}.pill.tone-peach{background:var(--peach);color:var(--on-fill)}
+.pill.tone-green{background:var(--green);color:var(--on-fill)}
