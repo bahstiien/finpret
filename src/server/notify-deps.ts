@@ -4,6 +4,7 @@ import type { NotificationKind, NotificationPrefs } from "@/engine/notifications
 import { fr } from "@/i18n/fr";
 import { notificationsSchema, parseSettings } from "@/lib/settings";
 import { type Db, rpc, withAdmin } from "@/server/db";
+import { sendEmail } from "@/server/email";
 import { householdCan } from "@/server/entitlements-load";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
@@ -11,7 +12,7 @@ import type { NotifyDeps, Payload, Recipient, Subscription } from "@/server/noti
 import { emailOf } from "@/server/users";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
 
-/** Dépendances réelles de l'envoi : base (clé de service), Web Push (VAPID) et e-mail (Resend). */
+/** Dépendances réelles de l'envoi : base (clé de service), Web Push (VAPID) et e-mail (Brevo). */
 
 export const vapidConfigured = () =>
   !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY &&
@@ -42,23 +43,18 @@ const escapeHtml = (s: string) =>
 
 export function emailSender(baseUrl: string) {
   return async (to: string, payload: Payload) => {
-    const key = process.env.RESEND_API_KEY;
-    const from = process.env.EMAIL_FROM;
-    if (!key || !from) return false;
     const link = new URL(payload.url, baseUrl).toString();
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      signal: AbortSignal.timeout(10_000),
-      headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
-      body: JSON.stringify({
-        from,
-        to,
-        subject: payload.body,
-        text: `${payload.body}\n\n${fr.notifications.emailOpen} : ${link}\n\n${fr.notifications.emailFooter}`,
-        html: `<p style="font-size:18px">${escapeHtml(payload.body)}</p><p><a href="${escapeHtml(link)}">${escapeHtml(fr.notifications.emailOpen)}</a></p><p style="color:#666;font-size:13px">${escapeHtml(fr.notifications.emailFooter)}</p>`,
-      }),
-    }).catch(() => null);
-    return !!res?.ok;
+    const sent = await sendEmail({
+      to,
+      subject: payload.body,
+      text: `${payload.body}
+
+${fr.notifications.emailOpen} : ${link}
+
+${fr.notifications.emailFooter}`,
+      html: `<p style="font-size:18px">${escapeHtml(payload.body)}</p><p><a href="${escapeHtml(link)}">${escapeHtml(fr.notifications.emailOpen)}</a></p><p style="color:#666;font-size:13px">${escapeHtml(fr.notifications.emailFooter)}</p>`,
+    });
+    return sent.ok;
   };
 }
 
