@@ -6,7 +6,7 @@ import { fr } from "@/i18n/fr";
 import { audit, requireAdmin } from "@/server/admin";
 import { withAdmin } from "@/server/db";
 import { sendAssociationApproved, sendAssociationRejected, sendStatement } from "@/server/emails";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { readStoredFile } from "@/server/files";
 import type { ActionResult } from "@/server/errors";
 import type { StatementInput } from "@/server/payouts";
 
@@ -199,9 +199,7 @@ export async function markPayoutPaid(formData: FormData): Promise<ActionResult> 
       .where("id", "=", payout.association_id)
       .executeTakeFirst(),
   );
-  const pdf = payout.statement_path
-    ? await createAdminClient().storage.from("asso-statements").download(payout.statement_path)
-    : null;
+  const pdf = payout.statement_path ? await readStoredFile("asso-statements", payout.statement_path) : null;
   const input: StatementInput = {
     associationId: payout.association_id,
     associationName: a?.name ?? "",
@@ -212,9 +210,7 @@ export async function markPayoutPaid(formData: FormData): Promise<ActionResult> 
     monthly: 0,
     refunds: 0,
   };
-  await sendStatement(input, pdf?.data ? Buffer.from(await pdf.data.arrayBuffer()) : null, true).catch(
-    () => null,
-  );
+  await sendStatement(input, pdf, true).catch(() => null);
   return ok("/admin/reversements");
 }
 

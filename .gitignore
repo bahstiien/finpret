@@ -40,3 +40,6 @@ lighthouse-report/
 
 # Base PostgreSQL locale (pnpm db:local)
 .pgdata/
+
+# Fichiers privés en local (FILES_DIR par défaut)
+.data/

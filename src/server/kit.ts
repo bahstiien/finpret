@@ -1,11 +1,11 @@
 import "server-only";
 import { formatLong } from "@/lib/dates";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { type TutoInput, tutoSourceHash } from "@/lib/tuto";
 import { withAdmin } from "@/server/db";
+import { type Bucket, readStoredFile, storeFile } from "@/server/files";
 import { renderTutoPdf } from "@/server/pdf/tuto-pdf";
 
-const BUCKET = "asso-kits";
+const BUCKET: Bucket = "asso-kits";
 
 /** Données de la fiche tuto d'une association (clé de service : l'appelant a déjà vérifié l'appartenance). */
 export async function tutoInputFor(associationId: string, baseUrl: string): Promise<TutoInput | null> {
@@ -38,13 +38,12 @@ export async function tutoInputFor(associationId: string, baseUrl: string): Prom
 }
 
 /**
- * PDF de la fiche tuto : relu dans Storage tant que (nom, code, écoles) n'ont pas changé, sinon régénéré, stocké
+ * PDF de la fiche tuto : relu sur le disque tant que (nom, code, écoles) n'ont pas changé, sinon régénéré, stocké
  * (`asso-kits/[association_id]/fiche-tuto.pdf`) et mémorisé avec son hash dans `association_kits`.
  */
 export async function tutoPdfFor(associationId: string, baseUrl: string): Promise<Buffer | null> {
   const input = await tutoInputFor(associationId, baseUrl);
   if (!input) return null;
-  const storage = createAdminClient().storage;
   const hash = tutoSourceHash(input);
   const path = `${associationId}/fiche-tuto.pdf`;
 
@@ -56,17 +55,16 @@ export async function tutoPdfFor(associationId: string, baseUrl: string): Promis
       .executeTakeFirst(),
   );
   if (kit?.source_hash === hash) {
-    const { data: file } = await storage.from(BUCKET).download(path);
-    if (file) return Buffer.from(await file.arrayBuffer());
+    const file = await readStoredFile(BUCKET, path);
+    if (file) return file;
   }
 
   const pdf = await renderTutoPdf(input);
-  // Le bucket est créé au premier besoin (privé) ; une erreur « existe déjà » est normale.
-  await storage.createBucket(BUCKET, { public: false }).catch(() => null);
-  const { error } = await storage
-    .from(BUCKET)
-    .upload(path, pdf, { contentType: "application/pdf", upsert: true });
-  if (!error) {
+  const stored = await storeFile(BUCKET, path, pdf).then(
+    () => true,
+    () => false,
+  );
+  if (stored) {
     const row = {
       association_id: associationId,
       tuto_pdf_path: path,

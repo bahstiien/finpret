@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { readStoredFile } from "@/server/files";
 import { withSession } from "@/server/session";
 
 export const dynamic = "force-dynamic";
@@ -15,11 +15,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     db.selectFrom("payouts").select(["quarter", "statement_path"]).where("id", "=", id).executeTakeFirst(),
   );
   if (!payout?.statement_path) return new NextResponse(null, { status: 404 });
-  const { data: file } = await createAdminClient()
-    .storage.from("asso-statements")
-    .download(payout.statement_path);
+  const file = await readStoredFile("asso-statements", payout.statement_path);
   if (!file) return new NextResponse(null, { status: 404 });
-  return new NextResponse(file, {
+  return new NextResponse(new Uint8Array(file), {
     headers: {
       "content-type": "application/pdf",
       "content-disposition": `attachment; filename="releve-${payout.quarter}.pdf"`,
