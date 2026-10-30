@@ -409,7 +409,7 @@ create table notification_log (id bigserial primary key, user_id uuid, kind text
 
 ## 12. Notifications
 
-- **Web Push (VAPID)** vers l'application installée (iOS 16.4 et plus après ajout à l'écran d'accueil, Android, ordinateur) ; **e-mail** en solution de repli (Resend ou équivalent).
+- **Web Push (VAPID)** vers l'application installée (iOS 16.4 et plus après ajout à l'écran d'accueil, Android, ordinateur) ; **e-mail** en solution de repli (Brevo).
 - **Planification :** crontab du VPS toutes les 15 min (`deploy/cron.sh`) → `/api/cron/notify` → pour chaque compte dont l'heure configurée tombe dans la fenêtre (fuseau horaire du foyer) → calcul du contenu par le moteur → envoi → `notification_log` (idempotence par compte, type et date).
 - **Contenus :**
   - « Ce soir : *plat* », avec la consigne ;

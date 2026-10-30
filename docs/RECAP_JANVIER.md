@@ -17,10 +17,10 @@
 
 ## Ce qui reste à faire par l'équipe (hors code)
 
-1. **Mise en service sans Supabase** (Postgres sur le VPS, Better Auth) : suivre `MISE_EN_SERVICE.md` (accès Google, Resend, Stripe ; VPS ; premier déploiement ; planificateur ; sauvegardes ; recette). La CI n'a plus besoin de secret.
+1. **Mise en service sans Supabase** (Postgres sur le VPS, Better Auth) : suivre `MISE_EN_SERVICE.md` (accès Google, Brevo, Stripe ; VPS ; premier déploiement ; planificateur ; sauvegardes ; recette). La CI n'a plus besoin de secret.
 2. **Stripe** : lancer `pnpm stripe:setup` avec une clé de **test** (`sk_test_…`), copier les identifiants dans `.env.local`, créer le webhook (`/api/stripe/webhook`, huit événements listés dans `src/server/stripe-webhook.ts`), puis refaire la configuration en mode réel le 2 janvier. Renseigner l'URL des conditions de vente dans Stripe (case à cocher `consent_collection`).
 3. **Planificateur** : crontab du VPS appelant `deploy/cron.sh` (notifications toutes les 15 minutes, série toutes les heures, clôture le 1er janvier, avril, juillet et octobre) ; lignes dans `MISE_EN_SERVICE.md`.
-4. **Variables d'environnement** à créer : `IBAN_ENCRYPTION_KEY` (`openssl rand -hex 32`), `APP_URL`, `ALERT_EMAIL`, `RESEND_API_KEY`, `EMAIL_FROM`, `SENTRY_DSN`/`NEXT_PUBLIC_SENTRY_DSN`, `COMPANY_NAME`/`COMPANY_ID`/`COMPANY_VAT`.
+4. **Variables d'environnement** à créer : `IBAN_ENCRYPTION_KEY` (`openssl rand -hex 32`), `APP_URL`, `ALERT_EMAIL`, `BREVO_API_KEY`, `EMAIL_FROM`, `SENTRY_DSN`/`NEXT_PUBLIC_SENTRY_DSN`, `COMPANY_NAME`/`COMPANY_ID`/`COMPANY_VAT`.
 5. **Premier administrateur** : après sa première connexion, insérer son identifiant dans `public.admins` (commande dans `MISE_EN_SERVICE.md`), puis scanner le QR code sur `/admin/mfa`.
 6. **Textes juridiques** (`TODO(juriste)` : mentions, CGU, CGV avec rétractation et renonciation, confidentialité, contrat de partenariat) et **charte** `brand/charte-fin-pret.md` (sections 8 et 9) : non fournie, les textes de la spec ont été repris tels quels.
 7. **Test de restauration** : procédure dans `RESTAURATION.md`, à jouer avant le 18 décembre.
