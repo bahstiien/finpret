@@ -6,14 +6,17 @@ export function Segmented<T extends string>({
   value,
   options,
   onChange,
+  block = false,
 }: {
   label: string;
   value: T;
   options: { value: T; label: string }[];
   onChange: (value: T) => void;
+  /** Occupe toute la largeur disponible (formulaires). */
+  block?: boolean;
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="seg">
+    <div role="radiogroup" aria-label={label} className={`seg ${block ? "w-full" : ""}`}>
       {options.map((o) => {
         const active = o.value === value;
         return (

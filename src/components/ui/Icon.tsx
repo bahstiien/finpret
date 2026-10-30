@@ -1,6 +1,7 @@
 import type { ComponentType, SVGProps } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
   Basket,
   CalendarCheck,
   CaretDown,
@@ -59,6 +60,7 @@ const GLYPHS = {
   chevronRight: CaretRight,
   chevronDown: CaretDown,
   arrowBack: ArrowLeft,
+  arrowRight: ArrowRight,
   search: MagnifyingGlass,
   info: Info,
   warning: Warning,

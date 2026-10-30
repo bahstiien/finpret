@@ -4,11 +4,11 @@ import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins/magic-link";
 import pg from "pg";
 import { FEATURES } from "@/lib/features";
-import { sendMagicLink } from "@/server/emails";
+import { sendMagicLink, sendPasswordReset, sendVerificationEmail } from "@/server/emails";
 import { trackEvent } from "@/server/events";
 
 /**
- * Better Auth : lien magique par e-mail, Google, et Apple derrière son drapeau.
+ * Better Auth : e-mail et mot de passe, lien magique par e-mail, Google, et Apple derrière son drapeau.
  * Tables du schéma `auth` (migration 20261107000000_better_auth.sql), lues et écrites en `service_role`.
  * Le second facteur du back-office est géré à part (src/server/mfa.ts).
  */
@@ -29,6 +29,33 @@ const timestamps = { createdAt: "created_at", updatedAt: "updated_at" };
 /** Tests de bout en bout lancés par Playwright : jamais sur un site public, l'application doit tourner sur localhost. */
 const isLocalE2E = () =>
   Boolean(process.env.E2E_MAGIC_LINK_DIR) && /^http:\/\/localhost[:/]/.test(process.env.APP_URL ?? "");
+
+/**
+ * Dépose le lien dans un fichier lu par Playwright (tests de bout en bout, build de production local) au lieu de
+ * l'envoyer ; renvoie false hors de ce cas.
+ */
+async function dropE2ELink(email: string, url: string): Promise<boolean> {
+  const e2eDir = process.env.E2E_MAGIC_LINK_DIR;
+  if (!e2eDir || !isLocalE2E()) return false;
+  const { mkdir, writeFile } = await import("node:fs/promises");
+  await mkdir(e2eDir, { recursive: true });
+  await writeFile(`${e2eDir}/${encodeURIComponent(email)}.txt`, url);
+  return true;
+}
+
+/** Envoie un lien par e-mail ; sans Brevo en développement, il s'affiche dans le terminal de `pnpm dev`. */
+async function deliverLink(
+  kind: string,
+  email: string,
+  url: string,
+  send: (to: string, url: string) => Promise<{ ok: true } | { ok: false; reason: string }>,
+) {
+  if (await dropE2ELink(email, url)) return;
+  const sent = await send(email, url);
+  if (!sent.ok && sent.reason === "not_configured" && process.env.NODE_ENV !== "production")
+    console.info(`[auth] ${kind} pour ${email} : ${url}`);
+  else if (!sent.ok) throw new Error("Envoi de l'e-mail impossible.");
+}
 
 function createAuth() {
   const google =
@@ -94,6 +121,23 @@ function createAuth() {
     // Limiteur de Better Auth (actif en production), sauf pour les tests de bout en bout en local qui se
     // connectent en parallèle depuis la même adresse. La limite par e-mail de signInWithEmail reste active.
     rateLimit: { enabled: process.env.NODE_ENV === "production" && !isLocalE2E() },
+    // Mot de passe : 8 caractères au moins. Un compte ne se connecte qu'après avoir confirmé son adresse (sinon
+    // quelqu'un pourrait créer un compte sur l'adresse d'un autre et le retrouver lié à son compte Google).
+    emailAndPassword: {
+      enabled: true,
+      minPasswordLength: 8,
+      maxPasswordLength: 128,
+      requireEmailVerification: true,
+      resetPasswordTokenExpiresIn: 60 * 60,
+      sendResetPassword: async ({ user, url }) => deliverLink("réinitialisation", user.email, url, sendPasswordReset),
+    },
+    emailVerification: {
+      sendOnSignUp: true,
+      sendOnSignIn: true,
+      autoSignInAfterVerification: true,
+      expiresIn: 60 * 60 * 24,
+      sendVerificationEmail: async ({ user, url }) => deliverLink("confirmation", user.email, url, sendVerificationEmail),
+    },
     socialProviders: { ...google, ...apple },
     databaseHooks: {
       user: { create: { after: async (user) => void (await trackEvent("signup", { userId: user.id })) } },
@@ -102,21 +146,7 @@ function createAuth() {
       magicLink({
         expiresIn: 15 * 60,
         storeToken: "hashed",
-        sendMagicLink: async ({ email, url }) => {
-          // Tests de bout en bout (build de production local) : le lien est déposé dans un fichier lu par Playwright.
-          const e2eDir = process.env.E2E_MAGIC_LINK_DIR;
-          if (e2eDir && isLocalE2E()) {
-            const { mkdir, writeFile } = await import("node:fs/promises");
-            await mkdir(e2eDir, { recursive: true });
-            await writeFile(`${e2eDir}/${encodeURIComponent(email)}.txt`, url);
-            return;
-          }
-          const sent = await sendMagicLink(email, url);
-          // Sans Brevo en développement, le lien s'affiche dans le terminal de `pnpm dev`.
-          if (!sent.ok && sent.reason === "not_configured" && process.env.NODE_ENV !== "production")
-            console.info(`[auth] lien de connexion pour ${email} : ${url}`);
-          else if (!sent.ok) throw new Error("Envoi du lien de connexion impossible.");
-        },
+        sendMagicLink: async ({ email, url }) => deliverLink("lien de connexion", email, url, sendMagicLink),
       }),
       // Toujours en dernier : pose les cookies de session depuis les actions serveur.
       nextCookies(),

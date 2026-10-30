@@ -7,10 +7,13 @@ import {
   AssociationReceivedEmail,
   AssociationRejectedEmail,
   HouseholdInvitationEmail,
+  ContactMessageEmail,
   MagicLinkEmail,
+  PasswordResetEmail,
   PaymentFailedEmail,
   StatementEmail,
   TrialEndingEmail,
+  VerifyEmail,
   WelcomeEmail,
 } from "@/emails/templates";
 import { type Email, sendEmail, type SendResult } from "@/server/email";
@@ -49,6 +52,36 @@ async function build(
 /** Lien magique de connexion (Better Auth). */
 export async function sendMagicLink(to: string, url: string): Promise<SendResult> {
   return sendEmail(await build(to, "Ton lien de connexion à Fin Prêt", createElement(MagicLinkEmail, { url })));
+}
+
+/** Confirmation de l'adresse à l'inscription par mot de passe (Better Auth). */
+export async function sendVerificationEmail(to: string, url: string): Promise<SendResult> {
+  return sendEmail(await build(to, "Confirme ton adresse Fin Prêt", createElement(VerifyEmail, { url })));
+}
+
+/** Réinitialisation du mot de passe (Better Auth). */
+export async function sendPasswordReset(to: string, url: string): Promise<SendResult> {
+  return sendEmail(
+    await build(to, "Choisis un nouveau mot de passe Fin Prêt", createElement(PasswordResetEmail, { url })),
+  );
+}
+
+export type ContactMessage = {
+  name: string;
+  email: string;
+  audience: string;
+  subject: string;
+  message: string;
+  details: string[];
+};
+
+/** Message du formulaire de contact : à l'équipe (CONTACT_EMAIL), réponse directe à la personne (Reply-To). */
+export async function sendContactMessage(to: string, input: ContactMessage): Promise<SendResult> {
+  return sendEmail(
+    await build(to, `[Contact] ${input.subject}`, createElement(ContactMessageEmail, input), {
+      replyTo: input.email,
+    }),
+  );
 }
 
 export async function sendHouseholdInvitation(

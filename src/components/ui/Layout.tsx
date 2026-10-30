@@ -72,15 +72,29 @@ const callouts = {
 } as const satisfies Record<string, { cls: string; icon: IconName; role: "status" | "alert" }>;
 
 /** Message en ligne : information, succès, avertissement ou erreur (annoncé aux lecteurs d'écran). */
-export function Callout({ tone = "info", children }: { tone?: keyof typeof callouts; children: ReactNode }) {
+export function Callout({
+  tone = "info",
+  icon,
+  title,
+  children,
+}: {
+  tone?: keyof typeof callouts;
+  /** Remplace l'icône du ton. */
+  icon?: IconName;
+  title?: ReactNode;
+  children: ReactNode;
+}) {
   const c = callouts[tone];
   return (
-    <p role={c.role} className={`callout text-sm font-bold ${c.cls}`}>
+    <div role={c.role} className={`callout text-sm font-bold ${c.cls}`}>
       <span className="callout-ic">
-        <Icon name={c.icon} />
+        <Icon name={icon ?? c.icon} />
       </span>
-      <span>{children}</span>
-    </p>
+      <span>
+        {title && <strong className="t-ui mb-1 block">{title}</strong>}
+        {children}
+      </span>
+    </div>
   );
 }
 
@@ -90,6 +104,7 @@ const statTones = {
   blue: "tone-blue",
   yellow: "tone-banane",
   green: "tone-green",
+  session: "tone-session",
 };
 
 /** Chiffre clé : valeur en grand, libellé et détail. */

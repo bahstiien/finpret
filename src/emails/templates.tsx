@@ -295,6 +295,63 @@ export function MagicLinkEmail({ url }: { url: string }) {
   );
 }
 
+export function VerifyEmail({ url }: { url: string }) {
+  return (
+    <Layout preview="Confirme ton adresse e-mail pour finir ton inscription" badge="INSCRIPTION" title="Confirme ton adresse">
+      <Text style={p}>
+        Encore un pas : confirme ton adresse e-mail pour ouvrir ton compte Fin Prêt. Le lien est valable 24 heures.
+      </Text>
+      <Cta href={url}>Confirmer mon adresse</Cta>
+      <Text style={small}>Tu n&apos;as pas créé de compte ? Ignore cet e-mail, rien ne sera ouvert.</Text>
+    </Layout>
+  );
+}
+
+export function PasswordResetEmail({ url }: { url: string }) {
+  return (
+    <Layout preview="Choisis un nouveau mot de passe pour Fin Prêt" badge="MOT DE PASSE" title="Un nouveau mot de passe">
+      <Text style={p}>
+        Tu as demandé à changer ton mot de passe. Le lien est valable 1 heure et ne sert qu&apos;une fois.
+      </Text>
+      <Cta href={url}>Choisir un mot de passe</Cta>
+      <Text style={small}>
+        Tu n&apos;as rien demandé ? Ignore cet e-mail : ton mot de passe actuel reste valable.
+      </Text>
+    </Layout>
+  );
+}
+
+/** Message du formulaire de contact, adressé à l'équipe (pas à la personne qui écrit). */
+export function ContactMessageEmail({
+  name,
+  email,
+  audience,
+  subject,
+  message,
+  details,
+}: {
+  name: string;
+  email: string;
+  audience: string;
+  subject: string;
+  message: string;
+  details: string[];
+}) {
+  return (
+    <Layout preview={`${subject} · ${name}`} badge="CONTACT" title={subject}>
+      <Text style={p}>
+        {name} ({audience}) · {email}
+      </Text>
+      {details.map((line) => (
+        <Text key={line} style={small}>
+          {line}
+        </Text>
+      ))}
+      <Text style={{ ...p, whiteSpace: "pre-wrap" }}>{message}</Text>
+    </Layout>
+  );
+}
+
 export function HouseholdInvitationEmail({ householdName, url }: { householdName: string; url: string }) {
   return (
     <Layout

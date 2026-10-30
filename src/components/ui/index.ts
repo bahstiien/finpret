@@ -1,7 +1,7 @@
 /** Design system Fin Prêt : point d'entrée des composants d'interface (voir docs/DESIGN_SYSTEM.md). */
 export { Button, LinkButton, IconButton, buttonClass } from "./Button";
 export type { ButtonVariant, ButtonSize } from "./Button";
-export { Card, CenteredPage, Logo } from "./Card";
+export { Card, CenteredPage, Logo, MealFrieze } from "./Card";
 export type { CardTone } from "./Card";
 export { Pill, Badge } from "./Pill";
 export type { PillTone } from "./Pill";
@@ -20,7 +20,7 @@ export {
   Skeleton,
 } from "./Layout";
 export { Segmented } from "./Segmented";
-export { TextField, SelectField, FormMessage } from "./Field";
+export { TextField, TextArea, SelectField, FormMessage } from "./Field";
 export { Toggle, Stepper, ChipToggle, SlotGrid } from "./Controls";
 export { Sticker, Difficulty, Dot, TextLink, Checkbox, Bento, Breadcrumbs, Faq, Coachmark } from "./Extras";
 export { Sheet } from "./Sheet";

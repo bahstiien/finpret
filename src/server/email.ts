@@ -8,6 +8,8 @@ export type Email = {
   attachments?: { filename: string; content: Buffer }[];
   /** Lien de désinscription en un clic : obligatoire sur tout e-mail non transactionnel (SPEC_JANVIER §8). */
   unsubscribeUrl?: string;
+  /** Adresse de réponse (formulaire de contact : l'équipe répond à la personne). */
+  replyTo?: string;
 };
 
 export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "failed" };
@@ -33,6 +35,7 @@ export async function sendEmail(email: Email, fetchImpl: typeof fetch = fetch): 
       sender: parseSender(from),
       to: (Array.isArray(email.to) ? email.to : [email.to]).map((address) => ({ email: address })),
       subject: email.subject,
+      replyTo: email.replyTo ? { email: email.replyTo } : undefined,
       htmlContent: email.html,
       textContent: email.text,
       attachment: email.attachments?.map((a) => ({

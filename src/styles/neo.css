@@ -282,3 +282,7 @@
 .pill.tone-yellow{background:var(--yellow);color:var(--on-fill)}.pill.tone-blue{background:var(--blue);color:var(--on-fill)}
 .pill.tone-pink{background:var(--pink);color:var(--on-fill)}.pill.tone-peach{background:var(--peach);color:var(--on-fill)}
 .pill.tone-green{background:var(--green);color:var(--on-fill)}
+
+/* Frise de repas (écrans de connexion et de contact) : une case par repas, aux couleurs des domaines. */
+.frieze{display:inline-flex;gap:3px}
+.frieze > span{width:var(--frieze-size,14px);height:var(--frieze-size,14px);border:var(--bw) solid var(--line);border-radius:var(--r1)}
