@@ -112,7 +112,7 @@ function createAuth() {
             return;
           }
           const sent = await sendMagicLink(email, url);
-          // Sans Resend en développement, le lien s'affiche dans le terminal de `pnpm dev`.
+          // Sans Brevo en développement, le lien s'affiche dans le terminal de `pnpm dev`.
           if (!sent.ok && sent.reason === "not_configured" && process.env.NODE_ENV !== "production")
             console.info(`[auth] lien de connexion pour ${email} : ${url}`);
           else if (!sent.ok) throw new Error("Envoi du lien de connexion impossible.");

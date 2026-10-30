@@ -8,7 +8,7 @@ Détail des services et commandes : `deploy/README.md` ; sauvegarde et restaurat
 | Où | Quoi |
 | --- | --- |
 | Google Cloud | ID client OAuth « Application Web », URI de redirection `https://finpret.app/api/auth/callback/google` → `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
-| Resend | domaine `finpret.app` vérifié (SPF, DKIM) → `RESEND_API_KEY`, `EMAIL_FROM` (les liens de connexion partent par Resend) |
+| Brevo | domaine `finpret.app` authentifié (SPF, DKIM, DMARC), expéditeur de `EMAIL_FROM` validé → clé API v3 `BREVO_API_KEY`, `EMAIL_FROM` (les liens de connexion partent par Brevo) |
 | Stripe | `pnpm stripe:setup` en mode réel, webhook `https://finpret.app/api/stripe/webhook` (événements listés dans `src/server/stripe-webhook.ts`) → `STRIPE_*` |
 | Surveillance | un contrôle « sauvegarde » (ex. healthchecks.io) → `BACKUP_PING_URL` ; un stockage hors du VPS pour `rclone` → `BACKUP_REMOTE` |
 | GitHub | secrets `VPS_*` et variables `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `NEXT_PUBLIC_SENTRY_DSN` (`deploy/README.md`) ; plus aucun secret Supabase |
@@ -19,7 +19,7 @@ Détail des services et commandes : `deploy/README.md` ; sauvegarde et restaurat
 2. `~/finpret/.env` d'après `deploy/compose.env.example` (deux mots de passe `openssl rand -hex 32`).
 3. `~/finpret/.env.production` d'après `.env.example`, valeurs de **production** :
    `APP_URL=https://finpret.app`, `BETTER_AUTH_SECRET` (`openssl rand -base64 32`, à ne jamais changer : il chiffre les clés TOTP),
-   `CRON_SECRET`, `IBAN_ENCRYPTION_KEY`, `UNSUBSCRIBE_SECRET`, Google, Resend, Stripe, VAPID, Sentry, `ANTHROPIC_API_KEY`, `ALERT_EMAIL`, `COMPANY_*`.
+   `CRON_SECRET`, `IBAN_ENCRYPTION_KEY`, `UNSUBSCRIBE_SECRET`, Google, Brevo, Stripe, VAPID, Sentry, `ANTHROPIC_API_KEY`, `ALERT_EMAIL`, `COMPANY_*`.
    `DATABASE_URL` et `FILES_DIR` sont fixés par `docker-compose.yml` : ne pas les mettre ici.
 4. `chmod 600 .env .env.production backup.env`.
 
@@ -55,7 +55,7 @@ Lancer une fois `backup.sh` à la main et vérifier le fichier produit et sa cop
 
 ## 6. Recette de mise en service
 
-- [ ] Connexion par lien magique (e-mail reçu de Resend) et par Google.
+- [ ] Connexion par lien magique (e-mail reçu de Brevo) et par Google.
 - [ ] Onboarding complet : foyer, menu de la semaine, liste de courses.
 - [ ] Courses partagées : deux appareils du foyer, une coche visible chez l'autre en moins de 2 s (flux `/api/realtime` à travers Caddy).
 - [ ] Session : démarrage, minuteur, fin de session et série.

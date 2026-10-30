@@ -18,7 +18,7 @@ pnpm seed                         # importe seed/*.json (catalogue) ; --dry-run 
 pnpm dev                          # http://localhost:3000
 ```
 
-Connexion en local : sans `RESEND_API_KEY`, le lien de connexion s'affiche dans le terminal de `pnpm dev`.
+Connexion en local : sans `BREVO_API_KEY`, le lien de connexion s'affiche dans le terminal de `pnpm dev`.
 Google se configure dans Google Cloud (URI de redirection `<APP_URL>/api/auth/callback/google`), voir `.env.example`.
 
 En CI (GitHub Actions), une base `postgres:18` jetable reçoit les migrations et le catalogue, puis les tests de bout en bout tournent sur un build de production.
@@ -59,4 +59,4 @@ Les icônes PWA provisoires sont générées par `node scripts/generate-icons.mj
 3. Planificateur : `GET /api/cron/notify` toutes les 15 minutes, `GET /api/cron/streak-close` toutes les heures, avec l'en-tête `Authorization: Bearer <CRON_SECRET>`. Sur le VPS, la crontab appelle `deploy/cron.sh` (lignes dans `docs/MISE_EN_SERVICE.md`).
    Les envois sont idempotents (une ligne par compte, type et jour dans `notification_log`) : un double passage n'envoie rien de plus. `?at=<date ISO>` rejoue un passage à une heure donnée.
    Après le déploiement initial, jouer une fois `pnpm backfill:progress` (`--dry-run` pour essayer sur une copie).
-4. E-mail de repli (facultatif) : `RESEND_API_KEY` et `EMAIL_FROM`. Sans clé, seuls les envois push partent.
+4. E-mail de repli (facultatif) : `BREVO_API_KEY` et `EMAIL_FROM`. Sans clé, seuls les envois push partent.
