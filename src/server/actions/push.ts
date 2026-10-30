@@ -2,12 +2,11 @@
 
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
+import { json } from "@/server/db";
 import type { ActionResult } from "@/server/errors";
 import { deliver, payloadFor } from "@/server/notify";
 import { sendWebPush, subscriptionsOf, vapidConfigured } from "@/server/notify-deps";
-import { requireUser } from "@/server/session";
+import { requireUser, withSession } from "@/server/session";
 
 /** Abonnement Web Push de l'appareil courant (§12) et notification de test (critère de M9). */
 
@@ -20,37 +19,43 @@ export async function savePushSubscription(sub: unknown, userAgent: string): Pro
   const user = await requireUser("/settings/profile");
   const parsed = subscriptionSchema.safeParse(sub);
   if (!parsed.success) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
-  // Un même navigateur peut changer de compte : l'ancien abonnement de cet appareil est remplacé.
-  await supabase.from("push_subscriptions").delete().eq("endpoint", parsed.data.endpoint);
-  const { error } = await supabase.from("push_subscriptions").insert({
-    user_id: user.id,
-    endpoint: parsed.data.endpoint,
-    keys: parsed.data.keys as Json,
-    user_agent: userAgent.slice(0, 200),
-  });
-  return error ? { ok: false, error: fr.errors.generic } : { ok: true, data: undefined };
+  try {
+    await withSession(async (db) => {
+      // Un même navigateur peut changer de compte : l'ancien abonnement de cet appareil est remplacé.
+      await db.deleteFrom("push_subscriptions").where("endpoint", "=", parsed.data.endpoint).execute();
+      await db
+        .insertInto("push_subscriptions")
+        .values({
+          user_id: user.id,
+          endpoint: parsed.data.endpoint,
+          keys: json(parsed.data.keys),
+          user_agent: userAgent.slice(0, 200),
+        })
+        .execute();
+    });
+  } catch {
+    return { ok: false, error: fr.errors.generic };
+  }
+  return { ok: true, data: undefined };
 }
 
 export async function removePushSubscription(endpoint: string): Promise<ActionResult> {
   await requireUser("/settings/profile");
-  const supabase = await createClient();
-  await supabase.from("push_subscriptions").delete().eq("endpoint", endpoint);
+  await withSession((db) => db.deleteFrom("push_subscriptions").where("endpoint", "=", endpoint).execute());
   return { ok: true, data: undefined };
 }
 
 /** Envoie une notification de test sur tous les appareils abonnés du compte. */
 export async function sendTestNotification(): Promise<ActionResult<{ message: string }>> {
   const user = await requireUser("/settings/profile");
-  const supabase = await createClient();
   if (!vapidConfigured()) return { ok: false, error: fr.settings.profile.pushNotConfigured };
   const payload = payloadFor("test", null, new Date().toISOString().slice(0, 10));
   const { push } = await deliver(
     {
-      subscriptions: (id) => subscriptionsOf(supabase, id),
+      subscriptions: (id) => withSession((db) => subscriptionsOf(db, id)),
       sendPush: sendWebPush,
       removeSubscription: async (id) => {
-        await supabase.from("push_subscriptions").delete().eq("id", id);
+        await withSession((db) => db.deleteFrom("push_subscriptions").where("id", "=", id).execute());
       },
       // Pas d'e-mail pour un test.
       emailOf: async () => null,

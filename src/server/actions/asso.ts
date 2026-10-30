@@ -7,7 +7,6 @@ import { z } from "zod";
 import { codeFromName, isValidCode, normalizeCode, withSuffix } from "@/lib/association-code";
 import { todayIn } from "@/lib/dates";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
 import { requireManager, requireAssociation } from "@/server/asso-session";
 import { MAX_PDF_BYTES, menusFromText, pdfText } from "@/server/canteen-import";
 import { notifyCanteenPublished } from "@/server/canteen-notify";
@@ -16,8 +15,13 @@ import { type ActionResult, toUserMessage } from "@/server/errors";
 import { sendAssociationReceived } from "@/server/emails";
 import { trackEvent } from "@/server/events";
 import { encryptIban, ibanLast4, normalizeIban } from "@/server/iban";
-import { requireUser } from "@/server/session";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireUser, withSession } from "@/server/session";
+import { rpc, withAdmin } from "@/server/db";
+
+/** Code et message d'une erreur levée par `pg`. */
+function pgError(e: unknown): { code?: string; message?: string } {
+  return e && typeof e === "object" ? (e as { code?: string; message?: string }) : {};
+}
 
 const t = fr.asso;
 
@@ -77,18 +81,24 @@ export async function createAssociationAction(_prev: SignupState, formData: Form
     schools: schoolsFrom(formData),
   });
   if (!parsed.success) return { error: t.signup.errors.invalid };
-  const supabase = await createClient();
   const base = codeFromName(parsed.data.name);
   for (let n = 1; n <= 10; n++) {
     const code = n === 1 ? base : withSuffix(base, n);
-    const { error } = await supabase.rpc("create_association", {
-      p_name: parsed.data.name,
-      p_rna: parsed.data.rna,
-      p_email: parsed.data.email,
-      p_manager: parsed.data.manager,
-      p_code: code,
-      p_schools: parsed.data.schools,
-    });
+    let error: { code?: string; message?: string } | null = null;
+    try {
+      await withSession((db) =>
+        rpc<string>(db, "create_association", {
+          p_name: parsed.data.name,
+          p_rna: parsed.data.rna,
+          p_email: parsed.data.email,
+          p_manager: parsed.data.manager,
+          p_code: code,
+          p_schools: parsed.data.schools,
+        }),
+      );
+    } catch (e) {
+      error = pgError(e);
+    }
     if (!error) {
       await trackEvent("asso_signup_started", { userId: user.id, props: { stage: "created" } });
       await sendAssociationReceived(parsed.data.email, parsed.data.name).catch(() => null);
@@ -115,13 +125,17 @@ export async function updateCodeAction(_prev: SimpleState, formData: FormData): 
   const code = normalizeCode(String(formData.get("code") ?? ""));
   if (!isValidCode(code)) return { error: t.dashboard.codeErrors.invalid };
   if (association.codeChanged) return { error: t.dashboard.codeErrors.already };
-  const supabase = await createClient();
-  const { error } = await supabase.from("associations").update({ code }).eq("id", association.id);
-  if (error?.code === "23505") return { error: t.dashboard.codeErrors.taken };
-  if (error)
+  try {
+    await withSession((db) =>
+      db.updateTable("associations").set({ code }).where("id", "=", association.id).execute(),
+    );
+  } catch (e) {
+    const error = pgError(e);
+    if (error.code === "23505") return { error: t.dashboard.codeErrors.taken };
     return {
-      error: error.message === "code_already_changed" ? t.dashboard.codeErrors.already : toUserMessage(error),
+      error: error.message === "code_already_changed" ? t.dashboard.codeErrors.already : toUserMessage(e),
     };
+  }
   revalidatePath("/asso", "layout");
   return { ok: t.dashboard.codeChanged };
 }
@@ -133,27 +147,33 @@ export async function inviteEditorAction(_prev: SimpleState, formData: FormData)
     .max(254)
     .safeParse(String(formData.get("email") ?? "").trim());
   if (!email.success) return { error: t.team.errors.invalid };
-  const supabase = await createClient();
-  const [editors, pending] = await Promise.all([
-    supabase
-      .from("association_members")
-      .select("user_id", { count: "exact", head: true })
-      .eq("association_id", association.id)
-      .eq("role", "menu_editor"),
-    supabase
-      .from("association_invitations")
-      .select("id", { count: "exact", head: true })
-      .eq("association_id", association.id)
-      .is("accepted_at", null)
-      .gt("expires_at", new Date().toISOString()),
-  ]);
-  if ((editors.count ?? 0) + (pending.count ?? 0) >= 3) return { error: t.team.limit };
-  const { data, error } = await supabase
-    .from("association_invitations")
-    .insert({ association_id: association.id, email: email.data })
-    .select("token")
-    .single();
-  if (error) return { error: t.team.errors.generic };
+  let data: { token: string } | null;
+  try {
+    data = await withSession(async (db) => {
+      const editors = await db
+        .selectFrom("association_members")
+        .select((eb) => eb.fn.countAll<number>().as("n"))
+        .where("association_id", "=", association.id)
+        .where("role", "=", "menu_editor")
+        .executeTakeFirst();
+      const pending = await db
+        .selectFrom("association_invitations")
+        .select((eb) => eb.fn.countAll<number>().as("n"))
+        .where("association_id", "=", association.id)
+        .where("accepted_at", "is", null)
+        .where("expires_at", ">", new Date().toISOString())
+        .executeTakeFirst();
+      if (Number(editors?.n ?? 0) + Number(pending?.n ?? 0) >= 3) return null;
+      return db
+        .insertInto("association_invitations")
+        .values({ association_id: association.id, email: email.data })
+        .returning("token")
+        .executeTakeFirstOrThrow();
+    });
+  } catch {
+    return { error: t.team.errors.generic };
+  }
+  if (!data) return { error: t.team.limit };
   revalidatePath("/asso/equipe");
   const host = (await headers()).get("host");
   const proto = process.env.NODE_ENV === "production" ? "https" : "http";
@@ -164,9 +184,11 @@ export async function revokeEditorInvitation(formData: FormData): Promise<Action
   await requireManager();
   const id = z.uuid().safeParse(formData.get("invitationId"));
   if (!id.success) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
-  const { error } = await supabase.from("association_invitations").delete().eq("id", id.data);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) => db.deleteFrom("association_invitations").where("id", "=", id.data).execute());
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/asso/equipe");
   return { ok: true, data: undefined };
 }
@@ -175,14 +197,18 @@ export async function removeEditor(formData: FormData): Promise<ActionResult> {
   const association = await requireManager();
   const userId = z.uuid().safeParse(formData.get("userId"));
   if (!userId.success) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("association_members")
-    .delete()
-    .eq("association_id", association.id)
-    .eq("user_id", userId.data)
-    .eq("role", "menu_editor");
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) =>
+      db
+        .deleteFrom("association_members")
+        .where("association_id", "=", association.id)
+        .where("user_id", "=", userId.data)
+        .where("role", "=", "menu_editor")
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/asso/equipe");
   return { ok: true, data: undefined };
 }
@@ -192,9 +218,13 @@ export async function acceptEditorInvitation(formData: FormData) {
   await requireUser("/asso");
   const token = z.string().min(10).max(100).safeParse(formData.get("token"));
   if (!token.success) redirect("/asso");
-  const supabase = await createClient();
-  const { error } = await supabase.rpc("accept_association_invitation", { p_token: token.data });
-  if (error) redirect(`/asso/invitation/${token.data}?error=${encodeURIComponent(error.message)}`);
+  let failure: string | null = null;
+  try {
+    await withSession((db) => rpc<string>(db, "accept_association_invitation", { p_token: token.data }));
+  } catch (e) {
+    failure = pgError(e).message ?? "";
+  }
+  if (failure !== null) redirect(`/asso/invitation/${token.data}?error=${encodeURIComponent(failure)}`);
   revalidatePath("/asso", "layout");
   redirect("/asso/menus");
 }
@@ -229,13 +259,14 @@ export type MenuState = { error?: string; ok?: string };
 
 /** L'école appartient à l'association du compte (la RLS le garantit aussi). */
 async function schoolOf(associationId: string, schoolId: string) {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("association_schools")
-    .select("school_id")
-    .eq("association_id", associationId)
-    .eq("school_id", schoolId)
-    .maybeSingle();
+  const data = await withSession((db) =>
+    db
+      .selectFrom("association_schools")
+      .select("school_id")
+      .where("association_id", "=", associationId)
+      .where("school_id", "=", schoolId)
+      .executeTakeFirst(),
+  );
   return !!data;
 }
 
@@ -261,18 +292,21 @@ export async function importSchoolMenusPdf(_prev: MenuState, formData: FormData)
   const found = await menusFromText(text, todayIn("Europe/Paris"));
   if (!found.length) return { error: t.menus.importNone };
 
-  const supabase = await createClient();
-  const { data: existing } = await supabase
-    .from("school_menus")
-    .select("date, status, association_id")
-    .eq("school_id", schoolId.data)
-    .in(
-      "date",
-      found.map((m) => m.date),
-    );
+  const existing = await withSession((db) =>
+    db
+      .selectFrom("school_menus")
+      .select(["date", "status", "association_id"])
+      .where("school_id", "=", schoolId.data)
+      .where(
+        "date",
+        "in",
+        found.map((m) => m.date),
+      )
+      .execute(),
+  );
   // Un menu déjà publié, ou saisi par une autre association, n'est pas écrasé par un import.
   const locked = new Set(
-    (existing ?? [])
+    existing
       .filter((e) => e.status === "published" || e.association_id !== association.id)
       .map((e) => e.date),
   );
@@ -286,8 +320,23 @@ export async function importSchoolMenusPdf(_prev: MenuState, formData: FormData)
       status: "draft" as const,
     }));
   if (!rows.length) return { error: t.menus.importNone };
-  const { error } = await supabase.from("school_menus").upsert(rows, { onConflict: "school_id,date" });
-  if (error) return { error: t.menus.errors.generic };
+  try {
+    await withSession((db) =>
+      db
+        .insertInto("school_menus")
+        .values(rows)
+        .onConflict((oc) =>
+          oc.columns(["school_id", "date"]).doUpdateSet((eb) => ({
+            association_id: eb.ref("excluded.association_id"),
+            main: eb.ref("excluded.main"),
+            status: eb.ref("excluded.status"),
+          })),
+        )
+        .execute(),
+    );
+  } catch {
+    return { error: t.menus.errors.generic };
+  }
   revalidatePath("/asso/menus");
   return { ok: t.menus.importDone(rows.length) };
 }
@@ -306,28 +355,34 @@ export async function saveSchoolMenu(_prev: MenuState, formData: FormData): Prom
   if (!parsed.success) return { error: t.menus.errors.date };
   const m = parsed.data;
   if (!(await schoolOf(association.id, m.schoolId))) return { error: t.menus.errors.forbidden };
-  const supabase = await createClient();
 
   if (intent === "delete") {
-    const { error } = await supabase
-      .from("school_menus")
-      .delete()
-      .eq("school_id", m.schoolId)
-      .eq("date", m.date)
-      .eq("association_id", association.id);
-    if (error) return { error: t.menus.errors.generic };
+    try {
+      await withSession((db) =>
+        db
+          .deleteFrom("school_menus")
+          .where("school_id", "=", m.schoolId)
+          .where("date", "=", m.date)
+          .where("association_id", "=", association.id)
+          .execute(),
+      );
+    } catch {
+      return { error: t.menus.errors.generic };
+    }
     revalidateMenus();
     return { ok: t.menus.remove };
   }
   if (![m.starter, m.main, m.side, m.dairy, m.dessert, m.note].some(Boolean))
     return { error: t.menus.errors.empty };
 
-  const { data: existing } = await supabase
-    .from("school_menus")
-    .select("id, status, association_id")
-    .eq("school_id", m.schoolId)
-    .eq("date", m.date)
-    .maybeSingle();
+  const existing = await withSession((db) =>
+    db
+      .selectFrom("school_menus")
+      .select(["id", "status", "association_id"])
+      .where("school_id", "=", m.schoolId)
+      .where("date", "=", m.date)
+      .executeTakeFirst(),
+  );
   if (existing && existing.association_id !== association.id) return { error: t.menus.errors.forbidden };
 
   const fields = {
@@ -339,15 +394,23 @@ export async function saveSchoolMenu(_prev: MenuState, formData: FormData): Prom
     note: m.note,
   };
   const status = intent === "publish" || existing?.status === "published" ? "published" : "draft";
-  const { error } = existing
-    ? await supabase
-        .from("school_menus")
-        .update({ ...fields, status })
-        .eq("id", existing.id)
-    : await supabase
-        .from("school_menus")
-        .insert({ school_id: m.schoolId, association_id: association.id, date: m.date, ...fields, status });
-  if (error) return { error: t.menus.errors.generic };
+  try {
+    await withSession(async (db) => {
+      if (existing)
+        await db
+          .updateTable("school_menus")
+          .set({ ...fields, status })
+          .where("id", "=", existing.id)
+          .execute();
+      else
+        await db
+          .insertInto("school_menus")
+          .values({ school_id: m.schoolId, association_id: association.id, date: m.date, ...fields, status })
+          .execute();
+    });
+  } catch {
+    return { error: t.menus.errors.generic };
+  }
   if (intent === "publish" && existing?.status !== "published") {
     const host = (await headers()).get("host");
     await notifyCanteenPublished(m.schoolId, [m.date], `https://${host}`);
@@ -363,16 +426,22 @@ export async function publishAllDrafts(_prev: MenuState, formData: FormData): Pr
   const schoolId = z.uuid().safeParse(formData.get("schoolId"));
   if (!schoolId.success || !(await schoolOf(association.id, schoolId.data)))
     return { error: t.menus.errors.forbidden };
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("school_menus")
-    .update({ status: "published" })
-    .eq("school_id", schoolId.data)
-    .eq("association_id", association.id)
-    .eq("status", "draft")
-    .select("date");
-  if (error) return { error: t.menus.errors.generic };
-  const dates = (data ?? []).map((d) => d.date);
+  let data: { date: string }[];
+  try {
+    data = await withSession((db) =>
+      db
+        .updateTable("school_menus")
+        .set({ status: "published" })
+        .where("school_id", "=", schoolId.data)
+        .where("association_id", "=", association.id)
+        .where("status", "=", "draft")
+        .returning("date")
+        .execute(),
+    );
+  } catch {
+    return { error: t.menus.errors.generic };
+  }
+  const dates = data.map((d) => d.date);
   if (dates.length) {
     const host = (await headers()).get("host");
     await notifyCanteenPublished(schoolId.data, dates, `https://${host}`);
@@ -391,11 +460,17 @@ export async function saveIbanAction(_prev: SimpleState, formData: FormData): Pr
   const iban = normalizeIban(String(formData.get("iban") ?? ""));
   if (!iban) return { error: t.statements.ibanInvalid };
   // Colonnes verrouillées pour les comptes : écriture par la clé de service, après contrôle du responsable.
-  const { error } = await createAdminClient()
-    .from("associations")
-    .update({ iban_encrypted: encryptIban(iban), iban_last4: ibanLast4(iban) })
-    .eq("id", association.id);
-  if (error) return { error: t.statements.ibanFailed };
+  try {
+    await withAdmin((db) =>
+      db
+        .updateTable("associations")
+        .set({ iban_encrypted: encryptIban(iban), iban_last4: ibanLast4(iban) })
+        .where("id", "=", association.id)
+        .execute(),
+    );
+  } catch {
+    return { error: t.statements.ibanFailed };
+  }
   revalidatePath("/asso/releves");
   return { ok: t.statements.ibanSaved };
 }

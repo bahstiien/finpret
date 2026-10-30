@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { notificationsSchema } from "@/lib/settings";
-import type { Json } from "@/lib/supabase/database.types";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { json, withAdmin } from "@/server/db";
 import { verifyUnsubscribeToken } from "@/server/emails";
 
 export const dynamic = "force-dynamic";
@@ -15,13 +14,19 @@ async function unsubscribe(request: Request) {
   if (!/^[0-9a-f-]{36}$/.test(userId) || !token || !verifyUnsubscribeToken(userId, token)) {
     return NextResponse.json({ error: "token" }, { status: 400 });
   }
-  const db = createAdminClient();
-  const { data } = await db.from("user_settings").select("notifications").eq("user_id", userId).maybeSingle();
-  const prefs = notificationsSchema.parse(data?.notifications ?? {});
-  await db
-    .from("user_settings")
-    .update({ notifications: { ...prefs, marketingEmails: false } as unknown as Json })
-    .eq("user_id", userId);
+  await withAdmin(async (db) => {
+    const data = await db
+      .selectFrom("user_settings")
+      .select("notifications")
+      .where("user_id", "=", userId)
+      .executeTakeFirst();
+    const prefs = notificationsSchema.parse(data?.notifications ?? {});
+    await db
+      .updateTable("user_settings")
+      .set({ notifications: json({ ...prefs, marketingEmails: false }) })
+      .where("user_id", "=", userId)
+      .execute();
+  });
   return null;
 }
 

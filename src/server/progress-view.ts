@@ -1,4 +1,5 @@
 import "server-only";
+import { sql } from "kysely";
 import { hasBatch } from "@/engine/cooks";
 import { countryLabel, seasonCounts, type CookRecord } from "@/engine/passport";
 import {
@@ -19,9 +20,9 @@ import {
 import { fr } from "@/i18n/fr";
 import { addDays, mondayOf, todayIn } from "@/lib/dates";
 import { notificationsSchema } from "@/lib/settings";
-import { createClient } from "@/lib/supabase/server";
 import { milestoneMeals } from "@/server/progress-share";
 import { loadHouseholdContext } from "@/server/household-context";
+import { withSession } from "@/server/session";
 
 export type PauseOption = { weekStart: string; planned: boolean; disabled: boolean };
 export type PendingAchievement = { kind: "streak" | "country" | "season"; key: string; label: string };
@@ -53,48 +54,64 @@ export async function loadProgressView(
   options: { passport?: boolean } = {},
 ): Promise<ProgressView> {
   const withPassport = options.passport ?? true;
-  const supabase = await createClient();
   const ctx = await loadHouseholdContext(householdId);
   const today = todayIn(ctx.timezone);
   const active = activeWeekStart(today);
 
-  const [settings, streakRows, achievementRows, cookRows, catalogRows, weekRow] = await Promise.all([
-    supabase.from("user_settings").select("notifications").eq("user_id", userId).maybeSingle(),
-    supabase
-      .from("streak_weeks")
-      .select("week_start, outcome, source, closed_at")
-      .eq("household_id", householdId),
-    supabase.from("achievements").select("kind, key, seen_at").eq("household_id", householdId),
-    withPassport
-      ? supabase
-          .from("recipe_cooks")
-          .select("recipe_id, kind, cooked_on, recipes(origin, months, household_id, sv:data->sv)")
-          .eq("household_id", householdId)
-      : Promise.resolve({ data: [] as never[] }),
-    withPassport
-      ? supabase
-          .from("recipes")
-          .select("id, name, origin, kind")
-          .is("household_id", null)
-          .eq("is_active", true)
-      : Promise.resolve({ data: [] as never[] }),
-    supabase
-      .from("weeks")
-      .select("plan")
-      .eq("household_id", householdId)
-      .eq("start_date", active)
-      .maybeSingle(),
-  ]);
+  const [settings, streakRows, achievements, cooks, catalogRows, weekRow] = await withSession((db) =>
+    Promise.all([
+      db.selectFrom("user_settings").select("notifications").where("user_id", "=", userId).executeTakeFirst(),
+      db
+        .selectFrom("streak_weeks")
+        .select(["week_start", "outcome", "source", "closed_at"])
+        .where("household_id", "=", householdId)
+        .execute(),
+      db
+        .selectFrom("achievements")
+        .select(["kind", "key", "seen_at"])
+        .where("household_id", "=", householdId)
+        .execute(),
+      withPassport
+        ? db
+            .selectFrom("recipe_cooks")
+            .innerJoin("recipes", "recipes.id", "recipe_cooks.recipe_id")
+            .select([
+              "recipe_cooks.recipe_id",
+              "recipe_cooks.kind",
+              "recipe_cooks.cooked_on",
+              "recipes.origin",
+              "recipes.months",
+              "recipes.household_id",
+              sql<{ m: number[] }[] | null>`recipes.data->'sv'`.as("sv"),
+            ])
+            .where("recipe_cooks.household_id", "=", householdId)
+            .execute()
+        : Promise.resolve([]),
+      withPassport
+        ? db
+            .selectFrom("recipes")
+            .select(["id", "name", "origin", "kind"])
+            .where("household_id", "is", null)
+            .where("is_active", "=", true)
+            .execute()
+        : Promise.resolve([]),
+      db
+        .selectFrom("weeks")
+        .select("plan")
+        .where("household_id", "=", householdId)
+        .where("start_date", "=", active)
+        .executeTakeFirst(),
+    ]),
+  );
 
-  const history = (streakRows.data ?? []).map((w) => ({
+  const history = streakRows.map((w) => ({
     weekStart: w.week_start,
     outcome: w.outcome,
     ...(w.source ? { source: w.source } : {}),
   }));
   const currentRow = history.find((w) => w.weekStart === active);
   const closed = history.filter((w) => w.weekStart < active);
-  const achievements = achievementRows.data ?? [];
-  const plan = weekRow.data?.plan as unknown as Parameters<typeof hasBatch>[0] | undefined;
+  const plan = weekRow?.plan as unknown as Parameters<typeof hasBatch>[0] | undefined;
   const state = computeStreak(
     closed,
     {
@@ -118,27 +135,15 @@ export async function loadProgressView(
     };
   });
 
-  const cooks = cookRows.data ?? [];
-  const records = cooks.flatMap((c): CookRecord[] => {
-    const r = c.recipes as unknown as {
-      origin: string | null;
-      months: number[] | null;
-      household_id: string | null;
-      sv: { m: number[] }[] | null;
-    } | null;
-    if (!r) return [];
-    return [
-      {
-        recipeId: c.recipe_id,
-        cookedOn: c.cooked_on,
-        kind: c.kind,
-        origin: r.origin,
-        isGlobal: r.household_id === null,
-        ...(r.months ? { months: r.months } : {}),
-        ...(r.sv ? { variantMonths: r.sv.map((v) => v.m) } : {}),
-      },
-    ];
-  });
+  const records = cooks.map((c): CookRecord => ({
+    recipeId: c.recipe_id,
+    cookedOn: c.cooked_on,
+    kind: c.kind,
+    origin: c.origin,
+    isGlobal: c.household_id === null,
+    ...(c.months ? { months: c.months } : {}),
+    ...(c.sv ? { variantMonths: c.sv.map((v) => v.m) } : {}),
+  }));
   const globalCooks = records
     .filter((r) => r.isGlobal)
     .map((r) => ({ recipeId: r.recipeId, cookedOn: r.cookedOn }));
@@ -153,7 +158,7 @@ export async function loadProgressView(
     }));
 
   return {
-    visible: notificationsSchema.parse(settings.data?.notifications ?? {}).progress_visible,
+    visible: notificationsSchema.parse(settings?.notifications ?? {}).progress_visible,
     today,
     streak: {
       ...state,
@@ -162,7 +167,7 @@ export async function loadProgressView(
       hasHistory: history.some((w) => w.outcome === "done"),
     },
     countries: buildCountries(
-      (catalogRows.data ?? []).map((r) => ({
+      catalogRows.map((r) => ({
         id: r.id,
         name: r.name ?? r.id,
         origin: r.origin,
@@ -182,13 +187,18 @@ export type Celebrations = {
 
 /** Tampons et palier jamais célébrés (une seule feuille par tampon, `achievements.seen_at`). Rien si masqué. */
 export async function loadCelebrations(householdId: string, userId: string): Promise<Celebrations | null> {
-  const supabase = await createClient();
-  const [settings, rows] = await Promise.all([
-    supabase.from("user_settings").select("notifications").eq("user_id", userId).maybeSingle(),
-    supabase.from("achievements").select("kind, key").eq("household_id", householdId).is("seen_at", null),
-  ]);
-  if (!notificationsSchema.parse(settings.data?.notifications ?? {}).progress_visible) return null;
-  const pending = rows.data ?? [];
+  const [settings, pending] = await withSession((db) =>
+    Promise.all([
+      db.selectFrom("user_settings").select("notifications").where("user_id", "=", userId).executeTakeFirst(),
+      db
+        .selectFrom("achievements")
+        .select(["kind", "key"])
+        .where("household_id", "=", householdId)
+        .where("seen_at", "is", null)
+        .execute(),
+    ]),
+  );
+  if (!notificationsSchema.parse(settings?.notifications ?? {}).progress_visible) return null;
   if (pending.length === 0) return null;
   const milestones = pending.filter((a) => a.kind === "streak").map((a) => Number(a.key));
   const top = milestones.length ? Math.max(...milestones) : null;

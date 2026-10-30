@@ -3,7 +3,7 @@ import { trialReminderDue } from "@/engine/trial";
 import { fr } from "@/i18n/fr";
 import { notificationsSchema } from "@/lib/settings";
 import { todayIn } from "@/lib/dates";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { withAdmin } from "@/server/db";
 import { sendTrialEnding } from "@/server/emails";
 import { deliver, type Payload } from "@/server/notify";
 import { createNotifyDeps } from "@/server/notify-deps";
@@ -17,36 +17,45 @@ export async function runTrialEnding(
   baseUrl: string,
   now = new Date(),
 ): Promise<{ due: number; sent: number }> {
-  const db = createAdminClient();
   const deps = createNotifyDeps(baseUrl);
   const summary = { due: 0, sent: 0 };
 
-  const { data: subs } = await db
-    .from("subscriptions")
-    .select("household_id, trial_ends_at")
-    .eq("plan", "trial")
-    .not("trial_ends_at", "is", null);
-  if (!subs?.length) return summary;
-  const { data: households } = await db
-    .from("households")
-    .select("id, timezone")
-    .in(
-      "id",
-      subs.map((s) => s.household_id),
-    );
-  const zone = new Map((households ?? []).map((h) => [h.id, h.timezone]));
+  const subs = await withAdmin((db) =>
+    db
+      .selectFrom("subscriptions")
+      .select(["household_id", "trial_ends_at"])
+      .where("plan", "=", "trial")
+      .where("trial_ends_at", "is not", null)
+      .execute(),
+  );
+  if (!subs.length) return summary;
+  const households = await withAdmin((db) =>
+    db
+      .selectFrom("households")
+      .select(["id", "timezone"])
+      .where(
+        "id",
+        "in",
+        subs.map((s) => s.household_id),
+      )
+      .execute(),
+  );
+  const zone = new Map(households.map((h) => [h.id, h.timezone]));
 
   for (const sub of subs) {
     const tz = zone.get(sub.household_id) ?? "Europe/Paris";
     const days = sub.trial_ends_at ? trialReminderDue(sub.trial_ends_at, tz, now) : null;
     if (days === null) continue;
     const day = todayIn(tz, now);
-    const { data: admins } = await db
-      .from("memberships")
-      .select("user_id")
-      .eq("household_id", sub.household_id)
-      .eq("role", "admin");
-    for (const { user_id: userId } of admins ?? []) {
+    const admins = await withAdmin((db) =>
+      db
+        .selectFrom("memberships")
+        .select("user_id")
+        .where("household_id", "=", sub.household_id)
+        .where("role", "=", "admin")
+        .execute(),
+    );
+    for (const { user_id: userId } of admins) {
       summary.due++;
       const payload: Payload = {
         kind: "trial_ending",
@@ -56,11 +65,13 @@ export async function runTrialEnding(
         day,
       };
       if (!(await deps.claim(userId, "trial_ending", day, payload))) continue;
-      const { data: settings } = await db
-        .from("user_settings")
-        .select("notifications")
-        .eq("user_id", userId)
-        .maybeSingle();
+      const settings = await withAdmin((db) =>
+        db
+          .selectFrom("user_settings")
+          .select("notifications")
+          .where("user_id", "=", userId)
+          .executeTakeFirst(),
+      );
       const prefs = notificationsSchema.parse(settings?.notifications ?? {});
       if (prefs.consentAt && prefs.push) await deliver(deps, userId, { push: true, email: false }, payload);
       if (prefs.marketingEmails) {

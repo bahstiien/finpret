@@ -20,8 +20,7 @@ import { fr } from "@/i18n/fr";
 import { todayIn } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
 import { toMenuSettings } from "@/lib/settings";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
+import { json } from "@/server/db";
 import type { Feature } from "@/server/entitlements";
 import { loadOffer, swapsUsed } from "@/server/entitlements-load";
 import { can } from "@/server/entitlements";
@@ -29,7 +28,7 @@ import { type ActionResult, toUserMessage } from "@/server/errors";
 import { trackEvent } from "@/server/events";
 import { lockedFor, loadLockState } from "@/server/allocations";
 import { type HouseholdContext, loadHouseholdContext, portionModelFor } from "@/server/household-context";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { engineEnvFor, generateAndStore } from "@/server/weeks";
 
@@ -86,17 +85,22 @@ async function editWeek(
     const locked = lockedFor(before, await loadLockState(weekId));
     if (touched.some((uid) => locked.has(uid))) return { ok: false, error: t.locked };
   }
-  const supabase = await createClient();
-  // Écriture conditionnée à la version lue : un autre appareil qui a modifié le plan entre-temps n'est pas écrasé.
-  const update = supabase
-    .from("weeks")
-    .update({ plan: res.plan as unknown as Json, pasta_need: res.plan.pastaNeed })
-    .eq("id", weekId);
-  const { data: written, error } = await (
-    FEATURES.realPurchases ? update.eq("updated_at", row.updated_at) : update
-  ).select("id");
-  if (error) return { ok: false, error: toUserMessage(error) };
-  if (!written?.length) return { ok: false, error: t.conflict };
+  let written: { id: string }[];
+  try {
+    written = await withSession((db) => {
+      // Écriture conditionnée à la version lue : un autre appareil qui a modifié le plan entre-temps n'est pas écrasé.
+      const update = db
+        .updateTable("weeks")
+        .set({ plan: json(res.plan), pasta_need: res.plan.pastaNeed })
+        .where("id", "=", weekId);
+      return (FEATURES.realPurchases ? update.where("updated_at", "=", row.updated_at) : update)
+        .returning("id")
+        .execute();
+    });
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
+  if (!written.length) return { ok: false, error: t.conflict };
   await syncShoppingItems(ctx, env, { id: weekId, plan: res.plan });
   if (feature === "menu.swap") {
     await trackEvent("menu_swap", { userId: user.id, householdId: household.id, props: { week: weekId } });
@@ -268,26 +272,34 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
   const k = `${d}-${m}`;
   const inWeek = !!slotMap(env, row.plan)[k];
   const on = inWeek && !row.plan.removed.includes(k);
-  const supabase = await createClient();
-  // Structure mémorisée pour les semaines suivantes (réglage du foyer, modifiable par l'administrateur).
-  if (household.role === "admin") {
-    const skip = on
-      ? [...new Set([...ctx.settings.menu.skip, k])]
-      : ctx.settings.menu.skip.filter((x) => x !== k);
-    await supabase
-      .from("household_settings")
-      .update({ menu: { ...ctx.settings.menu, skip } as unknown as Json })
-      .eq("household_id", household.id);
+  try {
+    await withSession(async (db) => {
+      // Structure mémorisée pour les semaines suivantes (réglage du foyer, modifiable par l'administrateur).
+      if (household.role === "admin") {
+        const skip = on
+          ? [...new Set([...ctx.settings.menu.skip, k])]
+          : ctx.settings.menu.skip.filter((x) => x !== k);
+        await db
+          .updateTable("household_settings")
+          .set({ menu: json({ ...ctx.settings.menu, skip }) })
+          .where("household_id", "=", household.id)
+          .execute();
+      }
+      if (on || inWeek) {
+        const plan = on
+          ? { ...row.plan, removed: [...new Set([...row.plan.removed, k])] }
+          : { ...row.plan, removed: row.plan.removed.filter((x) => x !== k) };
+        await db
+          .updateTable("weeks")
+          .set({ plan: json(plan) })
+          .where("id", "=", weekId)
+          .execute();
+      }
+    });
+  } catch (e) {
+    return { ok: false as const, error: toUserMessage(e) };
   }
   if (on || inWeek) {
-    const plan = on
-      ? { ...row.plan, removed: [...new Set([...row.plan.removed, k])] }
-      : { ...row.plan, removed: row.plan.removed.filter((x) => x !== k) };
-    const { error } = await supabase
-      .from("weeks")
-      .update({ plan: plan as unknown as Json })
-      .eq("id", weekId);
-    if (error) return { ok: false as const, error: toUserMessage(error) };
     revalidatePath("/app", "layout");
     return { ok: true as const, data: { message: on ? t.slotOff(slotLabel(k)) : t.slotOn(slotLabel(k)) } };
   }
@@ -305,13 +317,25 @@ export async function rateAction(weekId: string | null, recipeId: string, value:
   if (household.role === "viewer") return { ok: false as const, error: fr.errors.forbidden };
   if (![1, -1].includes(value) || !recipeId) return { ok: false as const, error: fr.errors.generic };
   const ctx = await loadHouseholdContext(household.id);
-  const supabase = await createClient();
   const current = ctx.ratings[recipeId];
-  const { error } =
-    current === value
-      ? await supabase.from("ratings").delete().eq("household_id", household.id).eq("recipe_id", recipeId)
-      : await supabase.from("ratings").upsert({ household_id: household.id, recipe_id: recipeId, value });
-  if (error) return { ok: false as const, error: toUserMessage(error) };
+  try {
+    await withSession(async (db) => {
+      if (current === value)
+        await db
+          .deleteFrom("ratings")
+          .where("household_id", "=", household.id)
+          .where("recipe_id", "=", recipeId)
+          .execute();
+      else
+        await db
+          .insertInto("ratings")
+          .values({ household_id: household.id, recipe_id: recipeId, value })
+          .onConflict((oc) => oc.columns(["household_id", "recipe_id"]).doUpdateSet({ value }))
+          .execute();
+    });
+  } catch (e) {
+    return { ok: false as const, error: toUserMessage(e) };
+  }
   revalidatePath("/app", "layout");
   if (current === value) return { ok: true as const, data: { message: t.ratingCleared } };
   if (value === 1) return { ok: true as const, data: { message: t.liked } };

@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { alertWebhookFailure } from "@/server/alerts";
+import { withAdmin } from "@/server/db";
 import { sendPaymentFailed } from "@/server/emails";
 import { stripeClient, stripeConfig } from "@/server/stripe";
 import { handleStripeEvent, type StripeEventLike } from "@/server/stripe-webhook";
@@ -39,21 +39,23 @@ export async function POST(request: Request) {
         (like.data.object as Record<string, unknown>).charge_invoice = invoice ?? null;
       }
     }
-    const result = await handleStripeEvent(createAdminClient(), like, cfg, {
-      // E-mail aux administrateurs du foyer : leur carte a été refusée.
-      paymentFailed: async (householdId) => {
-        const db = createAdminClient();
-        const { data: admins } = await db
-          .from("memberships")
-          .select("user_id")
-          .eq("household_id", householdId)
-          .eq("role", "admin");
-        for (const a of admins ?? []) {
-          const email = await emailOf(a.user_id);
-          if (email) await sendPaymentFailed(email);
-        }
-      },
-    });
+    const result = await withAdmin((db) =>
+      handleStripeEvent(db, like, cfg, {
+        // E-mail aux administrateurs du foyer : leur carte a été refusée.
+        paymentFailed: async (householdId) => {
+          const admins = await db
+            .selectFrom("memberships")
+            .select("user_id")
+            .where("household_id", "=", householdId)
+            .where("role", "=", "admin")
+            .execute();
+          for (const a of admins) {
+            const email = await emailOf(a.user_id);
+            if (email) await sendPaymentFailed(email);
+          }
+        },
+      }),
+    );
     return NextResponse.json({ received: true, result });
   } catch (error) {
     Sentry.captureException(error);

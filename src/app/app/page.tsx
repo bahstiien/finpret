@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { type CanteenEntry, MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
 import { canteenDays, duplicateGroups } from "@/engine/canteen";
 import { isRemoved, slotMap } from "@/engine/week";
-import { createClient } from "@/lib/supabase/server";
 import { StreakTile } from "@/components/progress/StreakTile";
 import { loadProgressView } from "@/server/progress-view";
 import { NoWeek } from "@/components/menu/NoWeek";
@@ -15,7 +14,7 @@ import { loadHouseholdContext, portionModelFor } from "@/server/household-contex
 import { buildMenuView, canPrepareNext, flagOf } from "@/server/menu-view";
 import { householdCan } from "@/server/entitlements-load";
 import { schoolMenusFor } from "@/server/school-canteen";
-import { getProfile, getUser, requireHousehold } from "@/server/session";
+import { getProfile, getUser, requireHousehold, withSession } from "@/server/session";
 import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.nav.menu };
@@ -111,19 +110,22 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
           canAlert && ctx.settings.canteen.alert ? duplicateGroups(env.lib, m.text, dinnerOf(m.date)) : [],
       });
     }
-    const supabase = await createClient();
-    const { data: menus } = FEATURES.householdCanteen
-      ? await supabase
-          .from("canteen_menus")
-          .select("member_id, date, text")
-          .eq("validated", true)
-          .in(
-            "member_id",
-            kids.map((k) => k.id),
-          )
-          .in("date", dates)
-      : { data: [] };
-    for (const m of menus ?? []) {
+    const menus = FEATURES.householdCanteen
+      ? await withSession((db) =>
+          db
+            .selectFrom("canteen_menus")
+            .select(["member_id", "date", "text"])
+            .where("validated", "=", true)
+            .where(
+              "member_id",
+              "in",
+              kids.map((k) => k.id),
+            )
+            .where("date", "in", dates)
+            .execute(),
+        )
+      : [];
+    for (const m of menus) {
       const kid = kids.find((k) => k.id === m.member_id)!;
       if (covered.has(`${kid.id}:${m.date}`)) continue;
       const day = dates.indexOf(m.date) + 1;

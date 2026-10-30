@@ -6,8 +6,7 @@ import { AppFrame } from "@/components/ui/AppFrame";
 import { ToastProvider } from "@/components/ui/Toast";
 import { loadCelebrations } from "@/server/progress-view";
 import { loadHouseholdContext } from "@/server/household-context";
-import { requireHousehold } from "@/server/session";
-import { createClient } from "@/lib/supabase/server";
+import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext } from "@/server/weeks";
 
 /** Onglets de l'application (§10) : il faut une session, un foyer configuré, et la navigation. */
@@ -17,21 +16,24 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!ctx.onboardedAt && household.role === "admin") redirect("/onboarding");
   const { current, next } = currentAndNext(ctx);
   const week = next ?? current;
-  const supabase = await createClient();
-  const { count } = week
-    ? await supabase
-        .from("shopping_items")
-        .select("id", { count: "exact", head: true })
-        .eq("week_id", week.id)
-        .eq("checked", false)
-    : { count: 0 };
-  const { data: session } = week
-    ? await supabase
-        .from("sessions")
-        .select("week_id, started_at, current_step, tasks_done, timers, updated_at")
-        .eq("week_id", week.id)
-        .maybeSingle()
-    : { data: null };
+  const { count, session } = week
+    ? await withSession(async (db) => ({
+        count: (
+          await db
+            .selectFrom("shopping_items")
+            .select((eb) => eb.fn.countAll<number>().as("n"))
+            .where("week_id", "=", week.id)
+            .where("checked", "=", false)
+            .executeTakeFirstOrThrow()
+        ).n,
+        session:
+          (await db
+            .selectFrom("sessions")
+            .select(["week_id", "started_at", "current_step", "tasks_done", "timers", "updated_at"])
+            .where("week_id", "=", week.id)
+            .executeTakeFirst()) ?? null,
+      }))
+    : { count: 0, session: null };
   const celebrations = await loadCelebrations(household.id, user.id);
   return (
     <ToastProvider>

@@ -1,19 +1,17 @@
 import "server-only";
 import { notFound, redirect } from "next/navigation";
-import type { Json } from "@/lib/supabase/database.types";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
-import { getAuthSession, requireUser } from "@/server/session";
+import { json, rpc, withAdmin } from "@/server/db";
+import type { Json } from "@/server/db.types";
+import { getAuthSession, requireUser, withSession } from "@/server/session";
 
 /** Compte administrateur, second facteur validé ou non pour cette session (page d'activation TOTP). */
 export async function requireAdminIdentity() {
   const user = await requireUser("/admin");
-  const supabase = await createClient();
-  const { data: isAdmin } = await supabase.rpc("is_admin");
+  const isAdmin = await withSession((db) => rpc<boolean>(db, "is_admin"));
   // Le back-office n'existe pas pour les autres comptes.
   if (!isAdmin) notFound();
   const session = (await getAuthSession())!.session;
-  return { user, supabase, sessionId: session.id, mfaVerified: Boolean(session.mfaVerifiedAt) };
+  return { user, sessionId: session.id, mfaVerified: Boolean(session.mfaVerifiedAt) };
 }
 
 /**
@@ -23,7 +21,7 @@ export async function requireAdminIdentity() {
 export async function requireAdmin() {
   const { user, mfaVerified } = await requireAdminIdentity();
   if (!mfaVerified) redirect("/admin/mfa");
-  return { user, db: createAdminClient() };
+  return { user };
 }
 
 /** Toute action d'écriture du back-office est journalisée dans `admin_audit`. */
@@ -33,5 +31,10 @@ export async function audit(
   target: string | null,
   props: Record<string, Json> = {},
 ) {
-  await createAdminClient().from("admin_audit").insert({ admin_id: adminId, action, target, props });
+  await withAdmin((db) =>
+    db
+      .insertInto("admin_audit")
+      .values({ admin_id: adminId, action, target, props: json(props) })
+      .execute(),
+  );
 }

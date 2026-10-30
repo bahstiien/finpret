@@ -10,9 +10,12 @@ create extension if not exists pgcrypto with schema extensions;
 do $$
 begin
   execute format('alter database %I set search_path = "$user", public, extensions', current_database());
+  -- Comme Supabase : dates et heures calculées en UTC (current_date, now()::date…), quel que soit le serveur.
+  execute format('alter database %I set timezone = %L', current_database(), 'UTC');
 end
 $$;
 set search_path = "$user", public, extensions;
+set timezone = 'UTC';
 
 -- Rôles sans connexion ; le rôle de connexion de l'application en devient membre (deploy/README.md).
 do $$

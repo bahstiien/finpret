@@ -2,10 +2,9 @@ import { ImageResponse } from "next/og";
 import { type NextRequest, NextResponse } from "next/server";
 import { isMilestone } from "@/engine/streak";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
 import { trackEvent } from "@/server/events";
 import { milestoneMeals } from "@/server/progress-share";
-import { getActiveHousehold, getUser } from "@/server/session";
+import { getActiveHousehold, getUser, withSession } from "@/server/session";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -28,13 +27,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "milestone" }, { status: 400 });
   }
   // Le foyer doit avoir atteint ce palier (ou un palier supérieur) : lecture avec la RLS.
-  const supabase = await createClient();
-  const { data: reached } = await supabase
-    .from("achievements")
-    .select("key")
-    .eq("household_id", household.id)
-    .eq("kind", "streak");
-  if (!(reached ?? []).some((a) => Number(a.key) >= milestone)) {
+  const reached = await withSession((db) =>
+    db
+      .selectFrom("achievements")
+      .select("key")
+      .where("household_id", "=", household.id)
+      .where("kind", "=", "streak")
+      .execute(),
+  );
+  if (!reached.some((a) => Number(a.key) >= milestone)) {
     return NextResponse.json({ error: "not_reached" }, { status: 403 });
   }
 

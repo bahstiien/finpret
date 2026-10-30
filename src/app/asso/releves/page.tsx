@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IbanForm } from "@/components/asso/IbanForm";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
+import { withSession } from "@/server/session";
 import { requireManager } from "@/server/asso-session";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
@@ -15,12 +15,14 @@ const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR
 /** Relevés trimestriels de reversement (lecture par le responsable). */
 export default async function StatementsPage() {
   const association = await requireManager();
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("payouts")
-    .select("id, quarter, amount_cents, status, statement_path")
-    .eq("association_id", association.id)
-    .order("quarter", { ascending: false });
+  const data = await withSession((db) =>
+    db
+      .selectFrom("payouts")
+      .select(["id", "quarter", "amount_cents", "status", "statement_path"])
+      .where("association_id", "=", association.id)
+      .orderBy("quarter", "desc")
+      .execute(),
+  );
   return (
     <>
       <PageHeader title={t.title} />
@@ -33,9 +35,9 @@ export default async function StatementsPage() {
         </Card>
       )}
       <Card padding="cozy" aria-label={t.title}>
-        {!data?.length && <p className="text-muted">{t.none}</p>}
+        {!data.length && <p className="text-muted">{t.none}</p>}
         <ul className="flex flex-col divide-y divide-line">
-          {(data ?? []).map((p) => (
+          {data.map((p) => (
             <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
               <span>
                 <b>{p.quarter}</b> · {euros.format(p.amount_cents / 100)} · {t.statuses[p.status]}

@@ -3,9 +3,8 @@ import { SettingsNav } from "@/components/settings/SettingsNav";
 import { AppFrame } from "@/components/ui/AppFrame";
 import { fr } from "@/i18n/fr";
 import { ADMIN_SECTIONS, MEMBER_SECTIONS } from "@/lib/settings-sections";
-import { createClient } from "@/lib/supabase/server";
 import { loadHouseholdContext } from "@/server/household-context";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext } from "@/server/weeks";
 import { PageHeader } from "@/components/ui/Layout";
 
@@ -17,13 +16,15 @@ export default async function SettingsLayout({ children }: { children: React.Rea
   const week = next ?? current;
   let left = 0;
   if (week) {
-    const supabase = await createClient();
-    const { count } = await supabase
-      .from("shopping_items")
-      .select("id", { count: "exact", head: true })
-      .eq("week_id", week.id)
-      .eq("checked", false);
-    left = count ?? 0;
+    const { n } = await withSession((db) =>
+      db
+        .selectFrom("shopping_items")
+        .select((eb) => eb.fn.countAll<number>().as("n"))
+        .where("week_id", "=", week.id)
+        .where("checked", "=", false)
+        .executeTakeFirstOrThrow(),
+    );
+    left = Number(n);
   }
   return (
     <AppFrame shoppingLeft={left}>

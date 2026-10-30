@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { FEATURES } from "../../src/lib/features";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M8 (§8.5) : session complète, minuteurs persistants entre les onglets, état partagé.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 test("session complète, minuteurs persistants, état partagé entre appareils", async ({ browser }) => {

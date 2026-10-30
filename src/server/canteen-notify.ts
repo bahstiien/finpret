@@ -1,8 +1,8 @@
 import "server-only";
 import { isoWeekKey, mondayOf } from "@/lib/dates";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { notificationsSchema } from "@/lib/settings";
 import { fr } from "@/i18n/fr";
+import { withAdmin } from "@/server/db";
 import { deliver, type NotifyDeps, type Payload } from "@/server/notify";
 import { createNotifyDeps } from "@/server/notify-deps";
 
@@ -17,31 +17,48 @@ export async function notifyCanteenPublished(
   baseUrl: string,
   deps: NotifyDeps = createNotifyDeps(baseUrl),
 ): Promise<{ weeks: number; users: number }> {
-  const db = createAdminClient();
   const weeks = [...new Set(dates.map(mondayOf))];
   let users = 0;
   let sentWeeks = 0;
   for (const monday of weeks) {
     const week = isoWeekKey(monday);
-    const { error } = await db.from("canteen_notifications").insert({ school_id: schoolId, iso_week: week });
-    if (error) continue; // déjà notifiée pour cette école et cette semaine
+    try {
+      await withAdmin((db) =>
+        db.insertInto("canteen_notifications").values({ school_id: schoolId, iso_week: week }).execute(),
+      );
+    } catch {
+      continue; // déjà notifiée pour cette école et cette semaine
+    }
     sentWeeks++;
-    const { data: links } = await db.from("member_schools").select("member_id").eq("school_id", schoolId);
-    const memberIds = (links ?? []).map((l) => l.member_id);
-    if (!memberIds.length) continue;
-    const { data: members } = await db.from("members").select("household_id").in("id", memberIds);
-    const households = [...new Set((members ?? []).map((m) => m.household_id))];
-    if (!households.length) continue;
-    const { data: memberships } = await db
-      .from("memberships")
-      .select("user_id")
-      .in("household_id", households);
-    const userIds = [...new Set((memberships ?? []).map((m) => m.user_id))];
-    const { data: settings } = await db
-      .from("user_settings")
-      .select("user_id, notifications")
-      .in("user_id", userIds);
-    for (const s of settings ?? []) {
+    const settings = await withAdmin(async (db) => {
+      const links = await db
+        .selectFrom("member_schools")
+        .select("member_id")
+        .where("school_id", "=", schoolId)
+        .execute();
+      const memberIds = links.map((l) => l.member_id);
+      if (!memberIds.length) return [];
+      const members = await db
+        .selectFrom("members")
+        .select("household_id")
+        .where("id", "in", memberIds)
+        .execute();
+      const households = [...new Set(members.map((m) => m.household_id))];
+      if (!households.length) return [];
+      const memberships = await db
+        .selectFrom("memberships")
+        .select("user_id")
+        .where("household_id", "in", households)
+        .execute();
+      const userIds = [...new Set(memberships.map((m) => m.user_id))];
+      if (!userIds.length) return [];
+      return db
+        .selectFrom("user_settings")
+        .select(["user_id", "notifications"])
+        .where("user_id", "in", userIds)
+        .execute();
+    });
+    for (const s of settings) {
       const prefs = notificationsSchema.safeParse(s.notifications ?? {});
       if (!prefs.success || !prefs.data.consentAt || !(prefs.data.push || prefs.data.email)) continue;
       const payload: Payload = {

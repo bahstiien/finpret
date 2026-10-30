@@ -18,12 +18,11 @@ import { addDays, formatShort, isoWeekday, mondayOf, todayIn } from "@/lib/dates
 import { canteenDays } from "@/engine/canteen";
 import { notificationsSchema } from "@/lib/settings";
 import { ADMIN_SECTIONS, type SettingsSection } from "@/lib/settings-sections";
-import { createClient } from "@/lib/supabase/server";
 import { leaveHousehold, switchHousehold } from "@/server/actions/households";
 import { signOut } from "@/server/actions/auth";
 import { deleteAccount, deleteHousehold } from "@/server/actions/settings";
 import { loadHouseholdContext } from "@/server/household-context";
-import { getHouseholds, getProfile, requireHousehold } from "@/server/session";
+import { getHouseholds, getProfile, requireHousehold, withSession } from "@/server/session";
 import { buttonClass } from "@/components/ui/Button";
 
 const t = fr.settings;
@@ -46,51 +45,66 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
   // Réservé à l'administrateur, sauf la section Profil (§6).
   if (section !== "profile" && household.role !== "admin") redirect("/settings/profile");
   const ctx = await loadHouseholdContext(household.id);
-  const supabase = await createClient();
 
   switch (section) {
     case "household":
       redirect("/settings/household");
     case "diet": {
-      const { data } = await supabase
-        .from("ingredients")
-        .select("key, label")
-        .neq("aisle", "base")
-        .order("label");
-      return <DietForm initial={ctx.settings.diet} ingredients={data ?? []} />;
+      const data = await withSession((db) =>
+        db
+          .selectFrom("ingredients")
+          .select(["key", "label"])
+          .where("aisle", "!=", "base")
+          .orderBy("label")
+          .execute(),
+      );
+      return <DietForm initial={ctx.settings.diet} ingredients={data} />;
     }
     case "menu":
       return <MenuForm initial={ctx.settings.menu} />;
     case "session":
       return <SessionForm initial={ctx.settings.session} equipment={ctx.settings.equipment} />;
     case "shopping": {
-      const [aisles, base] = await Promise.all([
-        supabase.from("aisles").select("key, label").neq("key", "base").order("position"),
-        supabase.from("ingredients").select("key, label").eq("aisle", "base").order("label"),
-      ]);
-      return (
-        <ShoppingForm
-          initial={ctx.settings.shopping}
-          aisles={aisles.data ?? []}
-          baseIngredients={base.data ?? []}
-        />
-      );
+      const { aisles, base } = await withSession(async (db) => ({
+        aisles: await db
+          .selectFrom("aisles")
+          .select(["key", "label"])
+          .where("key", "!=", "base")
+          .orderBy("position")
+          .execute(),
+        base: await db
+          .selectFrom("ingredients")
+          .select(["key", "label"])
+          .where("aisle", "=", "base")
+          .orderBy("label")
+          .execute(),
+      }));
+      return <ShoppingForm initial={ctx.settings.shopping} aisles={aisles} baseIngredients={base} />;
     }
     case "canteen": {
       const today = todayIn(ctx.timezone);
       const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
-      const { data: menus } = kids.length
-        ? await supabase
-            .from("canteen_menus")
-            .select("member_id, date, text, validated")
-            .in(
-              "member_id",
-              kids.map((k) => k.id),
-            )
-            // Menus à venir, et tous les menus importés encore à valider.
-            .or(`and(date.gte.${today},date.lte.${addDays(today, 27)}),validated.eq.false`)
-            .order("date")
-        : { data: [] };
+      const menus = kids.length
+        ? await withSession((db) =>
+            db
+              .selectFrom("canteen_menus")
+              .select(["member_id", "date", "text", "validated"])
+              .where(
+                "member_id",
+                "in",
+                kids.map((k) => k.id),
+              )
+              // Menus à venir, et tous les menus importés encore à valider.
+              .where((eb) =>
+                eb.or([
+                  eb.and([eb("date", ">=", today), eb("date", "<=", addDays(today, 27))]),
+                  eb("validated", "=", false),
+                ]),
+              )
+              .orderBy("date")
+              .execute(),
+          )
+        : [];
       const isCanteenDay = (id: string, date: string) =>
         canteenDays(
           kids.find((k) => k.id === id)!,
@@ -99,7 +113,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
           ctx.alternatingFrom,
         ).includes(isoWeekday(date));
       const children: CanteenChild[] = kids.map((k) => {
-        const mine = (menus ?? []).filter((m) => m.member_id === k.id);
+        const mine = menus.filter((m) => m.member_id === k.id);
         const dates = Array.from({ length: 14 }, (_, i) => addDays(today, i)).filter((d) =>
           isCanteenDay(k.id, d),
         );
@@ -157,9 +171,15 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
       const [profile, households, userSettings] = await Promise.all([
         getProfile(),
         getHouseholds(),
-        supabase.from("user_settings").select("notifications").eq("user_id", user.id).maybeSingle(),
+        withSession((db) =>
+          db
+            .selectFrom("user_settings")
+            .select("notifications")
+            .where("user_id", "=", user.id)
+            .executeTakeFirst(),
+        ),
       ]);
-      const notifications = notificationsSchema.safeParse(userSettings.data?.notifications ?? {});
+      const notifications = notificationsSchema.safeParse(userSettings?.notifications ?? {});
       return (
         <>
           <Card className="flex flex-col gap-4">

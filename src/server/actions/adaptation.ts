@@ -18,15 +18,14 @@ import type { WeekPlan } from "@/engine/types";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { toMenuSettings } from "@/lib/settings";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
 import { type LockState, lockedFor, loadLockState, pantryForWeek } from "@/server/allocations";
+import { json, rpc } from "@/server/db";
 import { householdCan } from "@/server/entitlements-load";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { trackEvent } from "@/server/events";
 import { allow } from "@/server/rate-limit";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { engineEnvFor } from "@/server/weeks";
 
@@ -58,40 +57,52 @@ async function gather(householdId: string, weekId: string): Promise<Gathered | {
   const row = ctx.weeks.find((w) => w.id === weekId);
   if (!row) return { error: fr.menuActions.weekGone };
   const env = await engineEnvFor(ctx);
-  const supabase = await createClient();
 
   // Identités des préparations : posées une fois, avec la version de la semaine relue.
   let plan = row.plan;
   let weekVersion = row.updated_at;
   const withIds = ensureOccurrenceIds(plan, () => crypto.randomUUID());
-  if (JSON.stringify(withIds) !== JSON.stringify(plan)) {
-    const { data, error } = await supabase
-      .from("weeks")
-      .update({ plan: withIds as unknown as Json })
-      .eq("id", weekId)
-      .eq("updated_at", row.updated_at)
-      .select("updated_at")
-      .maybeSingle();
-    if (error) return { error: toUserMessage(error) };
-    if (!data) return { error: t.conflict };
-    plan = withIds;
-    weekVersion = data.updated_at;
+  let read;
+  try {
+    read = await withSession(async (db) => {
+      if (JSON.stringify(withIds) !== JSON.stringify(plan)) {
+        const data = await db
+          .updateTable("weeks")
+          .set({ plan: json(withIds) })
+          .where("id", "=", weekId)
+          .where("updated_at", "=", row.updated_at)
+          .returning("updated_at")
+          .executeTakeFirst();
+        if (!data) return null;
+        plan = withIds;
+        weekVersion = data.updated_at;
+      }
+      return {
+        events: await db
+          .selectFrom("purchase_events")
+          .select(["id", "week_id", "ingredient_key", "qty", "type", "op_key"])
+          .where("week_id", "=", weekId)
+          .orderBy("seq")
+          .execute(),
+        issueRows: await db
+          .selectFrom("shopping_issues")
+          .select(["ingredient_key", "decision"])
+          .where("week_id", "=", weekId)
+          .execute(),
+        confirmations: await db
+          .selectFrom("coverage_confirmations")
+          .select(["ingredient_key", "confirmed_need"])
+          .where("week_id", "=", weekId)
+          .execute(),
+      };
+    });
+  } catch (e) {
+    return { error: toUserMessage(e) };
   }
+  if (!read) return { error: t.conflict };
+  const { events, issueRows, confirmations } = read;
 
-  const [events, issueRows, confirmations] = await Promise.all([
-    supabase
-      .from("purchase_events")
-      .select("id, week_id, ingredient_key, qty, type, op_key")
-      .eq("week_id", weekId)
-      .order("seq"),
-    supabase.from("shopping_issues").select("ingredient_key, decision").eq("week_id", weekId),
-    supabase.from("coverage_confirmations").select("ingredient_key, confirmed_need").eq("week_id", weekId),
-  ]);
-  if (events.error) return { error: toUserMessage(events.error) };
-  if (issueRows.error) return { error: toUserMessage(issueRows.error) };
-  if (confirmations.error) return { error: toUserMessage(confirmations.error) };
-
-  const log: PurchaseEvent[] = (events.data ?? []).map((r) => ({
+  const log: PurchaseEvent[] = events.map((r) => ({
     id: r.id,
     weekId: r.week_id,
     ingredient: r.ingredient_key,
@@ -103,9 +114,7 @@ async function gather(householdId: string, weekId: string): Promise<Gathered | {
   for (const k of new Set(log.map((e) => e.ingredient))) purchases[k] = availableBalance(log, weekId, k);
 
   const shared = pantryForWeek(ctx, env, { id: weekId, start_date: row.start_date });
-  const confirmed = new Map(
-    (confirmations.data ?? []).map((c) => [c.ingredient_key, Number(c.confirmed_need)]),
-  );
+  const confirmed = new Map(confirmations.map((c) => [c.ingredient_key, Number(c.confirmed_need)]));
   const stock: Record<string, number> = {};
   for (const [k, v] of Object.entries(shared.pantry)) {
     // « Assez » ne vaut qu'à hauteur du besoin confirmé : jamais une quantité supposée (AC-12).
@@ -119,7 +128,7 @@ async function gather(householdId: string, weekId: string): Promise<Gathered | {
     purchases,
     stock,
     lock: await loadLockState(weekId),
-    issues: Object.fromEntries((issueRows.data ?? []).map((r) => [r.ingredient_key, r.decision])),
+    issues: Object.fromEntries(issueRows.map((r) => [r.ingredient_key, r.decision])),
     pantryJson: JSON.stringify(shared.pantry),
     ctx,
   };
@@ -234,21 +243,26 @@ export async function previewAdaptation(
     reused: p.reusedPurchases.map((e) => qty(e.ingredient, e.qty)),
     durationDelta: Math.round(p.durationDelta),
   }));
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("adaptation_previews")
-    .insert({
-      household_id: household.id,
-      week_id: parsed.data.weekId,
-      fingerprint: fingerprint(g, selected),
-      payload: {
-        selected,
-        proposals: result.proposals.map((p) => p.replacements),
-      } as unknown as Json,
-    })
-    .select("id")
-    .single();
-  if (error) return { ok: false, error: toUserMessage(error) };
+  let data: { id: string };
+  try {
+    data = await withSession((db) =>
+      db
+        .insertInto("adaptation_previews")
+        .values({
+          household_id: household.id,
+          week_id: parsed.data.weekId,
+          fingerprint: fingerprint(g, selected),
+          payload: json({
+            selected,
+            proposals: result.proposals.map((p) => p.replacements),
+          }),
+        })
+        .returning("id")
+        .executeTakeFirstOrThrow(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   await trackEvent(proposals.length ? "adaptation_previewed" : "adaptation_no_verified_candidate", {
     userId: user.id,
     householdId: household.id,
@@ -309,14 +323,19 @@ export async function commitAdaptation(
   if (!parsed.success) return { ok: false, error: t.invalid };
   const p = parsed.data;
 
-  const supabase = await createClient();
-  const { data: preview, error: pe } = await supabase
-    .from("adaptation_previews")
-    .select("id, week_id, payload, fingerprint, expires_at, used_at")
-    .eq("id", p.previewId)
-    .eq("household_id", household.id)
-    .maybeSingle();
-  if (pe) return { ok: false, error: toUserMessage(pe) };
+  let preview;
+  try {
+    preview = await withSession((db) =>
+      db
+        .selectFrom("adaptation_previews")
+        .select(["id", "week_id", "payload", "fingerprint", "expires_at", "used_at"])
+        .where("id", "=", p.previewId)
+        .where("household_id", "=", household.id)
+        .executeTakeFirst(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   if (!preview) return { ok: false, error: t.invalid };
   if (preview.used_at) return { ok: false, error: t.used };
   if (new Date(preview.expires_at) <= new Date()) return { ok: false, error: t.expired };
@@ -347,20 +366,25 @@ export async function commitAdaptation(
     return { uid: r.uid, kind: occ.kind, before: occ.recipeId, after: r.recipeId };
   });
 
-  const { data, error } = await supabase.rpc("commit_adaptation", {
-    p_preview: p.previewId,
-    p_op_key: p.opKey,
-    p_expected_week_version: g.weekVersion,
-    p_expected_purchase_revision: g.purchaseRevision,
-    p_fingerprint: fresh,
-    p_plan: plan as unknown as Json,
-    p_changes: changes as unknown as Json,
-  });
-  if (error) {
+  let data: { replayed: boolean };
+  try {
+    data = await withSession((db) =>
+      rpc<{ replayed: boolean }>(db, "commit_adaptation", {
+        p_preview: p.previewId,
+        p_op_key: p.opKey,
+        p_expected_week_version: g.weekVersion,
+        p_expected_purchase_revision: g.purchaseRevision,
+        p_fingerprint: fresh,
+        p_plan: plan,
+        p_changes: changes,
+      }),
+    );
+  } catch (e) {
+    const error = e as { code?: string; message?: string };
     if (error.message === "version_conflict") return conflict();
     return { ok: false, error: adaptationError(error) };
   }
-  if (!(data as { replayed: boolean }).replayed) {
+  if (!data.replayed) {
     await trackEvent("adaptation_committed", {
       userId: user.id,
       householdId: household.id,
@@ -388,14 +412,19 @@ export async function undoAdaptation(
   if (!(await householdCan(household.id, "purchases"))) return { ok: false, error: fr.errors.upgrade };
   const parsed = undoInput.safeParse(raw);
   if (!parsed.success) return { ok: false, error: t.invalid };
-  const supabase = await createClient();
-  const { data: ev, error: ee } = await supabase
-    .from("adaptation_events")
-    .select("id, week_id, changes, kind, undone_by")
-    .eq("id", parsed.data.eventId)
-    .eq("household_id", household.id)
-    .maybeSingle();
-  if (ee) return { ok: false, error: toUserMessage(ee) };
+  let ev;
+  try {
+    ev = await withSession((db) =>
+      db
+        .selectFrom("adaptation_events")
+        .select(["id", "week_id", "changes", "kind", "undone_by"])
+        .where("id", "=", parsed.data.eventId)
+        .where("household_id", "=", household.id)
+        .executeTakeFirst(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   if (!ev || ev.kind !== "apply" || ev.undone_by) return { ok: false, error: t.notRevertible };
 
   const g = await gather(household.id, ev.week_id);
@@ -415,15 +444,22 @@ export async function undoAdaptation(
   let plan: WeekPlan = g.plan;
   for (const c of changes) plan = applyReplacement(plan, { uid: c.uid, recipeId: c.before })!;
   const reverse = changes.map((c) => ({ uid: c.uid, kind: c.kind, before: c.after, after: c.before }));
-  const { data, error } = await supabase.rpc("undo_adaptation", {
-    p_event: ev.id,
-    p_op_key: parsed.data.opKey,
-    p_expected_week_version: g.weekVersion,
-    p_plan: plan as unknown as Json,
-    p_changes: reverse as unknown as Json,
-  });
-  if (error) return { ok: false, error: adaptationError(error) };
-  if (!(data as { replayed: boolean }).replayed) {
+  const eventId = ev.id;
+  let data: { replayed: boolean };
+  try {
+    data = await withSession((db) =>
+      rpc<{ replayed: boolean }>(db, "undo_adaptation", {
+        p_event: eventId,
+        p_op_key: parsed.data.opKey,
+        p_expected_week_version: g.weekVersion,
+        p_plan: plan,
+        p_changes: reverse,
+      }),
+    );
+  } catch (e) {
+    return { ok: false, error: adaptationError(e as { code?: string; message?: string }) };
+  }
+  if (!data.replayed) {
     await trackEvent("adaptation_undone", { userId: user.id, householdId: household.id });
     await syncShoppingItems(g.ctx, g.env, { id: ev.week_id, plan });
     revalidatePath("/app", "layout");

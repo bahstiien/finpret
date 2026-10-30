@@ -1,7 +1,7 @@
 // Importe seed/*.json dans la base (catalogue global), en une transaction.
 // Idempotent : met à jour l'existant, ajoute le nouveau, retire du catalogue global ce qui n'est plus dans le seed.
 // Ne touche jamais aux recettes privées des foyers (household_id non nul).
-// Usage : pnpm seed  (SUPABASE_DB_URL dans .env.local)   |   pnpm seed --dry-run
+// Usage : pnpm seed  (DATABASE_URL dans .env.local)   |   pnpm seed --dry-run
 import pg from "pg";
 import { buildCatalogRows, validateSeed } from "../src/engine/catalog";
 import { rawSeed } from "../src/engine/catalog/seed-files";
@@ -32,7 +32,7 @@ if (dryRun) {
 }
 
 loadEnvLocal();
-const connectionString = requireEnv("SUPABASE_DB_URL");
+const connectionString = requireEnv("DATABASE_URL");
 const client = new pg.Client({ connectionString, ssl: pgSsl(connectionString) });
 await client.connect();
 

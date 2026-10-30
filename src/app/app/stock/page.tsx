@@ -5,12 +5,11 @@ import { totals } from "@/engine/quantities";
 import { frozenTooLong, pantryStep, weeksSince } from "@/engine/stock";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
-import { createClient } from "@/lib/supabase/server";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { flagOf } from "@/server/menu-view";
 import { UpgradeCard } from "@/components/ui/UpgradeCard";
 import { householdCan } from "@/server/entitlements-load";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.nav.stock };
@@ -28,14 +27,16 @@ export default async function StockPage() {
     : {};
   const lib = env.lib;
 
-  const supabase = await createClient();
-  const { data: freezerRows } = await supabase
-    .from("freezer")
-    .select("id, recipe_id, portions, frozen_at")
-    .eq("household_id", household.id)
-    .order("frozen_at");
+  const freezerRows = await withSession((db) =>
+    db
+      .selectFrom("freezer")
+      .select(["id", "recipe_id", "portions", "frozen_at"])
+      .where("household_id", "=", household.id)
+      .orderBy("frozen_at")
+      .execute(),
+  );
   const recipeOf = (id: string) => env.mainById.get(id) ?? env.soupById.get(id) ?? null;
-  const freezer = (freezerRows ?? []).map((f) => {
+  const freezer = freezerRows.map((f) => {
     const r = recipeOf(f.recipe_id);
     return {
       id: f.id,

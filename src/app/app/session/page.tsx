@@ -7,9 +7,9 @@ import { buildSession } from "@/engine/session";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import { toEquipment } from "@/lib/settings";
-import { createClient } from "@/lib/supabase/server";
+import { rpcRows } from "@/server/db";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.nav.session };
@@ -45,8 +45,9 @@ export default async function SessionPage() {
   // Signature des étapes : si le menu change, les coches de la session repartent de zéro.
   const sig = session.steps.map((s) => `${s.name}@${s.start}`).join("|");
   if (household.role !== "viewer") {
-    const supabase = await createClient();
-    await supabase.rpc("session_ensure", { p_week: week.id, p_sig: sig });
+    await withSession((db) => rpcRows(db, "session_ensure", { p_week: week.id, p_sig: sig })).catch(
+      () => null,
+    );
   }
 
   return (

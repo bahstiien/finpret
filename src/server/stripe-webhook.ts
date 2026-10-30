@@ -1,7 +1,7 @@
 import "server-only";
 import { lineForInvoice, refundLine } from "@/engine/payouts";
-import type { Json } from "@/lib/supabase/database.types";
-import type { Db } from "@/lib/supabase/types";
+import { sql } from "kysely";
+import { type Db, json } from "@/server/db";
 import { trackEvent } from "@/server/events";
 import { planOfPrice, type StripeConfig } from "@/server/stripe";
 
@@ -56,11 +56,11 @@ async function householdOfCustomer(
 ): Promise<string | null> {
   if (hint) return hint;
   if (!customerId) return null;
-  const { data } = await db
-    .from("subscriptions")
+  const data = await db
+    .selectFrom("subscriptions")
     .select("household_id")
-    .eq("stripe_customer_id", customerId)
-    .maybeSingle();
+    .where("stripe_customer_id", "=", customerId)
+    .executeTakeFirst();
   return data?.household_id ?? null;
 }
 
@@ -74,18 +74,22 @@ export async function handleStripeEvent(
 ): Promise<WebhookResult> {
   if (!(HANDLED_EVENTS as readonly string[]).includes(event.type)) return "ignored";
 
-  const { error: insertError } = await db
-    .from("stripe_events")
-    .insert({ id: event.id, type: event.type, payload: event as unknown as Json });
-  if (insertError) {
-    if (insertError.code === "23505") return "duplicate";
-    throw new Error(`stripe_events : ${insertError.message}`);
-  }
+  const inserted = await db
+    .insertInto("stripe_events")
+    .values({ id: event.id, type: event.type, payload: json(event) })
+    .onConflict((oc) => oc.column("id").doNothing())
+    .returning("id")
+    .executeTakeFirst();
+  if (!inserted) return "duplicate";
+  // Point de reprise : une erreur SQL du traitement annule ses écritures sans bloquer la suite de la transaction.
+  await sql`savepoint stripe_event`.execute(db);
   try {
     await process(db, event, cfg, hooks);
+    await sql`release savepoint stripe_event`.execute(db);
     return "processed";
   } catch (error) {
-    await db.from("stripe_events").delete().eq("id", event.id);
+    await sql`rollback to savepoint stripe_event`.execute(db);
+    await db.deleteFrom("stripe_events").where("id", "=", event.id).execute();
     throw error;
   }
 }
@@ -97,13 +101,14 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       const householdId = str(obj.client_reference_id);
       if (!householdId) return;
       await db
-        .from("subscriptions")
-        .update({
+        .updateTable("subscriptions")
+        .set({
           stripe_customer_id: idOf(obj.customer),
           stripe_subscription_id: idOf(obj.subscription),
           updated_at: new Date().toISOString(),
         })
-        .eq("household_id", householdId);
+        .where("household_id", "=", householdId)
+        .execute();
       return;
     }
     case "customer.subscription.created":
@@ -118,14 +123,14 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       const active = ["active", "trialing", "past_due"].includes(status);
       const periodEnd =
         iso(obj.current_period_end) ?? iso(asObj(Array.isArray(items) ? items[0] : {}).current_period_end);
-      const { data: before } = await db
-        .from("subscriptions")
-        .select("plan, status")
-        .eq("household_id", householdId)
-        .maybeSingle();
+      const before = await db
+        .selectFrom("subscriptions")
+        .select(["plan", "status"])
+        .where("household_id", "=", householdId)
+        .executeTakeFirst();
       await db
-        .from("subscriptions")
-        .update({
+        .updateTable("subscriptions")
+        .set({
           stripe_customer_id: customerId,
           stripe_subscription_id: str(obj.id),
           plan: active && plan ? plan : active ? (before?.plan ?? "free") : "free",
@@ -133,7 +138,8 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
           current_period_end: periodEnd,
           updated_at: new Date().toISOString(),
         })
-        .eq("household_id", householdId);
+        .where("household_id", "=", householdId)
+        .execute();
       if (
         active &&
         plan &&
@@ -152,14 +158,15 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       if (!householdId) return;
       // Données conservées : seul le droit retombe à « gratuit ».
       await db
-        .from("subscriptions")
-        .update({
+        .updateTable("subscriptions")
+        .set({
           plan: "free",
           status: "canceled",
           current_period_end: null,
           updated_at: new Date().toISOString(),
         })
-        .eq("household_id", householdId);
+        .where("household_id", "=", householdId)
+        .execute();
       return;
     }
     case "invoice.paid": {
@@ -167,37 +174,42 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       // Foyer introuvable (facture arrivée avant la fin du paiement) : erreur, Stripe renverra l'événement.
       if (!householdId) throw new Error(`foyer introuvable pour la facture ${str(obj.id)}`);
       await db
-        .from("subscriptions")
-        .update({ status: "active", updated_at: new Date().toISOString() })
-        .eq("household_id", householdId);
-      const { data: household } = await db
-        .from("households")
+        .updateTable("subscriptions")
+        .set({ status: "active", updated_at: new Date().toISOString() })
+        .where("household_id", "=", householdId)
+        .execute();
+      const household = await db
+        .selectFrom("households")
         .select("association_id")
-        .eq("id", householdId)
-        .maybeSingle();
+        .where("id", "=", householdId)
+        .executeTakeFirst();
       const associationId = household?.association_id;
       const invoiceId = str(obj.id);
       if (!associationId || !invoiceId) return;
       const line = lineForInvoice(planOfPrice(invoicePriceId(obj), cfg), num(obj.amount_paid));
       if (!line) return;
-      const { error } = await db.from("payout_lines").insert({
-        association_id: associationId,
-        household_id: householdId,
-        stripe_invoice_id: invoiceId,
-        kind: line.kind,
-        amount_cents: line.amount,
-      });
       // Une facture ne compte qu'une fois (index unique) : un doublon est normal, pas une erreur.
-      if (error && error.code !== "23505") throw new Error(`payout_lines : ${error.message}`);
+      await db
+        .insertInto("payout_lines")
+        .values({
+          association_id: associationId,
+          household_id: householdId,
+          stripe_invoice_id: invoiceId,
+          kind: line.kind,
+          amount_cents: line.amount,
+        })
+        .onConflict((oc) => oc.doNothing())
+        .execute();
       return;
     }
     case "invoice.payment_failed": {
       const householdId = await householdOfCustomer(db, idOf(obj.customer), invoiceHint(obj));
       if (!householdId) throw new Error(`foyer introuvable pour la facture ${str(obj.id)}`);
       await db
-        .from("subscriptions")
-        .update({ status: "past_due", updated_at: new Date().toISOString() })
-        .eq("household_id", householdId);
+        .updateTable("subscriptions")
+        .set({ status: "past_due", updated_at: new Date().toISOString() })
+        .where("household_id", "=", householdId)
+        .execute();
       await hooks.paymentFailed?.(householdId);
       return;
     }
@@ -206,28 +218,31 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       // Facture du paiement : sur le charge, ou ajoutée par la route (`charge_invoice`) pour un litige.
       const invoiceId = idOf(obj.invoice) ?? str(obj.charge_invoice);
       if (!invoiceId) return;
-      const { data: counted } = await db
-        .from("payout_lines")
-        .select("association_id, household_id, amount_cents")
-        .eq("stripe_invoice_id", invoiceId)
-        .neq("kind", "refund")
-        .maybeSingle();
+      const counted = await db
+        .selectFrom("payout_lines")
+        .select(["association_id", "household_id", "amount_cents"])
+        .where("stripe_invoice_id", "=", invoiceId)
+        .where("kind", "<>", "refund")
+        .executeTakeFirst();
       if (!counted) return; // facture jamais comptée : rien à annuler
-      const { data: already } = await db
-        .from("payout_lines")
+      const already = await db
+        .selectFrom("payout_lines")
         .select("id")
-        .eq("stripe_invoice_id", invoiceId)
-        .eq("kind", "refund")
-        .maybeSingle();
+        .where("stripe_invoice_id", "=", invoiceId)
+        .where("kind", "=", "refund")
+        .executeTakeFirst();
       if (already) return;
       const r = refundLine(counted);
-      await db.from("payout_lines").insert({
-        association_id: counted.association_id,
-        household_id: counted.household_id,
-        stripe_invoice_id: invoiceId,
-        kind: r.kind,
-        amount_cents: r.amount,
-      });
+      await db
+        .insertInto("payout_lines")
+        .values({
+          association_id: counted.association_id,
+          household_id: counted.household_id,
+          stripe_invoice_id: invoiceId,
+          kind: r.kind,
+          amount_cents: r.amount,
+        })
+        .execute();
       return;
     }
   }

@@ -4,30 +4,37 @@ import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import { fr } from "@/i18n/fr";
 import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { onboardingDefaults } from "@/lib/onboarding";
-import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { approvedAssociation } from "@/server/associations";
-import { getActiveHousehold, getProfile, requireUser } from "@/server/session";
+import { getActiveHousehold, getProfile, requireUser, withSession } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.onboarding.title };
 
 /** Assistant en 5 étapes (§5) : pour un nouveau compte, ou un foyer créé mais pas encore paramétré. */
 export default async function OnboardingPage() {
   const user = await requireUser("/onboarding");
-  const supabase = await createClient();
   const household = await getActiveHousehold();
   if (household) {
-    const { data } = await supabase
-      .from("households")
-      .select("onboarded_at, name")
-      .eq("id", household.id)
-      .single();
+    const data = await withSession((db) =>
+      db
+        .selectFrom("households")
+        .select(["onboarded_at", "name"])
+        .where("id", "=", household.id)
+        .executeTakeFirst(),
+    );
     if (data?.onboarded_at || household.role !== "admin") redirect("/app");
   }
   const association = await approvedAssociation((await cookies()).get(ASSOCIATION_COOKIE)?.value);
   const [profile, ingredients] = await Promise.all([
     getProfile(),
-    supabase.from("ingredients").select("key, label").neq("aisle", "base").order("label"),
+    withSession((db) =>
+      db
+        .selectFrom("ingredients")
+        .select(["key", "label"])
+        .where("aisle", "!=", "base")
+        .orderBy("label")
+        .execute(),
+    ),
   ]);
   // Le nom par défaut du profil est la partie locale de l'e-mail : on ne le propose pas comme prénom.
   const displayName = profile?.display_name ?? "";
@@ -40,7 +47,7 @@ export default async function OnboardingPage() {
     <main>
       <OnboardingWizard
         initial={initial}
-        ingredients={ingredients.data ?? []}
+        ingredients={ingredients}
         schools={association?.schools ?? []}
         associationName={association?.name ?? null}
       />

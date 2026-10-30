@@ -1,6 +1,6 @@
 import "server-only";
 import { decidePayout, previousQuarter, quarterBounds } from "@/engine/payouts";
-import type { Db } from "@/lib/supabase/types";
+import type { Db } from "@/server/db";
 
 export type ClosingDeps = {
   /** Relevé d'un versement prêt : génère le PDF, le range dans Storage et renvoie son chemin. */
@@ -40,34 +40,34 @@ export async function closeQuarter(db: Db, quarter: string, deps: ClosingDeps): 
   const { end } = quarterBounds(quarter);
   const summary: ClosingSummary = { quarter, created: 0, ready: 0, carried: 0, skipped: 0 };
 
-  const { data } = await db
-    .from("payout_lines")
-    .select("id, association_id, kind, amount_cents, created_at")
-    .is("payout_id", null)
-    .lt("created_at", end);
-  const lines = (data ?? []) as Line[];
+  const lines: Line[] = await db
+    .selectFrom("payout_lines")
+    .select(["id", "association_id", "kind", "amount_cents", "created_at"])
+    .where("payout_id", "is", null)
+    .where("created_at", "<", end)
+    .execute();
   const byAssociation = new Map<string, Line[]>();
   for (const l of lines)
     byAssociation.set(l.association_id, [...(byAssociation.get(l.association_id) ?? []), l]);
 
   for (const [associationId, group] of byAssociation) {
-    const { data: existing } = await db
-      .from("payouts")
+    const existing = await db
+      .selectFrom("payouts")
       .select("id")
-      .eq("association_id", associationId)
-      .eq("quarter", quarter)
-      .maybeSingle();
+      .where("association_id", "=", associationId)
+      .where("quarter", "=", quarter)
+      .executeTakeFirst();
     if (existing) {
       summary.skipped++;
       continue;
     }
     const total = group.reduce((s, l) => s + l.amount_cents, 0);
     const decision = decidePayout(total);
-    const { data: association } = await db
-      .from("associations")
-      .select("name, email")
-      .eq("id", associationId)
-      .maybeSingle();
+    const association = await db
+      .selectFrom("associations")
+      .select(["name", "email"])
+      .where("id", "=", associationId)
+      .executeTakeFirst();
     const count = (kind: string) => group.filter((l) => l.kind === kind).length;
     const input: StatementInput = {
       associationId,
@@ -80,16 +80,16 @@ export async function closeQuarter(db: Db, quarter: string, deps: ClosingDeps): 
       refunds: count("refund"),
     };
 
-    const { error } = await db
-      .from("payouts")
-      .insert({ association_id: associationId, quarter, amount_cents: total, status: decision.status });
-    if (error) {
-      // Deux clôtures simultanées : l'unicité protège, l'autre passage a gagné.
-      if (error.code === "23505") {
-        summary.skipped++;
-        continue;
-      }
-      throw new Error(`payouts : ${error.message}`);
+    const payout = await db
+      .insertInto("payouts")
+      .values({ association_id: associationId, quarter, amount_cents: total, status: decision.status })
+      .onConflict((oc) => oc.columns(["association_id", "quarter"]).doNothing())
+      .returning("id")
+      .executeTakeFirst();
+    // Deux clôtures simultanées : l'unicité protège, l'autre passage a gagné.
+    if (!payout) {
+      summary.skipped++;
+      continue;
     }
     summary.created++;
 
@@ -97,18 +97,19 @@ export async function closeQuarter(db: Db, quarter: string, deps: ClosingDeps): 
       summary.carried++;
       continue;
     }
-    const { data: payout } = await db
-      .from("payouts")
-      .select("id")
-      .eq("association_id", associationId)
-      .eq("quarter", quarter)
-      .single();
-    if (payout) {
-      for (const l of group) await db.from("payout_lines").update({ payout_id: payout.id }).eq("id", l.id);
-      const path = await deps.writeStatement(input);
-      if (path) await db.from("payouts").update({ statement_path: path }).eq("id", payout.id);
-      await deps.notifyReady(input, path);
-    }
+    await db
+      .updateTable("payout_lines")
+      .set({ payout_id: payout.id })
+      .where(
+        "id",
+        "in",
+        group.map((l) => l.id),
+      )
+      .execute();
+    const path = await deps.writeStatement(input);
+    if (path)
+      await db.updateTable("payouts").set({ statement_path: path }).where("id", "=", payout.id).execute();
+    await deps.notifyReady(input, path);
     summary.ready++;
   }
   return summary;

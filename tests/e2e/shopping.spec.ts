@@ -1,10 +1,10 @@
 import { expect, type Page, test } from "@playwright/test";
 import { FEATURES } from "../../src/lib/features";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M6 (§8.3) : deux navigateurs sur le même foyer.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 const item = (page: Page, name: string) => page.getByTestId("shopping-item").filter({ hasText: name });

@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { associationsFr } from "@/i18n/associations";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { withAdmin } from "@/server/db";
 import { sendEmail } from "@/server/email";
 import { trackEvent } from "@/server/events";
 import { renderPresentationPdf } from "@/server/pdf/presentation-pdf";
@@ -48,18 +48,24 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   });
   if (!parsed.success) return { error: t.errors.invalid };
   const l = parsed.data;
-  const { error } = await createAdminClient()
-    .from("association_leads")
-    .insert({
-      name: l.name,
-      email: l.email,
-      association_name: l.association,
-      school: l.school ?? null,
-      city: l.city ?? null,
-      families_estimate: l.families ?? null,
-      consent: true,
-    });
-  if (error) return { error: t.errors.generic };
+  try {
+    await withAdmin((db) =>
+      db
+        .insertInto("association_leads")
+        .values({
+          name: l.name,
+          email: l.email,
+          association_name: l.association,
+          school: l.school ?? null,
+          city: l.city ?? null,
+          families_estimate: l.families ?? null,
+          consent: true,
+        })
+        .execute(),
+    );
+  } catch {
+    return { error: t.errors.generic };
+  }
   await trackEvent("asso_lead_submitted");
 
   const pdf = await renderPresentationPdf().catch(() => null);

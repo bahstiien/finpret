@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // §8.6 et critère de M11 : la semaine s'imprime sur une seule page A4.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile, browserName }) => isMobile || browserName !== "chromium", "PDF généré par Chromium");
 
 test("la vue imprimable tient sur une page A4", async ({ page }) => {

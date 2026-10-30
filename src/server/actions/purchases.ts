@@ -7,15 +7,14 @@ import { ensureOccurrenceIds, listOccurrences } from "@/engine/occurrences";
 import { shoppingNeeds } from "@/engine/shopping";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
+import { json, rpc } from "@/server/db";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { householdCan } from "@/server/entitlements-load";
 import { pantryForWeek } from "@/server/allocations";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { trackEvent } from "@/server/events";
 import { allow } from "@/server/rate-limit";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { engineEnvFor } from "@/server/weeks";
 
 /**
@@ -58,17 +57,21 @@ async function write(raw: Input, type: "purchase" | "correction", okMessage: str
   if (!q.ok) return { ok: false, error: t[q.code] };
 
   // Idempotence, révision et solde sont vérifiés dans la transaction SQL, sous verrou de la semaine.
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("record_purchase", {
-    p_week: p.weekId,
-    p_ingredient: p.ingredient,
-    p_qty: q.value,
-    p_type: type,
-    p_op_key: p.opKey,
-    p_expected_revision: p.expectedRevision,
-  });
-  if (error) return { ok: false, error: purchaseError(error) };
-  const res = data as { replayed: boolean; revision: number };
+  let res: { replayed: boolean; revision: number };
+  try {
+    res = await withSession((db) =>
+      rpc<{ replayed: boolean; revision: number }>(db, "record_purchase", {
+        p_week: p.weekId,
+        p_ingredient: p.ingredient,
+        p_qty: q.value,
+        p_type: type,
+        p_op_key: p.opKey,
+        p_expected_revision: p.expectedRevision ?? null,
+      }),
+    );
+  } catch (e) {
+    return { ok: false, error: purchaseError(e as { code?: string; message?: string }) };
+  }
   if (!res.replayed) {
     await trackEvent(type === "purchase" ? "purchase_recorded" : "purchase_quantity_corrected", {
       userId: user.id,
@@ -124,28 +127,32 @@ export async function reportShoppingIssue(
   if (!parsed.success) return { ok: false, error: t.INVALID_QUANTITY };
   const p = parsed.data;
   if (!allow(`issue:${household.id}`, 60, 60_000)) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
-  const { data: existing, error } = await supabase
-    .from("shopping_issues")
-    .select("id")
-    .eq("week_id", p.weekId)
-    .eq("ingredient_key", p.ingredient)
-    .maybeSingle();
-  if (error) return { ok: false, error: toUserMessage(error) };
-  if (!existing) {
-    const { error: e } = await supabase
-      .from("shopping_issues")
-      .insert({ household_id: household.id, week_id: p.weekId, ingredient_key: p.ingredient });
-    if (e) return { ok: false, error: toUserMessage(e) };
-  }
-  // La décision par défaut est « à résoudre » ; tout autre choix passe par une mise à jour.
-  if (existing || p.decision !== "open") {
-    const { error: e } = await supabase
-      .from("shopping_issues")
-      .update({ decision: p.decision })
-      .eq("week_id", p.weekId)
-      .eq("ingredient_key", p.ingredient);
-    if (e) return { ok: false, error: toUserMessage(e) };
+  try {
+    await withSession(async (db) => {
+      const existing = await db
+        .selectFrom("shopping_issues")
+        .select("id")
+        .where("week_id", "=", p.weekId)
+        .where("ingredient_key", "=", p.ingredient)
+        .executeTakeFirst();
+      if (!existing) {
+        await db
+          .insertInto("shopping_issues")
+          .values({ household_id: household.id, week_id: p.weekId, ingredient_key: p.ingredient })
+          .execute();
+      }
+      // La décision par défaut est « à résoudre » ; tout autre choix passe par une mise à jour.
+      if (existing || p.decision !== "open") {
+        await db
+          .updateTable("shopping_issues")
+          .set({ decision: p.decision })
+          .where("week_id", "=", p.weekId)
+          .where("ingredient_key", "=", p.ingredient)
+          .execute();
+      }
+    });
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
   }
   await trackEvent("shopping_issue_reported", {
     userId: user.id,
@@ -165,14 +172,18 @@ export async function clearShoppingIssue(
   const { household } = await requireHousehold("/app/shopping");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
   if (!z.uuid().safeParse(weekId).success || !ingredient) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("shopping_issues")
-    .delete()
-    .eq("household_id", household.id)
-    .eq("week_id", weekId)
-    .eq("ingredient_key", ingredient);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) =>
+      db
+        .deleteFrom("shopping_issues")
+        .where("household_id", "=", household.id)
+        .where("week_id", "=", weekId)
+        .where("ingredient_key", "=", ingredient)
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: t.issueCleared } };
 }
@@ -210,31 +221,38 @@ export async function markPreparation(
   const uid = at >= 0 ? known[at]?.uid : known.find((o) => o.uid === p.uid)?.uid;
   if (!uid) return { ok: false, error: t.prepUnknown };
   p.uid = uid;
-  const supabase = await createClient();
-  // Les identités posées pour la première fois sont enregistrées avec le plan.
-  if (JSON.stringify(plan) !== JSON.stringify(week.plan)) {
-    const { error: e } = await supabase
-      .from("weeks")
-      .update({ plan: plan as unknown as Json })
-      .eq("id", p.weekId);
-    if (e) return { ok: false, error: toUserMessage(e) };
+  try {
+    await withSession(async (db) => {
+      // Les identités posées pour la première fois sont enregistrées avec le plan.
+      if (JSON.stringify(plan) !== JSON.stringify(week.plan)) {
+        await db
+          .updateTable("weeks")
+          .set({ plan: json(plan) })
+          .where("id", "=", p.weekId)
+          .execute();
+      }
+      const existing = await db
+        .selectFrom("preparation_states")
+        .select("state")
+        .where("week_id", "=", p.weekId)
+        .where("uid", "=", p.uid)
+        .executeTakeFirst();
+      if (existing)
+        await db
+          .updateTable("preparation_states")
+          .set({ state: p.state })
+          .where("week_id", "=", p.weekId)
+          .where("uid", "=", p.uid)
+          .execute();
+      else
+        await db
+          .insertInto("preparation_states")
+          .values({ week_id: p.weekId, uid: p.uid, household_id: household.id, state: p.state })
+          .execute();
+    });
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
   }
-  const { data: existing } = await supabase
-    .from("preparation_states")
-    .select("state")
-    .eq("week_id", p.weekId)
-    .eq("uid", p.uid)
-    .maybeSingle();
-  const res = existing
-    ? await supabase
-        .from("preparation_states")
-        .update({ state: p.state })
-        .eq("week_id", p.weekId)
-        .eq("uid", p.uid)
-    : await supabase
-        .from("preparation_states")
-        .insert({ week_id: p.weekId, uid: p.uid, household_id: household.id, state: p.state });
-  if (res.error) return { ok: false, error: toUserMessage(res.error) };
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: t.prepMarked } };
 }
@@ -271,14 +289,26 @@ export async function confirmCoverage(
     ctx.settings.menu.cake.enabled,
   )[p.ingredient]?.need;
   if (need === undefined) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("coverage_confirmations")
-    .upsert(
-      { week_id: p.weekId, ingredient_key: p.ingredient, household_id: household.id, confirmed_need: need },
-      { onConflict: "week_id,ingredient_key" },
+  try {
+    await withSession((db) =>
+      db
+        .insertInto("coverage_confirmations")
+        .values({
+          week_id: p.weekId,
+          ingredient_key: p.ingredient,
+          household_id: household.id,
+          confirmed_need: need,
+        })
+        .onConflict((oc) =>
+          oc
+            .columns(["week_id", "ingredient_key"])
+            .doUpdateSet({ household_id: household.id, confirmed_need: need }),
+        )
+        .execute(),
     );
-  if (error) return { ok: false, error: toUserMessage(error) };
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: t.coverageConfirmed } };
 }
@@ -313,16 +343,21 @@ export async function transferPurchase(
   const { lib } = await engineEnvFor(ctx);
   const q = toCatalogUnit(lib, p.ingredient, p.qty, p.unit);
   if (!q.ok) return { ok: false, error: t[q.code] };
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc("transfer_purchase", {
-    p_from: p.fromWeekId,
-    p_to: p.toWeekId,
-    p_ingredient: p.ingredient,
-    p_qty: q.value,
-    p_op_key: p.opKey,
-  });
-  if (error) return { ok: false, error: purchaseError(error) };
-  const replayed = (data as { replayed: boolean }).replayed;
+  let replayed: boolean;
+  try {
+    const data = await withSession((db) =>
+      rpc<{ replayed: boolean }>(db, "transfer_purchase", {
+        p_from: p.fromWeekId,
+        p_to: p.toWeekId,
+        p_ingredient: p.ingredient,
+        p_qty: q.value,
+        p_op_key: p.opKey,
+      }),
+    );
+    replayed = data.replayed;
+  } catch (e) {
+    return { ok: false, error: purchaseError(e as { code?: string; message?: string }) };
+  }
   if (!replayed) revalidatePath("/app", "layout");
   return { ok: true, data: { message: replayed ? t.replayed : t.transferred } };
 }

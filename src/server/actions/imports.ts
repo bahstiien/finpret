@@ -10,12 +10,11 @@ import { type ImportForm, importFormSchema, toRecipe } from "@/engine/import/to-
 import { siteName } from "@/engine/import/url";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
 import { loadLibrary } from "@/server/catalog";
+import { json } from "@/server/db";
 import type { ActionResult } from "@/server/errors";
 import { extractRecipe, extractWithModel, fetchRecipePage, rewriteSteps } from "@/server/recipe-fetch";
-import { getUser, requireHousehold } from "@/server/session";
+import { getUser, requireHousehold, withSession } from "@/server/session";
 
 /** Import de recette par lien (§8.8) : analyse, puis enregistrement après validation par l'utilisateur. */
 
@@ -45,17 +44,30 @@ export async function analyzeImport(rawUrl: string): Promise<AnalyzeResult> {
   // Un lien refusé (SSRF) ne compte pas dans le quota et n'est pas journalisé.
   if (!page.ok && page.error === "blocked") return { ok: false, error: t.errors.blocked };
 
-  const supabase = await createClient();
-  const { data: row, error: insertError } = await supabase
-    .from("recipe_imports")
-    .insert({ household_id: household.id, url: url.data })
-    .select("id")
-    .single();
-  if (insertError || !row) {
-    return { ok: false, error: insertError?.message?.includes("quota") ? t.errors.quota : fr.errors.generic };
+  let row: { id: string };
+  try {
+    row = await withSession((db) =>
+      db
+        .insertInto("recipe_imports")
+        .values({ household_id: household.id, url: url.data })
+        .returning("id")
+        .executeTakeFirstOrThrow(),
+    );
+  } catch (e) {
+    const message = (e as { message?: unknown }).message;
+    return {
+      ok: false,
+      error: typeof message === "string" && message.includes("quota") ? t.errors.quota : fr.errors.generic,
+    };
   }
   const fail = async (key: keyof typeof t.errors) => {
-    await supabase.from("recipe_imports").update({ status: "failed", error: key }).eq("id", row.id);
+    await withSession((db) =>
+      db
+        .updateTable("recipe_imports")
+        .set({ status: "failed", error: key })
+        .where("id", "=", row.id)
+        .execute(),
+    );
     return { ok: false as const, error: t.errors[key] };
   };
   if (!page.ok) return fail(page.error);
@@ -77,13 +89,17 @@ export async function analyzeImport(rawUrl: string): Promise<AnalyzeResult> {
   }
 
   const { lib } = await loadLibrary(household.id);
-  const [{ data: synonyms }, { data: own }] = await Promise.all([
-    supabase.from("ingredient_synonyms").select("synonym, ingredient_key"),
-    supabase.from("household_ingredients").select("key, synonyms").eq("household_id", household.id),
-  ]);
+  const { synonyms, own } = await withSession(async (db) => ({
+    synonyms: await db.selectFrom("ingredient_synonyms").select(["synonym", "ingredient_key"]).execute(),
+    own: await db
+      .selectFrom("household_ingredients")
+      .select(["key", "synonyms"])
+      .where("household_id", "=", household.id)
+      .execute(),
+  }));
   const allSynonyms: Record<string, string> = { ...BUILTIN_SYNONYMS };
-  for (const s of synonyms ?? []) allSynonyms[s.synonym] = s.ingredient_key;
-  for (const h of own ?? []) for (const s of h.synonyms) allSynonyms[s] = h.key;
+  for (const s of synonyms) allSynonyms[s.synonym] = s.ingredient_key;
+  for (const h of own) for (const s of h.synonyms) allSynonyms[s] = h.key;
 
   const draft = buildDraft({
     recipe,
@@ -93,10 +109,13 @@ export async function analyzeImport(rawUrl: string): Promise<AnalyzeResult> {
     synonyms: allSynonyms,
   });
   draft.steps = steps;
-  await supabase
-    .from("recipe_imports")
-    .update({ status: "parsed", method, raw_ingredients: recipe.ingredients.slice(0, 60) })
-    .eq("id", row.id);
+  await withSession((db) =>
+    db
+      .updateTable("recipe_imports")
+      .set({ status: "parsed", method, raw_ingredients: recipe.ingredients.slice(0, 60) })
+      .where("id", "=", row.id)
+      .execute(),
+  );
   return {
     ok: true,
     data: { importId: row.id, draft, method, rewritten: steps.length > 0, quality: quality(draft.lines) },
@@ -126,7 +145,6 @@ export async function saveImport(input: {
   const parsed = saveSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: t.errors.invalid };
   const { importId, editId, form } = parsed.data;
-  const supabase = await createClient();
   const { lib } = await loadLibrary(household.id);
 
   // Ingrédients sans équivalent au catalogue : créés pour le foyer (rayon deviné, modifiable à l'écran).
@@ -142,15 +160,23 @@ export async function saveImport(input: {
     }
     const key = householdIngredientKey(household.id, line.label);
     if (!lib.ingredients[key]) {
-      const { error } = await supabase.from("household_ingredients").insert({
-        key,
-        household_id: household.id,
-        label: line.label,
-        unit: line.unit,
-        aisle: line.aisle === "base" ? "divers" : line.aisle,
-        synonyms: line.original ? [line.label.toLowerCase()] : [],
-      });
-      if (error && error.code !== "23505") return { ok: false, error: fr.errors.generic };
+      try {
+        await withSession((db) =>
+          db
+            .insertInto("household_ingredients")
+            .values({
+              key,
+              household_id: household.id,
+              label: line.label,
+              unit: line.unit,
+              aisle: line.aisle === "base" ? "divers" : line.aisle,
+              synonyms: line.original ? [line.label.toLowerCase()] : [],
+            })
+            .execute(),
+        );
+      } catch (e) {
+        if ((e as { code?: unknown }).code !== "23505") return { ok: false, error: fr.errors.generic };
+      }
     }
     keys.push(key);
   }
@@ -160,7 +186,7 @@ export async function saveImport(input: {
   if (!ingKeys.length) return { ok: false, error: t.errors.invalid };
   const row = {
     kind,
-    data: data as unknown as Json,
+    data: json(data),
     origin: "o" in data ? data.o : null,
     protein: form.protein,
     months: data.months ?? null,
@@ -173,28 +199,44 @@ export async function saveImport(input: {
 
   let id: string;
   if (editId) {
-    const { data: updated, error } = await supabase
-      .from("recipes")
-      .update(row)
-      .eq("id", editId)
-      .eq("household_id", household.id)
-      .select("id");
-    if (error || !updated?.length) return { ok: false, error: fr.errors.forbidden };
+    const updated = await withSession((db) =>
+      db
+        .updateTable("recipes")
+        .set(row)
+        .where("id", "=", editId)
+        .where("household_id", "=", household.id)
+        .returning("id")
+        .execute(),
+    ).catch(() => []);
+    if (!updated.length) return { ok: false, error: fr.errors.forbidden };
     id = editId;
   } else {
-    id = `imp_${randomUUID().replace(/-/g, "").slice(0, 12)}`;
+    const newId = `imp_${randomUUID().replace(/-/g, "").slice(0, 12)}`;
+    id = newId;
     const me = await getUser();
-    const { error } = await supabase
-      .from("recipes")
-      .insert({ ...row, id, household_id: household.id, imported_by: me?.id ?? null });
-    if (error) return { ok: false, error: fr.errors.generic };
-    if (importId) {
-      await supabase.from("recipe_imports").update({ status: "validated", recipe_id: id }).eq("id", importId);
-    } else {
-      await supabase
-        .from("recipe_imports")
-        .insert({ household_id: household.id, url: "manual", status: "validated", method: "manual" });
+    try {
+      await withSession((db) =>
+        db
+          .insertInto("recipes")
+          .values({ ...row, id: newId, household_id: household.id, imported_by: me?.id ?? null })
+          .execute(),
+      );
+    } catch {
+      return { ok: false, error: fr.errors.generic };
     }
+    await withSession(async (db) => {
+      if (importId)
+        await db
+          .updateTable("recipe_imports")
+          .set({ status: "validated", recipe_id: newId })
+          .where("id", "=", importId)
+          .execute();
+      else
+        await db
+          .insertInto("recipe_imports")
+          .values({ household_id: household.id, url: "manual", status: "validated", method: "manual" })
+          .execute();
+    });
   }
   revalidatePath("/app", "layout");
   return { ok: true, data: { id, message: editId ? t.updated : t.saved } };
@@ -204,15 +246,17 @@ export async function deleteImportedRecipe(id: string): Promise<ActionResult<{ m
   const household = await editor();
   if (!household) return { ok: false, error: fr.errors.forbidden };
   if (!/^imp_[a-z0-9]+$/.test(id)) return { ok: false, error: fr.errors.generic };
-  const supabase = await createClient();
   // Retirée du pool sans casser les semaines qui la référencent : la ligne reste, inactive.
-  const { data, error } = await supabase
-    .from("recipes")
-    .update({ is_active: false })
-    .eq("id", id)
-    .eq("household_id", household.id)
-    .select("id");
-  if (error || !data?.length) return { ok: false, error: fr.errors.forbidden };
+  const data = await withSession((db) =>
+    db
+      .updateTable("recipes")
+      .set({ is_active: false })
+      .where("id", "=", id)
+      .where("household_id", "=", household.id)
+      .returning("id")
+      .execute(),
+  ).catch(() => []);
+  if (!data.length) return { ok: false, error: fr.errors.forbidden };
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: fr.discover.removed } };
 }

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { getActiveHousehold, getUser } from "@/server/session";
+import { getActiveHousehold, getUser, withSession } from "@/server/session";
 
 /** Export JSON de toutes les données du foyer (RGPD, §4 et §6 Données), réservé à l'administrateur. */
 export async function GET() {
@@ -9,63 +8,70 @@ export async function GET() {
   if (!user || !household) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   if (household.role !== "admin") return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
-  const supabase = await createClient();
   const hid = household.id;
-  const [
-    hh,
-    memberships,
-    members,
-    settings,
-    weeks,
-    ratings,
-    pantry,
-    freezer,
-    recipes,
-    purchases,
-    issues,
-    preparations,
-    confirmations,
-    adaptations,
-  ] = await Promise.all([
-    supabase.from("households").select("*").eq("id", hid).single(),
-    supabase.from("memberships").select("user_id, role, created_at").eq("household_id", hid),
-    supabase.from("members").select("*").eq("household_id", hid),
-    supabase.from("household_settings").select("*").eq("household_id", hid).maybeSingle(),
-    supabase.from("weeks").select("*").eq("household_id", hid).order("start_date"),
-    supabase.from("ratings").select("*").eq("household_id", hid),
-    supabase.from("pantry").select("*").eq("household_id", hid),
-    supabase.from("freezer").select("*").eq("household_id", hid),
-    supabase.from("recipes").select("*").eq("household_id", hid),
-    // Courses réelles : achats déclarés, signalements, préparations protégées, confirmations, adaptations.
-    supabase.from("purchase_events").select("*").eq("household_id", hid).order("seq"),
-    supabase.from("shopping_issues").select("*").eq("household_id", hid),
-    supabase.from("preparation_states").select("*").eq("household_id", hid),
-    supabase.from("coverage_confirmations").select("*").eq("household_id", hid),
-    supabase.from("adaptation_events").select("*").eq("household_id", hid).order("created_at"),
-  ]);
-  const memberIds = (members.data ?? []).map((m) => m.id);
-  const presence = memberIds.length
-    ? await supabase.from("presence_rules").select("*").in("member_id", memberIds)
-    : { data: [] };
+  const data = await withSession(async (db) => {
+    const members = await db.selectFrom("members").selectAll().where("household_id", "=", hid).execute();
+    const memberIds = members.map((m) => m.id);
+    return {
+      household:
+        (await db.selectFrom("households").selectAll().where("id", "=", hid).executeTakeFirst()) ?? null,
+      memberships: await db
+        .selectFrom("memberships")
+        .select(["user_id", "role", "created_at"])
+        .where("household_id", "=", hid)
+        .execute(),
+      members,
+      presence: memberIds.length
+        ? await db.selectFrom("presence_rules").selectAll().where("member_id", "in", memberIds).execute()
+        : [],
+      settings:
+        (await db
+          .selectFrom("household_settings")
+          .selectAll()
+          .where("household_id", "=", hid)
+          .executeTakeFirst()) ?? null,
+      weeks: await db
+        .selectFrom("weeks")
+        .selectAll()
+        .where("household_id", "=", hid)
+        .orderBy("start_date")
+        .execute(),
+      ratings: await db.selectFrom("ratings").selectAll().where("household_id", "=", hid).execute(),
+      pantry: await db.selectFrom("pantry").selectAll().where("household_id", "=", hid).execute(),
+      freezer: await db.selectFrom("freezer").selectAll().where("household_id", "=", hid).execute(),
+      recipes: await db.selectFrom("recipes").selectAll().where("household_id", "=", hid).execute(),
+      // Courses réelles : achats déclarés, signalements, préparations protégées, confirmations, adaptations.
+      purchaseEvents: await db
+        .selectFrom("purchase_events")
+        .selectAll()
+        .where("household_id", "=", hid)
+        .orderBy("seq")
+        .execute(),
+      shoppingIssues: await db
+        .selectFrom("shopping_issues")
+        .selectAll()
+        .where("household_id", "=", hid)
+        .execute(),
+      preparationStates: await db
+        .selectFrom("preparation_states")
+        .selectAll()
+        .where("household_id", "=", hid)
+        .execute(),
+      coverageConfirmations: await db
+        .selectFrom("coverage_confirmations")
+        .selectAll()
+        .where("household_id", "=", hid)
+        .execute(),
+      adaptationEvents: await db
+        .selectFrom("adaptation_events")
+        .selectAll()
+        .where("household_id", "=", hid)
+        .orderBy("created_at")
+        .execute(),
+    };
+  });
 
-  const body = {
-    exportedAt: new Date().toISOString(),
-    household: hh.data,
-    memberships: memberships.data,
-    members: members.data,
-    presence: presence.data,
-    settings: settings.data,
-    weeks: weeks.data,
-    ratings: ratings.data,
-    pantry: pantry.data,
-    freezer: freezer.data,
-    recipes: recipes.data,
-    purchaseEvents: purchases.data,
-    shoppingIssues: issues.data,
-    preparationStates: preparations.data,
-    coverageConfirmations: confirmations.data,
-    adaptationEvents: adaptations.data,
-  };
+  const body = { exportedAt: new Date().toISOString(), ...data };
   const date = new Date().toISOString().slice(0, 10);
   return new NextResponse(JSON.stringify(body, null, 2), {
     headers: {

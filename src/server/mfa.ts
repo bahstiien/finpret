@@ -44,29 +44,41 @@ export async function startMfaEnrollment(user: { id: string; email: string }): P
     db
       .insertInto("auth.admin_totp")
       .values({ user_id: user.id, secret_encrypted: encrypt(secret) })
-      .onConflict((oc) => oc.column("user_id").doUpdateSet({ secret_encrypted: encrypt(secret), created_at: new Date() }))
+      .onConflict((oc) =>
+        oc
+          .column("user_id")
+          .doUpdateSet({ secret_encrypted: encrypt(secret), created_at: new Date().toISOString() }),
+      )
       .execute(),
   );
   return { enrolled: false, qr: await QRCode.toDataURL(totpUri(secret, user.email)), secret };
 }
 
 /** Vérifie le code ; s'il est bon, valide le facteur et la session. 5 essais par tranche de 10 minutes. */
-export async function verifyMfa(userId: string, sessionId: string, code: string): Promise<"ok" | "invalid" | "locked"> {
+export async function verifyMfa(
+  userId: string,
+  sessionId: string,
+  code: string,
+): Promise<"ok" | "invalid" | "locked"> {
   if (!allow(`mfa:${userId}`, 5, 600_000)) return "locked";
   const row = await withAdmin((db) =>
-    db.selectFrom("auth.admin_totp").select("secret_encrypted").where("user_id", "=", userId).executeTakeFirst(),
+    db
+      .selectFrom("auth.admin_totp")
+      .select("secret_encrypted")
+      .where("user_id", "=", userId)
+      .executeTakeFirst(),
   );
   if (!row || !verifyTotp(decrypt(row.secret_encrypted), code)) return "invalid";
   await withAdmin(async (db) => {
     await db
       .updateTable("auth.admin_totp")
-      .set({ verified_at: new Date() })
+      .set({ verified_at: new Date().toISOString() })
       .where("user_id", "=", userId)
       .where("verified_at", "is", null)
       .execute();
     await db
       .updateTable("auth.sessions")
-      .set({ mfa_verified_at: new Date() })
+      .set({ mfa_verified_at: new Date().toISOString() })
       .where("id", "=", sessionId)
       .where("user_id", "=", userId)
       .execute();

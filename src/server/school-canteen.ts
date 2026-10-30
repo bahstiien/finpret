@@ -1,5 +1,5 @@
 import "server-only";
-import { createClient } from "@/lib/supabase/server";
+import { withSession } from "@/server/session";
 
 /** Texte d'un menu d'école : les plats renseignés, dans l'ordre du repas. */
 export function menuText(m: {
@@ -33,26 +33,42 @@ export async function schoolMenusFor(
   dates: string[],
 ): Promise<SchoolMenuEntry[]> {
   if (!kids.length) return [];
-  const supabase = await createClient();
-  const { data: links } = await supabase
-    .from("member_schools")
-    .select("member_id, school_id, canteen_days")
-    .in(
-      "member_id",
-      kids.map((k) => k.id),
-    );
-  if (!links?.length) return [];
-  const { data: menus } = await supabase
-    .from("school_menus")
-    .select("school_id, date, starter, main, side, dairy, dessert, note, edited_after_publish")
-    .eq("status", "published")
-    .in("school_id", [...new Set(links.map((l) => l.school_id))])
-    .in("date", dates);
+  const { links, menus } = await withSession(async (db) => {
+    const links = await db
+      .selectFrom("member_schools")
+      .select(["member_id", "school_id", "canteen_days"])
+      .where(
+        "member_id",
+        "in",
+        kids.map((k) => k.id),
+      )
+      .execute();
+    if (!links.length || !dates.length) return { links, menus: [] };
+    const menus = await db
+      .selectFrom("school_menus")
+      .select([
+        "school_id",
+        "date",
+        "starter",
+        "main",
+        "side",
+        "dairy",
+        "dessert",
+        "note",
+        "edited_after_publish",
+      ])
+      .where("status", "=", "published")
+      .where("school_id", "in", [...new Set(links.map((l) => l.school_id))])
+      .where("date", "in", dates)
+      .execute();
+    return { links, menus };
+  });
+  if (!links.length) return [];
   const entries: SchoolMenuEntry[] = [];
   for (const link of links) {
     const kid = kids.find((k) => k.id === link.member_id);
     if (!kid) continue;
-    for (const menu of menus ?? []) {
+    for (const menu of menus) {
       if (menu.school_id !== link.school_id) continue;
       const day = dates.indexOf(menu.date) + 1;
       if (!link.canteen_days.includes(day)) continue;

@@ -1,10 +1,11 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { withUser } from "@/server/db";
+import type { AssociationRole } from "@/server/db.types";
 import { requireUser } from "@/server/session";
 
-export type AssociationRole = "manager" | "menu_editor";
+export type { AssociationRole };
 
 export type MyAssociation = {
   id: string;
@@ -23,40 +24,58 @@ export type MyAssociation = {
 /** Association du compte (la première s'il y en a plusieurs), lue sous la RLS. `null` : aucune. */
 export const getMyAssociation = cache(async (): Promise<MyAssociation | null> => {
   const user = await requireUser("/asso");
-  const supabase = await createClient();
-  const { data: member } = await supabase
-    .from("association_members")
-    .select("association_id, role")
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
-  if (!member) return null;
-  const [{ data: a }, { data: links }] = await Promise.all([
-    supabase
-      .from("associations")
-      .select("id, name, code, status, reject_reason, code_changed, email, manager_name, iban_last4")
-      .eq("id", member.association_id)
-      .single(),
-    supabase.from("association_schools").select("school_id").eq("association_id", member.association_id),
-  ]);
-  if (!a) return null;
-  const ids = (links ?? []).map((l) => l.school_id);
-  const { data: schools } = ids.length
-    ? await supabase.from("schools").select("id, name, city").in("id", ids).order("name")
-    : { data: [] };
-  return {
-    id: a.id,
-    name: a.name,
-    code: a.code,
-    status: a.status,
-    rejectReason: a.reject_reason,
-    codeChanged: a.code_changed,
-    email: a.email,
-    managerName: a.manager_name,
-    ibanLast4: a.iban_last4,
-    role: member.role,
-    schools: schools ?? [],
-  };
+  return withUser(user.id, async (db) => {
+    const member = await db
+      .selectFrom("association_members")
+      .select(["association_id", "role"])
+      .where("user_id", "=", user.id)
+      .limit(1)
+      .executeTakeFirst();
+    if (!member) return null;
+    const a = await db
+      .selectFrom("associations")
+      .select([
+        "id",
+        "name",
+        "code",
+        "status",
+        "reject_reason",
+        "code_changed",
+        "email",
+        "manager_name",
+        "iban_last4",
+      ])
+      .where("id", "=", member.association_id)
+      .executeTakeFirst();
+    if (!a) return null;
+    const links = await db
+      .selectFrom("association_schools")
+      .select("school_id")
+      .where("association_id", "=", member.association_id)
+      .execute();
+    const ids = links.map((l) => l.school_id);
+    const schools = ids.length
+      ? await db
+          .selectFrom("schools")
+          .select(["id", "name", "city"])
+          .where("id", "in", ids)
+          .orderBy("name")
+          .execute()
+      : [];
+    return {
+      id: a.id,
+      name: a.name,
+      code: a.code,
+      status: a.status,
+      rejectReason: a.reject_reason,
+      codeChanged: a.code_changed,
+      email: a.email,
+      managerName: a.manager_name,
+      ibanLast4: a.iban_last4,
+      role: member.role,
+      schools,
+    };
+  });
 });
 
 /** Page de l'espace association : sans association, direction l'inscription. */

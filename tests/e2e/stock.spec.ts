@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { FEATURES } from "../../src/lib/features";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M7 (§8.4) : le garde-manger réduit la liste ; les restes sont ajoutés après la session.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 test("garde-manger, restes après la session et congélateur", async ({ page }) => {

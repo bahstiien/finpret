@@ -6,10 +6,9 @@ import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { mondayOf, nextMonday, todayIn } from "@/lib/dates";
 import { type OnboardingInput, onboardingSchema } from "@/lib/onboarding";
 import { defaultSettings, notificationsSchema, SETTINGS_VERSION } from "@/lib/settings";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
+import { json, rpc } from "@/server/db";
 import { toUserMessage } from "@/server/errors";
-import { ACTIVE_HOUSEHOLD_COOKIE, getActiveHousehold, requireUser } from "@/server/session";
+import { ACTIVE_HOUSEHOLD_COOKIE, getActiveHousehold, requireUser, withSession } from "@/server/session";
 import { approvedAssociation, attachHousehold } from "@/server/associations";
 import { sendWelcome } from "@/server/emails";
 import { trackEvent } from "@/server/events";
@@ -28,20 +27,35 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
   const parsed = onboardingSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, error: fr.onboarding.invalid };
   const input = parsed.data;
-  const supabase = await createClient();
 
   // Foyer : celui en cours d'onboarding (créé sans être paramétré), sinon un nouveau.
   const active = await getActiveHousehold();
   let householdId: string;
   if (active && active.role === "admin") {
-    const { data } = await supabase.from("households").select("onboarded_at").eq("id", active.id).single();
-    if (data?.onboarded_at) return { ok: false, error: fr.onboarding.alreadyDone };
+    const done = await withSession(async (db) => {
+      const data = await db
+        .selectFrom("households")
+        .select("onboarded_at")
+        .where("id", "=", active.id)
+        .executeTakeFirst();
+      if (data?.onboarded_at) return true;
+      await db
+        .updateTable("households")
+        .set({ name: input.household.name })
+        .where("id", "=", active.id)
+        .execute();
+      return false;
+    });
+    if (done) return { ok: false, error: fr.onboarding.alreadyDone };
     householdId = active.id;
-    await supabase.from("households").update({ name: input.household.name }).eq("id", householdId);
   } else {
-    const { data, error } = await supabase.rpc("create_household", { p_name: input.household.name });
-    if (error) return { ok: false, error: toUserMessage(error) };
-    householdId = data;
+    try {
+      householdId = await withSession((db) =>
+        rpc<string>(db, "create_household", { p_name: input.household.name }),
+      );
+    } catch (e) {
+      return { ok: false, error: toUserMessage(e) };
+    }
   }
   (await cookies()).set(ACTIVE_HOUSEHOLD_COOKIE, householdId, {
     httpOnly: true,
@@ -52,20 +66,27 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
   });
 
   // Membres (le premier adulte est le compte qui fait l'onboarding) et présence.
-  await supabase.from("members").delete().eq("household_id", householdId);
-  const { data: members, error: membersError } = await supabase
-    .from("members")
-    .insert(
-      input.household.members.map((m, i) => ({
-        household_id: householdId,
-        name: m.name,
-        kind: m.kind,
-        birthdate: m.kind === "child" ? m.birthdate : null,
-        user_id: i === 0 && m.kind === "adult" ? user.id : null,
-      })),
-    )
-    .select("id");
-  if (membersError) return { ok: false, error: toUserMessage(membersError) };
+  let members: { id: string }[];
+  try {
+    members = await withSession(async (db) => {
+      await db.deleteFrom("members").where("household_id", "=", householdId).execute();
+      return db
+        .insertInto("members")
+        .values(
+          input.household.members.map((m, i) => ({
+            household_id: householdId,
+            name: m.name,
+            kind: m.kind,
+            birthdate: m.kind === "child" ? m.birthdate : null,
+            user_id: i === 0 && m.kind === "adult" ? user.id : null,
+          })),
+        )
+        .returning("id")
+        .execute();
+    });
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   // Code d'association (cookie fp_asso) : rattachement du foyer, essai de 30 jours, puis enfants reliés à leur école.
   const jar = await cookies();
   const association = await approvedAssociation(jar.get(ASSOCIATION_COOKIE)?.value);
@@ -79,18 +100,27 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
           ? [{ member_id: members[i].id, school_id: m.schoolId, canteen_days: m.canteenDays }]
           : [],
       );
-      if (links.length) await supabase.from("member_schools").insert(links);
+      if (links.length)
+        await withSession((db) => db.insertInto("member_schools").values(links).execute()).catch(() => null);
     }
   }
   const absences = input.rhythm.absences.filter((a) => members[a.member]);
   if (absences.length) {
-    const { error } = await supabase.from("presence_rules").insert(
-      absences.map((a) => {
-        const [weekday, meal] = a.slot.split("-") as [string, "lunch" | "dinner"];
-        return { member_id: members[a.member]!.id, weekday: Number(weekday), meal, present: false };
-      }),
-    );
-    if (error) return { ok: false, error: toUserMessage(error) };
+    try {
+      await withSession((db) =>
+        db
+          .insertInto("presence_rules")
+          .values(
+            absences.map((a) => {
+              const [weekday, meal] = a.slot.split("-") as [string, "lunch" | "dinner"];
+              return { member_id: members[a.member]!.id, weekday: Number(weekday), meal, present: false };
+            }),
+          )
+          .execute(),
+      );
+    } catch (e) {
+      return { ok: false, error: toUserMessage(e) };
+    }
   }
 
   // Réglages.
@@ -102,33 +132,46 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     shopping: { ...defaults.shopping, shoppingDay: input.habits.shoppingDay, store: input.habits.store },
     equipment: input.equipment,
   };
-  const { error: settingsError } = await supabase.from("household_settings").upsert({
-    household_id: householdId,
+  const values = {
     version: SETTINGS_VERSION,
-    diet: settings.diet as Json,
-    menu: settings.menu as Json,
-    session: settings.session as Json,
-    shopping: settings.shopping as Json,
-    equipment: settings.equipment as Json,
-  });
-  if (settingsError) return { ok: false, error: toUserMessage(settingsError) };
+    diet: json(settings.diet),
+    menu: json(settings.menu),
+    session: json(settings.session),
+    shopping: json(settings.shopping),
+    equipment: json(settings.equipment),
+  };
+  try {
+    await withSession((db) =>
+      db
+        .insertInto("household_settings")
+        .values({ household_id: householdId, ...values })
+        .onConflict((oc) => oc.column("household_id").doUpdateSet(values))
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
 
-  const { data: household } = await supabase
-    .from("households")
-    .select("timezone")
-    .eq("id", householdId)
-    .single();
+  const household = await withSession(async (db) => {
+    const row = await db
+      .selectFrom("households")
+      .select("timezone")
+      .where("id", "=", householdId)
+      .executeTakeFirst();
+    await db
+      .updateTable("households")
+      .set({
+        onboarded_at: new Date().toISOString(),
+        alternating_from:
+          input.household.alternating.enabled && input.household.alternating.from
+            ? mondayOf(input.household.alternating.from)
+            : null,
+      })
+      .where("id", "=", householdId)
+      .execute();
+    return row;
+  });
   const today = todayIn(household?.timezone ?? "Europe/Paris");
-  await supabase
-    .from("households")
-    .update({
-      onboarded_at: new Date().toISOString(),
-      alternating_from:
-        input.household.alternating.enabled && input.household.alternating.from
-          ? mondayOf(input.household.alternating.from)
-          : null,
-    })
-    .eq("id", householdId);
 
   await trackEvent("onboarding_done", { userId: user.id, householdId });
   await trackEvent("trial_started", { userId: user.id, householdId });
@@ -136,15 +179,20 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     await sendWelcome(user.email, user.id, input.household.members[0]?.name ?? "").catch(() => null);
 
   // Heures de notification du compte (le consentement aux notifications se donne plus tard, §4).
-  await supabase
-    .from("user_settings")
-    .update({
-      notifications: notificationsSchema.parse({
-        dinner: { enabled: true, time: input.habits.dinnerTime },
-        thaw: { enabled: true, time: input.habits.thawTime },
-      }) as Json,
-    })
-    .eq("user_id", user.id);
+  await withSession((db) =>
+    db
+      .updateTable("user_settings")
+      .set({
+        notifications: json(
+          notificationsSchema.parse({
+            dinner: { enabled: true, time: input.habits.dinnerTime },
+            thaw: { enabled: true, time: input.habits.thawTime },
+          }),
+        ),
+      })
+      .where("user_id", "=", user.id)
+      .execute(),
+  );
 
   // Première semaine.
   const start = nextMonday(today);

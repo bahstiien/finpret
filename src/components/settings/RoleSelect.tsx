@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { FormMessage } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
-import type { HouseholdRole } from "@/lib/supabase/database.types";
+import type { HouseholdRole } from "@/server/db.types";
 import { changeRole } from "@/server/actions/households";
 
 export function RoleSelect({

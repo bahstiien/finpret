@@ -1,7 +1,8 @@
 import "server-only";
+import { sql } from "kysely";
 import { type EventName, ONCE_PER_USER } from "@/lib/events";
-import type { Json } from "@/lib/supabase/database.types";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { json, withAdmin } from "@/server/db";
+import type { Json } from "@/server/db.types";
 
 export type TrackOptions = {
   userId?: string | null;
@@ -18,23 +19,29 @@ export type TrackOptions = {
 export async function trackEvent(name: EventName, options: TrackOptions = {}): Promise<void> {
   try {
     const { userId = null, householdId = null, props = {}, dedupeKey } = options;
-    const db = createAdminClient();
     const once = ONCE_PER_USER.includes(name);
-    if (once || dedupeKey) {
-      let query = db.from("events").select("id", { head: true, count: "exact" }).eq("name", name);
-      if (userId) query = query.eq("user_id", userId);
-      else if (householdId) query = query.eq("household_id", householdId);
-      if (dedupeKey) query = query.eq("props->>key", dedupeKey);
-      const { count } = await query;
-      if (count) return;
-    }
-    const { error } = await db.from("events").insert({
-      name,
-      user_id: userId,
-      household_id: householdId,
-      props: dedupeKey ? { ...props, key: dedupeKey } : props,
+    await withAdmin(async (db) => {
+      if (once || dedupeKey) {
+        let query = db
+          .selectFrom("events")
+          .select((eb) => eb.fn.countAll<number>().as("n"))
+          .where("name", "=", name);
+        if (userId) query = query.where("user_id", "=", userId);
+        else if (householdId) query = query.where("household_id", "=", householdId);
+        if (dedupeKey) query = query.where(sql`props->>'key'`, "=", dedupeKey);
+        const { n } = await query.executeTakeFirstOrThrow();
+        if (Number(n)) return;
+      }
+      await db
+        .insertInto("events")
+        .values({
+          name,
+          user_id: userId,
+          household_id: householdId,
+          props: json(dedupeKey ? { ...props, key: dedupeKey } : props),
+        })
+        .execute();
     });
-    if (error) console.error(`événement ${name} non enregistré :`, error.message);
   } catch (error) {
     console.error(`événement ${name} non enregistré :`, error);
   }

@@ -6,9 +6,8 @@ import { urlFromShare } from "@/engine/import/url";
 import { ORIGINS } from "@/engine/origins";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
-import { createClient } from "@/lib/supabase/server";
 import { loadLibrary } from "@/server/catalog";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.recipeImport.title };
 
@@ -24,13 +23,15 @@ export default async function ImportPage({ searchParams }: { searchParams: Promi
 
   let edit: { id: string; form: ReturnType<typeof fromRecipe> } | null = null;
   if (params.edit) {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("recipes")
-      .select("id, kind, data, source_url, source_name")
-      .eq("id", params.edit)
-      .eq("household_id", household.id)
-      .maybeSingle();
+    const editId = params.edit;
+    const data = await withSession((db) =>
+      db
+        .selectFrom("recipes")
+        .select(["id", "kind", "data", "source_url", "source_name"])
+        .where("id", "=", editId)
+        .where("household_id", "=", household.id)
+        .executeTakeFirst(),
+    );
     if (!data || data.kind === "breakfast") redirect("/app/discover");
     edit = {
       id: data.id,

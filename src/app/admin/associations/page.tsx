@@ -3,6 +3,7 @@ import { ActionForm } from "@/components/ui/ActionForm";
 import { checkAssociationEmail, checkRnaOrSiren } from "@/lib/rna";
 import { approveAssociation, setAssociationSuspended } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { withAdmin } from "@/server/db";
 import { Card } from "@/components/ui/Card";
 
 const STATUS = {
@@ -14,14 +15,27 @@ const STATUS = {
 
 /** Validation des associations : contrôle du RNA/SIREN et de l'e-mail, puis validation ou refus motivé. */
 export default async function AdminAssociationsPage() {
-  const { db } = await requireAdmin();
-  const { data } = await db
-    .from("associations")
-    .select("id, name, rna_or_siren, email, manager_name, code, status, reject_reason, created_at")
-    .order("created_at", { ascending: false })
-    .limit(200);
+  await requireAdmin();
+  const data = await withAdmin((db) =>
+    db
+      .selectFrom("associations")
+      .select([
+        "id",
+        "name",
+        "rna_or_siren",
+        "email",
+        "manager_name",
+        "code",
+        "status",
+        "reject_reason",
+        "created_at",
+      ])
+      .orderBy("created_at", "desc")
+      .limit(200)
+      .execute(),
+  );
   const order = { pending: 0, approved: 1, suspended: 2, rejected: 3 } as const;
-  const rows = [...(data ?? [])].sort((a, b) => order[a.status] - order[b.status]);
+  const rows = [...data].sort((a, b) => order[a.status] - order[b.status]);
   return (
     <>
       <h1 className="text-4xl font-black">Associations</h1>

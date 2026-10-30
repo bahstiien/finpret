@@ -1,10 +1,18 @@
 import { expect, type Page, test } from "@playwright/test";
-import { adminClient, signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import {
+  adminDb,
+  createUser,
+  dbConfigured,
+  householdIdOf,
+  signInFromLoginPage,
+  uniqueEmail,
+  userIdOf,
+} from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Réglages › Abonnement : offre, paiement, carte, résiliation, factures. Les appels Stripe qui exigent un compte
 // réel (liste des factures, carte) sont vérifiés sur leur repli ; seule la création d'un Checkout (clé de test) part vers Stripe.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 async function signUpWithHousehold(page: Page, name: string) {
@@ -13,14 +21,6 @@ async function signUpWithHousehold(page: Page, name: string) {
   await signInFromLoginPage(page, email);
   await completeOnboarding(page, name);
   return email;
-}
-
-async function householdIdOf(email: string) {
-  const admin = adminClient();
-  const { data: users } = await admin.auth.admin.listUsers({ perPage: 1000 });
-  const userId = users.users.find((u) => u.email === email)!.id;
-  const { data } = await admin.from("memberships").select("household_id").eq("user_id", userId).single();
-  return data!.household_id;
 }
 
 test("l'ancienne adresse redirige vers Réglages et l'essai propose les deux formules", async ({ page }) => {
@@ -64,17 +64,17 @@ test("un abonnement actif affiche l'échéance, un paiement refusé et le repli 
   const householdId = await householdIdOf(email);
   const suffix = Date.now().toString(36);
   const periodEnd = new Date(Date.now() + 20 * 86_400_000).toISOString();
-  const { error } = await adminClient()
-    .from("subscriptions")
-    .update({
+  await adminDb()
+    .updateTable("subscriptions")
+    .set({
       plan: "monthly",
       status: "past_due",
       current_period_end: periodEnd,
       stripe_customer_id: `cus_e2e_${suffix}`,
       stripe_subscription_id: `sub_e2e_${suffix}`,
     })
-    .eq("household_id", householdId);
-  expect(error).toBeNull();
+    .where("household_id", "=", householdId)
+    .execute();
 
   await page.goto("/settings/subscription");
   await expect(page.getByTestId("offer-status")).toContainText("Abonnement mensuel actif");
@@ -91,7 +91,19 @@ test("un abonnement actif affiche l'échéance, un paiement refusé et le repli 
 test("un membre n'a qu'un message : ni paiement, ni factures", async ({ page }) => {
   const email = await signUpWithHousehold(page, "Famille Membre");
   const householdId = await householdIdOf(email);
-  await adminClient().from("memberships").update({ role: "member" }).eq("household_id", householdId);
+  // Un foyer garde toujours un administrateur (garde-fou `last_admin`) : un second compte le devient d'abord.
+  const otherAdmin = await createUser(uniqueEmail("admin-bis"));
+  await adminDb()
+    .insertInto("memberships")
+    .values({ household_id: householdId, user_id: otherAdmin, role: "admin" })
+    .execute();
+  const userId = await userIdOf(email);
+  await adminDb()
+    .updateTable("memberships")
+    .set({ role: "member" })
+    .where("household_id", "=", householdId)
+    .where("user_id", "=", userId)
+    .execute();
   await page.goto("/settings/subscription");
   await expect(page.getByText("Seul l'administrateur du foyer gère l'abonnement")).toBeVisible();
   await expect(page.getByTestId("choose-monthly")).toHaveCount(0);

@@ -1,12 +1,17 @@
-import { existsSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 import { cronSecret } from "./tests/e2e/helpers/cron";
 
-// Mêmes variables que l'application (URL et clé Supabase locales).
+// Mêmes variables que l'application (DATABASE_URL de la base Postgres locale, secrets Better Auth).
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
-const PORT = 3100;
+const PORT = 3300;
+
+// Liens magiques déposés par l'application au lieu d'être envoyés (lus par helpers/auth.ts).
+// Vidé au démarrage par le processus principal seulement : les workers rechargent aussi ce fichier.
+const MAGIC_LINK_DIR = path.resolve("test-results/magic-links");
+if (!process.env.TEST_WORKER_INDEX) rmSync(MAGIC_LINK_DIR, { recursive: true, force: true });
 
 export default defineConfig({
   testDir: "tests/e2e",
@@ -36,6 +41,9 @@ export default defineConfig({
       IMPORT_FIXTURES_DIR: path.resolve("tests/fixtures/import"),
       // Planificateur des notifications (§12) appelé par les tests.
       CRON_SECRET: cronSecret(),
+      // Connexion : liens magiques écrits dans ce dossier (seulement si APP_URL est en localhost).
+      E2E_MAGIC_LINK_DIR: MAGIC_LINK_DIR,
+      APP_URL: `http://localhost:${PORT}`,
     },
   },
 });

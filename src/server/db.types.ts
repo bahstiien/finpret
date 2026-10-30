@@ -9,13 +9,12 @@ export type AssociationRole = "manager" | "menu_editor";
 
 export type AssociationStatus = "approved" | "pending" | "rejected" | "suspended";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
 
 export type HouseholdRole = "admin" | "member" | "viewer";
-
-export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
 export type Json = JsonValue;
 
@@ -29,25 +28,23 @@ export type JsonPrimitive = boolean | number | string | null;
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
-export type Numeric = ColumnType<string, number | string, number | string>;
-
-export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+export type Numeric = ColumnType<number, number | string, number | string>;
 
 export interface Achievements {
-  achieved_at: Generated<Timestamp>;
+  achieved_at: Generated<string>;
   household_id: string;
   key: string;
-  kind: string;
-  seen_at: Timestamp | null;
+  kind: "streak" | "country" | "season";
+  seen_at: string | null;
 }
 
 export interface AdaptationEvents {
   author: Generated<string | null>;
   changes: Json;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   id: Generated<string>;
-  kind: Generated<string>;
+  kind: Generated<"apply" | "undo">;
   op_key: string;
   preview_id: string | null;
   undone_by: string | null;
@@ -55,28 +52,28 @@ export interface AdaptationEvents {
 }
 
 export interface AdaptationPreviews {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   created_by: Generated<string | null>;
-  expires_at: Generated<Timestamp>;
+  expires_at: Generated<string>;
   fingerprint: string;
   household_id: string;
   id: Generated<string>;
   payload: Json;
-  used_at: Timestamp | null;
+  used_at: string | null;
   week_id: string;
 }
 
 export interface AdminAudit {
   action: string;
   admin_id: string | null;
-  created_at: Generated<Timestamp>;
-  id: Generated<Int8>;
+  created_at: Generated<string>;
+  id: Generated<number>;
   props: Json | null;
   target: string | null;
 }
 
 export interface Admins {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   user_id: string;
 }
 
@@ -87,18 +84,18 @@ export interface Aisles {
 }
 
 export interface AssociationInvitations {
-  accepted_at: Timestamp | null;
+  accepted_at: string | null;
   association_id: string;
   created_by: Generated<string | null>;
   email: string;
-  expires_at: Generated<Timestamp>;
+  expires_at: Generated<string>;
   id: Generated<string>;
   token: Generated<string>;
 }
 
 export interface AssociationKits {
   association_id: string;
-  generated_at: Timestamp | null;
+  generated_at: string | null;
   source_hash: string | null;
   tuto_pdf_path: string | null;
 }
@@ -107,8 +104,8 @@ export interface AssociationLeads {
   association_name: string;
   city: string | null;
   consent: boolean;
-  contacted_at: Timestamp | null;
-  created_at: Generated<Timestamp>;
+  contacted_at: string | null;
+  created_at: Generated<string>;
   email: string;
   families_estimate: number | null;
   id: Generated<string>;
@@ -123,10 +120,10 @@ export interface AssociationMembers {
 }
 
 export interface Associations {
-  approved_at: Timestamp | null;
+  approved_at: string | null;
   code: string;
   code_changed: Generated<boolean>;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   created_by: string | null;
   email: string;
   iban_encrypted: string | null;
@@ -146,42 +143,42 @@ export interface AssociationSchools {
 
 export interface AuthAccounts {
   access_token: string | null;
-  access_token_expires_at: Timestamp | null;
+  access_token_expires_at: string | null;
   account_id: string;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   id: Generated<string>;
   id_token: string | null;
   password: string | null;
   provider_id: string;
   refresh_token: string | null;
-  refresh_token_expires_at: Timestamp | null;
+  refresh_token_expires_at: string | null;
   scope: string | null;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   user_id: string;
 }
 
 export interface AuthAdminTotp {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   secret_encrypted: string;
   user_id: string;
-  verified_at: Timestamp | null;
+  verified_at: string | null;
 }
 
 export interface AuthSessions {
-  created_at: Generated<Timestamp>;
-  expires_at: Timestamp;
+  created_at: Generated<string>;
+  expires_at: string;
   id: Generated<string>;
   ip_address: string | null;
-  mfa_verified_at: Timestamp | null;
+  mfa_verified_at: string | null;
   token: string;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   user_agent: string | null;
   user_id: string;
 }
 
 export interface AuthUsers {
   aud: string | null;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   email: string | null;
   email_verified: Generated<boolean>;
   id: Generated<string>;
@@ -190,54 +187,54 @@ export interface AuthUsers {
   name: string | null;
   raw_user_meta_data: Generated<Json>;
   role: string | null;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
 }
 
 export interface AuthVerifications {
-  created_at: Generated<Timestamp>;
-  expires_at: Timestamp;
+  created_at: Generated<string>;
+  expires_at: string;
   id: Generated<string>;
   identifier: string;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   value: string;
 }
 
 export interface CanteenMenus {
-  date: Timestamp;
+  date: string;
   id: Generated<string>;
   member_id: string;
-  source: Generated<string>;
+  source: Generated<"manual" | "pdf" | "url">;
   text: string;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   validated: Generated<boolean>;
 }
 
 export interface CanteenNotifications {
   iso_week: string;
   school_id: string;
-  sent_at: Generated<Timestamp>;
+  sent_at: Generated<string>;
 }
 
 export interface CoverageConfirmations {
   author: Generated<string | null>;
   confirmed_need: Numeric;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   ingredient_key: string;
   week_id: string;
 }
 
 export interface Events {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string | null;
-  id: Generated<Int8>;
+  id: Generated<number>;
   name: string;
   props: Generated<Json>;
   user_id: string | null;
 }
 
 export interface Freezer {
-  frozen_at: Generated<Timestamp>;
+  frozen_at: Generated<string>;
   household_id: string;
   id: Generated<string>;
   portions: number;
@@ -246,23 +243,23 @@ export interface Freezer {
 
 export interface HouseholdIngredients {
   aisle: string;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   key: string;
   label: string;
   synonyms: Generated<string[]>;
-  unit: string;
+  unit: "g" | "ml" | "pc" | "boite" | "cs" | "cc";
 }
 
 export interface Households {
-  alternating_from: Timestamp | null;
+  alternating_from: string | null;
   association_id: string | null;
-  association_joined_at: Timestamp | null;
-  created_at: Generated<Timestamp>;
+  association_joined_at: string | null;
+  created_at: Generated<string>;
   created_by: string | null;
   id: Generated<string>;
   name: string;
-  onboarded_at: Timestamp | null;
+  onboarded_at: string | null;
   timezone: Generated<string>;
 }
 
@@ -274,7 +271,7 @@ export interface HouseholdSettings {
   menu: Json;
   session: Json;
   shopping: Json;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   version: Generated<number>;
 }
 
@@ -286,7 +283,7 @@ export interface Ingredients {
   key: string;
   label: string;
   seasonal: Generated<boolean>;
-  unit: string;
+  unit: "g" | "ml" | "pc" | "boite" | "cs" | "cc";
 }
 
 export interface IngredientSynonyms {
@@ -295,12 +292,12 @@ export interface IngredientSynonyms {
 }
 
 export interface Invitations {
-  accepted_at: Timestamp | null;
+  accepted_at: string | null;
   accepted_by: string | null;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   created_by: Generated<string | null>;
   email: string | null;
-  expires_at: Generated<Timestamp>;
+  expires_at: Generated<string>;
   household_id: string;
   id: Generated<string>;
   role: Generated<HouseholdRole>;
@@ -309,11 +306,11 @@ export interface Invitations {
 
 export interface Members {
   archived: Generated<boolean>;
-  birthdate: Timestamp | null;
+  birthdate: string | null;
   diet: string | null;
   household_id: string;
   id: Generated<string>;
-  kind: string;
+  kind: "adult" | "child";
   name: string;
   portion_override: Numeric | null;
   user_id: string | null;
@@ -326,18 +323,18 @@ export interface MemberSchools {
 }
 
 export interface Memberships {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   role: Generated<HouseholdRole>;
   user_id: string;
 }
 
 export interface NotificationLog {
-  day: Timestamp;
-  id: Generated<Int8>;
+  day: string;
+  id: Generated<number>;
   kind: string;
   payload: Json | null;
-  sent_at: Generated<Timestamp>;
+  sent_at: Generated<string>;
   user_id: string;
 }
 
@@ -352,16 +349,16 @@ export interface Pantry {
   household_id: string;
   ingredient_key: string;
   qty: Numeric | null;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
 }
 
 export interface PayoutLines {
   amount_cents: number;
   association_id: string;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string | null;
   id: Generated<string>;
-  kind: string;
+  kind: "yearly" | "monthly" | "refund";
   payout_id: string | null;
   stripe_invoice_id: string | null;
 }
@@ -370,26 +367,26 @@ export interface Payouts {
   amount_cents: number;
   association_id: string;
   id: Generated<string>;
-  paid_at: Timestamp | null;
+  paid_at: string | null;
   quarter: string;
   statement_path: string | null;
-  status: string;
+  status: "ready" | "paid" | "carried_over";
 }
 
 export interface PreparationStates {
   household_id: string;
-  state: string;
+  state: "started" | "prepared";
   uid: string;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   updated_by: Generated<string | null>;
   week_id: string;
 }
 
 export interface PresenceRules {
-  meal: string;
+  meal: "lunch" | "dinner";
   member_id: string;
   present: boolean;
-  week_parity: Generated<string>;
+  week_parity: Generated<"all" | "A" | "B">;
   weekday: number;
 }
 
@@ -401,19 +398,19 @@ export interface Profiles {
 
 export interface PurchaseEvents {
   author: Generated<string | null>;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   id: Generated<string>;
   ingredient_key: string;
   op_key: string;
   qty: Numeric;
-  seq: Generated<Int8>;
-  type: string;
+  seq: Generated<number>;
+  type: "purchase" | "correction" | "transfer_out" | "transfer_in";
   week_id: string;
 }
 
 export interface PushSubscriptions {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   endpoint: string;
   id: Generated<string>;
   keys: Json;
@@ -429,67 +426,67 @@ export interface Ratings {
 
 export interface RecipeCooks {
   backfilled: Generated<boolean>;
-  cooked_on: Timestamp;
+  cooked_on: string;
   household_id: string;
-  id: Generated<Int8>;
-  kind: string;
+  id: Generated<number>;
+  kind: "main" | "soup" | "simple";
   recipe_id: string;
   week_id: string | null;
 }
 
 export interface RecipeImports {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   created_by: Generated<string | null>;
   error: string | null;
   household_id: string;
   id: Generated<string>;
-  method: string | null;
+  method: "jsonld" | "microdata" | "llm" | "manual" | null;
   raw_ingredients: string[] | null;
   recipe_id: string | null;
-  status: Generated<string>;
+  status: Generated<"pending" | "parsed" | "failed" | "validated">;
   url: string;
 }
 
 export interface Recipes {
   allergens: Generated<string[] | null>;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   data: Json;
   diet_tags: Generated<string[] | null>;
   household_id: string | null;
   id: string;
   imported_by: string | null;
   is_active: Generated<boolean>;
-  kind: string;
+  kind: "main" | "soup" | "simple" | "cake" | "breakfast";
   months: number[] | null;
   name: Generated<string | null>;
   origin: string | null;
-  protein: string | null;
+  protein: "volaille" | "boeuf" | "porc" | "poisson" | "veg" | null;
   source_name: string | null;
   source_url: string | null;
-  status: Generated<string>;
+  status: Generated<"draft" | "validated">;
 }
 
 export interface SchoolMenus {
   association_id: string | null;
   dairy: string | null;
-  date: Timestamp;
+  date: string;
   dessert: string | null;
   edited_after_publish: Generated<boolean>;
   id: Generated<string>;
   main: string | null;
   note: string | null;
-  published_at: Timestamp | null;
+  published_at: string | null;
   published_by: string | null;
   school_id: string;
   side: string | null;
   starter: string | null;
-  status: Generated<string>;
-  updated_at: Generated<Timestamp>;
+  status: Generated<"draft" | "published">;
+  updated_at: Generated<string>;
 }
 
 export interface Schools {
   city: string;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   id: Generated<string>;
   name: string;
   uai: string | null;
@@ -497,24 +494,24 @@ export interface Schools {
 
 export interface Sessions {
   current_step: Generated<number>;
-  done_at: Timestamp | null;
+  done_at: string | null;
   household_id: string;
-  started_at: Timestamp | null;
+  started_at: string | null;
   tasks_done: Generated<Json>;
   timers: Generated<Json>;
-  updated_at: Generated<Timestamp>;
+  updated_at: Generated<string>;
   week_id: string;
 }
 
 export interface ShoppingIssues {
   author: Generated<string | null>;
-  created_at: Generated<Timestamp>;
-  decision: Generated<string>;
+  created_at: Generated<string>;
+  decision: Generated<"open" | "search_elsewhere" | "no_more">;
   household_id: string;
   id: Generated<string>;
   ingredient_key: string;
-  kind: Generated<string>;
-  updated_at: Generated<Timestamp>;
+  kind: Generated<"not_found">;
+  updated_at: Generated<string>;
   week_id: string;
 }
 
@@ -523,41 +520,41 @@ export interface ShoppingItems {
   aisle: string;
   checked: Generated<boolean>;
   checked_by: string | null;
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   id: Generated<string>;
   ingredient_key: string | null;
   label: string | null;
   qty_text: string | null;
-  source: string;
-  updated_at: Generated<Timestamp>;
+  source: "menu" | "pantry_check" | "manual";
+  updated_at: Generated<string>;
   week_id: string | null;
 }
 
 export interface StreakWeeks {
-  closed_at: Timestamp | null;
+  closed_at: string | null;
   household_id: string;
-  outcome: string;
-  source: string | null;
-  week_start: Timestamp;
+  outcome: "done" | "paused" | "neutral" | "missed";
+  source: "auto" | "planned" | "admin" | null;
+  week_start: string;
 }
 
 export interface StripeEvents {
   id: string;
   payload: Json;
-  received_at: Generated<Timestamp>;
+  received_at: Generated<string>;
   type: string;
 }
 
 export interface Subscriptions {
-  current_period_end: Timestamp | null;
+  current_period_end: string | null;
   household_id: string;
-  plan: Generated<string>;
+  plan: Generated<"trial" | "monthly" | "yearly" | "free">;
   status: Generated<string>;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
-  trial_ends_at: Timestamp | null;
-  updated_at: Generated<Timestamp>;
+  trial_ends_at: string | null;
+  updated_at: Generated<string>;
 }
 
 export interface UserSettings {
@@ -566,15 +563,15 @@ export interface UserSettings {
 }
 
 export interface Weeks {
-  created_at: Generated<Timestamp>;
+  created_at: Generated<string>;
   household_id: string;
   id: Generated<string>;
   pantry_done: Generated<boolean>;
   pasta_need: number | null;
   plan: Json;
-  start_date: Timestamp;
-  status: string;
-  updated_at: Generated<Timestamp>;
+  start_date: string;
+  status: "draft" | "active" | "done";
+  updated_at: Generated<string>;
 }
 
 export interface DB {

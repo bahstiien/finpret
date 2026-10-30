@@ -1,24 +1,28 @@
+import { sql } from "kysely";
 import { requireAdmin } from "@/server/admin";
+import { withAdmin } from "@/server/db";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
 
 /** Accueil du back-office : quelques compteurs. */
 export default async function AdminHome() {
-  const { db } = await requireAdmin();
-  const count = async (
-    table: "associations" | "households" | "association_leads" | "payouts",
-    col?: [string, string],
-  ) => {
-    let q = db.from(table).select("*", { count: "exact", head: true });
-    if (col) q = q.eq(col[0] as never, col[1] as never);
-    return (await q).count ?? 0;
-  };
-  const [pending, households, leads, ready] = await Promise.all([
-    count("associations", ["status", "pending"]),
-    count("households"),
-    count("association_leads"),
-    count("payouts", ["status", "ready"]),
-  ]);
+  await requireAdmin();
+  const [pending, households, leads, ready] = await withAdmin(async (db) => {
+    const count = async (
+      table: "associations" | "households" | "association_leads" | "payouts",
+      status?: "pending" | "ready",
+    ) => {
+      let q = db.selectFrom(table).select(sql<number>`count(*)`.as("n"));
+      if (status) q = q.where(sql.ref("status"), "=", status);
+      return Number((await q.executeTakeFirst())?.n ?? 0);
+    };
+    return [
+      await count("associations", "pending"),
+      await count("households"),
+      await count("association_leads"),
+      await count("payouts", "ready"),
+    ];
+  });
   const cards = [
     ["Associations à valider", pending],
     ["Foyers", households],

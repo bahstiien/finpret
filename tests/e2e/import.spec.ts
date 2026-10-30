@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 import { FEATURES } from "../../src/lib/features";
 
 // §8.8 Import de recette par lien. Les pages sont des fixtures servies sous https://recettes.test/<nom>.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(
   !FEATURES.recipeImport,
   "Import de recettes REPORTÉ (SPEC_JANVIER) : drapeau FEATURES.recipeImport",

@@ -13,7 +13,7 @@ import {
 import { shoppingNeeds } from "@/engine/shopping";
 import type { PortionModel } from "@/engine/portions";
 import type { Pantry, WeekPlan } from "@/engine/types";
-import { createClient } from "@/lib/supabase/server";
+import { withSession } from "@/server/session";
 
 /** Vue des achats réels d'une semaine pour l'écran Courses : besoin, acheté, reste, surplus, état. */
 
@@ -62,14 +62,25 @@ export async function loadPurchaseView(
   checked: ReadonlySet<string>,
   unverified: ReadonlySet<string> = new Set(),
 ): Promise<{ lines: Record<string, PurchaseLine>; revision: number }> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("purchase_events")
-    .select("id, week_id, ingredient_key, qty, type, op_key")
-    .eq("week_id", week.id)
-    .order("created_at");
-  if (error) throw error;
-  const log: PurchaseEvent[] = (data ?? []).map((r) => ({
+  const { data, issueRows, confRows } = await withSession(async (db) => ({
+    data: await db
+      .selectFrom("purchase_events")
+      .select(["id", "week_id", "ingredient_key", "qty", "type", "op_key"])
+      .where("week_id", "=", week.id)
+      .orderBy("created_at")
+      .execute(),
+    issueRows: await db
+      .selectFrom("shopping_issues")
+      .select(["ingredient_key", "decision"])
+      .where("week_id", "=", week.id)
+      .execute(),
+    confRows: await db
+      .selectFrom("coverage_confirmations")
+      .select(["ingredient_key", "confirmed_need"])
+      .where("week_id", "=", week.id)
+      .execute(),
+  }));
+  const log: PurchaseEvent[] = data.map((r) => ({
     id: r.id,
     weekId: r.week_id,
     ingredient: r.ingredient_key,
@@ -77,18 +88,8 @@ export async function loadPurchaseView(
     type: r.type,
     opKey: r.op_key,
   }));
-  const { data: issueRows, error: issueErr } = await supabase
-    .from("shopping_issues")
-    .select("ingredient_key, decision")
-    .eq("week_id", week.id);
-  if (issueErr) throw issueErr;
-  const issues = new Map((issueRows ?? []).map((r) => [r.ingredient_key, r.decision]));
-  const { data: confRows, error: confErr } = await supabase
-    .from("coverage_confirmations")
-    .select("ingredient_key, confirmed_need")
-    .eq("week_id", week.id);
-  if (confErr) throw confErr;
-  const confirmed = new Map((confRows ?? []).map((r) => [r.ingredient_key, Number(r.confirmed_need)]));
+  const issues = new Map(issueRows.map((r) => [r.ingredient_key, r.decision]));
+  const confirmed = new Map(confRows.map((r) => [r.ingredient_key, Number(r.confirmed_need)]));
   const withEvents = new Set(log.map((e) => e.ingredient));
   const lines: Record<string, PurchaseLine> = {};
   for (const [k, n] of Object.entries(shoppingNeeds(env, week.plan, pm, pantry, cakeOn))) {
