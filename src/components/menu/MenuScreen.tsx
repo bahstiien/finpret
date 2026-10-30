@@ -143,7 +143,7 @@ export function MenuScreen({
             {fr.menu.weekOf(formatShort(view.start))}
           </p>
           <h1 className="t-1 [overflow-wrap:anywhere]">{t.title}</h1>
-          <p className="t-small muted">
+          <p className="t-small muted" data-testid="menu-greeting">
             {header.greeting}, <span className="break-words">{header.name}</span>{" "}
             <span aria-hidden="true">👋</span>
             {tonightName && (

@@ -103,8 +103,9 @@
 .btn:focus-visible,.btn.is-focus{outline:3px solid var(--focus);outline-offset:3px}
 .btn--primary{background:var(--cta);color:var(--on-cta)}
 .btn--secondary{background:var(--violet);color:var(--on-violet)}
-.btn--outline{background:transparent;box-shadow:none}
-.btn--outline:hover,.btn--outline.is-hover{transform:none;background:var(--chip);box-shadow:var(--sh-sm)}
+/* Transparent : le texte prend la couleur de son support (aplat compris, en clair comme en sombre). */
+.btn--outline{background:transparent;box-shadow:none;color:inherit}
+.btn--outline:hover,.btn--outline.is-hover{transform:none;background:var(--chip);color:var(--ink);box-shadow:var(--sh-sm)}
 .btn--outline:active,.btn--outline.is-active{transform:translate(var(--off-sm),var(--off-sm));box-shadow:none}
 .btn--dark{background:var(--nav);color:var(--on-nav);box-shadow:var(--off) var(--off) 0 var(--violet)}
 .btn--dark:hover,.btn--dark.is-hover{box-shadow:calc(var(--off) - 2px) calc(var(--off) - 2px) 0 var(--violet)}

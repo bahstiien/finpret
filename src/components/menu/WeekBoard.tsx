@@ -38,6 +38,7 @@ function DayCard({
             type="button"
             onClick={onSelect}
             aria-pressed={selected}
+            aria-label={`${fr.days[day.day - 1]} ${Number(day.iso.slice(8))}${today ? `, ${t.today}` : ""}`}
             className="cursor-pointer uppercase underline-offset-4 hover:underline"
           >
             {label}

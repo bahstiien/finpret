@@ -88,7 +88,7 @@ test.describe("mobile", () => {
     await completeOnboarding(page, "Mobile");
     await page.getByRole("link", { name: "Voir mon menu" }).click();
     await page.getByTestId("week-title").waitFor();
-    await page.getByRole("heading", { level: 1 }).filter({ hasText: "Camille" }).waitFor();
+    await page.getByTestId("menu-greeting").filter({ hasText: "Camille" }).waitFor();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
   });

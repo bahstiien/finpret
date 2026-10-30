@@ -6,7 +6,8 @@ test("la page d'accueil s'affiche en français", async ({ page }) => {
   await expect(page).toHaveTitle(/^Fin Prêt/);
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("2 h 30 le dimanche.");
-  await expect(page.getByRole("link", { name: "Connexion" }).first()).toHaveAttribute("href", "/login");
+  // « Connexion » n'apparaît qu'à partir de 900 px ; sur mobile, « Commencer » mène aussi à /login.
+  await expect(page.getByRole("banner").locator('a[href="/login"]:visible').first()).toBeVisible();
 });
 
 test("aucun défilement horizontal", async ({ page }) => {

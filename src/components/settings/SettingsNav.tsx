@@ -30,7 +30,7 @@ export function SettingsNav({ sections }: { sections: (keyof typeof fr.settings.
         <li>
           <Link
             href="/app/progress?from=profile"
-            className="chiptg whitespace-nowrap !bg-banana !text-ink"
+            className="chiptg whitespace-nowrap !bg-banana ![color:var(--on-banane)]"
           >
             <Icon name="passport" className="size-4" />
             {fr.progress.nav}

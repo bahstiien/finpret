@@ -66,6 +66,10 @@ test("session complète, minuteurs persistants, état partagé entre appareils",
   // Minuteur arrivé à échéance (horloge simulée) : pilule « prêt », puis OK.
   const clockPage = await context.newPage();
   await clockPage.clock.install();
+  // Les recettes cuisinées ont pu rapporter des tampons : leur célébration s'ouvre sur /app, par-dessus le minuteur.
+  await clockPage.addLocatorHandler(clockPage.getByRole("dialog"), async (dialog) => {
+    await dialog.getByRole("button", { name: "Fermer" }).click();
+  });
   await clockPage.goto("/app");
   await expect(clockPage.getByTestId("timer-bar")).toBeVisible();
   await clockPage.clock.fastForward("02:00:00");

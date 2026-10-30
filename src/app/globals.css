@@ -226,6 +226,10 @@
     color: #000 !important;
     background: transparent !important;
   }
+  /* Le titre d'écran (t-1, 56 px) ferait passer la semaine sur deux pages. */
+  .print-sheet .t-1 {
+    font-size: 24px;
+  }
 }
 
 /* Archivo Black n'a qu'une graisse : on évite le faux gras des utilitaires font-bold sur les titres. */

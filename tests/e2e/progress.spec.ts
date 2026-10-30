@@ -115,8 +115,10 @@ test("masquer la série retire la tuile ; réafficher restitue l'historique", as
   await expect(page.getByTestId("streak-tile")).toContainText("3 semaines");
 
   await page.goto("/settings/profile");
+  // La case est masquée (interrupteur dessiné) : on clique son libellé, comme un utilisateur.
   const toggle = page.getByLabel("Afficher la série et le passeport");
-  await toggle.uncheck();
+  await page.getByText("Afficher la série et le passeport").click();
+  await expect(toggle).not.toBeChecked();
   await expect(page.getByText(/Enregistré/)).toBeVisible();
   await page.goto("/app");
   await expect(page.getByTestId("streak-tile")).toHaveCount(0);
@@ -125,7 +127,8 @@ test("masquer la série retire la tuile ; réafficher restitue l'historique", as
   await expect(page.getByTestId("streak-current")).toContainText("3 semaines");
 
   await page.goto("/settings/profile");
-  await page.getByLabel("Afficher la série et le passeport").check();
+  await page.getByText("Afficher la série et le passeport").click();
+  await expect(page.getByLabel("Afficher la série et le passeport")).toBeChecked();
   await expect(page.getByText(/Enregistré/)).toBeVisible();
   await page.goto("/app");
   await expect(page.getByTestId("streak-tile")).toContainText("3 semaines");
