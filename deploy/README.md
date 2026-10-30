@@ -16,8 +16,8 @@ Sur le VPS, `docker-compose.yml` fait tourner quatre services :
 
 ```bash
 mkdir -p ~/finpret/backups && cd ~/finpret
-# copier ici, depuis le dossier deploy/ du dépôt : docker-compose.yml, Caddyfile, backup.sh et le dossier db-init/
-chmod +x backup.sh db-init/01-roles.sh
+# copier ici, depuis le dossier deploy/ du dépôt : docker-compose.yml, Caddyfile, backup.sh, cron.sh et le dossier db-init/
+chmod +x backup.sh cron.sh db-init/01-roles.sh
 nano .env                   # mots de passe de la base : voir compose.env.example (openssl rand -hex 32)
 nano .env.production        # variables de l'app : voir .env.example ; DATABASE_URL et FILES_DIR viennent du compose
 chmod 600 .env .env.production
@@ -50,6 +50,11 @@ BACKUP_PING_URL=https://hc-ping.com/<uuid>   # surveillance : alerte si la sauve
 ```
 
 Restauration et test de restauration : `docs/RESTAURATION.md`.
+
+## Tâches planifiées
+
+`cron.sh <tâche>` appelle `/api/cron/<tâche>` depuis le conteneur de l'app avec le `CRON_SECRET` de `.env.production`
+(remplace `pg_cron` de Supabase). Lignes de crontab et ordre de mise en service : `docs/MISE_EN_SERVICE.md`.
 
 ## Clé de déploiement (distincte de ta clé personnelle)
 
