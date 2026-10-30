@@ -13,8 +13,14 @@ export type HouseholdSummary = { id: string; name: string; role: HouseholdRole }
 
 export type SessionUser = { id: string; email: string };
 
-/** Session Better Auth de la requête (lue en base : une session révoquée l'est immédiatement). */
-export const getAuthSession = cache(async () => auth().api.getSession({ headers: await headers() }));
+/**
+ * Session Better Auth de la requête (lue en base : une session révoquée l'est immédiatement).
+ * `headers()` d'abord : il marque la page comme dynamique avant tout accès à la base (le build n'a pas de base).
+ */
+export const getAuthSession = cache(async () => {
+  const requestHeaders = await headers();
+  return auth().api.getSession({ headers: requestHeaders });
+});
 
 export const getUser = cache(async (): Promise<SessionUser | null> => {
   const session = await getAuthSession();

@@ -54,7 +54,11 @@ jobs:
             echo "DATABASE_URL=$DATABASE_URL"
             echo "BETTER_AUTH_SECRET=$(openssl rand -hex 32)"
           } > .env.local
+      # Comme l'image Docker : aucune base au build (une page qui la lirait à la compilation échoue ici).
+      # `next start` lit ensuite DATABASE_URL dans .env.local.
       - run: pnpm build
+        env:
+          DATABASE_URL: ""
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
