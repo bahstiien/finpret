@@ -83,6 +83,8 @@ export type TestDb = {
   admin<T>(fn: (db: Db) => Promise<T>): Promise<T>;
   /** Lignes d'une table, pour les vérifications. */
   rows(table: keyof DB): Promise<Record<string, unknown>[]>;
+  /** Écoute un canal NOTIFY ; renvoie la fonction d'arrêt. */
+  listen(channel: string, onPayload: (payload: string) => void): Promise<() => Promise<void>>;
   close(): Promise<void>;
 };
 
@@ -107,6 +109,7 @@ export async function createTestDb(): Promise<TestDb> {
       }),
     rows: async (table) =>
       (await sql<Record<string, unknown>>`select * from ${sql.table(table)}`.execute(kysely)).rows,
+    listen: (channel, onPayload) => pg.listen(channel, onPayload),
     close: () => kysely.destroy(),
   };
 }

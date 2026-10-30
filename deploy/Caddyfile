@@ -1,5 +1,7 @@
 finpret.app {
-	encode zstd gzip
+	# Le flux temps réel (SSE) n'est pas compressé : la compression le retiendrait en mémoire tampon.
+	@compressible not path /api/realtime
+	encode @compressible zstd gzip
 	reverse_proxy app:3000
 }
 

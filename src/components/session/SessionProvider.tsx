@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { FEATURES } from "@/lib/features";
+import { useHouseholdEvents } from "@/lib/use-household-events";
 import { recordWeekEvent } from "@/server/actions/events";
 import { readSessionRow, runSessionCommand, type SessionCommand } from "@/server/actions/session-sync";
 
@@ -39,6 +41,7 @@ const SessionContext = createContext<Ctx | null>(null);
 export const useSession = () => useContext(SessionContext);
 
 export function SessionProvider({
+  householdId,
   weekId,
   initial,
   canEdit,
@@ -58,7 +61,7 @@ export function SessionProvider({
   const [row, setRow] = useState<SessionRow | null>(initial);
   // Écritures locales en cours : les états reçus entre-temps sont plus anciens que l'état optimiste.
   const writes = useRef(0);
-  // N'applique un état reçu que s'il est au moins aussi récent que l'état connu (Realtime peut livrer en retard).
+  // N'applique un état relu que s'il est au moins aussi récent que l'état connu (les relectures peuvent se croiser).
   const accept = useCallback((next: SessionRow) => {
     setRow((cur) => (!cur?.updated_at || !next.updated_at || next.updated_at >= cur.updated_at ? next : cur));
   }, []);
@@ -71,14 +74,22 @@ export function SessionProvider({
     if (data && writes.current === 0) accept(data);
   }, [weekId, accept]);
 
-  // La synchronisation en direct entre appareils est REPORTÉE (SPEC_JANVIER) : l'état est relu au retour sur l'onglet.
-  // TODO(migration phase 4) : brancher le flux temps réel (SSE) quand FEATURES.sharedSession sera activé.
   useEffect(() => {
     if (!weekId) return;
     const onFocus = () => void reload();
     window.addEventListener("focus", onFocus);
     return () => window.removeEventListener("focus", onFocus);
   }, [weekId, reload]);
+
+  // La synchronisation en direct entre appareils est REPORTÉE (SPEC_JANVIER) : sans elle, l'état reste relu au retour
+  // sur l'onglet.
+  useHouseholdEvents(
+    FEATURES.sharedSession && weekId ? householdId : null,
+    (change) => {
+      if (change.table === "sessions" && change.weekId === weekId && writes.current === 0) void reload();
+    },
+    () => void reload(),
+  );
 
   const call = useCallback(
     async (command: SessionCommand) => {

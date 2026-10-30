@@ -9,6 +9,7 @@ import { baseAisle, guessAisle, shoppingText } from "@/engine/shopping";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { enqueue, loadQueue, type NewItem, type QueuedOp, saveQueue } from "@/lib/offline-queue";
+import { useHouseholdEvents } from "@/lib/use-household-events";
 import { applyShoppingOp, listShoppingItems } from "@/server/actions/shopping-sync";
 import { useRouter } from "next/navigation";
 import { recordWeekEvent } from "@/server/actions/events";
@@ -43,7 +44,7 @@ type Item = {
 };
 
 /**
- * Liste de courses (§8.3) : temps réel (Supabase Realtime, moins de 2 s), coches article par article,
+ * Liste de courses (§8.3) : temps réel (flux SSE de /api/realtime, moins de 2 s), coches article par article,
  * hors ligne avec file rejouée au retour du réseau.
  */
 export function ShoppingScreen({
@@ -162,30 +163,47 @@ export function ShoppingScreen({
     [apply, flush, weekId, toast],
   );
 
-  // File laissée par une visite précédente hors ligne, état réseau, temps réel.
+  // Relit la liste (changement signalé, coupure, reconnexion du flux) ; les coches locales encore en attente
+  // restent prioritaires. Les relectures demandées en rafale sont regroupées.
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const refresh = useCallback(async () => {
+    const data = await listShoppingItems(weekId).catch(() => null);
+    if (!data) return;
+    setItems(() => {
+      const next = new Map(data.map((row) => [row.id, row as Item]));
+      for (const op of queue.current) {
+        if (op.op === "check" && next.has(op.id))
+          next.set(op.id, { ...next.get(op.id)!, checked: op.checked });
+        if (op.op === "delete") next.delete(op.id);
+        if (op.op === "add" && !next.has(op.item.id)) {
+          next.set(op.item.id, { ...op.item, checked: false, added_by: userId, updated_at: "" });
+        }
+      }
+      return next;
+    });
+  }, [weekId, userId]);
+  const scheduleRefresh = useCallback(() => {
+    if (refreshTimer.current) clearTimeout(refreshTimer.current);
+    refreshTimer.current = setTimeout(() => void refresh(), 150);
+  }, [refresh]);
+
+  // Temps réel : articles de la semaine, et achats ou signalements du foyer (relus par le serveur).
+  useHouseholdEvents(
+    householdId,
+    (change) => {
+      if (change.table === "shopping_items" && change.weekId === weekId) scheduleRefresh();
+      else if (hasPurchases && (change.table === "purchase_events" || change.table === "shopping_issues"))
+        router.refresh();
+    },
+    scheduleRefresh,
+  );
+
+  // File laissée par une visite précédente hors ligne, état réseau.
   useEffect(() => {
     queue.current = loadQueue(weekId);
     queue.current.forEach(apply);
     setPending(queue.current.length);
     setOnline(navigator.onLine);
-    // Relit la liste (changements des autres pendant une coupure, ou avant l'abonnement) ;
-    // les coches locales encore en attente restent prioritaires.
-    const refresh = async () => {
-      const data = await listShoppingItems(weekId).catch(() => null);
-      if (!data) return;
-      setItems(() => {
-        const next = new Map(data.map((row) => [row.id, row as Item]));
-        for (const op of queue.current) {
-          if (op.op === "check" && next.has(op.id))
-            next.set(op.id, { ...next.get(op.id)!, checked: op.checked });
-          if (op.op === "delete") next.delete(op.id);
-          if (op.op === "add" && !next.has(op.item.id)) {
-            next.set(op.item.id, { ...op.item, checked: false, added_by: userId, updated_at: "" });
-          }
-        }
-        return next;
-      });
-    };
     const up = async () => {
       setOnline(true);
       await flush();
@@ -195,20 +213,12 @@ export function ShoppingScreen({
     window.addEventListener("online", up);
     window.addEventListener("offline", down);
     void flush();
-    // TODO(migration phase 4) : flux temps réel (SSE) des articles, achats et signalements du foyer `householdId`.
-    // D'ici là, la liste et les achats sont relus au retour sur l'onglet.
-    const onFocus = () => {
-      void refresh();
-      if (hasPurchases) router.refresh();
-    };
-    window.addEventListener("focus", onFocus);
-    void refresh();
     return () => {
       window.removeEventListener("online", up);
       window.removeEventListener("offline", down);
-      window.removeEventListener("focus", onFocus);
+      if (refreshTimer.current) clearTimeout(refreshTimer.current);
     };
-  }, [weekId, userId, apply, flush, hasPurchases, router]);
+  }, [weekId, apply, flush, refresh]);
 
   const list = [...items.values()];
   const visible = list;
