@@ -6,7 +6,7 @@ import { Card } from "./Card";
 export function UpgradeCard() {
   return (
     <Card tone="yellow" className="flex flex-col items-start gap-3" data-testid="upgrade">
-      <h2 className="text-xl font-extrabold">{fr.upgrade.title}</h2>
+      <h2 className="text-xl font-bold">{fr.upgrade.title}</h2>
       <p className="text-muted">{fr.upgrade.body}</p>
       <LinkButton href="/settings/subscription">{fr.upgrade.cta}</LinkButton>
     </Card>

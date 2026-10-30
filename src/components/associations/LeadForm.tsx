@@ -13,9 +13,9 @@ export function LeadForm() {
   const [state, action, pending] = useActionState<LeadState, FormData>(submitLead, {});
   if (state.ok) return <FormMessage tone="success">{t.sent}</FormMessage>;
   return (
-    <form action={action} className="flex flex-col gap-4 rounded-card bg-surface p-6" id="presentation">
-      <h2 className="text-2xl font-extrabold">{t.title}</h2>
-      <p className="text-muted">{t.intro}</p>
+    <form action={action} className="card flex flex-col gap-4 min-[900px]:p-8" id="presentation">
+      <h2 className="t-2">{t.title}</h2>
+      <p className="muted">{t.intro}</p>
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>
           Ne pas remplir
@@ -38,9 +38,9 @@ export function LeadForm() {
         inputMode="numeric"
         label={t.families}
       />
-      <label className="flex items-start gap-3 text-sm">
-        <input type="checkbox" name="consent" required className="mt-1 size-5 accent-violet" />
-        <span>{t.consent}</span>
+      <label className="flex items-start gap-3">
+        <input type="checkbox" name="consent" required className="cb mt-1" />
+        <span className="t-small">{t.consent}</span>
       </label>
       {state.error && <FormMessage tone="error">{state.error}</FormMessage>}
       <Button type="submit" disabled={pending} className="self-start">

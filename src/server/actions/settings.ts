@@ -8,10 +8,12 @@ import { fr } from "@/i18n/fr";
 import { mondayOf, todayIn } from "@/lib/dates";
 import { notificationsSchema, SETTINGS_SCHEMAS, SETTINGS_VERSION } from "@/lib/settings";
 import { auth } from "@/server/auth";
-import { json } from "@/server/db";
+import { json, withAdmin } from "@/server/db";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
 import { ACTIVE_HOUSEHOLD_COOKIE, requireHousehold, requireUser, withSession } from "@/server/session";
+import { stripeAvailable, stripeClient } from "@/server/stripe";
+import { cancelHouseholdSubscriptions } from "@/server/subscription-cleanup";
 import { deleteUser } from "@/server/users";
 import { generateAndStore } from "@/server/weeks";
 
@@ -250,6 +252,13 @@ export async function signOutOtherDevices(): Promise<ActionResult> {
   return { ok: true, data: undefined };
 }
 
+/** Résilie les abonnements Stripe d'un foyer avant sa suppression ; false si la suppression doit s'arrêter. */
+async function cancelSubscriptionsOf(householdId: string): Promise<boolean> {
+  const stripe = stripeAvailable() ? stripeClient() : null;
+  const result = await withAdmin((db) => cancelHouseholdSubscriptions(db, householdId, stripe));
+  return result.ok;
+}
+
 /**
  * Suppression du compte (RGPD, §4) : les foyers dont il est le seul administrateur sont supprimés
  * avec lui, après confirmation forte (saisie de « SUPPRIMER »).
@@ -263,13 +272,15 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
   ) {
     return { ok: false, error: fr.settings.data.confirmMismatch };
   }
+  let orphans: string[];
   try {
-    await withSession(async (db) => {
+    orphans = await withSession(async (db) => {
       const memberships = await db
         .selectFrom("memberships")
         .select(["household_id", "role"])
         .where("user_id", "=", user.id)
         .execute();
+      const ids: string[] = [];
       for (const m of memberships) {
         if (m.role !== "admin") continue;
         const { n } = await db
@@ -278,11 +289,22 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
           .where("household_id", "=", m.household_id)
           .where("role", "=", "admin")
           .executeTakeFirstOrThrow();
-        if (Number(n) <= 1) await db.deleteFrom("households").where("id", "=", m.household_id).execute();
+        if (Number(n) <= 1) ids.push(m.household_id);
       }
+      return ids;
     });
   } catch (e) {
     return { ok: false, error: toUserMessage(e) };
+  }
+  for (const householdId of orphans) {
+    // L'abonnement Stripe est résilié avant le foyer : sinon la facturation continuerait sans compte.
+    const cancelled = await cancelSubscriptionsOf(householdId);
+    if (!cancelled) return { ok: false, error: fr.errors.subscriptionCancel };
+    try {
+      await withSession((db) => db.deleteFrom("households").where("id", "=", householdId).execute());
+    } catch (e) {
+      return { ok: false, error: toUserMessage(e) };
+    }
   }
   try {
     // La suppression du compte emporte ses sessions : il ne reste qu'à effacer les cookies.
@@ -303,6 +325,7 @@ export async function deleteHousehold(formData: FormData): Promise<ActionResult>
   if (String(formData.get("confirm") ?? "").trim() !== household.name) {
     return { ok: false, error: fr.settings.data.confirmMismatch };
   }
+  if (!(await cancelSubscriptionsOf(household.id))) return { ok: false, error: fr.errors.subscriptionCancel };
   try {
     await withSession((db) => db.deleteFrom("households").where("id", "=", household.id).execute());
   } catch (e) {

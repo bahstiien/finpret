@@ -5,6 +5,7 @@ import { withSession } from "@/server/session";
 import { requireManager } from "@/server/asso-session";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
+import { Pill } from "@/components/ui/Pill";
 
 const t = fr.asso.statements;
 
@@ -26,24 +27,25 @@ export default async function StatementsPage() {
   return (
     <>
       <PageHeader title={t.title} />
-      <p className="text-muted">{t.lead}</p>
+      <p className="muted">{t.lead}</p>
       {association.status === "approved" ? (
         <IbanForm last4={association.ibanLast4} />
       ) : (
-        <Card as="p" padding="cozy">
+        <Card as="p" tone="yellow" className="t-ui">
           {t.ibanMissing}
         </Card>
       )}
-      <Card padding="cozy" aria-label={t.title}>
-        {!data.length && <p className="text-muted">{t.none}</p>}
-        <ul className="flex flex-col divide-y divide-line">
+      <Card aria-label={t.title}>
+        {!data.length && <p className="muted">{t.none}</p>}
+        <ul>
           {data.map((p) => (
-            <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-              <span>
-                <b>{p.quarter}</b> · {euros.format(p.amount_cents / 100)} · {t.statuses[p.status]}
+            <li key={p.id} className="row flex-wrap justify-between">
+              <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <b className="mono">{p.quarter}</b> · <span className="mono">{euros.format(p.amount_cents / 100)}</span> ·{" "}
+                <Pill tone={p.status === "paid" ? "green" : "chip"}>{t.statuses[p.status]}</Pill>
               </span>
               {p.statement_path && (
-                <a href={`/asso/releves/${p.id}/pdf`} className="font-semibold underline">
+                <a href={`/asso/releves/${p.id}/pdf`} className="lnk">
                   {t.download}
                 </a>
               )}

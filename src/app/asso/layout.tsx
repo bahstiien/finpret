@@ -20,30 +20,29 @@ export default async function AssoLayout({ children }: { children: React.ReactNo
       ]
     : [];
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col gap-6 px-4 py-8">
-      <Link href="/app" className="self-start text-sm font-semibold text-muted underline">
-        ← {t.nav.back}
-      </Link>
-      {association && (
-        <>
-          <p className="text-sm font-bold tracking-wide text-violet uppercase">{association.name}</p>
+    <div className="min-h-dvh">
+      <header className="topbar">
+        <Link href="/app" className="lnk t-small">
+          ← {t.nav.back}
+        </Link>
+        {association && <p className="t-kicker truncate">{association.name}</p>}
+      </header>
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 min-[900px]:px-10">
+        {association && (
           <nav aria-label={t.nav.label}>
             <ul className="flex flex-wrap gap-2">
               {links.map((l) => (
                 <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="inline-flex min-h-11 items-center rounded-pill bg-surface px-5 font-bold hover:bg-chip"
-                  >
+                  <Link href={l.href} className="btn btn--outline btn--sm">
                     {l.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-        </>
-      )}
-      <main className="flex flex-col gap-5">{children}</main>
+        )}
+        <main className="flex flex-col gap-4">{children}</main>
+      </div>
     </div>
   );
 }

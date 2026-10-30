@@ -15,32 +15,36 @@ function tokenIn(selector: string, name: string): string | undefined {
 
 // SPEC §11, mode clair.
 const light: Record<string, string> = {
-  bg: "#F4F3F8",
+  bg: "#FFF8E7",
   surface: "#FFFFFF",
   ink: "#17151F",
-  muted: "#6B6878",
-  line: "#ECEAF2",
+  muted: "#4A4658",
+  line: "#17151F",
   violet: "#7A5AF8",
   banana: "#FFD23F",
   green: "#1FA85A",
-  "blue-soft": "#DCEBFF",
-  "blue-ink": "#1F4E8C",
-  "pink-soft": "#FFE6EC",
-  "pink-ink": "#A3264A",
+  "blue-soft": "#4D96FF",
+  "blue-ink": "#17151F",
+  "pink-soft": "#FF6B9D",
+  "pink-ink": "#17151F",
   "yellow-soft": "#FFF6D6",
-  peach: "#FFE3D6",
-  "peach-ink": "#A33A12",
-  chip: "#F1F0F5",
+  peach: "#FF8C42",
+  "peach-ink": "#17151F",
+  chip: "#FFF6D6",
 };
 
-// SPEC §11, mode sombre (tokens de base).
+// Mode sombre : neutres limités à la liste du skill landing-page-design (#000000, #181818, #1F1F1F, #272727, #313131, #131209).
 const dark: Record<string, string> = {
-  bg: "#121019",
-  surface: "#1E1B27",
+  bg: "#181818",
+  surface: "#1F1F1F",
   ink: "#F3F1F8",
   muted: "#A6A2B4",
-  line: "#2C2838",
+  line: "#313131",
+  chip: "#272727",
+  nav: "#000000",
 };
+
+const DARK_NEUTRALS = ["#000000", "#181818", "#1F1F1F", "#272727", "#313131", "#131209"];
 
 describe("design tokens", () => {
   it.each(Object.entries(light))("mode clair : --%s = %s", (name, value) => {
@@ -55,9 +59,18 @@ describe("design tokens", () => {
     expect(tokenIn(':root:not([data-theme="light"])', name)).toBe(value);
   });
 
-  it("expose les rayons de la refonte v2", () => {
-    expect(css).toMatch(/--radius-card:\s*28px/);
-    expect(css).toMatch(/--radius-sheet:\s*32px/);
-    expect(css).toMatch(/--radius-pill:\s*999px/);
+  it("garde les fonds sombres neutres dans la liste autorisée", () => {
+    for (const name of ["bg", "surface", "chip", "line", "nav"]) {
+      expect(DARK_NEUTRALS).toContain(dark[name]);
+    }
+  });
+
+  it("expose les rayons (échelle Tailwind), la courbe de mouvement et une seule police", () => {
+    expect(css).toContain("--radius-card: 0.25rem"); // 4 px
+    expect(css).toContain("--radius-sheet: 0.25rem");
+    expect(css).toContain("--radius-pill: 9999px");
+    expect(css).toContain("--ease-base: steps(2)");
+    expect(css).toContain("--font-display: var(--font-archivo)");
+    expect(css).toContain("--font-sans: var(--font-grotesk)");
   });
 });

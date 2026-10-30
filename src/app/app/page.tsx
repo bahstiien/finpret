@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { type CanteenEntry, MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
 import { canteenDays, duplicateGroups } from "@/engine/canteen";
 import { isRemoved, slotMap } from "@/engine/week";
-import { StreakTile } from "@/components/progress/StreakTile";
 import { loadProgressView } from "@/server/progress-view";
 import { NoWeek } from "@/components/menu/NoWeek";
 import { eligible } from "@/engine/season";
@@ -143,6 +142,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
   return (
     <>
       <MenuScreen
+        streak={progress.visible ? progress.streak : null}
         header={header}
         view={view}
         canEdit={canEdit}
@@ -160,7 +160,6 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
           canPrepareNext: isCurrent && !next && canPrepareNext(today),
         }}
       />
-      {progress.visible && <StreakTile streak={progress.streak} />}
     </>
   );
 }

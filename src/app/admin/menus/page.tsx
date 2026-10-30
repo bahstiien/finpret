@@ -39,12 +39,12 @@ export default async function AdminMenusPage() {
   return (
     <>
       <PageHeader title="Menus d'école" />
-      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
+      <Card as="ul" className="!shadow-none">
         {data.map((m) => (
-          <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+          <li key={m.id} className="row flex-wrap justify-between">
             <span>
-              <b>{formatShort(m.date)}</b> · {name.get(m.school_id) ?? "?"} · {menuText(m)}{" "}
-              <span className="text-sm text-muted">
+              <b className="mono">{formatShort(m.date)}</b> · {name.get(m.school_id) ?? "?"} · {menuText(m)}{" "}
+              <span className="t-small muted">
                 ({m.status === "published" ? "publié" : "brouillon"}
                 {m.edited_after_publish ? ", modifié" : ""})
               </span>
@@ -59,7 +59,7 @@ export default async function AdminMenusPage() {
             )}
           </li>
         ))}
-        {!data.length && <li className="text-muted">Aucun menu.</li>}
+        {!data.length && <li className="muted">Aucun menu.</li>}
       </Card>
     </>
   );

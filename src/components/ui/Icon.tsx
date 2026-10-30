@@ -1,51 +1,71 @@
-/** Icônes en SVG en ligne (inspirées de Material Symbols Rounded, §11). Décoratives par défaut. */
+import type { ComponentType, SVGProps } from "react";
+import {
+  ArrowLeft,
+  Basket,
+  CalendarCheck,
+  CaretDown,
+  CaretRight,
+  Cake,
+  Check,
+  Clock,
+  Compass,
+  CookingPot,
+  DotsThree,
+  ForkKnife,
+  Info,
+  MagnifyingGlass,
+  PauseCircle,
+  Plus,
+  Printer,
+  ShareNetwork,
+  Snowflake,
+  Sparkle,
+  Stamp,
+  Thermometer,
+  ThumbsDown,
+  ThumbsUp,
+  Timer,
+  User,
+  Users,
+  Warning,
+  X,
+} from "@phosphor-icons/react/ssr";
 
-const PATHS = {
-  menu: "M7 2v9a3 3 0 0 0 2 2.83V22h2v-8.17A3 3 0 0 0 13 11V2h-2v7h-1V2H8v7H7V2zm10 0c-1.66 0-3 2.24-3 5v6h2v9h2V2z",
-  compass:
-    "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16m-5.5-2.5 7.5-3.5 3.5-7.5-7.5 3.5zm5.5-6.6a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2",
-  basket:
-    "M17.2 9 13 2.7a1 1 0 0 0-1.7 0L7 9H2a1 1 0 0 0-1 1.3l2.5 9.2A2 2 0 0 0 5.4 21h13.2a2 2 0 0 0 1.9-1.5L23 10.3A1 1 0 0 0 22 9zM12.2 4.9 14.8 9H9.6zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4",
-  fridge:
-    "M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2m0 2v5h10V4zm0 7v9h10v-9zm2-5h2v2H9zm0 7h2v3H9z",
-  timer:
-    "M9 1h6v2H9zm10 6.4 1.4-1.4L19 4.6l-1.4 1.4A9 9 0 1 0 21 13a8.9 8.9 0 0 0-2-5.6M12 20a7 7 0 1 1 0-14 7 7 0 0 1 0 14m1-11h-2v5l4 2.4 1-1.7-3-1.8z",
-  print:
-    "M18 7V3H6v4H5a3 3 0 0 0-3 3v6h4v5h12v-5h4v-6a3 3 0 0 0-3-3zM8 5h8v2H8zm8 14H8v-5h8zm2-8.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2",
-  more: "M6 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4m6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4",
-  clock:
-    "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16m.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7z",
-  pot: "M3 10h18v2h-1v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6H3zm4-6 1-2h2L9 4zm4 0 1-2h2l-1 2zm4 0 1-2h2l-1 2zM2 8h20v1H2z",
-  snow: "M11 2h2v4.6l2.8-2.8 1.4 1.4L13 9.4V11h1.6l4.2-4.2 1.4 1.4L17.4 11H22v2h-4.6l2.8 2.8-1.4 1.4-4.2-4.2H13v1.6l4.2 4.2-1.4 1.4-2.8-2.8V22h-2v-4.6l-2.8 2.8-1.4-1.4 4.2-4.2V13H9.4l-4.2 4.2-1.4-1.4L6.6 13H2v-2h4.6L3.8 8.2l1.4-1.4L9.4 11H11V9.4L6.8 5.2l1.4-1.4L11 6.6z",
-  user: "M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9m0 2.5c-3.6 0-8 1.8-8 4.5V21h16v-2c0-2.7-4.4-4.5-8-4.5",
-  plus: "M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z",
-  check: "m9.5 16.2-4.2-4.2-1.4 1.4 5.6 5.6 11-11-1.4-1.4z",
-  users:
-    "M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0 2c-3.3 0-7 1.6-7 4v2h14v-2c0-2.4-3.7-4-7-4m8-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6m1.5 2c-.7 0-1.4.1-2 .3 1.5 1 2.5 2.3 2.5 3.7v2h5v-2c0-2-2.8-4-5.5-4",
-  sparkle: "M12 2 14 8l6 2-6 2-2 6-2-6-6-2 6-2zm7 12 1 3 3 1-3 1-1 3-1-3-3-1 3-1z",
-  close: "m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z",
-  cake: "M12 6a2 2 0 0 0 2-2c0-1-2-4-2-4s-2 3-2 4a2 2 0 0 0 2 2m6 3h-5V7h-2v2H6a3 3 0 0 0-3 3v1.5a2.5 2.5 0 0 0 4.2 1.8l1-1 1 1a2.6 2.6 0 0 0 3.6 0l1-1 1 1a2.5 2.5 0 0 0 4.2-1.8V12a3 3 0 0 0-3-3m-1.5 7.3-1-1-1 1a4.5 4.5 0 0 1-6.2 0l-1-1-1 1A4.4 4.4 0 0 1 4 17.4V21h16v-3.6a4.4 4.4 0 0 1-3.5-1.1",
-  thumbUp:
-    "M2 21h4V9H2zm20-11a2 2 0 0 0-2-2h-6.3l1-4.6v-.3a1.5 1.5 0 0 0-.4-1L13.2 1 6.6 7.6A2 2 0 0 0 6 9v10a2 2 0 0 0 2 2h9a2 2 0 0 0 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7z",
-  thumbDown:
-    "M22 3h-4v12h4zM2 14a2 2 0 0 0 2 2h6.3l-1 4.6v.3c0 .4.2.8.4 1l1.1 1.1 6.6-6.6A2 2 0 0 0 18 15V5a2 2 0 0 0-2-2H7a2 2 0 0 0-1.8 1.2l-3 7.1L2 12z",
-  // Série et passeport (SPEC_PROGRES §5) : Material Symbols Rounded, remplis.
-  streak:
-    "M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-8.2 15.1L6.9 14.2l1.4-1.4 2.5 2.5 5.1-5.1 1.4 1.4zM19 8H5V6h14z",
-  pause: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m-1 14H9V8h2zm4 0h-2V8h2z",
-  passport:
-    "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m-1 17.9A8 8 0 0 1 4 12c0-.6.1-1.2.2-1.8L9 15v1a2 2 0 0 0 2 2zm6.9-2.5A2 2 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.4a8 8 0 0 1 2.9 12.8",
-  chevronRight: "M9.4 6 8 7.4l4.6 4.6L8 16.6 9.4 18l6-6z",
-  chevronDown: "M7.4 8.6 6 10l6 6 6-6-1.4-1.4-4.6 4.6z",
-  arrowBack: "m12 4 1.4 1.4L8.8 10H20v2H8.8l4.6 4.6L12 18l-8-8z",
-  search:
-    "M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9",
-  info: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m1 15h-2v-6h2zm0-8h-2V7h2z",
-  warning: "M1 21h22L12 2zm12-3h-2v-2h2zm0-4h-2v-4h2z",
-  share: "M16 5 14.6 6.4 13 4.8V15h-2V4.8L9.4 6.4 8 5l4-4zm4 5v11H4V10h4v2H6v7h12v-7h-2v-2z",
-} as const;
+/** Icônes Phosphor (graisse « regular »), une seule famille et un seul trait pour toute l'application. Décoratives par défaut. */
+const GLYPHS = {
+  menu: ForkKnife,
+  compass: Compass,
+  basket: Basket,
+  fridge: Thermometer,
+  timer: Timer,
+  print: Printer,
+  more: DotsThree,
+  clock: Clock,
+  pot: CookingPot,
+  snow: Snowflake,
+  user: User,
+  plus: Plus,
+  check: Check,
+  users: Users,
+  sparkle: Sparkle,
+  close: X,
+  cake: Cake,
+  thumbUp: ThumbsUp,
+  thumbDown: ThumbsDown,
+  // Série et passeport (SPEC_PROGRES §5).
+  streak: CalendarCheck,
+  pause: PauseCircle,
+  passport: Stamp,
+  chevronRight: CaretRight,
+  chevronDown: CaretDown,
+  arrowBack: ArrowLeft,
+  search: MagnifyingGlass,
+  info: Info,
+  warning: Warning,
+  share: ShareNetwork,
+} as const satisfies Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 
-export type IconName = keyof typeof PATHS;
+export type IconName = keyof typeof GLYPHS;
 
 export function Icon({
   name,
@@ -56,16 +76,13 @@ export function Icon({
   className?: string;
   label?: string;
 }) {
+  const Glyph = GLYPHS[name];
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      fill="currentColor"
+    <Glyph
+      className={`shrink-0 ${className}`}
       aria-hidden={label ? undefined : true}
       role={label ? "img" : undefined}
       aria-label={label}
-    >
-      <path d={PATHS[name]} />
-    </svg>
+    />
   );
 }

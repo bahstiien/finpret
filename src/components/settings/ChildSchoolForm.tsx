@@ -36,7 +36,7 @@ export function ChildSchoolForm({ kids, schools }: { kids: ChildSchool[]; school
       {rows.map((r) => (
         <div
           key={r.memberId}
-          className="flex flex-col gap-3 rounded-2xl bg-bg p-4"
+          className="nb-dash flex flex-col gap-3 p-4"
           data-testid={`school-${r.name}`}
         >
           <SelectField

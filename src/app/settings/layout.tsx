@@ -28,12 +28,12 @@ export default async function SettingsLayout({ children }: { children: React.Rea
   }
   return (
     <AppFrame shoppingLeft={left}>
-      <Link href="/app" className="self-start text-sm font-semibold text-muted underline min-[900px]:hidden">
+      <Link href="/app" className="lnk t-ui inline-flex min-h-11 items-center self-start text-sm min-[900px]:hidden">
         ← {fr.settings.back}
       </Link>
       <PageHeader title={fr.settings.title} />
       <SettingsNav sections={[...sections]} />
-      <div className="flex max-w-3xl flex-col gap-5">{children}</div>
+      <div className="flex max-w-3xl flex-col gap-4">{children}</div>
     </AppFrame>
   );
 }

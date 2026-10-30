@@ -18,13 +18,13 @@ export function AppFrame({
 }) {
   return (
     <div className="min-h-dvh">
-      <div className="mx-auto grid min-h-dvh w-full max-w-6xl grid-cols-1 gap-5 px-4 pt-6 pb-32 min-[900px]:max-w-[1400px] min-[900px]:grid-cols-[17rem_minmax(0,1fr)] min-[900px]:gap-6 min-[900px]:p-4 print:block print:max-w-none print:p-0">
+      <div className="mx-auto grid min-h-dvh w-full max-w-6xl grid-cols-1 gap-4 px-4 pt-6 pb-24 min-[900px]:max-w-[1400px] min-[900px]:grid-cols-[17rem_minmax(0,1fr)] min-[900px]:gap-6 min-[900px]:p-4 print:block print:max-w-none print:p-0">
         <div className="contents print:hidden">
           <AppNav shoppingLeft={shoppingLeft} />
         </div>
-        <div className="flex min-w-0 flex-col gap-5 min-[900px]:px-2 min-[900px]:py-4 min-[900px]:pr-4">
+        <div className="flex min-w-0 flex-col gap-4 min-[900px]:px-2 min-[900px]:py-4 min-[900px]:pr-4">
           {top && <div className="print:hidden">{top}</div>}
-          <main className="page-enter flex flex-col gap-5">{children}</main>
+          <main className="page-enter flex flex-col gap-4">{children}</main>
         </div>
         {overlay}
       </div>

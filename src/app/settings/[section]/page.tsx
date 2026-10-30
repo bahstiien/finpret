@@ -137,18 +137,18 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
       return (
         <>
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xl font-extrabold">{t.data.export}</h2>
+            <h2 className="t-2">{t.data.export}</h2>
             <p className="text-sm text-muted">{t.data.exportHint}</p>
             <a href="/settings/data/export" download className={buttonClass({ className: "self-start" })}>
               {t.data.export}
             </a>
           </Card>
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xl font-extrabold">{t.data.history}</h2>
+            <h2 className="t-2">{t.data.history}</h2>
             {ctx.weeks.length ? (
-              <ul className="flex flex-col divide-y divide-line" data-testid="weeks-history">
+              <ul className="flex flex-col" data-testid="weeks-history">
                 {ctx.weeks.map((w) => (
-                  <li key={w.id} className="py-2">
+                  <li key={w.id} className="row mono min-h-11">
                     {fr.menu.weekOf(formatShort(w.start_date))}
                   </li>
                 ))}
@@ -158,7 +158,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             )}
           </Card>
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xl font-extrabold">{t.data.deleteHousehold}</h2>
+            <h2 className="t-2">{t.data.deleteHousehold}</h2>
             <ConfirmDelete
               action={deleteHousehold}
               label={t.data.deleteHousehold}
@@ -183,7 +183,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
       return (
         <>
           <Card className="flex flex-col gap-4">
-            <h2 className="text-xl font-extrabold">{t.profile.you}</h2>
+            <h2 className="t-2">{t.profile.you}</h2>
             <ProfileNameForm initial={profile?.display_name ?? ""} />
             <p className="text-sm text-muted">{user.email}</p>
           </Card>
@@ -210,17 +210,17 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             </Card>
           )}
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xl font-extrabold">{t.profile.theme}</h2>
+            <h2 className="t-2">{t.profile.theme}</h2>
             <ThemeForm />
           </Card>
           <Card className="flex flex-col gap-4" id="notifications">
-            <h2 className="text-xl font-extrabold">{t.profile.notifications}</h2>
+            <h2 className="t-2">{t.profile.notifications}</h2>
             <NotificationsForm
               initial={notifications.success ? notifications.data : notificationsSchema.parse({})}
             />
           </Card>
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xl font-extrabold">{t.profile.devices}</h2>
+            <h2 className="t-2">{t.profile.devices}</h2>
             <p className="text-sm text-muted">{t.profile.devicesHint}</p>
             <SignOutOthers />
           </Card>
@@ -241,7 +241,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             />
           </Card>
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xl font-extrabold">{t.data.deleteAccount}</h2>
+            <h2 className="t-2">{t.data.deleteAccount}</h2>
             <ConfirmDelete
               action={deleteAccount}
               label={t.data.deleteAccount}

@@ -1,6 +1,7 @@
 import "server-only";
 import { sql } from "kysely";
-import { hasBatch } from "@/engine/cooks";
+import { coveredMeals, hasBatch } from "@/engine/cooks";
+import type { WeekPlan } from "@/engine/types";
 import { countryLabel, seasonCounts, type CookRecord } from "@/engine/passport";
 import {
   buildCountries,
@@ -207,5 +208,26 @@ export async function loadCelebrations(householdId: string, userId: string): Pro
       .filter((a): a is { kind: "country" | "season"; key: string } => a.kind !== "streak")
       .map((a) => ({ ...a, label: achievementLabel(a.kind, a.key) })),
     milestone: top ? { weeks: top, meals: await milestoneMeals(householdId, top) } : null,
+  };
+}
+
+export type ProgressStats = { sessions: number; meals: number };
+
+/** Bandeau de chiffres de « Nos progrès » : sessions terminées et repas couverts (une lecture, RLS). */
+export async function loadProgressStats(householdId: string): Promise<ProgressStats> {
+  const weeks = await withSession((db) =>
+    db
+      .selectFrom("streak_weeks")
+      .leftJoin("weeks", (j) =>
+        j.onRef("weeks.household_id", "=", "streak_weeks.household_id").onRef("weeks.start_date", "=", "streak_weeks.week_start"),
+      )
+      .select("weeks.plan")
+      .where("streak_weeks.household_id", "=", householdId)
+      .where("streak_weeks.outcome", "=", "done")
+      .execute(),
+  );
+  return {
+    sessions: weeks.length,
+    meals: weeks.reduce((sum, w) => sum + (w.plan ? coveredMeals(w.plan as unknown as WeekPlan) : 0), 0),
   };
 }

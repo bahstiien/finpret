@@ -48,28 +48,32 @@ export function PrintSheet({ data }: { data: PrintData }) {
   return (
     <>
       <div className="flex flex-wrap gap-2 print:hidden">
-        <Button type="button" onClick={() => window.print()}>
+        <Button type="button" variant="primary" onClick={() => window.print()}>
           {t.print}
         </Button>
         <Button type="button" variant="outline" onClick={() => router.refresh()}>
           {t.otherBreakfasts}
         </Button>
-        <Link href="/app" className="inline-flex min-h-11 items-center px-4 font-bold underline">
+        <Link href="/app" className="btn btn--ghost">
           {t.back}
         </Link>
       </div>
 
-      <div ref={sheet} className="print-sheet" data-testid="print-sheet">
+      <div
+        ref={sheet}
+        className="print-sheet border-[length:var(--bw)] border-line shadow-[var(--sh)] print:border-0 print:shadow-none"
+        data-testid="print-sheet"
+      >
         <header className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-2xl font-black">{data.title}</h1>
+            <h1 className="t-1">{data.title}</h1>
             <p className="text-xs">{t.lead}</p>
           </div>
           <div className="flex shrink-0 gap-2">
             {data.chips.map((c) => (
               <span
                 key={c}
-                className="rounded-pill border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
+                className="mono rounded-r1 border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
               >
                 {c}
               </span>
@@ -107,25 +111,25 @@ export function PrintSheet({ data }: { data: PrintData }) {
               <tr key={d.label}>
                 <th scope="row">
                   {d.label}
-                  {d.cake && <span className="block text-[0.7em] font-normal">{d.cake}</span>}
+                  {d.cake && <span className="block text-xs font-normal">{d.cake}</span>}
                 </th>
                 {d.meals.map((m, i) =>
                   m ? (
                     <td key={i}>
-                      {m.tag && <span className="block text-[0.75em] italic">{m.tag}</span>}
+                      {m.tag && <span className="block text-xs">{m.tag}</span>}
                       <b className="block">{m.name}</b>
-                      {m.macros && <span className="block text-[0.75em]">{m.macros}</span>}
-                      <span className="block text-[0.75em]">{m.guests}</span>
-                      <span className="block text-[0.8em]">{m.how}</span>
+                      {m.macros && <span className="block text-xs">{m.macros}</span>}
+                      <span className="block text-xs">{m.guests}</span>
+                      <span className="block text-xs">{m.how}</span>
                     </td>
                   ) : (
-                    <td key={i} className="italic">
+                    <td key={i} className="text-muted">
                       {t.nothing}
                     </td>
                   ),
                 )}
                 <td className="whitespace-pre-line">{thaw(d.thaw)}</td>
-                <td className="text-[0.8em]">{d.total}</td>
+                <td className="text-xs">{d.total}</td>
               </tr>
             ))}
           </tbody>

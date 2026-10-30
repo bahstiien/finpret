@@ -6,18 +6,19 @@ export type ButtonVariant = "primary" | "secondary" | "outline" | "dark" | "ghos
 export type ButtonSize = "sm" | "md" | "lg";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-banana text-[#17151F] hover:brightness-95",
-  secondary: "bg-violet-soft text-violet-strong hover:brightness-95",
-  outline: "border-2 border-ink text-ink hover:bg-chip",
-  dark: "bg-ink text-surface hover:opacity-90",
-  ghost: "text-ink hover:bg-chip",
-  danger: "bg-peach text-peach-ink hover:brightness-95",
+  primary: "btn--primary",
+  secondary: "btn--secondary",
+  outline: "btn--outline",
+  dark: "btn--dark",
+  ghost: "btn--ghost",
+  danger: "btn--danger",
 };
 
+// Tailles de la maquette : sm 44 px, md 52 px (action), lg 60 px (session, mains occupées).
 const sizes: Record<ButtonSize, string> = {
-  sm: "min-h-11 px-4 text-sm",
-  md: "min-h-11 px-6",
-  lg: "min-h-14 px-8 text-lg",
+  sm: "btn--sm",
+  md: "",
+  lg: "btn--lg",
 };
 
 /** Classes d'un bouton, pour habiller un lien (`<Link className={buttonClass()}>`) comme un bouton. */
@@ -26,7 +27,7 @@ export function buttonClass({
   size = "md",
   className = "",
 }: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}) {
-  return `inline-flex items-center justify-center gap-2 rounded-pill font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${sizes[size]} ${variants[variant]} ${className}`;
+  return `btn ${variants[variant]} ${sizes[size]} ${className}`;
 }
 
 export function Button({
@@ -72,14 +73,14 @@ export function IconButton({
   tone?: "surface" | "chip" | "dark";
 }) {
   const tones = {
-    surface: "bg-surface hover:bg-chip",
-    chip: "bg-chip hover:bg-line",
-    dark: "bg-ink text-surface",
+    surface: "",
+    chip: "",
+    dark: "iconbtn--dark",
   };
   return (
     <button
       aria-label={label}
-      className={`grid size-11 shrink-0 place-items-center rounded-full transition disabled:opacity-50 ${tones[tone]} ${className}`}
+      className={`iconbtn ${tones[tone]} ${className}`}
       {...props}
     >
       <Icon name={icon} className="size-5" />

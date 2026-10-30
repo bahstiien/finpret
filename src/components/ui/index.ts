@@ -22,6 +22,7 @@ export {
 export { Segmented } from "./Segmented";
 export { TextField, SelectField, FormMessage } from "./Field";
 export { Toggle, Stepper, ChipToggle, SlotGrid } from "./Controls";
+export { Sticker, Difficulty, Dot, TextLink, Checkbox, Bento, Breadcrumbs, Faq, Coachmark } from "./Extras";
 export { Sheet } from "./Sheet";
 export { Stamp } from "./Stamp";
 export { UpgradeCard } from "./UpgradeCard";

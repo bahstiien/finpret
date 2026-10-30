@@ -113,7 +113,7 @@ export default async function HouseholdSettingsPage() {
 
       {schools?.length && kids.length ? (
         <Card className="flex flex-col gap-4">
-          <h2 className="text-xl font-extrabold">{fr.ecole.school}</h2>
+          <h2 className="t-2">{fr.ecole.school}</h2>
           <p className="text-sm text-muted">{fr.ecole.schoolHint}</p>
           <ChildSchoolForm
             schools={schools}
@@ -131,14 +131,14 @@ export default async function HouseholdSettingsPage() {
       ) : null}
 
       <Card className="flex flex-col gap-4">
-        <h2 className="text-xl font-extrabold">{t.accounts}</h2>
-        <ul className="flex flex-col divide-y divide-line">
+        <h2 className="t-2">{t.accounts}</h2>
+        <ul className="flex flex-col">
           {(memberships ?? []).map((m) => {
             const isMe = m.user_id === user.id;
             const name = nameOf(m.user_id);
             return (
-              <li key={m.user_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                <span className="font-semibold">
+              <li key={m.user_id} className="row flex-wrap justify-between">
+                <span className="t-ui">
                   {name} {isMe && <Pill className="ml-1">{t.you}</Pill>}
                 </span>
                 <div className="flex flex-wrap items-start gap-2">
@@ -165,17 +165,17 @@ export default async function HouseholdSettingsPage() {
       </Card>
 
       <Card className="flex flex-col gap-4">
-        <h2 className="text-xl font-extrabold">{t.invitations}</h2>
+        <h2 className="t-2">{t.invitations}</h2>
         <p className="text-muted">{t.inviteLead}</p>
         <InviteForm householdId={household.id} householdName={household.name} />
-        <h3 className="text-lg font-extrabold">{t.pending}</h3>
+        <h3 className="t-3">{t.pending}</h3>
         {invitations?.length ? (
-          <ul className="flex flex-col divide-y divide-line" data-testid="pending-invitations">
+          <ul className="flex flex-col" data-testid="pending-invitations">
             {invitations.map((inv) => (
-              <li key={inv.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+              <li key={inv.id} className="row flex-wrap justify-between">
                 <span>
-                  <span className="font-semibold">{inv.email ?? fr.roles[inv.role]}</span>{" "}
-                  <span className="text-sm text-muted">
+                  <span className="t-ui">{inv.email ?? fr.roles[inv.role]}</span>{" "}
+                  <span className="mono text-sm text-muted">
                     · {fr.roles[inv.role]} · {t.expiresOn(dateFr.format(new Date(inv.expires_at)))}
                   </span>
                 </span>

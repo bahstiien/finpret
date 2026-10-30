@@ -9,9 +9,9 @@ import { Card } from "@/components/ui/Card";
 export function CopyBlock({ title, text }: { title: string; text: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <Card padding="cozy" className="flex flex-col gap-3">
-      <h2 className="text-lg font-extrabold">{title}</h2>
-      <pre className="font-sans text-sm whitespace-pre-wrap">{text}</pre>
+    <Card className="flex flex-col gap-3">
+      <h2 className="t-2">{title}</h2>
+      <pre className="tone-chip mono t-small rounded-r1 border-[length:var(--bw)] border-line p-3 whitespace-pre-wrap">{text}</pre>
       <Button
         type="button"
         variant="outline"

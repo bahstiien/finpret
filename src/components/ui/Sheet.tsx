@@ -34,23 +34,26 @@ export function Sheet({
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className="m-0 mt-auto max-h-[90dvh] w-full max-w-none overflow-y-auto rounded-t-sheet bg-surface p-0 text-ink backdrop:bg-black/40 sm:m-auto sm:max-w-lg sm:rounded-sheet"
+      className="sheet m-0 mt-auto max-h-[90dvh] w-full max-w-none overflow-y-auto text-ink backdrop:bg-nav sm:m-auto sm:max-w-lg"
     >
       {open && (
-        <div className="flex flex-col gap-4 p-5 pb-8">
+        <>
+        <span className="sheet-handle" aria-hidden="true" />
+        <div className="flex flex-col gap-4 pt-2 pb-4">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-2xl font-black">{title}</h2>
+            <h2 className="t-2">{title}</h2>
             <button
               type="button"
               onClick={onClose}
               aria-label={fr.common.close}
-              className="grid size-11 place-items-center rounded-full bg-chip"
+              className="iconbtn"
             >
-              <Icon name="close" className="size-5" />
+              <Icon name="close" />
             </button>
           </div>
           {children}
         </div>
+        </>
       )}
     </dialog>
   );

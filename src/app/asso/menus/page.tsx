@@ -63,7 +63,7 @@ export default async function AssoMenusPage({
   return (
     <>
       <PageHeader title={t.title} />
-      <p className="text-muted">{t.lead}</p>
+      <p className="muted">{t.lead}</p>
       <StatusBanner association={association} />
       {association.schools.length > 1 && (
         <nav aria-label={t.school} className="flex flex-wrap gap-2">
@@ -72,7 +72,7 @@ export default async function AssoMenusPage({
               key={s.id}
               href={`/asso/menus?school=${s.id}`}
               aria-current={s.id === school?.id ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center rounded-pill px-5 font-bold ${s.id === school?.id ? "bg-ink text-surface" : "bg-surface"}`}
+              className={`btn btn--sm ${s.id === school?.id ? "btn--dark" : "btn--outline"}`}
             >
               {s.name}
             </Link>
@@ -81,7 +81,7 @@ export default async function AssoMenusPage({
       )}
       {school && (
         <>
-          <h2 className="text-xl font-extrabold">
+          <h2 className="t-2">
             {school.name} ({school.city})
           </h2>
           <MenusEditor

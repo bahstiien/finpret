@@ -20,8 +20,8 @@ export function InviteEditorForm() {
         </Button>
       </form>
       {state.link && (
-        <div className="flex flex-col gap-2">
-          <label htmlFor="invite-link" className="text-sm font-semibold">
+        <div className="field">
+          <label htmlFor="invite-link" className="field-label">
             {t.link}
           </label>
           <input
@@ -29,7 +29,7 @@ export function InviteEditorForm() {
             readOnly
             value={state.link}
             onFocus={(e) => e.currentTarget.select()}
-            className="min-h-11 w-full rounded-xl bg-bg px-3 text-sm"
+            className="input mono"
           />
         </div>
       )}

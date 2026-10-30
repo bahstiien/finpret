@@ -29,25 +29,25 @@ export function LegalPage({ slug }: { slug: LegalSlug }) {
     <>
       <PublicHeader signup={false} />
       <main id="contenu">
-        <Container className="flex max-w-3xl flex-col gap-8 py-12 sm:py-20">
-          <h1 className="text-4xl font-black">{page.title}</h1>
-          <Card as="p" tone="yellow" padding="cozy" className="font-semibold" data-testid="legal-todo">
+        <Container narrow className="flex flex-col gap-8 py-12 min-[900px]:py-16">
+          <h1 className="t-1">{page.title}</h1>
+          <Card as="p" tone="banane" className="t-ui" data-testid="legal-todo">
             {legalFr.todo}
           </Card>
           {slug === "mentions-legales" && (
-            <Card as="dl" padding="cozy" data-testid="company">
-              <dt className="font-bold">Éditeur</dt>
-              <dd>{c.name}</dd>
-              <dt className="mt-2 font-bold">Immatriculation</dt>
-              <dd>{c.id}</dd>
-              <dt className="mt-2 font-bold">TVA</dt>
-              <dd>{c.vat}</dd>
+            <Card as="dl" data-testid="company">
+              <dt className="t-label">Éditeur</dt>
+              <dd className="mono">{c.name}</dd>
+              <dt className="t-label mt-3">Immatriculation</dt>
+              <dd className="mono">{c.id}</dd>
+              <dt className="t-label mt-3">TVA</dt>
+              <dd className="mono">{c.vat}</dd>
             </Card>
           )}
           {page.sections.map((s) => (
             <section key={s} className="flex flex-col gap-2">
-              <h2 className="text-2xl font-extrabold">{s}</h2>
-              <p className="text-muted">TODO(juriste)</p>
+              <h2 className="t-2">{s}</h2>
+              <p className="mono muted">TODO(juriste)</p>
             </section>
           ))}
         </Container>

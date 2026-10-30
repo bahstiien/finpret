@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { FormMessage, SelectField, TextField } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
@@ -36,8 +37,8 @@ export function InviteForm({ householdId, householdName }: { householdId: string
       </form>
 
       {link && (
-        <div className="flex flex-col gap-3 rounded-2xl bg-yellow-soft p-4">
-          <label htmlFor="invite-link" className="text-sm font-semibold">
+        <Card as="div" tone="banane" padding="cozy" className="flex flex-col gap-3">
+          <label htmlFor="invite-link" className="field-label">
             {t.inviteLink}
           </label>
           <input
@@ -45,7 +46,7 @@ export function InviteForm({ householdId, householdName }: { householdId: string
             readOnly
             value={link}
             onFocus={(e) => e.currentTarget.select()}
-            className="min-h-11 w-full rounded-xl bg-surface px-3 text-sm"
+            className="input mono"
           />
           <div className="flex flex-wrap gap-2">
             <Button
@@ -70,7 +71,7 @@ export function InviteForm({ householdId, householdName }: { householdId: string
               </Button>
             )}
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

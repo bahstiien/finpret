@@ -7,7 +7,7 @@ const t = fr.progress;
 
 /**
  * Tuile « Série » de l'onglet Menu (SPEC_PROGRES §3.5) : visible dès 2 semaines fin prêtes, ou si la semaine en cours
- * est déjà fin prête. Mène à « Nos progrès ».
+ * est déjà fin prête. Mène à « Nos progrès ». Domaine Progrès = banane.
  */
 export function StreakTile({ streak }: { streak: Pick<StreakState, "current" | "currentWeek"> }) {
   if (streak.current < 2 && streak.currentWeek !== "done") return null;
@@ -20,19 +20,19 @@ export function StreakTile({ streak }: { streak: Pick<StreakState, "current" | "
   return (
     <Link
       href="/app/progress?from=tile"
-      className="flex min-h-16 items-center gap-4 rounded-card bg-violet-soft p-4 text-violet-strong"
+      className="card tone-progres flex min-h-16 items-center gap-4 !p-4"
       data-testid="streak-tile"
     >
-      <span className="grid size-12 shrink-0 place-items-center rounded-full bg-surface">
+      <span className="nb-flat tone-surface grid size-12 shrink-0 place-items-center">
         <Icon name="streak" className="size-6" />
       </span>
       <span className="flex flex-col">
-        <span className="font-black">
+        <span className="t-ui">
           {t.streak.label}
-          {" : "}
+          {" : "}
           {t.streak.tile(streak.current)}
         </span>
-        <span className="text-sm">{state}</span>
+        <span className="t-small">{state}</span>
       </span>
     </Link>
   );

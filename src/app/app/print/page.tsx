@@ -30,7 +30,7 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
   if (!row) {
     return (
       <p className="text-muted">
-        {t.noWeek} <Link href="/app">{t.back}</Link>
+        {t.noWeek} <Link href="/app" className="lnk">{t.back}</Link>
       </p>
     );
   }

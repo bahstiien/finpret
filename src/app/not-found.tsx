@@ -10,12 +10,15 @@ export const metadata: Metadata = {
 
 /** Vraie 404 (code HTTP 404) avec des liens vers les hubs, pour ne laisser ni le visiteur ni les robots dans une impasse. */
 export default function NotFound() {
-  const link = "inline-flex min-h-11 items-center underline underline-offset-4";
+  const link = "lnk t-ui inline-flex min-h-11 items-center";
   return (
     <>
       <SeoHeader />
       <main className="mx-auto w-full max-w-[860px] px-4 py-10 sm:px-8">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">Cette page n’existe pas</h1>
+        <p className="num-xl nb tone-violet mb-6 inline-block px-4 py-2" aria-hidden="true">
+          404
+        </p>
+        <h1 className="t-1">Cette page n’existe pas</h1>
         <p className="mt-3 text-lg text-muted">Elle a peut-être été déplacée. Voici où poursuivre :</p>
         <ul className="mt-5 flex flex-col">
           {INDEXABLE_HUBS.map((h) => (

@@ -1,21 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Gabarito } from "next/font/google";
+import { Archivo_Black, Space_Grotesk, Space_Mono } from "next/font/google";
 import { fr } from "@/i18n/fr";
 import "./globals.css";
 
-const gabarito = Gabarito({
-  subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  variable: "--font-gabarito",
-  display: "swap",
-});
-
-const figtree = Figtree({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-figtree",
-  display: "swap",
-});
+// Archivo Black (titres, capitales), Space Grotesk (texte), Space Mono (chiffres, métadonnées).
+const archivo = Archivo_Black({ subsets: ["latin", "latin-ext"], weight: "400", variable: "--font-archivo", display: "swap" });
+const grotesk = Space_Grotesk({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "700"], variable: "--font-grotesk", display: "swap" });
+const spaceMono = Space_Mono({ subsets: ["latin", "latin-ext"], weight: ["400", "700"], variable: "--font-space-mono", display: "swap" });
 
 export const metadata: Metadata = {
   // Base des URL absolues (image de partage, canonical) : finpret.app en production.
@@ -30,8 +21,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F4F3F8" },
-    { media: "(prefers-color-scheme: dark)", color: "#121019" },
+    { media: "(prefers-color-scheme: light)", color: "#FFF8E7" },
+    { media: "(prefers-color-scheme: dark)", color: "#181818" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -42,7 +33,7 @@ const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t=
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${gabarito.variable} ${figtree.variable}`} suppressHydrationWarning>
+    <html lang="fr" className={`${archivo.variable} ${grotesk.variable} ${spaceMono.variable}`} suppressHydrationWarning>
       <head>
         {/* Thème choisi sur cet appareil (§11), appliqué avant l'affichage pour éviter un flash. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />

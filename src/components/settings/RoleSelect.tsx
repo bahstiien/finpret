@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { FormMessage } from "@/components/ui/Field";
+import { Icon } from "@/components/ui/Icon";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import type { HouseholdRole } from "@/server/db.types";
@@ -24,6 +25,7 @@ export function RoleSelect({
 
   return (
     <div className="flex flex-col items-end gap-2">
+      <span className="select-wrap">
       <select
         aria-label={label}
         value={value}
@@ -44,7 +46,7 @@ export function RoleSelect({
             } else setError(undefined);
           });
         }}
-        className="min-h-11 rounded-pill border-2 border-line bg-surface px-4 font-semibold"
+        className="input"
       >
         {(FEATURES.viewerRole || role === "viewer"
           ? (["admin", "member", "viewer"] as const)
@@ -55,6 +57,8 @@ export function RoleSelect({
           </option>
         ))}
       </select>
+        <Icon name="chevronDown" className="ic" />
+      </span>
       {error && <FormMessage tone="error">{error}</FormMessage>}
     </div>
   );

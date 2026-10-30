@@ -276,7 +276,7 @@ export function ConfirmDelete({
         required
       />
       {error && <FormMessage tone="error">{error}</FormMessage>}
-      <Button type="submit" variant="dark" disabled={pending}>
+      <Button type="submit" variant="danger" disabled={pending}>
         {label}
       </Button>
     </form>

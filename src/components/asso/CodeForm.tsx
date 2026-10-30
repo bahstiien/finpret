@@ -21,7 +21,7 @@ export function CodeForm({ code }: { code: string }) {
         maxLength={20}
         autoCapitalize="characters"
       />
-      <p className="text-sm text-muted">{t.codeChangeHint}</p>
+      <p className="t-small muted">{t.codeChangeHint}</p>
       {state.error && <FormMessage tone="error">{state.error}</FormMessage>}
       {state.ok && <FormMessage tone="success">{state.ok}</FormMessage>}
       <Button type="submit" variant="outline" className="self-start" disabled={pending}>

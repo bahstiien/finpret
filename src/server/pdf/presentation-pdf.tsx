@@ -43,9 +43,9 @@ export function renderPresentationPdf(): Promise<Buffer> {
         <Text style={styles.h1}>{t.hero.title}</Text>
         <Text style={styles.lead}>{t.hero.lead}</Text>
         <Text style={styles.h2}>{t.how.title}</Text>
-        <List items={t.how.steps} numbered />
+        <List items={t.how.steps.map((s) => s.text)} numbered />
         <Text style={styles.h2}>{t.families.title}</Text>
-        <List items={t.families.items} />
+        <List items={t.families.items.map((c) => c.text)} />
         <Text style={styles.box}>{t.families.benefit}</Text>
         <Text style={styles.h2}>{t.zero.title}</Text>
         <List items={t.zero.items} />

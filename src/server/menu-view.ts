@@ -30,6 +30,8 @@ export type MealView = {
   counts: { a: number; c: number };
   favorite: boolean;
   removed: boolean;
+  /** 1 (très facile) à 4 (technique). */
+  difficulty: number;
 };
 
 export type DayView = { day: number; iso: string; meals: MealView[]; tonight: string | null; thaw: string[] };
@@ -165,6 +167,7 @@ export function buildMenuView(
           counts: g.counts,
           favorite: fav(r.id),
           removed,
+          difficulty: r.diff,
         });
       } else {
         const x = weekendItems(env, w).find((it) => it.d === day && it.m === meal);
@@ -190,6 +193,7 @@ export function buildMenuView(
           counts: g.counts,
           favorite: fav(x.id),
           removed: false,
+          difficulty: x.r.diff,
         });
       }
     }

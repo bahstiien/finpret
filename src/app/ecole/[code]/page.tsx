@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { Sticker } from "@/components/ui/Extras";
+import { FormMessage } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
 import { associationByCode } from "@/server/associations";
 import { startWithCode } from "@/server/actions/ecole";
@@ -22,7 +24,7 @@ export default async function EcolePage({ params }: { params: Promise<{ code: st
   if (!allow(`ecole-page:${await clientIp()}`, 30, 60_000)) {
     return (
       <main className="mx-auto flex min-h-dvh max-w-xl flex-col justify-center gap-4 p-6">
-        <p role="alert">{t.tooMany}</p>
+        <FormMessage tone="error">{t.tooMany}</FormMessage>
       </main>
     );
   }
@@ -33,35 +35,32 @@ export default async function EcolePage({ params }: { params: Promise<{ code: st
     <main className="mx-auto flex min-h-dvh max-w-xl flex-col justify-center gap-6 p-6">
       {active && association ? (
         <>
-          <p className="text-sm font-bold tracking-wide text-violet uppercase">{t.eyebrow}</p>
+          <Sticker tone="banane" className="self-start">
+            {t.eyebrow}
+          </Sticker>
           <PageHeader title={t.title(association.name)} />
           {association.schools.length > 0 && (
-            <p className="text-muted">
-              {association.schools.map((s) => `${s.name} (${s.city})`).join(" · ")}
-            </p>
+            <p className="muted">{association.schools.map((s) => `${s.name} (${s.city})`).join(" · ")}</p>
           )}
-          <Card tone="yellow" padding="cozy" aria-label={t.benefitLabel}>
-            <p className="font-bold">{t.benefit}</p>
-            <p className="text-sm text-muted">{t.benefitHint(association.name)}</p>
+          <Card tone="banane" aria-label={t.benefitLabel}>
+            <p className="t-3">{t.benefit}</p>
+            <p className="t-small mt-1">{t.benefitHint(association.name)}</p>
           </Card>
           <form action={startWithCode}>
             <input type="hidden" name="code" value={association.code} />
-            <Button type="submit" className="w-full">
+            <Button type="submit" size="lg" className="btn--block">
               {t.cta}
             </Button>
           </form>
-          <Link
-            href={`/ecole/${association.code}/comment-ca-marche`}
-            className="text-sm font-semibold underline"
-          >
+          <Link href={`/ecole/${association.code}/comment-ca-marche`} className="lnk t-small self-start">
             {t.howItWorks}
           </Link>
         </>
       ) : (
         <>
-          <h1 className="text-3xl font-black">{t.inactiveTitle}</h1>
-          <p className="text-muted">{t.inactiveBody}</p>
-          <Link href="/login" className="font-semibold underline">
+          <h1 className="t-1">{t.inactiveTitle}</h1>
+          <p className="muted">{t.inactiveBody}</p>
+          <Link href="/login" className="lnk self-start">
             {t.inactiveCta}
           </Link>
         </>

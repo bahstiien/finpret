@@ -11,7 +11,7 @@ export function InteractiveDemo() {
   const [n, setN] = useState(4);
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       <Segmented
         label="Affichage"
         value={view}

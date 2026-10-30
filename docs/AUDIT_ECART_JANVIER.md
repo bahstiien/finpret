@@ -1,3 +1,5 @@
+> **Archive** : photo du 20 octobre 2026. L'état à jour est dans `AUDIT_COMPLET.md`.
+
 # Audit d'écart : SPEC_JANVIER vs branche `m2-catalogue`
 
 Date : 20 octobre 2026. Base auditée : `m2-catalogue` @ 6731e3d (M0 à M11 de la SPEC V1, 21 commits).

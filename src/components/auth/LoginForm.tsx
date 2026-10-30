@@ -14,7 +14,7 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
   const error = state.status === "error" ? state.message : state.status === "idle" ? initialError : undefined;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       {state.status === "sent" ? (
         <FormMessage tone="success">{t.sent(state.email)}</FormMessage>
       ) : (
@@ -30,7 +30,7 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
             inputMode="email"
             required
           />
-          <Button type="submit" disabled={pending}>
+          <Button type="submit" variant="primary" disabled={pending}>
             {t.submit}
           </Button>
         </form>
@@ -38,17 +38,17 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
 
       {error && <FormMessage tone="error">{error}</FormMessage>}
 
-      <div className="flex items-center gap-3 text-sm text-muted" aria-hidden="true">
-        <span className="h-px flex-1 bg-line" />
+      <div className="t-kicker flex items-center gap-3" aria-hidden="true">
+        <span className="h-[var(--bw)] flex-1 bg-line" />
         {t.or}
-        <span className="h-px flex-1 bg-line" />
+        <span className="h-[var(--bw)] flex-1 bg-line" />
       </div>
 
       {(FEATURES.appleSignIn ? (["apple", "google"] as const) : (["google"] as const)).map((provider) => (
         <form key={provider} action={signInWithProvider}>
           <input type="hidden" name="provider" value={provider} />
           <input type="hidden" name="next" value={next} />
-          <Button type="submit" variant="outline" className="w-full">
+          <Button type="submit" variant="outline" className="btn--block">
             {t[provider]}
           </Button>
         </form>
