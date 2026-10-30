@@ -49,7 +49,9 @@ test("écrans de l'application, en clair puis en sombre", async ({ page }) => {
     await page.emulateMedia({ colorScheme: scheme });
     for (const path of screens) {
       await page.goto(path);
-      await page.waitForLoadState("networkidle");
+      // Pas de « networkidle » : le flux temps réel (SSE, /api/realtime) reste ouvert sur les écrans du foyer.
+      await page.waitForLoadState("load");
+      await page.locator("main").first().waitFor();
       await audit(page, `${path} (${scheme})`);
     }
   }

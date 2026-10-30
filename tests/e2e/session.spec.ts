@@ -68,7 +68,8 @@ test("session complète, minuteurs persistants, état partagé entre appareils",
   await clockPage.clock.install();
   // Les recettes cuisinées ont pu rapporter des tampons : leur célébration s'ouvre sur /app, par-dessus le minuteur.
   await clockPage.addLocatorHandler(clockPage.getByRole("dialog"), async (dialog) => {
-    await dialog.getByRole("button", { name: "Fermer" }).click();
+    // Deux « Fermer » : la croix de l'en-tête et le bouton du bas.
+    await dialog.getByRole("button", { name: "Fermer" }).first().click();
   });
   await clockPage.goto("/app");
   await expect(clockPage.getByTestId("timer-bar")).toBeVisible();
