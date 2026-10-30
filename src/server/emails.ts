@@ -46,7 +46,7 @@ async function build(
   return { to, subject, html, text, ...extra };
 }
 
-/** Lien magique de connexion (Better Auth), anciennement envoyé par Supabase. */
+/** Lien magique de connexion (Better Auth). */
 export async function sendMagicLink(to: string, url: string): Promise<SendResult> {
   return sendEmail(await build(to, "Ton lien de connexion à Fin Prêt", createElement(MagicLinkEmail, { url })));
 }

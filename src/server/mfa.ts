@@ -6,7 +6,7 @@ import { allow } from "@/server/rate-limit";
 import { generateTotpSecret, totpUri, verifyTotp } from "@/server/totp";
 
 /**
- * Second facteur TOTP du back-office (SPEC_JANVIER §8), qui remplace Supabase MFA : la clé de l'administrateur est
+ * Second facteur TOTP du back-office (SPEC_JANVIER §8) : la clé de l'administrateur est
  * chiffrée en base (AES-256-GCM, clé dérivée de BETTER_AUTH_SECRET) et un code valide marque la session courante
  * (`auth.sessions.mfa_verified_at`), l'équivalent du niveau aal2.
  */

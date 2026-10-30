@@ -22,7 +22,7 @@ import type { DB } from "@/server/db.types";
  * mêmes formats de retour que le pool de l'application (src/server/db.ts). Remplace l'ancien faux client Supabase.
  */
 
-const MIGRATIONS = join(process.cwd(), "supabase/migrations");
+const MIGRATIONS = join(process.cwd(), "db/migrations");
 
 // Formats alignés sur src/server/db.ts : dates en texte, horodatages ISO à la microseconde, numeric et bigint en nombres.
 const parsers = {

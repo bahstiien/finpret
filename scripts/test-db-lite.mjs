@@ -13,7 +13,7 @@ import { reportTap } from "./lib/pgtap.mjs";
 const root = process.cwd();
 const db = await PGlite.create({ extensions: { pgcrypto, pg_trgm, unaccent, pgtap } });
 
-const migrations = join(root, "supabase/migrations");
+const migrations = join(root, "db/migrations");
 for (const file of readdirSync(migrations).sort()) {
   try {
     await db.exec(readFileSync(join(migrations, file), "utf8"));
@@ -24,7 +24,7 @@ for (const file of readdirSync(migrations).sort()) {
   }
 }
 
-const tests = join(root, "supabase/tests/database");
+const tests = join(root, "db/tests");
 let failures = 0;
 for (const file of readdirSync(tests).sort()) {
   console.log(`\n# ${file}`);

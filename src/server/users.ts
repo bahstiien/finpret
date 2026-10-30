@@ -1,7 +1,7 @@
 import "server-only";
 import { withAdmin } from "@/server/db";
 
-/** Adresse e-mail d'un compte (remplace auth.admin.getUserById de Supabase). */
+/** Adresse e-mail d'un compte. */
 export async function emailOf(userId: string): Promise<string | null> {
   const row = await withAdmin((db) =>
     db.selectFrom("auth.users").select("email").where("id", "=", userId).executeTakeFirst(),

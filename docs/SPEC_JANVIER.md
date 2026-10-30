@@ -232,15 +232,15 @@ Tests RLS obligatoires (pgTAP ou Vitest avec deux clients authentifiés) pour ch
 | `canteen_published` | À la publication | 1 par école et par semaine ISO | Gratuit pour les foyers d'une association |
 | `trial_ending` | J-3, 10 h | Essai en cours | Tous |
 
-Cron Supabase toutes les 15 min → Edge Function `notify` → idempotence par (`user_id`, `type`, `date`) dans `notification_log`. Fuseau : `households.timezone` (D3). Textes : charte, section 9.
+Crontab du VPS toutes les 15 min (`deploy/cron.sh`) → `/api/cron/notify` → idempotence par (`user_id`, `type`, `date`) dans `notification_log`. Fuseau : `households.timezone` (D3). Textes : charte, section 9.
 
 ### E-mails (Resend)
 Lien de connexion, invitation au foyer, bienvenue, fin d'essai (J-3, J0), paiement échoué, association (demande reçue, validée, refusée, relevé trimestriel). Gabarits en React Email dans `src/emails/`, en français, conformes à la charte. Lien de désinscription en un clic sur tout e-mail non transactionnel.
 
 ### Sécurité
-- Clés Stripe, Anthropic, Resend et clé de service Supabase uniquement côté serveur.
+- Clés Stripe, Anthropic, Resend, secret Better Auth et accès privilégié à la base (`withAdmin`) uniquement côté serveur.
 - IBAN : chiffrement AES-256-GCM côté serveur avec `IBAN_ENCRYPTION_KEY` ; stocker `iban_encrypted` et `iban_last4` ; jamais renvoyé en clair au client ; déchiffré seulement pour l'export CSV admin.
-- `/admin` : membre de `admins` **et** TOTP (Supabase MFA) ; toute action écrite dans `admin_audit`.
+- `/admin` : membre de `admins` **et** TOTP (second facteur du back-office, `src/server/mfa.ts`) ; toute action écrite dans `admin_audit`.
 - Limitation de débit : connexion (5 par heure et par e-mail), `/ecole/[code]` (30 par minute et par IP), import PDF (quota), création d'association (3 par jour et par compte).
 - Surveillance : Sentry (`SENTRY_DSN`), alerte e-mail sur tout webhook Stripe en erreur.
 - Sauvegarde quotidienne, test de restauration documenté avant le 18 décembre.

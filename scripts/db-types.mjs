@@ -1,7 +1,7 @@
 // Génère src/server/db.types.ts (types Kysely) depuis le schéma de DATABASE_URL, migrations appliquées.
 // Les colonnes texte bornées par un `check (… in (…))` reçoivent ensuite leur union de valeurs
 // (scripts/db-types-overrides.json, à compléter quand une migration en ajoute une).
-// Usage : pnpm db:types:pg
+// Usage : pnpm db:types
 import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -11,7 +11,7 @@ loadEnvLocal();
 const url = requireEnv("DATABASE_URL");
 const OUT = "src/server/db.types.ts";
 
-// Point d'entrée Node direct, sans shell : même raison que supabase-remote.mjs (caractères spéciaux sous Windows).
+// Point d'entrée Node direct, sans shell : un mot de passe contenant `&` ou `%` serait sinon découpé par cmd.exe sous Windows.
 const CLI = fileURLToPath(new URL("../node_modules/kysely-codegen/dist/cli/bin.js", import.meta.url));
 
 const result = spawnSync(
@@ -24,7 +24,7 @@ const result = spawnSync(
     "--default-schema=public",
     "--include-pattern=(public|auth).*",
     "--exclude-pattern=public.schema_migrations",
-    // Mêmes formats que le pool (src/server/db.ts) et que supabase-js : dates et horodatages en texte, nombres.
+    // Mêmes formats que le pool (src/server/db.ts) : dates et horodatages en texte, nombres.
     "--date-parser=string",
     "--numeric-parser=number",
     '--type-mapping={"timestamptz":"string","timestamp":"string","int8":"number"}',

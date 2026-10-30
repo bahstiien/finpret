@@ -32,7 +32,7 @@ COPY --from=build --chown=node:node /app/public ./public
 # dans les dépendances du serveur autonome.
 COPY --from=build --chown=node:node /app/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=build --chown=node:node /app/scripts/lib/env.mjs ./scripts/lib/env.mjs
-COPY --from=build --chown=node:node /app/supabase/migrations ./supabase/migrations
+COPY --from=build --chown=node:node /app/db/migrations ./db/migrations
 # Fichiers privés (volume `files`) : le dossier appartient à `node` pour qu'un volume neuf hérite de ces droits.
 RUN mkdir -p /data/files && chown node:node /data/files
 USER node

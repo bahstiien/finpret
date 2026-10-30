@@ -1,4 +1,4 @@
-// Applique les migrations SQL de supabase/migrations/ à DATABASE_URL, dans l'ordre, une transaction par fichier.
+// Applique les migrations SQL de db/migrations/ à DATABASE_URL, dans l'ordre, une transaction par fichier.
 // Les versions appliquées sont tenues dans public.schema_migrations.
 // Usage : pnpm db:migrate | pnpm db:migrate --dry (liste ce qui serait appliqué)
 import { readFileSync, readdirSync } from "node:fs";
@@ -9,7 +9,7 @@ import { loadEnvLocal, pgSsl, requireEnv } from "./lib/env.mjs";
 loadEnvLocal();
 const connectionString = requireEnv("DATABASE_URL");
 const dry = process.argv.includes("--dry");
-const dir = join(process.cwd(), "supabase/migrations");
+const dir = join(process.cwd(), "db/migrations");
 
 const client = new pg.Client({ connectionString, ssl: pgSsl(connectionString) });
 await client.connect();

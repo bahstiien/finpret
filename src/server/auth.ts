@@ -8,7 +8,7 @@ import { sendMagicLink } from "@/server/emails";
 import { trackEvent } from "@/server/events";
 
 /**
- * Better Auth (remplace Supabase Auth) : lien magique par e-mail, Google, et Apple derrière son drapeau.
+ * Better Auth : lien magique par e-mail, Google, et Apple derrière son drapeau.
  * Tables du schéma `auth` (migration 20261107000000_better_auth.sql), lues et écrites en `service_role`.
  * Le second facteur du back-office est géré à part (src/server/mfa.ts).
  */
@@ -61,7 +61,7 @@ function createAuth() {
       additionalFields: {
         mfaVerifiedAt: { type: "date", required: false, input: false, fieldName: "mfa_verified_at" },
       },
-      // Durée et renouvellement proches de Supabase : 30 jours glissants.
+      // Sessions de 30 jours glissants, renouvelées une fois par jour.
       expiresIn: 60 * 60 * 24 * 30,
       updateAge: 60 * 60 * 24,
     },

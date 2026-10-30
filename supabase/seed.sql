@@ -1,2 +1,0 @@
--- Données de développement appliquées par `supabase db reset`.
--- Le catalogue (seed/*.json) est importé par `pnpm seed` à partir de M2.

@@ -29,7 +29,6 @@ export async function requireUser(next = "/app") {
 
 /**
  * Requêtes pour la requête HTTP en cours : au nom de l'utilisateur connecté (RLS `authenticated`), sinon en `anon`.
- * Remplace `createClient()` de Supabase côté serveur.
  */
 export async function withSession<T>(fn: (db: Db) => Promise<T>): Promise<T> {
   const user = await getUser();

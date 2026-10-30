@@ -3,7 +3,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
 /**
- * Fichiers privés du serveur (remplace Supabase Storage) : PDF des kits et des relevés d'associations, rangés sur le
+ * Fichiers privés du serveur : PDF des kits et des relevés d'associations, rangés sur le
  * disque sous FILES_DIR (volume Docker `/data/files` sur le VPS, sauvegardé avec la base). Même découpage que les
  * anciens buckets : `<bucket>/<chemin>`, si bien que les chemins enregistrés en base (`statement_path`) restent valables.
  * Jamais servis directement : les routes vérifient les droits puis renvoient le contenu.

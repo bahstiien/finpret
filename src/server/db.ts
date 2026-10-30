@@ -16,9 +16,9 @@ export function pgTimestamp(v: string): string {
 }
 
 /**
- * Formats renvoyés par le pool, alignés sur ceux de supabase-js (PostgREST) pour ne rien changer au code appelant :
+ * Formats renvoyés par le pool (ceux de PostgREST, que le code a toujours reçus) :
  * `date` en texte AAAA-MM-JJ, horodatages en texte ISO 8601 (UTC, microsecondes conservées), `numeric` et `bigint`
- * en nombres. Les types générés (pnpm db:types:pg) suivent les mêmes choix.
+ * en nombres. Les types générés (pnpm db:types) suivent les mêmes choix.
  */
 const PG = pg.types.builtins;
 function typeParser(oid: number, format?: string) {
@@ -92,7 +92,7 @@ async function withRole<T>(
     );
 }
 
-/** Requêtes au nom d'un utilisateur connecté : la RLS s'applique comme avec le client Supabase. */
+/** Requêtes au nom d'un utilisateur connecté : la RLS s'applique. */
 export function withUser<T>(userId: string, fn: (db: Db) => Promise<T>): Promise<T> {
   return withRole("authenticated", userId, fn);
 }
@@ -130,7 +130,7 @@ function callSql(fn: string, args: Record<string, unknown>) {
 }
 
 /**
- * Appel d'une fonction SQL qui renvoie une valeur (uuid, boolean, jsonb, void…), comme `supabase.rpc()`.
+ * Appel d'une fonction SQL qui renvoie une valeur (uuid, boolean, jsonb, void…).
  * Arguments nommés (`{ p_name: … }`). Un tableau destiné à un paramètre `text[]` doit passer par `rpcRows` + `sql`.
  */
 export async function rpc<T = unknown>(db: Db, fn: string, args: Record<string, unknown> = {}): Promise<T> {

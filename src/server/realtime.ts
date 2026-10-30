@@ -3,7 +3,7 @@ import pg from "pg";
 import { z } from "zod";
 
 /**
- * Temps réel (remplace Supabase Realtime) : une connexion Postgres dédiée écoute `household_events`
+ * Temps réel : une connexion Postgres dédiée écoute `household_events`
  * (migration 20261108000000_household_events.sql) et répartit chaque notification entre les abonnés de son foyer.
  * Une seule connexion par processus, quel que soit le nombre de navigateurs ouverts.
  */

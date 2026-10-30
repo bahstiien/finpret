@@ -26,9 +26,6 @@ playwright/.cache/
 .env.local
 .env.*.local
 
-# Supabase
-supabase/.branches/
-supabase/.temp/
 
 # Divers
 .DS_Store

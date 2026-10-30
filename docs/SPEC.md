@@ -45,7 +45,7 @@ Il DOIT toujours y avoir au moins un administrateur par foyer. Le créateur du f
 
 ## 4. Authentification et comptes
 
-- **Connexion par lien magique e-mail** (Supabase OTP), **Apple** et **Google** (OAuth). Le mot de passe PEUT être activé plus tard ; il n'est pas dans la V1.
+- **Connexion par lien magique e-mail** (Better Auth), **Apple** et **Google** (OAuth). Le mot de passe PEUT être activé plus tard ; il n'est pas dans la V1.
 - **Après la première connexion :** si l'utilisateur n'a aucun foyer, il crée un foyer ou rejoint un foyer via une invitation, puis passe à l'onboarding.
 - **Invitations :**
   - lien signé (jeton aléatoire, expiration 7 jours, usage unique) ou envoi par e-mail ;
@@ -311,7 +311,7 @@ Scénario: URL interdite
 - conversions d'unités ; durées ISO 8601 ; `recipeYield` (« 4 », « 4 personnes », « 6-8 parts ») ;
 - refus SSRF ; délai dépassé ; page sans recette.
 
-## 9. Modèle de données (Postgres, migrations Supabase)
+## 9. Modèle de données (Postgres, migrations `db/migrations`)
 
 ```sql
 -- Identité et foyers
@@ -410,7 +410,7 @@ create table notification_log (id bigserial primary key, user_id uuid, kind text
 ## 12. Notifications
 
 - **Web Push (VAPID)** vers l'application installée (iOS 16.4 et plus après ajout à l'écran d'accueil, Android, ordinateur) ; **e-mail** en solution de repli (Resend ou équivalent).
-- **Planification :** cron Supabase toutes les 15 min → Edge Function `notify` → pour chaque compte dont l'heure configurée tombe dans la fenêtre (fuseau horaire du foyer) → calcul du contenu par le moteur → envoi → `notification_log` (idempotence par compte, type et date).
+- **Planification :** crontab du VPS toutes les 15 min (`deploy/cron.sh`) → `/api/cron/notify` → pour chaque compte dont l'heure configurée tombe dans la fenêtre (fuseau horaire du foyer) → calcul du contenu par le moteur → envoi → `notification_log` (idempotence par compte, type et date).
 - **Contenus :**
   - « Ce soir : *plat* », avec la consigne ;
   - « Pense à sortir *X* du congélateur pour demain » ;

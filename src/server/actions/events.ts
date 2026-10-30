@@ -10,7 +10,7 @@ const schema = z.object({
 });
 
 /**
- * Événements déclenchés depuis l'interface (la session et les courses écrivent directement dans Supabase).
+ * Événements déclenchés depuis l'interface (session et courses, dont les écritures passent par leurs propres actions).
  * Un seul enregistrement par compte, événement et semaine ; la semaine doit appartenir au foyer (RLS).
  */
 export async function recordWeekEvent(name: string, weekId: string): Promise<void> {
