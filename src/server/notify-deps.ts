@@ -3,12 +3,12 @@ import webpush from "web-push";
 import type { NotificationKind, NotificationPrefs } from "@/engine/notifications";
 import { fr } from "@/i18n/fr";
 import { notificationsSchema, parseSettings } from "@/lib/settings";
-import { createAdminClient } from "@/lib/supabase/admin";
-import type { Db } from "@/lib/supabase/types";
+import { type Db, rpc, withAdmin } from "@/server/db";
 import { householdCan } from "@/server/entitlements-load";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
 import type { NotifyDeps, Payload, Recipient, Subscription } from "@/server/notify";
+import { emailOf } from "@/server/users";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
 
 /** Dépendances réelles de l'envoi : base (clé de service), Web Push (VAPID) et e-mail (Resend). */
@@ -63,52 +63,57 @@ export function emailSender(baseUrl: string) {
 }
 
 export async function subscriptionsOf(db: Db, userId: string): Promise<Subscription[]> {
-  const { data } = await db.from("push_subscriptions").select("id, endpoint, keys").eq("user_id", userId);
-  return (data ?? []).map((s) => ({ id: s.id, endpoint: s.endpoint, keys: s.keys as Subscription["keys"] }));
+  const data = await db
+    .selectFrom("push_subscriptions")
+    .select(["id", "endpoint", "keys"])
+    .where("user_id", "=", userId)
+    .execute();
+  return data.map((s) => ({ id: s.id, endpoint: s.endpoint, keys: s.keys as Subscription["keys"] }));
 }
 
 /** Comptes ayant consenti aux notifications, avec leur foyer actif (ou le premier) et ses horaires. */
 async function recipients(db: Db): Promise<Recipient[]> {
-  const { data: settings } = await db.from("user_settings").select("user_id, notifications");
+  const settings = await db.selectFrom("user_settings").select(["user_id", "notifications"]).execute();
   const prefs = new Map<string, NotificationPrefs>();
-  for (const row of settings ?? []) {
+  for (const row of settings) {
     const parsed = notificationsSchema.safeParse(row.notifications ?? {});
     if (parsed.success && parsed.data.consentAt && (parsed.data.push || parsed.data.email))
       prefs.set(row.user_id, parsed.data);
   }
   if (!prefs.size) return [];
   const users = [...prefs.keys()];
-  const [{ data: profiles }, { data: memberships }] = await Promise.all([
-    db.from("profiles").select("user_id, active_household").in("user_id", users),
+  const [profiles, memberships] = await Promise.all([
+    db.selectFrom("profiles").select(["user_id", "active_household"]).where("user_id", "in", users).execute(),
     db
-      .from("memberships")
-      .select("user_id, household_id, created_at")
-      .in("user_id", users)
-      .order("created_at"),
+      .selectFrom("memberships")
+      .select(["user_id", "household_id", "created_at"])
+      .where("user_id", "in", users)
+      .orderBy("created_at")
+      .execute(),
   ]);
   const householdOf = new Map<string, string>();
-  for (const m of memberships ?? [])
-    if (!householdOf.has(m.user_id)) householdOf.set(m.user_id, m.household_id);
-  for (const p of profiles ?? []) {
+  for (const m of memberships) if (!householdOf.has(m.user_id)) householdOf.set(m.user_id, m.household_id);
+  for (const p of profiles) {
     if (
       p.active_household &&
-      (memberships ?? []).some((m) => m.user_id === p.user_id && m.household_id === p.active_household)
+      memberships.some((m) => m.user_id === p.user_id && m.household_id === p.active_household)
     ) {
       householdOf.set(p.user_id, p.active_household);
     }
   }
   const ids = [...new Set(householdOf.values())];
   if (!ids.length) return [];
-  const [{ data: households }, { data: hs }] = await Promise.all([
-    db.from("households").select("id, timezone").in("id", ids),
+  const [households, hs] = await Promise.all([
+    db.selectFrom("households").select(["id", "timezone"]).where("id", "in", ids).execute(),
     db
-      .from("household_settings")
-      .select("household_id, diet, menu, session, shopping, equipment, canteen")
-      .in("household_id", ids),
+      .selectFrom("household_settings")
+      .select(["household_id", "diet", "menu", "session", "shopping", "equipment", "canteen"])
+      .where("household_id", "in", ids)
+      .execute(),
   ]);
-  const tz = new Map((households ?? []).map((h) => [h.id, h.timezone]));
+  const tz = new Map(households.map((h) => [h.id, h.timezone]));
   const schedule = new Map(
-    (hs ?? []).map((row) => {
+    hs.map((row) => {
       const s = parseSettings(row);
       return [
         row.household_id,
@@ -144,12 +149,13 @@ async function content(db: Db, householdId: string, kind: NotificationKind): Pro
   if (kind === "shopping") {
     const week = next ?? current;
     if (!week) return null;
-    const { count } = await db
-      .from("shopping_items")
-      .select("id", { count: "exact", head: true })
-      .eq("week_id", week.id)
-      .eq("checked", false);
-    return count ?? 0;
+    const { n } = await db
+      .selectFrom("shopping_items")
+      .select((eb) => eb.fn.countAll<number>().as("n"))
+      .where("week_id", "=", week.id)
+      .where("checked", "=", false)
+      .executeTakeFirstOrThrow();
+    return Number(n);
   }
   if (kind === "session") return (next ?? current) ? 1 : null;
   if (!current) return null;
@@ -163,26 +169,26 @@ async function content(db: Db, householdId: string, kind: NotificationKind): Pro
 }
 
 export function createNotifyDeps(baseUrl: string): NotifyDeps {
-  const db = createAdminClient();
   return {
-    recipients: () => recipients(db),
-    content: (householdId, kind) => content(db, householdId, kind),
+    recipients: () => withAdmin(recipients),
+    content: (householdId, kind) => withAdmin((db) => content(db, householdId, kind)),
     claim: async (userId, kind, day, payload) => {
-      const { data, error } = await db.rpc("claim_notification", {
-        p_user: userId,
-        p_kind: kind,
-        p_day: day,
-        p_payload: payload,
-      });
-      if (error) throw error;
+      const data = await withAdmin((db) =>
+        rpc<boolean>(db, "claim_notification", {
+          p_user: userId,
+          p_kind: kind,
+          p_day: day,
+          p_payload: payload,
+        }),
+      );
       return data === true;
     },
-    subscriptions: (userId) => subscriptionsOf(db, userId),
+    subscriptions: (userId) => withAdmin((db) => subscriptionsOf(db, userId)),
     sendPush: sendWebPush,
     removeSubscription: async (id) => {
-      await db.from("push_subscriptions").delete().eq("id", id);
+      await withAdmin((db) => db.deleteFrom("push_subscriptions").where("id", "=", id).execute());
     },
-    emailOf: async (userId) => (await db.auth.admin.getUserById(userId)).data.user?.email ?? null,
+    emailOf,
     sendEmail: emailSender(baseUrl),
   };
 }

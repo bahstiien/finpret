@@ -10,8 +10,8 @@ import { type ExtractedRecipe, extractRecipe, mainText } from "@/engine/import/j
  * Récupération d'une page de recette (§8.8, étape 1) : une seule requête à la demande de l'utilisateur,
  * IP résolue vérifiée (SSRF), 10 s et 3 Mo au plus, User-Agent identifié.
  *
- * Écart avec la spec : le pipeline tourne dans une action serveur Next.js et non dans une Edge Function
- * Supabase (pas de jeton de déploiement des fonctions pour l'instant). Les règles sont les mêmes.
+ * Écart avec la spec : le pipeline tourne dans une action serveur Next.js et non dans une fonction séparée
+ * (Edge Function). Les règles sont les mêmes.
  */
 
 export const FETCH_TIMEOUT_MS = 10_000;

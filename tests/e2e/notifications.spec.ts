@@ -1,6 +1,14 @@
 import { expect, test } from "@playwright/test";
+import { sql } from "kysely";
 import { FEATURES } from "../../src/lib/features";
-import { adminClient, signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import {
+  adminDb,
+  dbConfigured,
+  householdIdOf,
+  signInFromLoginPage,
+  uniqueEmail,
+  userIdOf,
+} from "./helpers/auth";
 import { cronSecret } from "./helpers/cron";
 import { completeOnboarding } from "./helpers/onboarding";
 
@@ -16,7 +24,7 @@ test("le planificateur refuse un appel sans secret", async ({ request }) => {
 test("deux passages du planificateur n'envoient pas deux fois le même rappel", async ({ page, request }) => {
   // Le rappel « courses » est REPORTÉ (SPEC_JANVIER §2) ; l'idempotence reste couverte par les tests unitaires et pgTAP.
   test.skip(!FEATURES.shoppingSessionNotifications, "Rappels courses et session REPORTÉS");
-  test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+  test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
   test.setTimeout(90_000);
   const email = uniqueEmail("notif");
   await page.goto("/login");
@@ -24,37 +32,33 @@ test("deux passages du planificateur n'envoient pas deux fois le même rappel", 
   await completeOnboarding(page, "Rappels");
 
   // Consentement et rappel « courses » seul ; courses le samedi (9 h).
-  const admin = adminClient();
-  const { data: users } = await admin.auth.admin.listUsers({ perPage: 1000 });
-  const user = users.users.find((u) => u.email === email)!;
-  await admin
-    .from("user_settings")
-    .update({
-      notifications: {
-        push: true,
-        email: false,
-        dinner: { enabled: false, time: "17:30" },
-        thaw: { enabled: false, time: "20:30" },
-        shoppingReady: true,
-        sessionStart: false,
-        consentAt: new Date().toISOString(),
-      },
-    })
-    .eq("user_id", user.id);
-  const { data: membership } = await admin
-    .from("memberships")
-    .select("household_id")
-    .eq("user_id", user.id)
-    .single();
-  const { data: settings } = await admin
-    .from("household_settings")
+  const db = adminDb();
+  const userId = await userIdOf(email);
+  const notifications = {
+    push: true,
+    email: false,
+    dinner: { enabled: false, time: "17:30" },
+    thaw: { enabled: false, time: "20:30" },
+    shoppingReady: true,
+    sessionStart: false,
+    consentAt: new Date().toISOString(),
+  };
+  await db
+    .updateTable("user_settings")
+    .set({ notifications: sql`${JSON.stringify(notifications)}::jsonb` })
+    .where("user_id", "=", userId)
+    .execute();
+  const householdId = await householdIdOf(email);
+  const settings = await db
+    .selectFrom("household_settings")
     .select("shopping")
-    .eq("household_id", membership!.household_id)
-    .single();
-  await admin
-    .from("household_settings")
-    .update({ shopping: { ...(settings!.shopping as object), shoppingDay: 6 } })
-    .eq("household_id", membership!.household_id);
+    .where("household_id", "=", householdId)
+    .executeTakeFirstOrThrow();
+  await db
+    .updateTable("household_settings")
+    .set({ shopping: sql`${JSON.stringify({ ...(settings.shopping as object), shoppingDay: 6 })}::jsonb` })
+    .where("household_id", "=", householdId)
+    .execute();
 
   // Samedi 9 h 05 à Paris, deux passages dans la même fenêtre.
   const at = "2026-10-24T07:05:00Z";
@@ -66,11 +70,12 @@ test("deux passages du planificateur n'envoient pas deux fois le même rappel", 
   });
   expect((await second.json()).duplicates).toBeGreaterThanOrEqual(1);
 
-  const { data: log } = await admin
-    .from("notification_log")
-    .select("kind, day, payload")
-    .eq("user_id", user.id);
+  const log = await db
+    .selectFrom("notification_log")
+    .select(["kind", "day", "payload"])
+    .where("user_id", "=", userId)
+    .execute();
   expect(log).toHaveLength(1);
-  expect(log![0]).toMatchObject({ kind: "shopping", day: "2026-10-24" });
-  expect((log![0]!.payload as { body: string }).body).toMatch(/^Courses : \d+ articles?\.$/);
+  expect(log[0]).toMatchObject({ kind: "shopping", day: "2026-10-24" });
+  expect((log[0]!.payload as { body: string }).body).toMatch(/^Courses : \d+ articles?\.$/);
 });

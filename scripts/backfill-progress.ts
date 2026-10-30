@@ -1,7 +1,7 @@
 // Rattrapage du passeport à la mise en ligne (SPEC_PROGRES §4.3) : pour chaque semaine dont la session a été terminée
 // avant le déploiement (événement `session_done`), inscrit les recettes du plan dans `recipe_cooks` (backfilled) et les
 // tampons correspondants, déjà vus : aucun palier ni tampon n'est célébré. Idempotent. `done_at` est repris de l'événement.
-// Usage : pnpm backfill:progress  (SUPABASE_DB_URL dans .env.local)   |   pnpm backfill:progress --dry-run (annule)
+// Usage : pnpm backfill:progress  (DATABASE_URL dans .env.local)   |   pnpm backfill:progress --dry-run (annule)
 import pg from "pg";
 import { batchCooks, simpleCooks } from "../src/engine/cooks";
 import { type CookRecord, newAchievements } from "../src/engine/passport";
@@ -10,12 +10,17 @@ import { loadEnvLocal, pgSsl, requireEnv } from "./lib/env.mjs";
 
 const dryRun = process.argv.includes("--dry-run");
 loadEnvLocal();
-const connectionString = requireEnv("SUPABASE_DB_URL");
+const connectionString = requireEnv("DATABASE_URL");
 const client = new pg.Client({ connectionString, ssl: pgSsl(connectionString) });
 await client.connect();
 
 const localDate = (instant: Date, tz: string) =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(instant);
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(instant);
 
 try {
   await client.query("begin");

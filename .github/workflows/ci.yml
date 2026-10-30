@@ -13,8 +13,23 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Base jetable pour les parcours de bout en bout : même version que la production (deploy/docker-compose.yml).
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          # Conteneur jetable, joignable seulement depuis le runner : pas de mot de passe.
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: finpret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d finpret"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
-      HAS_SUPABASE: ${{ secrets.SUPABASE_DEV_URL != '' }}
+      DATABASE_URL: postgresql://postgres@localhost:5432/finpret
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -30,29 +45,18 @@ jobs:
       # Tests RLS pgTAP sur PGlite (Postgres en WebAssembly) : ni Docker ni projet distant.
       - run: pnpm test:db:lite
 
-      # Parcours de bout en bout : projet Supabase hébergé de DÉVELOPPEMENT (secrets du dépôt), jamais Docker.
-      # Sans secrets (branches de forks), la construction et les tests Playwright sont sautés.
+      # Parcours de bout en bout sur la base jetable : migrations, catalogue réel, puis build de production.
+      - run: pnpm db:migrate
+      - run: pnpm seed
       - name: Variables de l'environnement de test
-        if: env.HAS_SUPABASE == 'true'
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_DEV_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_DEV_ANON_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_DEV_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DEV_DB_URL }}
         run: |
           {
-            echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL"
-            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY"
-            echo "SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY"
-            echo "SUPABASE_DB_URL=$SUPABASE_DB_URL"
+            echo "DATABASE_URL=$DATABASE_URL"
+            echo "BETTER_AUTH_SECRET=$(openssl rand -hex 32)"
           } > .env.local
-
       - run: pnpm build
-        if: env.HAS_SUPABASE == 'true'
       - run: pnpm exec playwright install --with-deps chromium
-        if: env.HAS_SUPABASE == 'true'
       - run: pnpm test:e2e
-        if: env.HAS_SUPABASE == 'true'
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

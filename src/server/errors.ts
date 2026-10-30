@@ -15,9 +15,10 @@ const KNOWN = [
 
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: string };
 
-/** Traduit une erreur Supabase ou Postgres en message pour l'utilisateur. */
-export function toUserMessage(error: { code?: string; message?: string } | null | undefined): string {
-  if (!error) return fr.errors.generic;
+/** Traduit une erreur Postgres (levée par `pg`, attrapée dans un `catch`) en message pour l'utilisateur. */
+export function toUserMessage(caught: unknown): string {
+  if (!caught || typeof caught !== "object") return fr.errors.generic;
+  const error = caught as { code?: unknown; message?: unknown };
   const known = KNOWN.find((k) => error.message === k);
   if (known) return fr.errors[known];
   // 42501 : refus par la RLS ou par les droits sur la table.

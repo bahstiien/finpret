@@ -26,9 +26,6 @@ playwright/.cache/
 .env.local
 .env.*.local
 
-# Supabase
-supabase/.branches/
-supabase/.temp/
 
 # Divers
 .DS_Store
@@ -37,3 +34,9 @@ Thumbs.db
 
 # Rapports Lighthouse (pnpm audit:lighthouse)
 lighthouse-report/
+
+# Base PostgreSQL locale (pnpm db:local)
+.pgdata/
+
+# Fichiers privés en local (FILES_DIR par défaut)
+.data/

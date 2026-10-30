@@ -111,16 +111,16 @@ export function PrintSheet({ data }: { data: PrintData }) {
               <tr key={d.label}>
                 <th scope="row">
                   {d.label}
-                  {d.cake && <span className="block text-xs font-normal">{d.cake}</span>}
+                  {d.cake && <span className="block text-[0.7em] font-normal">{d.cake}</span>}
                 </th>
                 {d.meals.map((m, i) =>
                   m ? (
                     <td key={i}>
-                      {m.tag && <span className="block text-xs">{m.tag}</span>}
+                      {m.tag && <span className="block text-[0.75em]">{m.tag}</span>}
                       <b className="block">{m.name}</b>
-                      {m.macros && <span className="block text-xs">{m.macros}</span>}
-                      <span className="block text-xs">{m.guests}</span>
-                      <span className="block text-xs">{m.how}</span>
+                      {m.macros && <span className="block text-[0.75em]">{m.macros}</span>}
+                      <span className="block text-[0.75em]">{m.guests}</span>
+                      <span className="block text-[0.8em]">{m.how}</span>
                     </td>
                   ) : (
                     <td key={i} className="text-muted">
@@ -129,7 +129,7 @@ export function PrintSheet({ data }: { data: PrintData }) {
                   ),
                 )}
                 <td className="whitespace-pre-line">{thaw(d.thaw)}</td>
-                <td className="text-xs">{d.total}</td>
+                <td className="text-[0.8em]">{d.total}</td>
               </tr>
             ))}
           </tbody>

@@ -1,6 +1,6 @@
 import "server-only";
 import { normalizeCode } from "@/lib/association-code";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { withAdmin } from "@/server/db";
 import { trackEvent } from "@/server/events";
 
 export type PublicAssociation = {
@@ -15,23 +15,21 @@ export type PublicAssociation = {
 export async function associationByCode(rawCode: string): Promise<PublicAssociation | null> {
   const code = normalizeCode(rawCode);
   if (code.length < 4) return null;
-  const db = createAdminClient();
-  const { data } = await db
-    .from("associations")
-    .select("id, name, code, status, association_schools(schools(id, name, city))")
-    .eq("code", code)
-    .maybeSingle();
-  if (!data) return null;
-  const links = data.association_schools as unknown as {
-    schools: { id: string; name: string; city: string } | null;
-  }[];
-  return {
-    id: data.id,
-    name: data.name,
-    code: data.code,
-    status: data.status,
-    schools: links.flatMap((l) => (l.schools ? [l.schools] : [])),
-  };
+  return withAdmin(async (db) => {
+    const data = await db
+      .selectFrom("associations")
+      .select(["id", "name", "code", "status"])
+      .where("code", "=", code)
+      .executeTakeFirst();
+    if (!data) return null;
+    const schools = await db
+      .selectFrom("association_schools")
+      .innerJoin("schools", "schools.id", "association_schools.school_id")
+      .select(["schools.id", "schools.name", "schools.city"])
+      .where("association_schools.association_id", "=", data.id)
+      .execute();
+    return { id: data.id, name: data.name, code: data.code, status: data.status, schools };
+  });
 }
 
 /** Association approuvée d'un code, ou null (un code non validé n'ouvre aucun avantage). */
@@ -58,33 +56,40 @@ export async function attachHousehold(
   associationId: string,
   userId?: string,
 ): Promise<AttachResult> {
-  const db = createAdminClient();
-  const [{ data: household }, { data: sub }] = await Promise.all([
-    db.from("households").select("association_id, created_at").eq("id", householdId).single(),
-    db
-      .from("subscriptions")
-      .select("plan, status, trial_ends_at")
-      .eq("household_id", householdId)
-      .maybeSingle(),
-  ]);
-  if (!household) return { ok: false, reason: "locked" };
-  if (household.association_id === associationId) return { ok: true, changed: false };
-  const subscribed = !!sub && (sub.plan === "monthly" || sub.plan === "yearly") && PAID.has(sub.status);
-  if (household.association_id && subscribed) return { ok: false, reason: "locked" };
+  const result = await withAdmin(async (db): Promise<AttachResult> => {
+    const household = await db
+      .selectFrom("households")
+      .select(["association_id", "created_at"])
+      .where("id", "=", householdId)
+      .executeTakeFirst();
+    const sub = await db
+      .selectFrom("subscriptions")
+      .select(["plan", "status", "trial_ends_at"])
+      .where("household_id", "=", householdId)
+      .executeTakeFirst();
+    if (!household) return { ok: false, reason: "locked" };
+    if (household.association_id === associationId) return { ok: true, changed: false };
+    const subscribed = !!sub && (sub.plan === "monthly" || sub.plan === "yearly") && PAID.has(sub.status);
+    if (household.association_id && subscribed) return { ok: false, reason: "locked" };
 
-  await db
-    .from("households")
-    .update({ association_id: associationId, association_joined_at: new Date().toISOString() })
-    .eq("id", householdId);
-  if (sub?.plan === "trial") {
-    const trialEnd = new Date(Date.parse(household.created_at) + TRIAL_DAYS * 86_400_000).toISOString();
-    if (!sub.trial_ends_at || trialEnd > sub.trial_ends_at) {
-      await db
-        .from("subscriptions")
-        .update({ trial_ends_at: trialEnd, updated_at: new Date().toISOString() })
-        .eq("household_id", householdId);
+    await db
+      .updateTable("households")
+      .set({ association_id: associationId, association_joined_at: new Date().toISOString() })
+      .where("id", "=", householdId)
+      .execute();
+    if (sub?.plan === "trial") {
+      const trialEnd = new Date(Date.parse(household.created_at) + TRIAL_DAYS * 86_400_000).toISOString();
+      if (!sub.trial_ends_at || trialEnd > sub.trial_ends_at) {
+        await db
+          .updateTable("subscriptions")
+          .set({ trial_ends_at: trialEnd, updated_at: new Date().toISOString() })
+          .where("household_id", "=", householdId)
+          .execute();
+      }
     }
-  }
-  await trackEvent("association_joined", { userId, householdId, props: { association: associationId } });
-  return { ok: true, changed: true };
+    return { ok: true, changed: true };
+  });
+  if (result.ok && result.changed)
+    await trackEvent("association_joined", { userId, householdId, props: { association: associationId } });
+  return result;
 }

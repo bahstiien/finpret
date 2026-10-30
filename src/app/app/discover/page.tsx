@@ -9,12 +9,11 @@ import { fill, fmtQ } from "@/engine/format";
 import { originOf } from "@/engine/origins";
 import { eligible } from "@/engine/season";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
 import { toDietRules } from "@/lib/settings";
 import { loadLibrary } from "@/server/catalog";
 import { loadHouseholdContext } from "@/server/household-context";
 import { flagOf } from "@/server/menu-view";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.nav.discover };
@@ -131,13 +130,15 @@ export default async function DiscoverPage({
   }));
 
   // Petits-déjeuners : décrits en texte libre (allergènes inconnus, voir M2).
-  const supabase = await createClient();
-  const { data: bf } = await supabase
-    .from("recipes")
-    .select("id, data")
-    .eq("kind", "breakfast")
-    .is("household_id", null);
-  const breakfasts = (bf ?? []).map((b) => {
+  const bf = await withSession((db) =>
+    db
+      .selectFrom("recipes")
+      .select(["id", "data"])
+      .where("kind", "=", "breakfast")
+      .where("household_id", "is", null)
+      .execute(),
+  );
+  const breakfasts = bf.map((b) => {
     const d = b.data as { n: string; d: string; t: "sucre" | "sale"; m: [number, number] };
     return {
       id: b.id ?? breakfastId(d.n),

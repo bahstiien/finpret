@@ -2,6 +2,7 @@ import { ActionForm } from "@/components/ui/ActionForm";
 import { formatShort } from "@/lib/dates";
 import { markPayoutPaid } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { withAdmin } from "@/server/db";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
 
@@ -10,17 +11,25 @@ const STATUS = { ready: "À verser", paid: "Versé", carried_over: "Reporté" } 
 
 /** Reversements trimestriels : export CSV (IBAN déchiffré), « Marquer comme payé » (relevé PDF envoyé). */
 export default async function AdminPayoutsPage() {
-  const { db } = await requireAdmin();
-  const { data } = await db
-    .from("payouts")
-    .select("id, association_id, quarter, amount_cents, status, paid_at")
-    .order("quarter", { ascending: false });
-  const ids = [...new Set((data ?? []).map((p) => p.association_id))];
-  const { data: assos } = ids.length
-    ? await db.from("associations").select("id, name, iban_last4").in("id", ids)
-    : { data: [] };
-  const byId = new Map((assos ?? []).map((a) => [a.id, a]));
-  const quarters = [...new Set((data ?? []).map((p) => p.quarter))];
+  await requireAdmin();
+  const { data, assos } = await withAdmin(async (db) => {
+    const data = await db
+      .selectFrom("payouts")
+      .select(["id", "association_id", "quarter", "amount_cents", "status", "paid_at"])
+      .orderBy("quarter", "desc")
+      .execute();
+    const ids = [...new Set(data.map((p) => p.association_id))];
+    const assos = ids.length
+      ? await db
+          .selectFrom("associations")
+          .select(["id", "name", "iban_last4"])
+          .where("id", "in", ids)
+          .execute()
+      : [];
+    return { data, assos };
+  });
+  const byId = new Map(assos.map((a) => [a.id, a]));
+  const quarters = [...new Set(data.map((p) => p.quarter))];
   return (
     <>
       <PageHeader title="Reversements" />
@@ -36,7 +45,7 @@ export default async function AdminPayoutsPage() {
         ))}
       </div>
       <Card as="ul" className="!shadow-none">
-        {(data ?? []).map((p) => {
+        {data.map((p) => {
           const a = byId.get(p.association_id);
           return (
             <li
@@ -62,7 +71,7 @@ export default async function AdminPayoutsPage() {
             </li>
           );
         })}
-        {!data?.length && <li className="muted">Aucun versement.</li>}
+        {!data.length && <li className="muted">Aucun versement.</li>}
       </Card>
     </>
   );

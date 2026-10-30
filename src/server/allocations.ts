@@ -9,8 +9,8 @@ import {
   sumNeeds,
 } from "@/engine/occurrences";
 import type { Pantry } from "@/engine/types";
-import { createClient } from "@/lib/supabase/server";
 import { type HouseholdContext, portionModelFor, type WeekRow } from "@/server/household-context";
+import { withSession } from "@/server/session";
 
 /** Allocation des ressources du foyer entre les semaines et état de verrouillage des préparations. */
 
@@ -45,16 +45,21 @@ export type LockState = {
 };
 
 export async function loadLockState(weekId: string): Promise<LockState> {
-  const supabase = await createClient();
-  const [session, prep] = await Promise.all([
-    supabase.from("sessions").select("started_at").eq("week_id", weekId).maybeSingle(),
-    supabase.from("preparation_states").select("uid, state").eq("week_id", weekId),
-  ]);
-  if (session.error) throw session.error;
-  if (prep.error) throw prep.error;
+  const { session, prep } = await withSession(async (db) => ({
+    session: await db
+      .selectFrom("sessions")
+      .select("started_at")
+      .where("week_id", "=", weekId)
+      .executeTakeFirst(),
+    prep: await db
+      .selectFrom("preparation_states")
+      .select(["uid", "state"])
+      .where("week_id", "=", weekId)
+      .execute(),
+  }));
   return {
-    sessionStarted: !!session.data?.started_at,
-    states: Object.fromEntries((prep.data ?? []).map((r) => [r.uid, r.state as PreparationState])),
+    sessionStarted: !!session?.started_at,
+    states: Object.fromEntries(prep.map((r) => [r.uid, r.state as PreparationState])),
   };
 }
 

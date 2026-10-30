@@ -1,4 +1,4 @@
-/** Série de semaines fin prêtes (SPEC_PROGRES §3). TypeScript pur : aucun import React ni Supabase. */
+/** Série de semaines fin prêtes (SPEC_PROGRES §3). TypeScript pur : aucun import React ni accès à la base. */
 
 export type WeekOutcome = "done" | "paused" | "neutral" | "missed";
 

@@ -2,8 +2,8 @@ import "server-only";
 import { cache } from "react";
 import type { Cake, Ingredient, Main, Pack, Simple, Soup } from "@/engine/catalog/schema";
 import type { Library } from "@/engine/types";
-import { createClient } from "@/lib/supabase/server";
-import type { Db } from "@/lib/supabase/types";
+import type { Db } from "@/server/db";
+import { withSession } from "@/server/session";
 
 /** Recette du foyer : lien et nom du site d'origine (« Source : Marmiton »), null si saisie à la main. */
 export type ImportedMeta = { sourceUrl: string | null; sourceName: string | null };
@@ -30,26 +30,41 @@ export const loadLibrary = cache(
     householdId: string,
     client?: Db,
   ): Promise<{ lib: Library; bonus: Record<string, number>; imported: Record<string, ImportedMeta> }> => {
-    const supabase = client ?? (await createClient());
-    const [aisles, ingredients, packs, recipes, own] = await Promise.all([
-      supabase.from("aisles").select("key, label, position").order("position"),
-      supabase.from("ingredients").select("key, label, unit, aisle, forms, half, seasonal"),
-      supabase.from("packs").select("ingredient_key, sizes, label, tolerance"),
-      supabase
-        .from("recipes")
-        .select("id, kind, data, household_id, status, source_url, source_name, is_active")
+    const read = async (db: Db) => ({
+      aisles: await db
+        .selectFrom("aisles")
+        .select(["key", "label", "position"])
+        .orderBy("position")
+        .execute(),
+      ingredients: await db
+        .selectFrom("ingredients")
+        .select(["key", "label", "unit", "aisle", "forms", "half", "seasonal"])
+        .execute(),
+      packs: await db.selectFrom("packs").select(["ingredient_key", "sizes", "label", "tolerance"]).execute(),
+      recipes: await db
+        .selectFrom("recipes")
+        .select(["id", "kind", "data", "household_id", "status", "source_url", "source_name", "is_active"])
         // Catalogue global actif, et toutes les recettes du foyer (les supprimées restent lisibles par les semaines).
-        .or(`and(household_id.is.null,is_active.eq.true),household_id.eq.${householdId}`),
-      supabase
-        .from("household_ingredients")
-        .select("key, label, unit, aisle")
-        .eq("household_id", householdId),
-    ]);
-    for (const res of [aisles, ingredients, packs, recipes, own]) if (res.error) throw res.error;
+        .where((eb) =>
+          eb.or([
+            eb.and([eb("household_id", "is", null), eb("is_active", "=", true)]),
+            eb("household_id", "=", householdId),
+          ]),
+        )
+        .execute(),
+      own: await db
+        .selectFrom("household_ingredients")
+        .select(["key", "label", "unit", "aisle"])
+        .where("household_id", "=", householdId)
+        .execute(),
+    });
+    const { aisles, ingredients, packs, recipes, own } = client
+      ? await read(client)
+      : await withSession(read);
 
     const ing: Record<string, Ingredient> = {};
     const notSeasonal: string[] = [];
-    for (const row of (ingredients.data ?? []) as IngredientRow[]) {
+    for (const row of ingredients as IngredientRow[]) {
       const f = row.forms ?? {};
       ing[row.key] = {
         l: row.label,
@@ -63,12 +78,12 @@ export const loadLibrary = cache(
       if (row.aisle === "legumes" && !row.seasonal) notSeasonal.push(row.key);
     }
     // Ingrédients créés par le foyer lors d'un import (§8.8) : non saisonniers, sans forme d'affichage.
-    for (const row of own.data ?? []) {
+    for (const row of own) {
       ing[row.key] = { l: row.label, u: row.unit, c: row.aisle };
       if (row.aisle === "legumes") notSeasonal.push(row.key);
     }
     const packMap: Record<string, Pack> = {};
-    for (const p of packs.data ?? []) {
+    for (const p of packs) {
       packMap[p.ingredient_key] = {
         s: p.sizes,
         l: p.label,
@@ -84,12 +99,12 @@ export const loadLibrary = cache(
       ingredients: ing,
       packs: packMap,
       notSeasonal,
-      aisles: (aisles.data ?? []).filter((a) => a.key !== "base").map((a) => [a.key, a.label]),
+      aisles: aisles.filter((a) => a.key !== "base").map((a) => [a.key, a.label]),
       retired: [],
     };
     const bonus: Record<string, number> = {};
     const imported: Record<string, ImportedMeta> = {};
-    for (const r of recipes.data ?? []) {
+    for (const r of recipes) {
       if (r.status !== "validated") continue;
       const recipe = { id: r.id, ...(r.data as object) };
       if (!r.is_active) lib.retired!.push(r.id);

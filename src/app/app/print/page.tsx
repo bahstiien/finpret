@@ -8,12 +8,11 @@ import { dayTotals, dailyAverages } from "@/engine/nutrition";
 import { isRemoved, slotMap } from "@/engine/week";
 import { fr } from "@/i18n/fr";
 import { addDays, formatLong } from "@/lib/dates";
-import { createClient } from "@/lib/supabase/server";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
 import { UpgradeCard } from "@/components/ui/UpgradeCard";
 import { householdCan } from "@/server/entitlements-load";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.menuScreen.print };
@@ -51,26 +50,32 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
     .filter((m) => map[`1-${m}`]?.kind === "bank" && !isRemoved(row.plan, 1, m))
     .map((m) => map[`1-${m}`]!.r.s.toLowerCase());
 
-  const supabase = await createClient();
   const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
-  const [{ data: menus }, { data: breakfasts }] = await Promise.all([
-    kids.length
-      ? supabase
-          .from("canteen_menus")
-          .select("member_id, date, text")
-          .eq("validated", true)
-          .in(
+  const { menus, breakfasts } = await withSession(async (db) => ({
+    menus: kids.length
+      ? await db
+          .selectFrom("canteen_menus")
+          .select(["member_id", "date", "text"])
+          .where("validated", "=", true)
+          .where(
             "member_id",
+            "in",
             kids.map((k) => k.id),
           )
-          .gte("date", row.start_date)
-          .lte("date", addDays(row.start_date, 4))
-          .order("date")
-      : Promise.resolve({ data: [] as { member_id: string; date: string; text: string }[] }),
-    supabase.from("recipes").select("id, data").eq("kind", "breakfast").is("household_id", null),
-  ]);
+          .where("date", ">=", row.start_date)
+          .where("date", "<=", addDays(row.start_date, 4))
+          .orderBy("date")
+          .execute()
+      : [],
+    breakfasts: await db
+      .selectFrom("recipes")
+      .select(["id", "data"])
+      .where("kind", "=", "breakfast")
+      .where("household_id", "is", null)
+      .execute(),
+  }));
   const pick = (type: "sucre" | "sale") => {
-    const list = (breakfasts ?? [])
+    const list = breakfasts
       .map((b) => ({ id: b.id ?? "", ...(b.data as { n: string; d: string; t: string }) }))
       .filter((b) => b.t === type);
     const b = list[Math.floor(Math.random() * list.length)];
@@ -114,7 +119,7 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
     canteen: kids.map((k) => ({
       name: k.name,
       days: canteenDays(k, ctx.presence, row.start_date, ctx.alternatingFrom),
-      menus: (menus ?? [])
+      menus: menus
         .filter((m) => m.member_id === k.id)
         .map((m) => ({ day: fr.days[(new Date(`${m.date}T12:00:00Z`).getUTCDay() + 6) % 7]!, text: m.text })),
     })),

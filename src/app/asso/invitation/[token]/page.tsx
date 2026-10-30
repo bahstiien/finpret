@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/Button";
 import { CenteredPage } from "@/components/ui/Card";
 import { FormMessage } from "@/components/ui/Field";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
 import { acceptEditorInvitation } from "@/server/actions/asso";
-import { getUser } from "@/server/session";
+import { rpcRows } from "@/server/db";
+import { getUser, withSession } from "@/server/session";
 import { buttonClass } from "@/components/ui/Button";
 
 const t = fr.asso.team.accept;
@@ -23,9 +23,12 @@ export default async function EditorInvitationPage({
 }) {
   const { token } = await params;
   const { error } = await searchParams;
-  const supabase = await createClient();
-  const { data } = await supabase.rpc("get_association_invitation", { p_token: token });
-  const invitation = data?.[0];
+  const data = await withSession((db) =>
+    rpcRows<{ association_name: string; status: string }>(db, "get_association_invitation", {
+      p_token: token,
+    }),
+  );
+  const invitation = data[0];
   const user = await getUser();
   const problem = !invitation
     ? t.notFound

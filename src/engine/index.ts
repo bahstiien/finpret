@@ -1,4 +1,4 @@
-/** Moteur métier (SPEC §7) : TypeScript pur, sans React ni Supabase. */
+/** Moteur métier (SPEC §7) : TypeScript pur, sans React ni accès à la base. */
 export * from "./allocation";
 export * from "./compose";
 export * from "./edit";

@@ -2,23 +2,37 @@ import { ActionForm } from "@/components/ui/ActionForm";
 import { formatShort } from "@/lib/dates";
 import { markLeadContacted } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
+import { withAdmin } from "@/server/db";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
 import { Pill } from "@/components/ui/Pill";
 
 /** Demandes de présentation reçues depuis la landing /associations. */
 export default async function AdminLeadsPage() {
-  const { db } = await requireAdmin();
-  const { data } = await db
-    .from("association_leads")
-    .select("id, name, email, association_name, school, city, families_estimate, created_at, contacted_at")
-    .order("created_at", { ascending: false })
-    .limit(200);
+  await requireAdmin();
+  const data = await withAdmin((db) =>
+    db
+      .selectFrom("association_leads")
+      .select([
+        "id",
+        "name",
+        "email",
+        "association_name",
+        "school",
+        "city",
+        "families_estimate",
+        "created_at",
+        "contacted_at",
+      ])
+      .orderBy("created_at", "desc")
+      .limit(200)
+      .execute(),
+  );
   return (
     <>
       <PageHeader title="Prospects" />
       <Card as="ul" className="!shadow-none">
-        {(data ?? []).map((l) => (
+        {data.map((l) => (
           <li
             key={l.id}
             className="row flex-wrap justify-between"
@@ -43,7 +57,7 @@ export default async function AdminLeadsPage() {
             )}
           </li>
         ))}
-        {!data?.length && <li className="muted">Aucune demande.</li>}
+        {!data.length && <li className="muted">Aucune demande.</li>}
       </Card>
     </>
   );

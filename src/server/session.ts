@@ -1,21 +1,24 @@
 import "server-only";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import type { HouseholdRole } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
+import { auth } from "@/server/auth";
+import { type Db, withAnon, withUser } from "@/server/db";
+import type { HouseholdRole } from "@/server/db.types";
 
 /** Foyer actif mémorisé par appareil (SPEC §4). */
 export const ACTIVE_HOUSEHOLD_COOKIE = "active_household";
 
 export type HouseholdSummary = { id: string; name: string; role: HouseholdRole };
 
-export const getUser = cache(async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+export type SessionUser = { id: string; email: string };
+
+/** Session Better Auth de la requête (lue en base : une session révoquée l'est immédiatement). */
+export const getAuthSession = cache(async () => auth().api.getSession({ headers: await headers() }));
+
+export const getUser = cache(async (): Promise<SessionUser | null> => {
+  const session = await getAuthSession();
+  return session ? { id: session.user.id, email: session.user.email } : null;
 });
 
 export async function requireUser(next = "/app") {
@@ -24,29 +27,39 @@ export async function requireUser(next = "/app") {
   return user;
 }
 
+/**
+ * Requêtes pour la requête HTTP en cours : au nom de l'utilisateur connecté (RLS `authenticated`), sinon en `anon`.
+ */
+export async function withSession<T>(fn: (db: Db) => Promise<T>): Promise<T> {
+  const user = await getUser();
+  return user ? withUser(user.id, fn) : withAnon(fn);
+}
+
 export const getProfile = cache(async () => {
   const user = await getUser();
   if (!user) return null;
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select("display_name, active_household")
-    .eq("user_id", user.id)
-    .maybeSingle();
-  return data;
+  const row = await withUser(user.id, (db) =>
+    db
+      .selectFrom("profiles")
+      .select(["display_name", "active_household"])
+      .where("user_id", "=", user.id)
+      .executeTakeFirst(),
+  );
+  return row ?? null;
 });
 
 export const getHouseholds = cache(async (): Promise<HouseholdSummary[]> => {
   const user = await getUser();
   if (!user) return [];
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("memberships")
-    .select("role, households(id, name)")
-    .eq("user_id", user.id)
-    .order("created_at");
-  if (error) throw error;
-  return (data ?? []).flatMap((m) => (m.households ? [{ ...m.households, role: m.role }] : []));
+  return withUser(user.id, (db) =>
+    db
+      .selectFrom("memberships")
+      .innerJoin("households", "households.id", "memberships.household_id")
+      .select(["households.id", "households.name", "memberships.role"])
+      .where("memberships.user_id", "=", user.id)
+      .orderBy("memberships.created_at")
+      .execute(),
+  );
 });
 
 /** Foyer actif : celui de l'appareil, sinon celui du profil, sinon le premier. */

@@ -7,6 +7,7 @@ import {
   AssociationReceivedEmail,
   AssociationRejectedEmail,
   HouseholdInvitationEmail,
+  MagicLinkEmail,
   PaymentFailedEmail,
   StatementEmail,
   TrialEndingEmail,
@@ -43,6 +44,11 @@ async function build(
 ): Promise<Email> {
   const [html, text] = await Promise.all([render(element), render(element, { plainText: true })]);
   return { to, subject, html, text, ...extra };
+}
+
+/** Lien magique de connexion (Better Auth). */
+export async function sendMagicLink(to: string, url: string): Promise<SendResult> {
+  return sendEmail(await build(to, "Ton lien de connexion à Fin Prêt", createElement(MagicLinkEmail, { url })));
 }
 
 export async function sendHouseholdInvitation(

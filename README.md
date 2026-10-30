@@ -5,42 +5,48 @@ PWA multi-foyers de planification de repas et de batch cooking. Spécification :
 ## Prérequis
 
 - Node.js 20.18 ou plus (24 recommandé) et pnpm 11
-- Un projet Supabase hébergé **de développement** (région UE), sans Docker : voir « Démarrage »
-- La CLI Supabase est une dépendance du projet (`pnpm exec supabase …`)
+- PostgreSQL 18 installé sur le poste (installateur Windows de postgresql.org, ou `PG_BIN` vers ses binaires), sans Docker : la base de développement tourne dans un cluster à part (`.pgdata/`)
 
 ## Démarrage
 
 ```bash
 pnpm install
-cp .env.example .env.local        # puis complète les valeurs du projet Supabase de développement
-pnpm db:push                      # applique supabase/migrations au projet hébergé
+cp .env.example .env.local        # puis complète-le (au minimum DATABASE_URL, BETTER_AUTH_SECRET, APP_URL=http://localhost:3000)
+pnpm db:local start               # base PostgreSQL locale sur le port 54329 (stop | status | reset)
+pnpm db:migrate                   # applique db/migrations
 pnpm seed                         # importe seed/*.json (catalogue) ; --dry-run pour valider sans écrire
 pnpm dev                          # http://localhost:3000
 ```
 
-Dans le tableau de bord Supabase, *Authentication > URL Configuration* : Site URL `http://localhost:3000`, Redirect URLs `http://localhost:3000/**` et `http://localhost:3100/**`.
-Apple et Google se configurent dans *Authentication > Sign In / Providers*.
+Connexion en local : sans `RESEND_API_KEY`, le lien de connexion s'affiche dans le terminal de `pnpm dev`.
+Google se configure dans Google Cloud (URI de redirection `<APP_URL>/api/auth/callback/google`), voir `.env.example`.
 
-En CI (GitHub Actions), Supabase tourne en local sur le serveur de build (`pnpm test:db:ci`, e-mails lus dans Mailpit).
+En CI (GitHub Actions), une base `postgres:18` jetable reçoit les migrations et le catalogue, puis les tests de bout en bout tournent sur un build de production.
 
 ## Vérifications
 
 ```bash
 pnpm lint && pnpm typecheck
-pnpm test                         # Vitest
-pnpm test:db                      # tests RLS pgTAP sur le projet hébergé (SUPABASE_DB_URL)
-pnpm test:db:lite                 # mêmes tests sur PGlite, sans Docker (vérification rapide)
+pnpm test                         # Vitest (moteur, et serveur sur une vraie base PGlite)
+pnpm test:db:lite                 # tests RLS pgTAP sur PGlite, sans Docker
 pnpm exec playwright install chromium
-pnpm test:e2e                     # Playwright, sur un build de production (port 3100) ;
-                                  # les parcours connectés sont ignorés sans .env.local ;
+pnpm test:e2e                     # Playwright, sur un build de production (port 3300) ;
+                                  # liens de connexion lus dans test-results/magic-links ;
                                   # les comptes de test e2e-…@example.com sont supprimés à la fin
 ```
 
 Le service worker (Serwist) n'est actif qu'en production (`pnpm build && pnpm start`).
 
-## Types de la base
+## Base de données
 
-Après chaque migration : `pnpm db:types` régénère `src/lib/supabase/database.types.ts` (demande `SUPABASE_ACCESS_TOKEN`).
+- Migrations SQL dans `db/migrations` (`pnpm db:migrate`), tests RLS dans `db/tests`.
+- Après chaque migration : `pnpm db:types` régénère `src/server/db.types.ts` (types Kysely) depuis la base locale.
+- Accès depuis le code : `withSession`, `withUser`, `withAdmin` (`src/server/db.ts`, `src/server/session.ts`) ; la RLS s'applique sauf en `withAdmin`.
+
+## Production
+
+VPS avec Docker Compose (Postgres, migrations, app, Caddy) : [`deploy/README.md`](deploy/README.md).
+Mise en service : [`docs/MISE_EN_SERVICE.md`](docs/MISE_EN_SERVICE.md) ; sauvegarde et restauration : [`docs/RESTAURATION.md`](docs/RESTAURATION.md).
 
 ## Icônes
 
@@ -48,19 +54,9 @@ Les icônes PWA provisoires sont générées par `node scripts/generate-icons.mj
 
 ## Notifications (M9)
 
-1. Clés VAPID : `pnpm dlx web-push generate-vapid-keys`, puis `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` et `VAPID_SUBJECT` dans `.env.local` (et dans l'hébergement).
+1. Clés VAPID : `pnpm dlx web-push generate-vapid-keys`, puis `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` et `VAPID_SUBJECT` dans `.env.local` (et dans `.env.production` sur le VPS).
 2. `CRON_SECRET` : `openssl rand -hex 32`.
-3. Planificateur : appeler `GET https://<app>/api/cron/notify` toutes les 15 minutes avec l'en-tête `Authorization: Bearer <CRON_SECRET>`. Avec Supabase (extensions `pg_cron` et `pg_net` activées), dans l'éditeur SQL :
-
-   ```sql
-   select cron.schedule('notify', '*/15 * * * *', $$
-     select net.http_get(
-       url := 'https://<app>/api/cron/notify',
-       headers := jsonb_build_object('Authorization', 'Bearer <CRON_SECRET>')
-     );
-   $$);
-   ```
-
+3. Planificateur : `GET /api/cron/notify` toutes les 15 minutes, `GET /api/cron/streak-close` toutes les heures, avec l'en-tête `Authorization: Bearer <CRON_SECRET>`. Sur le VPS, la crontab appelle `deploy/cron.sh` (lignes dans `docs/MISE_EN_SERVICE.md`).
    Les envois sont idempotents (une ligne par compte, type et jour dans `notification_log`) : un double passage n'envoie rien de plus. `?at=<date ISO>` rejoue un passage à une heure donnée.
-   Série de semaines fin prêtes (SPEC_PROGRES) : appeler de la même façon `GET https://<app>/api/cron/streak-close` toutes les heures (`'0 * * * *'`). Idempotent ; `?at=<date ISO>` rejoue un passage. Après le déploiement initial, jouer une fois `pnpm backfill:progress` (`--dry-run` pour essayer sur une copie).
+   Après le déploiement initial, jouer une fois `pnpm backfill:progress` (`--dry-run` pour essayer sur une copie).
 4. E-mail de repli (facultatif) : `RESEND_API_KEY` et `EMAIL_FROM`. Sans clé, seuls les envois push partent.

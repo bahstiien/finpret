@@ -9,12 +9,11 @@ import { isRemoved } from "@/engine/week";
 import { addDays, mondayOf, nextMonday, todayIn } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
 import { toDietRules, toEquipment, toMenuSettings } from "@/lib/settings";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
 import { hasAnyLock, loadLockState } from "./allocations";
 import { loadLibrary } from "./catalog";
+import { type Db, json } from "./db";
 import { trackEvent } from "./events";
-import { getUser } from "./session";
+import { getUser, withSession } from "./session";
 import {
   type HouseholdContext,
   loadHouseholdContext,
@@ -22,7 +21,6 @@ import {
   type WeekRow,
 } from "./household-context";
 import { syncShoppingItems } from "./shopping";
-import type { Db } from "@/lib/supabase/types";
 
 export async function engineEnvFor(
   ctx: HouseholdContext,
@@ -88,42 +86,54 @@ export async function summarize(ctx: HouseholdContext, plan: WeekPlan, env?: Env
 
 /** Restes de la semaine au garde-manger (« Mettre à jour le garde-manger », §7.4 et §8.4). */
 export async function applyLeftovers(ctx: HouseholdContext, env: Env, row: WeekRow) {
-  const supabase = await createClient();
   const plan = row.plan;
   const t = totals(env, plan, portionModelFor(ctx, plan.start), ctx.settings.menu.cake.enabled);
   const changes = pantryAfterWeek(env, ctx.pantry, t);
-  for (const c of changes) {
-    if (c.after > 0) {
-      await supabase.from("pantry").upsert({ household_id: ctx.id, ingredient_key: c.k, qty: c.after });
-    } else {
-      await supabase.from("pantry").delete().eq("household_id", ctx.id).eq("ingredient_key", c.k);
+  await withSession(async (db) => {
+    for (const c of changes) {
+      if (c.after > 0) {
+        await db
+          .insertInto("pantry")
+          .values({ household_id: ctx.id, ingredient_key: c.k, qty: c.after })
+          .onConflict((oc) => oc.columns(["household_id", "ingredient_key"]).doUpdateSet({ qty: c.after }))
+          .execute();
+      } else {
+        await db
+          .deleteFrom("pantry")
+          .where("household_id", "=", ctx.id)
+          .where("ingredient_key", "=", c.k)
+          .execute();
+      }
     }
-  }
-  await supabase.from("weeks").update({ pantry_done: true }).eq("id", row.id);
+    await db.updateTable("weeks").set({ pantry_done: true }).where("id", "=", row.id).execute();
+  });
   return changes;
 }
 
 /** Plats doublés de la semaine ajoutés à la réserve du congélateur (une fois par semaine). */
 export async function bankDoubles(ctx: HouseholdContext, row: WeekRow) {
-  const supabase = await createClient();
   const plan = row.plan;
   if (plan.banked) return 0;
-  let total = 0;
-  for (const i of plan.doubles ?? []) {
-    const g = plan.groups[i];
-    if (!g) continue;
-    const n = g.meals.filter((m) => !isRemoved(plan, m.day, m.meal)).length;
-    if (!n) continue;
-    total += n;
-    await supabase
-      .from("freezer")
-      .insert({ household_id: ctx.id, recipe_id: g.id, portions: n, frozen_at: plan.start });
-  }
-  await supabase
-    .from("weeks")
-    .update({ plan: { ...plan, banked: true } as unknown as Json })
-    .eq("id", row.id);
-  return total;
+  return withSession(async (db) => {
+    let total = 0;
+    for (const i of plan.doubles ?? []) {
+      const g = plan.groups[i];
+      if (!g) continue;
+      const n = g.meals.filter((m) => !isRemoved(plan, m.day, m.meal)).length;
+      if (!n) continue;
+      total += n;
+      await db
+        .insertInto("freezer")
+        .values({ household_id: ctx.id, recipe_id: g.id, portions: n, frozen_at: plan.start })
+        .execute();
+    }
+    await db
+      .updateTable("weeks")
+      .set({ plan: json({ ...plan, banked: true }) })
+      .where("id", "=", row.id)
+      .execute();
+    return total;
+  });
 }
 
 /**
@@ -131,35 +141,40 @@ export async function bankDoubles(ctx: HouseholdContext, row: WeekRow) {
  * pas été faite, repas pris dans la réserve décomptés, plats doublés ajoutés au congélateur.
  */
 async function commitWeek(ctx: HouseholdContext, env: Env, row: WeekRow) {
-  const supabase = await createClient();
   const plan = row.plan;
   if (!row.pantry_done) await applyLeftovers(ctx, env, row);
   if (!plan.bankConsumed) {
-    for (const slot of plan.bank ?? []) {
-      if (isRemoved(plan, slot.day, slot.meal)) continue;
-      const { data } = await supabase
-        .from("freezer")
-        .select("id, portions")
-        .eq("household_id", ctx.id)
-        .eq("recipe_id", slot.id)
-        .gt("portions", 0)
-        .order("frozen_at")
-        .limit(1)
-        .maybeSingle();
-      if (!data) continue;
-      if (data.portions <= 1) await supabase.from("freezer").delete().eq("id", data.id);
-      else
-        await supabase
-          .from("freezer")
-          .update({ portions: data.portions - 1 })
-          .eq("id", data.id);
-    }
+    await withSession(async (db) => {
+      for (const slot of plan.bank ?? []) {
+        if (isRemoved(plan, slot.day, slot.meal)) continue;
+        const data = await db
+          .selectFrom("freezer")
+          .select(["id", "portions"])
+          .where("household_id", "=", ctx.id)
+          .where("recipe_id", "=", slot.id)
+          .where("portions", ">", 0)
+          .orderBy("frozen_at")
+          .limit(1)
+          .executeTakeFirst();
+        if (!data) continue;
+        if (data.portions <= 1) await db.deleteFrom("freezer").where("id", "=", data.id).execute();
+        else
+          await db
+            .updateTable("freezer")
+            .set({ portions: data.portions - 1 })
+            .where("id", "=", data.id)
+            .execute();
+      }
+    });
   }
   await bankDoubles(ctx, row);
-  await supabase
-    .from("weeks")
-    .update({ pantry_done: true, plan: { ...plan, banked: true, bankConsumed: true } as unknown as Json })
-    .eq("id", row.id);
+  await withSession((db) =>
+    db
+      .updateTable("weeks")
+      .set({ pantry_done: true, plan: json({ ...plan, banked: true, bankConsumed: true }) })
+      .where("id", "=", row.id)
+      .execute(),
+  );
 }
 
 export type GenerateOutcome =
@@ -171,7 +186,6 @@ export type GenerateOutcome =
  * pour cette date. Clôture d'abord la semaine précédente si elle ne l'est pas encore.
  */
 export async function generateAndStore(householdId: string, start: string): Promise<GenerateOutcome> {
-  const supabase = await createClient();
   let ctx = await loadHouseholdContext(householdId);
   const env = await engineEnvFor(ctx);
 
@@ -215,24 +229,30 @@ export async function generateAndStore(householdId: string, start: string): Prom
     household_id: householdId,
     start_date: start,
     status: statusOn(start, today),
-    plan: plan as unknown as Json,
+    plan: json(plan),
     pasta_need: plan.pastaNeed,
     pantry_done: false,
   };
-  const { data, error } = existing
-    ? await supabase
-        .from("weeks")
-        .update({
-          status: payload.status,
-          plan: payload.plan,
-          pasta_need: payload.pasta_need,
-          pantry_done: false,
-        })
-        .eq("id", existing.id)
-        .select("id")
-        .single()
-    : await supabase.from("weeks").insert(payload).select("id").single();
-  if (error) return { ok: false, reason: error.code === "42501" ? "forbidden" : "impossible" };
+  let data: { id: string };
+  try {
+    data = await withSession((db) =>
+      existing
+        ? db
+            .updateTable("weeks")
+            .set({
+              status: payload.status,
+              plan: payload.plan,
+              pasta_need: payload.pasta_need,
+              pantry_done: false,
+            })
+            .where("id", "=", existing.id)
+            .returning("id")
+            .executeTakeFirstOrThrow()
+        : db.insertInto("weeks").values(payload).returning("id").executeTakeFirstOrThrow(),
+    );
+  } catch (e) {
+    return { ok: false, reason: (e as { code?: unknown }).code === "42501" ? "forbidden" : "impossible" };
+  }
   await syncShoppingItems(ctx, freshEnv, { id: data.id, plan });
   const summary = await summarize(ctx, plan, freshEnv);
   await trackEvent("week_generated", {
@@ -245,20 +265,22 @@ export async function generateAndStore(householdId: string, start: string): Prom
 
 /** Relit le garde-manger et le congélateur après une clôture de semaine. */
 async function reloadStock(householdId: string) {
-  const supabase = await createClient();
-  const [pantry, freezer] = await Promise.all([
-    supabase.from("pantry").select("ingredient_key, qty").eq("household_id", householdId),
-    supabase
-      .from("freezer")
-      .select("recipe_id, portions, frozen_at")
-      .eq("household_id", householdId)
-      .order("frozen_at"),
-  ]);
+  const { pantry, freezer } = await withSession(async (db) => ({
+    pantry: await db
+      .selectFrom("pantry")
+      .select(["ingredient_key", "qty"])
+      .where("household_id", "=", householdId)
+      .execute(),
+    freezer: await db
+      .selectFrom("freezer")
+      .select(["recipe_id", "portions", "frozen_at"])
+      .where("household_id", "=", householdId)
+      .orderBy("frozen_at")
+      .execute(),
+  }));
   return {
-    pantry: Object.fromEntries(
-      (pantry.data ?? []).map((p) => [p.ingredient_key, p.qty === null ? null : Number(p.qty)]),
-    ),
-    bank: (freezer.data ?? []).map((f) => ({
+    pantry: Object.fromEntries(pantry.map((p) => [p.ingredient_key, p.qty === null ? null : Number(p.qty)])),
+    bank: freezer.map((f) => ({
       recipeId: f.recipe_id,
       portions: f.portions,
       frozenAt: f.frozen_at,

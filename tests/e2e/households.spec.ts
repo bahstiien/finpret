@@ -1,16 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { FEATURES } from "../../src/lib/features";
-import {
-  canSendLoginEmail,
-  signInFromLoginPage,
-  submitLoginForm,
-  supabaseConfigured,
-  uniqueEmail,
-} from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, submitLoginForm, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
-// Parcours des jalons M1 et M4 : nécessite un Supabase (projet hébergé de développement ou local en CI) et .env.local.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+// Parcours des jalons M1 et M4 : nécessite une base Postgres (DATABASE_URL dans .env.local).
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 // Un seul navigateur suffit : ces parcours testent le serveur et la base, pas la mise en page.
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
@@ -20,7 +14,6 @@ test("une page de l'application demande une connexion", async ({ page }) => {
 });
 
 test("le formulaire envoie le lien de connexion", async ({ page }) => {
-  test.skip(!canSendLoginEmail, "envoi d'e-mails limité sur le projet hébergé : vérifié en CI");
   await page.goto("/login");
   await submitLoginForm(page, uniqueEmail("formulaire"));
 });

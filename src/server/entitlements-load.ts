@@ -1,27 +1,33 @@
 import "server-only";
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
-import type { Db } from "@/lib/supabase/types";
+import { sql } from "kysely";
+import { type Db, withAdmin } from "@/server/db";
 import { type CanContext, can, type Feature, type HouseholdOffer, type Plan } from "@/server/entitlements";
+import { withSession } from "@/server/session";
 
 /** Offre d'un foyer : abonnement (table `subscriptions`) et rattachement à une association. `client` : tâches planifiées. */
-export const loadOffer = cache(async (householdId: string, client?: Db): Promise<HouseholdOffer> => {
-  const supabase = client ?? (await createClient());
-  const [subscription, household] = await Promise.all([
-    supabase
-      .from("subscriptions")
-      .select("plan, status, trial_ends_at")
-      .eq("household_id", householdId)
-      .maybeSingle(),
-    supabase.from("households").select("association_id").eq("id", householdId).maybeSingle(),
-  ]);
+export const loadOffer = cache(async (householdId: string, client?: Db): Promise<HouseholdOffer> =>
+  client ? load(client, householdId) : withSession((db) => load(db, householdId)),
+);
+
+async function load(db: Db, householdId: string): Promise<HouseholdOffer> {
+  const subscription = await db
+    .selectFrom("subscriptions")
+    .select(["plan", "status", "trial_ends_at"])
+    .where("household_id", "=", householdId)
+    .executeTakeFirst();
+  const household = await db
+    .selectFrom("households")
+    .select("association_id")
+    .where("id", "=", householdId)
+    .executeTakeFirst();
   return {
-    plan: (subscription.data?.plan ?? "free") as Plan,
-    status: subscription.data?.status ?? "canceled",
-    trialEndsAt: subscription.data?.trial_ends_at ?? null,
-    associationId: household.data?.association_id ?? null,
+    plan: (subscription?.plan ?? "free") as Plan,
+    status: subscription?.status ?? "canceled",
+    trialEndsAt: subscription?.trial_ends_at ?? null,
+    associationId: household?.association_id ?? null,
   };
-});
+}
 
 /** `can()` pour un foyer, avec son offre lue en base. Le serveur reste l'autorité (CLAUDE.md). */
 export async function householdCan(
@@ -35,12 +41,14 @@ export async function householdCan(
 
 /** Changements de plat (« Changer ») déjà faits pour une semaine : journalisés dans `events` (SPEC_JANVIER §4). */
 export async function swapsUsed(householdId: string, weekId: string): Promise<number> {
-  const { createAdminClient } = await import("@/lib/supabase/admin");
-  const { count } = await createAdminClient()
-    .from("events")
-    .select("id", { head: true, count: "exact" })
-    .eq("name", "menu_swap")
-    .eq("household_id", householdId)
-    .eq("props->>week", weekId);
-  return count ?? 0;
+  const { n } = await withAdmin((db) =>
+    db
+      .selectFrom("events")
+      .select((eb) => eb.fn.countAll<number>().as("n"))
+      .where("name", "=", "menu_swap")
+      .where("household_id", "=", householdId)
+      .where(sql`props->>'week'`, "=", weekId)
+      .executeTakeFirstOrThrow(),
+  );
+  return Number(n);
 }

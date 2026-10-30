@@ -9,7 +9,6 @@ import { Pill } from "@/components/ui/Pill";
 import { fr } from "@/i18n/fr";
 import { brandLabel, cardExpired } from "@/lib/billing";
 import { formatLong } from "@/lib/dates";
-import { createClient } from "@/lib/supabase/server";
 import {
   cancelSubscription,
   changePlan,
@@ -22,7 +21,7 @@ import { getBillingDetails } from "@/server/billing-details";
 import { tierOf } from "@/server/entitlements";
 import { loadOffer } from "@/server/entitlements-load";
 import { listInvoices } from "@/server/invoices";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 
 const t = fr.subscription;
 
@@ -39,15 +38,18 @@ export default async function SubscriptionPage({
   const isAdmin = household.role === "admin";
   const offer = await loadOffer(household.id);
   const tier = tierOf(offer);
-  const supabase = await createClient();
-  const [{ data: sub }, { data: h }] = await Promise.all([
-    supabase
-      .from("subscriptions")
-      .select("current_period_end, stripe_customer_id, stripe_subscription_id, status")
-      .eq("household_id", household.id)
-      .maybeSingle(),
-    supabase.from("households").select("association_id").eq("id", household.id).single(),
-  ]);
+  const { sub, h } = await withSession(async (db) => ({
+    sub: await db
+      .selectFrom("subscriptions")
+      .select(["current_period_end", "stripe_customer_id", "stripe_subscription_id", "status"])
+      .where("household_id", "=", household.id)
+      .executeTakeFirst(),
+    h: await db
+      .selectFrom("households")
+      .select("association_id")
+      .where("id", "=", household.id)
+      .executeTakeFirst(),
+  }));
   const subscribed = tier === "subscribed" && (offer.plan === "monthly" || offer.plan === "yearly");
   const [invoices, details] = await Promise.all([
     isAdmin && sub?.stripe_customer_id ? listInvoices(sub.stripe_customer_id) : undefined,

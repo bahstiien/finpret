@@ -1,9 +1,9 @@
 import { expect, type Page, test } from "@playwright/test";
-import { adminClient, signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { adminDb, dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // SPEC_PROGRES §9 : série fin prête et passeport des saveurs (jalons G2 à G4).
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 const MONDAY_MS = 7 * 86_400_000;
@@ -22,14 +22,19 @@ async function signUp(page: Page, name: string) {
   await completeOnboarding(page, name);
 }
 
-/** Foyer du compte connecté (cookie actif), lu avec la clé de service. */
+/** Foyer du compte connecté (cookie actif), lu directement en base. */
 async function householdId(page: Page): Promise<string> {
   await page.goto("/app");
   const cookies = await page.context().cookies();
   const active = cookies.find((c) => c.name === "active_household")?.value;
   if (active) return active;
-  const { data } = await adminClient().from("households").select("id").order("created_at", { ascending: false }).limit(1);
-  return data![0]!.id;
+  const row = await adminDb()
+    .selectFrom("households")
+    .select("id")
+    .orderBy("created_at", "desc")
+    .limit(1)
+    .executeTakeFirstOrThrow();
+  return row.id;
 }
 
 async function seedStreak(household: string, weeks: number) {
@@ -39,11 +44,21 @@ async function seedStreak(household: string, weeks: number) {
     outcome: "done" as const,
     closed_at: new Date().toISOString(),
   }));
-  const { error } = await adminClient().from("streak_weeks").upsert(rows);
-  if (error) throw error;
+  await adminDb()
+    .insertInto("streak_weeks")
+    .values(rows)
+    .onConflict((oc) =>
+      oc.columns(["household_id", "week_start"]).doUpdateSet((eb) => ({
+        outcome: eb.ref("excluded.outcome"),
+        closed_at: eb.ref("excluded.closed_at"),
+      })),
+    )
+    .execute();
 }
 
-test("terminer une session : ligne de série à l'écran de réussite, « Nos progrès » affiche série et tampon", async ({ page }) => {
+test("terminer une session : ligne de série à l'écran de réussite, « Nos progrès » affiche série et tampon", async ({
+  page,
+}) => {
   test.setTimeout(240_000);
   await signUp(page, "progres-session");
   await page.goto("/app/session");
@@ -68,7 +83,10 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
   await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
   await page.getByTestId("plan-pause").click();
   const dialog = page.getByRole("dialog", { name: "Planifier une pause" });
-  await dialog.getByRole("button", { name: /Planifier une pause$/ }).first().click();
+  await dialog
+    .getByRole("button", { name: /Planifier une pause$/ })
+    .first()
+    .click();
   await expect(page.getByTestId("toast")).toContainText("Pause posée");
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("pauses-left")).toContainText("1 pause disponible");
@@ -97,8 +115,10 @@ test("masquer la série retire la tuile ; réafficher restitue l'historique", as
   await expect(page.getByTestId("streak-tile")).toContainText("3 semaines");
 
   await page.goto("/settings/profile");
+  // La case est masquée (interrupteur dessiné) : on clique son libellé, comme un utilisateur.
   const toggle = page.getByLabel("Afficher la série et le passeport");
-  await toggle.uncheck();
+  await page.getByText("Afficher la série et le passeport").click();
+  await expect(toggle).not.toBeChecked();
   await expect(page.getByText(/Enregistré/)).toBeVisible();
   await page.goto("/app");
   await expect(page.getByTestId("streak-tile")).toHaveCount(0);
@@ -107,7 +127,8 @@ test("masquer la série retire la tuile ; réafficher restitue l'historique", as
   await expect(page.getByTestId("streak-current")).toContainText("3 semaines");
 
   await page.goto("/settings/profile");
-  await page.getByLabel("Afficher la série et le passeport").check();
+  await page.getByText("Afficher la série et le passeport").click();
+  await expect(page.getByLabel("Afficher la série et le passeport")).toBeChecked();
   await expect(page.getByText(/Enregistré/)).toBeVisible();
   await page.goto("/app");
   await expect(page.getByTestId("streak-tile")).toContainText("3 semaines");
@@ -117,10 +138,13 @@ test("carte de palier : l'image se génère, légère, sans prénom ni nom de fo
   await signUp(page, "progres-share");
   const household = await householdId(page);
   await seedStreak(household, 4);
-  const { error } = await adminClient()
-    .from("achievements")
-    .upsert({ household_id: household, kind: "streak", key: "4", seen_at: new Date().toISOString() });
-  if (error) throw error;
+  await adminDb()
+    .insertInto("achievements")
+    .values({ household_id: household, kind: "streak", key: "4", seen_at: new Date().toISOString() })
+    .onConflict((oc) =>
+      oc.columns(["household_id", "kind", "key"]).doUpdateSet({ seen_at: new Date().toISOString() }),
+    )
+    .execute();
 
   const res = await page.request.get("/api/share/streak?milestone=4");
   expect(res.status()).toBe(200);

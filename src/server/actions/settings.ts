@@ -1,20 +1,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
 import { mondayOf, todayIn } from "@/lib/dates";
 import { notificationsSchema, SETTINGS_SCHEMAS, SETTINGS_VERSION } from "@/lib/settings";
-import type { Json } from "@/lib/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@/server/auth";
+import { json, withAdmin } from "@/server/db";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
-import { ACTIVE_HOUSEHOLD_COOKIE, requireHousehold, requireUser } from "@/server/session";
+import { ACTIVE_HOUSEHOLD_COOKIE, requireHousehold, requireUser, withSession } from "@/server/session";
 import { stripeAvailable, stripeClient } from "@/server/stripe";
 import { cancelHouseholdSubscriptions } from "@/server/subscription-cleanup";
+import { deleteUser } from "@/server/users";
 import { generateAndStore } from "@/server/weeks";
 
 type Section = keyof typeof SETTINGS_SCHEMAS;
@@ -44,14 +44,17 @@ export async function saveSettings(section: Section, value: unknown): Promise<Sa
   if (!schema) return { ok: false, error: fr.errors.generic };
   const parsed = schema.safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("household_settings")
-    .update({ [section]: parsed.data as Json, version: SETTINGS_VERSION } as { version: number } & Partial<
-      Record<Section, Json>
-    >)
-    .eq("household_id", household.id);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) =>
+      db
+        .updateTable("household_settings")
+        .set({ [section]: json(parsed.data), version: SETTINGS_VERSION })
+        .where("household_id", "=", household.id)
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/", "layout");
   const pending = AFFECTS_PLAN.includes(section) ? await pendingWeek(household.id) : null;
   return { ok: true, data: { pendingWeekStart: pending?.start_date ?? null } };
@@ -86,16 +89,21 @@ export async function saveHousehold(value: unknown): Promise<ActionResult> {
   if (forbidden) return { ok: false, error: fr.errors.forbidden };
   const parsed = householdSchema.safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("households")
-    .update({
-      name: parsed.data.name,
-      timezone: parsed.data.timezone,
-      alternating_from: parsed.data.alternatingFrom ? mondayOf(parsed.data.alternatingFrom) : null,
-    })
-    .eq("id", household.id);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) =>
+      db
+        .updateTable("households")
+        .set({
+          name: parsed.data.name,
+          timezone: parsed.data.timezone,
+          alternating_from: parsed.data.alternatingFrom ? mondayOf(parsed.data.alternatingFrom) : null,
+        })
+        .where("id", "=", household.id)
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/", "layout");
   return { ok: true, data: undefined };
 }
@@ -120,7 +128,6 @@ export async function saveMember(value: unknown): Promise<ActionResult<{ id: str
   const parsed = memberSchema.safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
   const m = parsed.data;
-  const supabase = await createClient();
   const row = {
     name: m.name,
     kind: m.kind,
@@ -128,20 +135,26 @@ export async function saveMember(value: unknown): Promise<ActionResult<{ id: str
     portion_override: m.portionOverride,
     archived: m.archived,
   };
-  const { data, error } = m.id
-    ? await supabase
-        .from("members")
-        .update(row)
-        .eq("id", m.id)
-        .eq("household_id", household.id)
-        .select("id")
-        .single()
-    : await supabase
-        .from("members")
-        .insert({ ...row, household_id: household.id })
-        .select("id")
-        .single();
-  if (error) return { ok: false, error: toUserMessage(error) };
+  let data: { id: string };
+  try {
+    data = await withSession((db) =>
+      m.id
+        ? db
+            .updateTable("members")
+            .set(row)
+            .where("id", "=", m.id)
+            .where("household_id", "=", household.id)
+            .returning("id")
+            .executeTakeFirstOrThrow()
+        : db
+            .insertInto("members")
+            .values({ ...row, household_id: household.id })
+            .returning("id")
+            .executeTakeFirstOrThrow(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/", "layout");
   return { ok: true, data: { id: data.id } };
 }
@@ -161,13 +174,28 @@ export async function setPresence(value: unknown): Promise<ActionResult> {
   const parsed = presenceSchema.safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
   const p = parsed.data;
-  const supabase = await createClient();
   const key = { member_id: p.memberId, weekday: p.weekday, meal: p.meal, week_parity: p.weekParity };
-  const { error } =
-    p.present && p.weekParity === "all"
-      ? await supabase.from("presence_rules").delete().match(key)
-      : await supabase.from("presence_rules").upsert({ ...key, present: p.present });
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession<unknown>((db) =>
+      p.present && p.weekParity === "all"
+        ? db
+            .deleteFrom("presence_rules")
+            .where("member_id", "=", key.member_id)
+            .where("weekday", "=", key.weekday)
+            .where("meal", "=", key.meal)
+            .where("week_parity", "=", key.week_parity)
+            .execute()
+        : db
+            .insertInto("presence_rules")
+            .values({ ...key, present: p.present })
+            .onConflict((oc) =>
+              oc.columns(["member_id", "weekday", "meal", "week_parity"]).doUpdateSet({ present: p.present }),
+            )
+            .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/", "layout");
   return { ok: true, data: undefined };
 }
@@ -180,12 +208,17 @@ export async function saveProfile(value: unknown): Promise<ActionResult> {
   const user = await requireUser("/settings/profile");
   const parsed = z.object({ displayName: z.string().trim().min(1).max(60) }).safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("profiles")
-    .update({ display_name: parsed.data.displayName })
-    .eq("user_id", user.id);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) =>
+      db
+        .updateTable("profiles")
+        .set({ display_name: parsed.data.displayName })
+        .where("user_id", "=", user.id)
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/", "layout");
   return { ok: true, data: undefined };
 }
@@ -194,22 +227,36 @@ export async function saveNotifications(value: unknown): Promise<ActionResult> {
   const user = await requireUser("/settings/profile");
   const parsed = notificationsSchema.safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("user_settings")
-    .update({ notifications: parsed.data as Json })
-    .eq("user_id", user.id);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    await withSession((db) =>
+      db
+        .updateTable("user_settings")
+        .set({ notifications: json(parsed.data) })
+        .where("user_id", "=", user.id)
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   return { ok: true, data: undefined };
 }
 
 /** Déconnexion de tous les autres appareils (§4, « appareils connectés »). */
 export async function signOutOtherDevices(): Promise<ActionResult> {
   await requireUser("/settings/profile");
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signOut({ scope: "others" });
-  if (error) return { ok: false, error: fr.errors.generic };
+  try {
+    await auth().api.revokeOtherSessions({ headers: await headers() });
+  } catch {
+    return { ok: false, error: fr.errors.generic };
+  }
   return { ok: true, data: undefined };
+}
+
+/** Résilie les abonnements Stripe d'un foyer avant sa suppression ; false si la suppression doit s'arrêter. */
+async function cancelSubscriptionsOf(householdId: string): Promise<boolean> {
+  const stripe = stripeAvailable() ? stripeClient() : null;
+  const result = await withAdmin((db) => cancelHouseholdSubscriptions(db, householdId, stripe));
+  return result.ok;
 }
 
 /**
@@ -225,34 +272,49 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
   ) {
     return { ok: false, error: fr.settings.data.confirmMismatch };
   }
-  const supabase = await createClient();
-  const { data: memberships } = await supabase
-    .from("memberships")
-    .select("household_id, role")
-    .eq("user_id", user.id);
-  for (const m of memberships ?? []) {
-    if (m.role !== "admin") continue;
-    const { count } = await supabase
-      .from("memberships")
-      .select("*", { count: "exact", head: true })
-      .eq("household_id", m.household_id)
-      .eq("role", "admin");
-    if ((count ?? 0) <= 1) {
-      // L'abonnement Stripe est résilié avant le foyer : sinon la facturation continuerait sans compte.
-      const cancelled = await cancelHouseholdSubscriptions(
-        createAdminClient(),
-        m.household_id,
-        stripeAvailable() ? stripeClient() : null,
-      );
-      if (!cancelled.ok) return { ok: false, error: fr.errors.subscriptionCancel };
-      await supabase.from("households").delete().eq("id", m.household_id);
+  let orphans: string[];
+  try {
+    orphans = await withSession(async (db) => {
+      const memberships = await db
+        .selectFrom("memberships")
+        .select(["household_id", "role"])
+        .where("user_id", "=", user.id)
+        .execute();
+      const ids: string[] = [];
+      for (const m of memberships) {
+        if (m.role !== "admin") continue;
+        const { n } = await db
+          .selectFrom("memberships")
+          .select((eb) => eb.fn.countAll<number>().as("n"))
+          .where("household_id", "=", m.household_id)
+          .where("role", "=", "admin")
+          .executeTakeFirstOrThrow();
+        if (Number(n) <= 1) ids.push(m.household_id);
+      }
+      return ids;
+    });
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
+  for (const householdId of orphans) {
+    // L'abonnement Stripe est résilié avant le foyer : sinon la facturation continuerait sans compte.
+    const cancelled = await cancelSubscriptionsOf(householdId);
+    if (!cancelled) return { ok: false, error: fr.errors.subscriptionCancel };
+    try {
+      await withSession((db) => db.deleteFrom("households").where("id", "=", householdId).execute());
+    } catch (e) {
+      return { ok: false, error: toUserMessage(e) };
     }
   }
-  const admin = createAdminClient();
-  const { error } = await admin.auth.admin.deleteUser(user.id);
-  if (error) return { ok: false, error: fr.errors.generic };
-  await supabase.auth.signOut();
-  (await cookies()).delete(ACTIVE_HOUSEHOLD_COOKIE);
+  try {
+    // La suppression du compte emporte ses sessions : il ne reste qu'à effacer les cookies.
+    await deleteUser(user.id);
+  } catch {
+    return { ok: false, error: fr.errors.generic };
+  }
+  const jar = await cookies();
+  for (const c of jar.getAll()) if (c.name.includes("better-auth")) jar.delete(c.name);
+  jar.delete(ACTIVE_HOUSEHOLD_COOKIE);
   redirect("/");
 }
 
@@ -263,15 +325,12 @@ export async function deleteHousehold(formData: FormData): Promise<ActionResult>
   if (String(formData.get("confirm") ?? "").trim() !== household.name) {
     return { ok: false, error: fr.settings.data.confirmMismatch };
   }
-  const cancelled = await cancelHouseholdSubscriptions(
-    createAdminClient(),
-    household.id,
-    stripeAvailable() ? stripeClient() : null,
-  );
-  if (!cancelled.ok) return { ok: false, error: fr.errors.subscriptionCancel };
-  const supabase = await createClient();
-  const { error } = await supabase.from("households").delete().eq("id", household.id);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  if (!(await cancelSubscriptionsOf(household.id))) return { ok: false, error: fr.errors.subscriptionCancel };
+  try {
+    await withSession((db) => db.deleteFrom("households").where("id", "=", household.id).execute());
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   (await cookies()).delete(ACTIVE_HOUSEHOLD_COOKIE);
   redirect("/app");
 }
@@ -292,22 +351,32 @@ export async function saveMemberSchool(value: unknown): Promise<ActionResult> {
   const parsed = memberSchoolSchema.safeParse(value);
   if (!parsed.success) return { ok: false, error: fr.settings.invalid };
   const { memberId, schoolId, days } = parsed.data;
-  const supabase = await createClient();
-  // L'enfant appartient bien au foyer actif.
-  const { data: kid } = await supabase
-    .from("members")
-    .select("id")
-    .eq("id", memberId)
-    .eq("household_id", household.id)
-    .eq("kind", "child")
-    .maybeSingle();
-  if (!kid) return { ok: false, error: fr.errors.forbidden };
-  const { error } = schoolId
-    ? await supabase
-        .from("member_schools")
-        .upsert({ member_id: memberId, school_id: schoolId, canteen_days: days }, { onConflict: "member_id" })
-    : await supabase.from("member_schools").delete().eq("member_id", memberId);
-  if (error) return { ok: false, error: toUserMessage(error) };
+  try {
+    const found = await withSession(async (db) => {
+      // L'enfant appartient bien au foyer actif.
+      const kid = await db
+        .selectFrom("members")
+        .select("id")
+        .where("id", "=", memberId)
+        .where("household_id", "=", household.id)
+        .where("kind", "=", "child")
+        .executeTakeFirst();
+      if (!kid) return false;
+      if (schoolId) {
+        await db
+          .insertInto("member_schools")
+          .values({ member_id: memberId, school_id: schoolId, canteen_days: days })
+          .onConflict((oc) => oc.column("member_id").doUpdateSet({ school_id: schoolId, canteen_days: days }))
+          .execute();
+      } else {
+        await db.deleteFrom("member_schools").where("member_id", "=", memberId).execute();
+      }
+      return true;
+    });
+    if (!found) return { ok: false, error: fr.errors.forbidden };
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
   revalidatePath("/", "layout");
   return { ok: true, data: undefined };
 }

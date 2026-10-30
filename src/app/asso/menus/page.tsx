@@ -4,9 +4,9 @@ import { MenusEditor, type MenuRow } from "@/components/asso/MenusEditor";
 import { StatusBanner } from "@/components/asso/StatusBanner";
 import { fr } from "@/i18n/fr";
 import { addDays, formatLong, todayIn } from "@/lib/dates";
-import { createClient } from "@/lib/supabase/server";
 import { importsThisMonth, MAX_IMPORTS_PER_MONTH } from "@/server/asso-quota";
 import { requireAssociation } from "@/server/asso-session";
+import { withSession } from "@/server/session";
 import { PageHeader } from "@/components/ui/Layout";
 
 const t = fr.asso.menus;
@@ -25,14 +25,27 @@ export default async function AssoMenusPage({
   let rows: MenuRow[] = [];
   if (school) {
     const today = todayIn("Europe/Paris");
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("school_menus")
-      .select("date, starter, main, side, dairy, dessert, note, status, edited_after_publish, association_id")
-      .eq("school_id", school.id)
-      .gte("date", addDays(today, -14))
-      .order("date");
-    rows = (data ?? []).map((m) => ({
+    const data = await withSession((db) =>
+      db
+        .selectFrom("school_menus")
+        .select([
+          "date",
+          "starter",
+          "main",
+          "side",
+          "dairy",
+          "dessert",
+          "note",
+          "status",
+          "edited_after_publish",
+          "association_id",
+        ])
+        .where("school_id", "=", school.id)
+        .where("date", ">=", addDays(today, -14))
+        .orderBy("date")
+        .execute(),
+    );
+    rows = data.map((m) => ({
       date: m.date,
       starter: m.starter,
       main: m.main,

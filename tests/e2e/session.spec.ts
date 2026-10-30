@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { FEATURES } from "../../src/lib/features";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M8 (§8.5) : session complète, minuteurs persistants entre les onglets, état partagé.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 test("session complète, minuteurs persistants, état partagé entre appareils", async ({ browser }) => {
@@ -66,6 +66,11 @@ test("session complète, minuteurs persistants, état partagé entre appareils",
   // Minuteur arrivé à échéance (horloge simulée) : pilule « prêt », puis OK.
   const clockPage = await context.newPage();
   await clockPage.clock.install();
+  // Les recettes cuisinées ont pu rapporter des tampons : leur célébration s'ouvre sur /app, par-dessus le minuteur.
+  await clockPage.addLocatorHandler(clockPage.getByRole("dialog"), async (dialog) => {
+    // Deux « Fermer » : la croix de l'en-tête et le bouton du bas.
+    await dialog.getByRole("button", { name: "Fermer" }).first().click();
+  });
   await clockPage.goto("/app");
   await expect(clockPage.getByTestId("timer-bar")).toBeVisible();
   await clockPage.clock.fastForward("02:00:00");

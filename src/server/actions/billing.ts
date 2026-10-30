@@ -5,10 +5,9 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { normalizeCode } from "@/lib/association-code";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
 import { approvedAssociation, attachHousehold } from "@/server/associations";
 import { stripeAvailable, stripeClient, stripeConfig } from "@/server/stripe";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 
 const t = fr.subscription;
 
@@ -30,15 +29,16 @@ export async function createCheckoutSession(formData: FormData) {
   const cfg = stripeConfig();
   if (!stripeAvailable() || !cfg.monthlyPrice || !cfg.yearlyPrice) redirect(`${BASE}?error=notConfigured`);
 
-  const supabase = await createClient();
-  const [{ data: h }, { data: sub }] = await Promise.all([
-    supabase.from("households").select("association_id").eq("id", household.id).single(),
-    supabase
-      .from("subscriptions")
-      .select("stripe_customer_id")
-      .eq("household_id", household.id)
-      .maybeSingle(),
-  ]);
+  const [h, sub] = await withSession((db) =>
+    Promise.all([
+      db.selectFrom("households").select("association_id").where("id", "=", household.id).executeTakeFirst(),
+      db
+        .selectFrom("subscriptions")
+        .select("stripe_customer_id")
+        .where("household_id", "=", household.id)
+        .executeTakeFirst(),
+    ]),
+  );
   const useCoupon = !!h?.association_id && plan.data === "yearly" && !!cfg.associationCoupon;
 
   let url: string | null = null;
@@ -71,12 +71,13 @@ export async function createPortalSession() {
   const { household } = await requireHousehold(BASE);
   if (household.role !== "admin") redirect(`${BASE}?error=notAdmin`);
   if (!stripeAvailable()) redirect(`${BASE}?error=notConfigured`);
-  const supabase = await createClient();
-  const { data: sub } = await supabase
-    .from("subscriptions")
-    .select("stripe_customer_id")
-    .eq("household_id", household.id)
-    .maybeSingle();
+  const sub = await withSession((db) =>
+    db
+      .selectFrom("subscriptions")
+      .select("stripe_customer_id")
+      .where("household_id", "=", household.id)
+      .executeTakeFirst(),
+  );
   if (!sub?.stripe_customer_id) redirect(`${BASE}?error=generic`);
   let url: string | null = null;
   try {
@@ -108,12 +109,13 @@ async function adminSubscription() {
   const { household } = await requireHousehold(BASE);
   if (household.role !== "admin") redirect(`${BASE}?error=notAdmin`);
   if (!stripeAvailable()) redirect(`${BASE}?error=notConfigured`);
-  const supabase = await createClient();
-  const { data: sub } = await supabase
-    .from("subscriptions")
-    .select("stripe_customer_id, stripe_subscription_id")
-    .eq("household_id", household.id)
-    .maybeSingle();
+  const sub = await withSession((db) =>
+    db
+      .selectFrom("subscriptions")
+      .select(["stripe_customer_id", "stripe_subscription_id"])
+      .where("household_id", "=", household.id)
+      .executeTakeFirst(),
+  );
   if (!sub?.stripe_subscription_id) redirect(`${BASE}?error=generic`);
   return { customerId: sub.stripe_customer_id, subscriptionId: sub.stripe_subscription_id };
 }

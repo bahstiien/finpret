@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
+import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // Jalon M5 (§8.1, §8.7) : Générer, Changer, Déplacer, Retirer, Convives et Week-end.
-test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
+test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
 test.describe.configure({ mode: "parallel" });
 
 test("écran Menu : générer, changer, retirer, déplacer, convives, week-end", async ({ page, isMobile }) => {
@@ -81,14 +81,14 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
 test.describe("mobile", () => {
   test.skip(({ isMobile }) => !isMobile, "vérification de mise en page mobile");
   test("l'écran Menu ne déborde pas horizontalement et salue le membre lié au compte", async ({ page }) => {
-    test.skip(!supabaseConfigured, "Supabase n'est pas configuré");
+    test.skip(!dbConfigured, "Postgres n'est pas configuré");
     test.setTimeout(90_000);
     await page.goto("/login");
     await signInFromLoginPage(page, uniqueEmail("mobile-un-nom-de-compte-tres-long-sans-espace"));
     await completeOnboarding(page, "Mobile");
     await page.getByRole("link", { name: "Voir mon menu" }).click();
     await page.getByTestId("week-title").waitFor();
-    await page.getByRole("heading", { level: 1 }).filter({ hasText: "Camille" }).waitFor();
+    await page.getByTestId("menu-greeting").filter({ hasText: "Camille" }).waitFor();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
   });

@@ -1,4 +1,4 @@
-import type { Db } from "@/lib/supabase/types";
+import type { Db } from "@/server/db";
 
 /** Partie de l'API Stripe utilisée ici (injectable dans les tests). */
 export type SubscriptionCanceller = {
@@ -13,18 +13,19 @@ export type CancelResult =
  * `subscriptions` disparaît en cascade mais Stripe continue de facturer. Un abonnement déjà supprimé côté Stripe
  * (`resource_missing`) est considéré comme résilié. Toute autre erreur interrompt la suppression : mieux vaut un
  * compte conservé qu'un client facturé sans compte. Le client Stripe et les factures sont conservés (comptabilité).
+ * `db` doit voir les abonnements du foyer (`withAdmin` côté serveur).
  */
 export async function cancelHouseholdSubscriptions(
   db: Db,
   householdId: string,
   stripe: SubscriptionCanceller | null,
 ): Promise<CancelResult> {
-  const { data, error } = await db
-    .from("subscriptions")
+  const rows = await db
+    .selectFrom("subscriptions")
     .select("stripe_subscription_id")
-    .eq("household_id", householdId);
-  if (error) return { ok: false, reason: "stripe" };
-  const ids = (data ?? []).map((r) => r.stripe_subscription_id).filter((id): id is string => !!id);
+    .where("household_id", "=", householdId)
+    .execute();
+  const ids = rows.map((r) => r.stripe_subscription_id).filter((id): id is string => !!id);
   if (ids.length === 0) return { ok: true, cancelled: 0 };
   if (!stripe) return { ok: false, reason: "not_configured" };
   let cancelled = 0;

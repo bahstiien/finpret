@@ -3,7 +3,8 @@ import { CodeForm } from "@/components/asso/CodeForm";
 import { StatusBanner } from "@/components/asso/StatusBanner";
 import { fr } from "@/i18n/fr";
 import { requireManager } from "@/server/asso-session";
-import { createClient } from "@/lib/supabase/server";
+import { rpc } from "@/server/db";
+import { withSession } from "@/server/session";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
 
@@ -24,8 +25,7 @@ const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR
 /** Tableau de bord : agrégats uniquement, tout compteur inférieur à 5 est affiché « moins de 5 » (D13). */
 export default async function AssoDashboardPage() {
   const association = await requireManager();
-  const supabase = await createClient();
-  const { data } = await supabase.rpc("association_stats", { aid: association.id });
+  const data = await withSession((db) => rpc<Stats | null>(db, "association_stats", { aid: association.id }));
   const stats = (data ?? {}) as Stats;
   const count = (n: number | null | undefined) => (n === null || n === undefined ? t.fewer : String(n));
   const cards = [

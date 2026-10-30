@@ -4,14 +4,13 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { FriseWeek } from "@/engine/progress-view";
 import { fr } from "@/i18n/fr";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
+import { withAdmin } from "@/server/db";
 import { type ActionResult } from "@/server/errors";
 import { trackEvent } from "@/server/events";
 import { cancelPause, finishSession, planPause } from "@/server/progress";
 import { createProgressStore } from "@/server/progress-store";
 import { loadProgressView } from "@/server/progress-view";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 
 const uuid = z.uuid();
 const monday = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
@@ -38,13 +37,14 @@ export async function finishSessionAction(weekId: string): Promise<SessionDoneRe
   if (!uuid.safeParse(weekId).success) return NOTHING;
   const { user, household } = await requireHousehold("/app/session");
   if (household.role === "viewer") return NOTHING;
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("weeks")
-    .select("id")
-    .eq("id", weekId)
-    .eq("household_id", household.id)
-    .maybeSingle();
+  const data = await withSession((db) =>
+    db
+      .selectFrom("weeks")
+      .select("id")
+      .where("id", "=", weekId)
+      .where("household_id", "=", household.id)
+      .executeTakeFirst(),
+  );
   if (!data) return NOTHING;
   await trackEvent("session_done", { userId: user.id, householdId: household.id, dedupeKey: weekId });
   await finishSession(createProgressStore(), { householdId: household.id, weekId });
@@ -90,25 +90,29 @@ export async function markAchievementsSeen(keys: string[]): Promise<void> {
   const parsed = seenSchema.safeParse(keys);
   if (!parsed.success || parsed.data.length === 0) return;
   const { household } = await requireHousehold("/app");
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("achievements")
-    .select("kind, key")
-    .eq("household_id", household.id)
-    .is("seen_at", null);
+  const data = await withSession((db) =>
+    db
+      .selectFrom("achievements")
+      .select(["kind", "key"])
+      .where("household_id", "=", household.id)
+      .where("seen_at", "is", null)
+      .execute(),
+  );
   const wanted = new Set(parsed.data);
-  const rows = (data ?? []).filter((a) => wanted.has(`${a.kind}:${a.key}`));
+  const rows = data.filter((a) => wanted.has(`${a.kind}:${a.key}`));
   if (rows.length === 0) return;
-  const admin = createAdminClient();
-  for (const a of rows) {
-    await admin
-      .from("achievements")
-      .update({ seen_at: new Date().toISOString() })
-      .eq("household_id", household.id)
-      .eq("kind", a.kind)
-      .eq("key", a.key)
-      .is("seen_at", null);
-  }
+  await withAdmin(async (db) => {
+    for (const a of rows) {
+      await db
+        .updateTable("achievements")
+        .set({ seen_at: new Date().toISOString() })
+        .where("household_id", "=", household.id)
+        .where("kind", "=", a.kind)
+        .where("key", "=", a.key)
+        .where("seen_at", "is", null)
+        .execute();
+    }
+  });
 }
 
 const viewSchema = z.discriminatedUnion("name", [

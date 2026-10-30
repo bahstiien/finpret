@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { InviteEditorForm } from "@/components/asso/InviteEditorForm";
 import { ActionForm } from "@/components/ui/ActionForm";
 import { fr } from "@/i18n/fr";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
+import { withSession } from "@/server/session";
 import { removeEditor, revokeEditorInvitation } from "@/server/actions/asso";
 import { requireManager } from "@/server/asso-session";
+import { emailOf } from "@/server/users";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
 import { Pill } from "@/components/ui/Pill";
@@ -17,22 +17,25 @@ export const metadata: Metadata = { title: t.title };
 /** Équipe : responsable et éditeurs de menus (3 au plus), invitations en attente. */
 export default async function TeamPage() {
   const association = await requireManager();
-  const supabase = await createClient();
-  const [{ data: members }, { data: invitations }] = await Promise.all([
-    supabase.from("association_members").select("user_id, role").eq("association_id", association.id),
-    supabase
-      .from("association_invitations")
-      .select("id, email, expires_at")
-      .eq("association_id", association.id)
-      .is("accepted_at", null)
-      .gt("expires_at", new Date().toISOString()),
-  ]);
-  // L'e-mail d'un membre de sa propre équipe est lisible du responsable (clé de service, réservée au serveur).
-  const admin = createAdminClient();
+  const { members, invitations } = await withSession(async (db) => ({
+    members: await db
+      .selectFrom("association_members")
+      .select(["user_id", "role"])
+      .where("association_id", "=", association.id)
+      .execute(),
+    invitations: await db
+      .selectFrom("association_invitations")
+      .select(["id", "email", "expires_at"])
+      .where("association_id", "=", association.id)
+      .where("accepted_at", "is", null)
+      .where("expires_at", ">", new Date().toISOString())
+      .execute(),
+  }));
+  // L'e-mail d'un membre de sa propre équipe est lisible du responsable (lecture privilégiée, réservée au serveur).
   const people = await Promise.all(
-    (members ?? []).map(async (m) => ({
+    members.map(async (m) => ({
       ...m,
-      email: (await admin.auth.admin.getUserById(m.user_id)).data.user?.email ?? "",
+      email: (await emailOf(m.user_id)) ?? "",
     })),
   );
   return (
@@ -68,9 +71,9 @@ export default async function TeamPage() {
       </Card>
       <Card aria-label={t.pending} data-testid="asso-invitations">
         <h2 className="t-2 mb-3">{t.pending}</h2>
-        {!invitations?.length && <p className="muted">{t.none}</p>}
+        {!invitations.length && <p className="muted">{t.none}</p>}
         <ul>
-          {(invitations ?? []).map((i) => (
+          {invitations.map((i) => (
             <li key={i.id} className="row flex-wrap justify-between">
               <span className="t-body [overflow-wrap:anywhere]">{i.email}</span>
               <ActionForm action={revokeEditorInvitation} fields={{ invitationId: i.id }} label={t.revoke} />

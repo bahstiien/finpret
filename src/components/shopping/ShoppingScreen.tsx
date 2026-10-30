@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Bento } from "@/components/ui/Extras";
 import { Segmented } from "@/components/ui/Segmented";
@@ -11,7 +11,8 @@ import { baseAisle, guessAisle, shoppingText } from "@/engine/shopping";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { enqueue, loadQueue, type NewItem, type QueuedOp, saveQueue } from "@/lib/offline-queue";
-import { createClient } from "@/lib/supabase/client";
+import { useHouseholdEvents } from "@/lib/use-household-events";
+import { applyShoppingOp, listShoppingItems } from "@/server/actions/shopping-sync";
 import { useRouter } from "next/navigation";
 import { recordWeekEvent } from "@/server/actions/events";
 import {
@@ -45,7 +46,7 @@ type Item = {
 };
 
 /**
- * Liste de courses (§8.3) : temps réel (Supabase Realtime, moins de 2 s), coches article par article,
+ * Liste de courses (§8.3) : temps réel (flux SSE de /api/realtime, moins de 2 s), coches article par article,
  * hors ligne avec file rejouée au retour du réseau.
  */
 export function ShoppingScreen({
@@ -85,7 +86,6 @@ export function ShoppingScreen({
   frequent: string[];
   exportFormat: "text" | "checklist";
 }) {
-  const supabase = useMemo(() => createClient(), []);
   const toast = useToast();
   const [items, setItems] = useState<Map<string, Item>>(() => new Map(initialItems.map((i) => [i.id, i])));
   const [online, setOnline] = useState(true);
@@ -128,22 +128,10 @@ export function ShoppingScreen({
     [userId],
   );
 
-  const send = useCallback(
-    async (op: QueuedOp) => {
-      const res =
-        op.op === "check"
-          ? await supabase.from("shopping_items").update({ checked: op.checked }).eq("id", op.id)
-          : op.op === "delete"
-            ? await supabase.from("shopping_items").delete().eq("id", op.id)
-            : await supabase
-                .from("shopping_items")
-                .upsert(op.item, { onConflict: "id", ignoreDuplicates: true });
-      // Une erreur de droits ou de données n'est pas rejouée ; seule une coupure réseau garde l'opération.
-      if (res.error && !/fetch|network|Failed/i.test(res.error.message)) return "dropped" as const;
-      return res.error ? ("failed" as const) : ("sent" as const);
-    },
-    [supabase],
-  );
+  const send = useCallback(async (op: QueuedOp) => {
+    // Une erreur de droits ou de données n'est pas rejouée ; seule une coupure réseau (l'appel échoue) garde l'opération.
+    return applyShoppingOp(op).catch(() => "failed" as const);
+  }, []);
 
   const flush = useCallback(async () => {
     if (flushing.current || !navigator.onLine) return;
@@ -179,33 +167,47 @@ export function ShoppingScreen({
     [apply, flush, weekId, toast],
   );
 
-  // File laissée par une visite précédente hors ligne, état réseau, temps réel.
+  // Relit la liste (changement signalé, coupure, reconnexion du flux) ; les coches locales encore en attente
+  // restent prioritaires. Les relectures demandées en rafale sont regroupées.
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const refresh = useCallback(async () => {
+    const data = await listShoppingItems(weekId).catch(() => null);
+    if (!data) return;
+    setItems(() => {
+      const next = new Map(data.map((row) => [row.id, row as Item]));
+      for (const op of queue.current) {
+        if (op.op === "check" && next.has(op.id))
+          next.set(op.id, { ...next.get(op.id)!, checked: op.checked });
+        if (op.op === "delete") next.delete(op.id);
+        if (op.op === "add" && !next.has(op.item.id)) {
+          next.set(op.item.id, { ...op.item, checked: false, added_by: userId, updated_at: "" });
+        }
+      }
+      return next;
+    });
+  }, [weekId, userId]);
+  const scheduleRefresh = useCallback(() => {
+    if (refreshTimer.current) clearTimeout(refreshTimer.current);
+    refreshTimer.current = setTimeout(() => void refresh(), 150);
+  }, [refresh]);
+
+  // Temps réel : articles de la semaine, et achats ou signalements du foyer (relus par le serveur).
+  useHouseholdEvents(
+    householdId,
+    (change) => {
+      if (change.table === "shopping_items" && change.weekId === weekId) scheduleRefresh();
+      else if (hasPurchases && (change.table === "purchase_events" || change.table === "shopping_issues"))
+        router.refresh();
+    },
+    scheduleRefresh,
+  );
+
+  // File laissée par une visite précédente hors ligne, état réseau.
   useEffect(() => {
     queue.current = loadQueue(weekId);
     queue.current.forEach(apply);
     setPending(queue.current.length);
     setOnline(navigator.onLine);
-    // Relit la liste (changements des autres pendant une coupure, ou avant l'abonnement) ;
-    // les coches locales encore en attente restent prioritaires.
-    const refresh = async () => {
-      const { data } = await supabase
-        .from("shopping_items")
-        .select("id, source, ingredient_key, label, qty_text, aisle, checked, added_by, updated_at")
-        .eq("week_id", weekId);
-      if (!data) return;
-      setItems(() => {
-        const next = new Map(data.map((row) => [row.id, row as Item]));
-        for (const op of queue.current) {
-          if (op.op === "check" && next.has(op.id))
-            next.set(op.id, { ...next.get(op.id)!, checked: op.checked });
-          if (op.op === "delete") next.delete(op.id);
-          if (op.op === "add" && !next.has(op.item.id)) {
-            next.set(op.item.id, { ...op.item, checked: false, added_by: userId, updated_at: "" });
-          }
-        }
-        return next;
-      });
-    };
     const up = async () => {
       setOnline(true);
       await flush();
@@ -215,61 +217,12 @@ export function ShoppingScreen({
     window.addEventListener("online", up);
     window.addEventListener("offline", down);
     void flush();
-    let cancelled = false;
-    const channel = supabase.channel(`shopping:${weekId}`);
-    channel.on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "shopping_items", filter: `household_id=eq.${householdId}` },
-      (payload) => {
-        setItems((prev) => {
-          const next = new Map(prev);
-          if (payload.eventType === "DELETE") next.delete((payload.old as Item).id);
-          else {
-            const row = payload.new as Item & { week_id: string };
-            if (row.week_id !== weekId) return prev;
-            // Un événement livré en retard ne remplace pas un état plus récent.
-            const known = next.get(row.id);
-            if (known?.updated_at && row.updated_at && row.updated_at < known.updated_at) return prev;
-            // Une coche locale en attente reste prioritaire sur l'état reçu.
-            const local = queue.current.find((q) => q.op === "check" && q.id === row.id);
-            next.set(row.id, local && local.op === "check" ? { ...row, checked: local.checked } : row);
-          }
-          return next;
-        });
-      },
-    );
-    if (hasPurchases) {
-      channel.on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "purchase_events",
-          filter: `household_id=eq.${householdId}`,
-        },
-        () => router.refresh(),
-      );
-      channel.on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "shopping_issues", filter: `household_id=eq.${householdId}` },
-        () => router.refresh(),
-      );
-    }
-    // La session est lue dans les cookies de façon asynchrone : sans jeton, la RLS bloquerait les événements.
-    void supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      if (data.session) void supabase.realtime.setAuth(data.session.access_token);
-      channel.subscribe((status) => {
-        if (status === "SUBSCRIBED") void refresh();
-      });
-    });
     return () => {
-      cancelled = true;
       window.removeEventListener("online", up);
       window.removeEventListener("offline", down);
-      void supabase.removeChannel(channel);
+      if (refreshTimer.current) clearTimeout(refreshTimer.current);
     };
-  }, [supabase, weekId, householdId, userId, apply, flush, hasPurchases, router]);
+  }, [weekId, apply, flush, refresh]);
 
   const list = [...items.values()];
   const visible = list;

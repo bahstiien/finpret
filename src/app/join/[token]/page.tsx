@@ -4,18 +4,24 @@ import { CenteredPage, Logo } from "@/components/ui/Card";
 import { FormMessage } from "@/components/ui/Field";
 import { ActionForm } from "@/components/ui/ActionForm";
 import { fr } from "@/i18n/fr";
-import { createClient } from "@/lib/supabase/server";
 import { acceptInvitation } from "@/server/actions/households";
-import { getUser } from "@/server/session";
+import { rpcRows } from "@/server/db";
+import type { HouseholdRole } from "@/server/db.types";
+import { getUser, withSession } from "@/server/session";
 import { buttonClass } from "@/components/ui/Button";
 
 export const metadata: Metadata = { title: "Invitation", robots: { index: false } };
 
 export default async function JoinPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const supabase = await createClient();
-  const { data } = await supabase.rpc("get_invitation", { p_token: token });
-  const invitation = data?.[0];
+  const data = await withSession((db) =>
+    rpcRows<{ household_name: string; role: HouseholdRole; status: "valid" | "expired" | "used" }>(
+      db,
+      "get_invitation",
+      { p_token: token },
+    ),
+  ).catch(() => []);
+  const invitation = data[0];
   const user = await getUser();
 
   return (

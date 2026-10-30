@@ -9,10 +9,9 @@ import { Card } from "@/components/ui/Card";
 import { Pill } from "@/components/ui/Pill";
 import { fr } from "@/i18n/fr";
 import { mondayOf, todayIn } from "@/lib/dates";
-import { createClient } from "@/lib/supabase/server";
 import { removeAccount, revokeInvitation } from "@/server/actions/households";
 import { loadHouseholdContext } from "@/server/household-context";
-import { requireHousehold } from "@/server/session";
+import { requireHousehold, withSession } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.settingsHousehold.title };
 
@@ -36,52 +35,68 @@ const TIMEZONES = [
 export default async function HouseholdSettingsPage() {
   const { user, household } = await requireHousehold("/settings/household");
   if (household.role !== "admin") redirect("/settings/profile");
-  const supabase = await createClient();
   const ctx = await loadHouseholdContext(household.id);
-
-  const [{ data: memberships }, { data: invitations }] = await Promise.all([
-    supabase
-      .from("memberships")
-      .select("user_id, role, created_at")
-      .eq("household_id", household.id)
-      .order("created_at"),
-    supabase
-      .from("invitations")
-      .select("id, role, email, expires_at")
-      .eq("household_id", household.id)
-      .is("accepted_at", null)
-      .gt("expires_at", new Date().toISOString())
-      .order("created_at"),
-  ]);
   // École et jours de cantine des enfants, si le foyer est rattaché à une association (RLS : ses écoles seulement).
   const kids = ctx.members.filter((m) => m.kind === "child" && !m.archived);
-  const { data: hh } = await supabase
-    .from("households")
-    .select("association_id")
-    .eq("id", household.id)
-    .single();
-  const { data: assoSchools } = hh?.association_id
-    ? await supabase.from("association_schools").select("school_id").eq("association_id", hh.association_id)
-    : { data: [] };
-  const schoolIds = (assoSchools ?? []).map((s) => s.school_id);
-  const { data: schools } = schoolIds.length
-    ? await supabase.from("schools").select("id, name, city").in("id", schoolIds).order("name")
-    : { data: [] };
-  const { data: links } = kids.length
-    ? await supabase
-        .from("member_schools")
-        .select("member_id, school_id, canteen_days")
-        .in(
-          "member_id",
-          kids.map((k) => k.id),
-        )
-    : { data: [] };
-  const userIds = (memberships ?? []).map((m) => m.user_id);
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("user_id, display_name")
-    .in("user_id", userIds);
-  const nameOf = (id: string) => profiles?.find((p) => p.user_id === id)?.display_name ?? "—";
+
+  const { memberships, invitations, schools, links, profiles } = await withSession(async (db) => {
+    const memberships = await db
+      .selectFrom("memberships")
+      .select(["user_id", "role", "created_at"])
+      .where("household_id", "=", household.id)
+      .orderBy("created_at")
+      .execute();
+    const invitations = await db
+      .selectFrom("invitations")
+      .select(["id", "role", "email", "expires_at"])
+      .where("household_id", "=", household.id)
+      .where("accepted_at", "is", null)
+      .where("expires_at", ">", new Date().toISOString())
+      .orderBy("created_at")
+      .execute();
+    const hh = await db
+      .selectFrom("households")
+      .select("association_id")
+      .where("id", "=", household.id)
+      .executeTakeFirst();
+    const assoSchools = hh?.association_id
+      ? await db
+          .selectFrom("association_schools")
+          .select("school_id")
+          .where("association_id", "=", hh.association_id)
+          .execute()
+      : [];
+    const schoolIds = assoSchools.map((s) => s.school_id);
+    const schools = schoolIds.length
+      ? await db
+          .selectFrom("schools")
+          .select(["id", "name", "city"])
+          .where("id", "in", schoolIds)
+          .orderBy("name")
+          .execute()
+      : [];
+    const links = kids.length
+      ? await db
+          .selectFrom("member_schools")
+          .select(["member_id", "school_id", "canteen_days"])
+          .where(
+            "member_id",
+            "in",
+            kids.map((k) => k.id),
+          )
+          .execute()
+      : [];
+    const userIds = memberships.map((m) => m.user_id);
+    const profiles = userIds.length
+      ? await db
+          .selectFrom("profiles")
+          .select(["user_id", "display_name"])
+          .where("user_id", "in", userIds)
+          .execute()
+      : [];
+    return { memberships, invitations, schools, links, profiles };
+  });
+  const nameOf = (id: string) => profiles.find((p) => p.user_id === id)?.display_name ?? "—";
 
   return (
     <>

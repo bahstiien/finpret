@@ -8,10 +8,9 @@ import { getUser } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.login.title };
 
-const errors: Record<string, string> = {
-  link: fr.login.linkExpired,
-  provider: fr.login.providerUnavailable,
-};
+// `provider` : fournisseur indisponible ; tout autre code (Better Auth : INVALID_TOKEN, EXPIRED_TOKEN…) vient du lien.
+const errorMessage = (code: string) =>
+  code === "provider" ? fr.login.providerUnavailable : fr.login.linkExpired;
 
 export default async function LoginPage({
   searchParams,
@@ -30,7 +29,7 @@ export default async function LoginPage({
         <p className="muted">{fr.login.lead}</p>
       </div>
       <Card className="flex flex-col gap-4">
-        <LoginForm next={next} initialError={params.error ? errors[params.error] : undefined} />
+        <LoginForm next={next} initialError={params.error ? errorMessage(params.error) : undefined} />
       </Card>
     </CenteredPage>
   );
