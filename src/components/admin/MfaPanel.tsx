@@ -66,9 +66,15 @@ export function MfaPanel() {
             chiffres.
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element -- QR code SVG fourni par Supabase (data URL) */}
-          <img src={enrollment.qr} alt="QR code du second facteur" width={180} height={180} />
-          <p className="text-sm text-muted">
-            Ou saisissez la clé : <code>{enrollment.secret}</code>
+          <img
+            src={enrollment.qr}
+            alt="QR code du second facteur"
+            width={180}
+            height={180}
+            className="border-[length:var(--bw)] border-line"
+          />
+          <p className="t-small muted">
+            Ou saisissez la clé : <code className="mono">{enrollment.secret}</code>
           </p>
         </>
       )}

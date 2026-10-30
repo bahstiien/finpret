@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ShoppingScreen } from "@/components/shopping/ShoppingScreen";
-import { Card } from "@/components/ui/Card";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
@@ -13,7 +12,7 @@ import { loadPurchaseView } from "@/server/purchases-view";
 import { requireHousehold } from "@/server/session";
 import { syncShoppingItems } from "@/server/shopping";
 import { currentAndNext, engineEnvFor } from "@/server/weeks";
-import { PageHeader } from "@/components/ui/Layout";
+import { EmptyState, PageHeader } from "@/components/ui/Layout";
 
 export const metadata: Metadata = { title: fr.nav.shopping };
 
@@ -27,9 +26,9 @@ export default async function ShoppingPage() {
     return (
       <>
         <PageHeader title={fr.nav.shopping} />
-        <Card>
-          <p className="text-muted">{fr.shopping.noWeek}</p>
-        </Card>
+        <EmptyState icon="basket" title={fr.nav.shopping}>
+          {fr.shopping.noWeek}
+        </EmptyState>
       </>
     );
   }

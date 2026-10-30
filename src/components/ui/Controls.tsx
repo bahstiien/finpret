@@ -19,7 +19,7 @@ export function Toggle({
   return (
     <label className="flex min-h-11 cursor-pointer items-center justify-between gap-4">
       <span className="flex flex-col">
-        <span className="font-semibold">{label}</span>
+        <span className="font-bold">{label}</span>
         {hint && <span className="text-sm text-muted">{hint}</span>}
       </span>
       <input
@@ -30,10 +30,7 @@ export function Toggle({
         disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
       />
-      <span
-        aria-hidden="true"
-        className="relative h-7 w-12 shrink-0 rounded-pill bg-line transition peer-checked:bg-violet peer-focus-visible:outline-3 peer-focus-visible:outline-violet after:absolute after:top-1 after:left-1 after:size-5 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5"
-      />
+      <span aria-hidden="true" className="toggle peer-checked:[background:var(--violet)] peer-checked:[&>.toggle-knob]:translate-x-6 peer-checked:[&>.toggle-knob]:bg-banana peer-focus-visible:outline-3 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-violet"><span className="toggle-knob" /></span>
     </label>
   );
 }
@@ -56,15 +53,12 @@ export function Stepper({
   onChange: (value: number) => void;
   format?: (value: number) => string;
 }) {
-  const btn =
-    "grid size-11 place-items-center rounded-full bg-chip text-xl font-bold disabled:opacity-40 hover:bg-line";
   return (
     <div className="flex min-h-11 items-center justify-between gap-4">
-      <span className="font-semibold">{label}</span>
-      <div className="flex items-center gap-2">
+      <span className="font-bold">{label}</span>
+      <div className="stepper">
         <button
           type="button"
-          className={btn}
           aria-label={`${label} : moins`}
           disabled={value <= min}
           onClick={() => onChange(Math.max(min, Math.round((value - step) * 100) / 100))}
@@ -73,13 +67,12 @@ export function Stepper({
         </button>
         <output
           aria-live="polite"
-          className="min-w-14 text-center font-display text-lg font-extrabold whitespace-nowrap"
+          className=""
         >
           {format(value)}
         </output>
         <button
           type="button"
-          className={btn}
           aria-label={`${label} : plus`}
           disabled={value >= max}
           onClick={() => onChange(Math.min(max, Math.round((value + step) * 100) / 100))}
@@ -106,9 +99,7 @@ export function ChipToggle({
       type="button"
       aria-pressed={pressed}
       onClick={onToggle}
-      className={`min-h-11 rounded-pill px-4 text-sm font-semibold transition ${
-        pressed ? "bg-violet text-white" : "bg-chip text-ink hover:bg-line"
-      }`}
+      className="chiptg"
     >
       {children}
     </button>
@@ -146,7 +137,7 @@ export function SlotGrid({
       <tbody>
         {(["lunch", "dinner"] as const).map((meal) => (
           <tr key={meal}>
-            <th scope="row" className="pr-1 text-left text-sm font-semibold text-muted">
+            <th scope="row" className="pr-1 text-left t-label">
               {mealLabels[meal]}
             </th>
             {days.map((d) => {
@@ -158,9 +149,7 @@ export function SlotGrid({
                     aria-pressed={on}
                     aria-label={label(d, meal, on)}
                     onClick={() => onToggle(d, meal)}
-                    className={`grid h-11 w-full min-w-9 place-items-center rounded-2xl text-lg font-bold transition ${
-                      on ? "bg-violet text-white" : "bg-chip text-muted"
-                    }`}
+                    className="chiptg w-full min-w-9 justify-center !px-0"
                   >
                     {on ? "✓" : "–"}
                   </button>

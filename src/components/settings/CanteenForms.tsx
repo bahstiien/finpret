@@ -102,7 +102,7 @@ function ChildCanteen({
 
   return (
     <Card className="flex flex-col gap-4" data-testid={`canteen-${kid.name}`}>
-      <h2 className="text-xl font-extrabold">{t.menuFor(kid.name)}</h2>
+      <h2 className="t-2">{t.menuFor(kid.name)}</h2>
       <p className="text-sm text-muted">
         {kid.days.length ? t.days(kid.days.map((d) => fr.days[d - 1]).join(", ")) : t.noDays}
       </p>
@@ -159,7 +159,7 @@ function ChildCanteen({
 
       {kid.upcoming.length > 0 && (
         <div className="flex flex-col gap-2">
-          <h3 className="font-extrabold">{t.upcoming}</h3>
+          <h3 className="t-3">{t.upcoming}</h3>
           {kid.upcoming.map((d) => (
             <TextField
               key={`${d.date}-${d.text}`}
@@ -194,9 +194,9 @@ function PendingMenus({
 }) {
   const [rows, setRows] = useState(kid.pending.map((p) => ({ ...p, keep: true })));
   return (
-    <fieldset className="flex flex-col gap-3 rounded-card bg-banana/25 p-4" data-testid="canteen-pending">
+    <fieldset className="card tone-banane flex flex-col gap-3" data-testid="canteen-pending">
       <legend className="sr-only">{t.pending(rows.length)}</legend>
-      <p className="font-extrabold">{t.pending(rows.length)}</p>
+      <p className="t-ui">{t.pending(rows.length)}</p>
       <p className="text-sm">{t.pendingLead}</p>
       {rows.map((r, i) => (
         <div key={r.date} className="flex flex-col gap-1">

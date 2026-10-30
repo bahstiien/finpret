@@ -30,28 +30,30 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
   };
 
   return (
-    <Card className="flex flex-col gap-4" aria-labelledby="passport-title">
-      <div className="flex flex-col gap-2">
-        <h2 id="passport-title" className="text-2xl font-black">
-          {t.title}
-        </h2>
-        <p className="font-bold" data-testid="passport-count">
-          {t.countries(earned, countries.length)}
-        </p>
+    <Card padding="none" className="overflow-hidden" aria-labelledby="passport-title">
+      <div className="tone-menu flex flex-col gap-2 border-b-[length:var(--bw)] border-line px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="passport-title" className="t-2">
+            {t.title}
+          </h2>
+          <p className="mono text-sm font-bold" data-testid="passport-count">
+            {t.countries(earned, countries.length)}
+          </p>
+        </div>
         <div
           role="progressbar"
           aria-valuemin={0}
           aria-valuemax={countries.length}
           aria-valuenow={earned}
           aria-label={t.countries(earned, countries.length)}
-          className="h-3 overflow-hidden rounded-pill bg-chip"
+          className="bar"
         >
-          <div className="h-full rounded-pill bg-violet" style={{ width: `${percent}%` }} />
+          <div className="bar-fill bg-violet" style={{ width: `${percent}%` }} />
         </div>
       </div>
 
       <ul
-        className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] justify-items-center gap-3"
+        className="tone-yellow grid grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] justify-items-center gap-4 p-4"
         data-testid="country-stamps"
       >
         {countries.map((c) => (
@@ -72,7 +74,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
       </ul>
 
       <ul
-        className="flex flex-wrap justify-center gap-3 border-t border-line pt-4"
+        className="flex flex-wrap justify-center gap-4 border-t-[length:var(--bw)] border-line p-4"
         data-testid="season-stamps"
       >
         {seasons.map((s) => {
@@ -97,23 +99,23 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
       <Sheet open={!!country} onClose={() => setCountry(null)} title={country?.label ?? ""}>
         {country && (
           <div className="flex flex-col gap-4" data-testid="country-sheet">
-            <p className="font-bold">{t.count(country.cooked.length, country.total)}</p>
+            <p className="mono font-bold">{t.count(country.cooked.length, country.total)}</p>
             <div>
-              <h3 className="mb-2 font-black">{t.cooked}</h3>
+              <h3 className="t-label mb-2">{t.cooked}</h3>
               <ul className="flex flex-col gap-2">
                 {country.cooked.map((r) => (
                   <li
                     key={r.id}
-                    className="flex justify-between gap-3 rounded-2xl bg-violet-soft px-4 py-2 text-violet-strong"
+                    className="nb-flat tone-violet flex justify-between gap-3 px-4 py-2"
                   >
-                    <span className="font-semibold">{r.name}</span>
-                    <span className="text-sm">{formatShort(r.on)}</span>
+                    <span className="t-ui">{r.name}</span>
+                    <span className="mono t-small">{formatShort(r.on)}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="mb-2 font-black">{t.remaining}</h3>
+              <h3 className="t-label mb-2">{t.remaining}</h3>
               {country.remaining.length === 0 ? (
                 <p className="text-muted">{t.none}</p>
               ) : (
@@ -142,7 +144,7 @@ export function PassportBlock({ countries, seasons }: { countries: CountryEntry[
       >
         {season && (
           <div className="flex flex-col gap-2">
-            <p className="font-bold">{t.seasonProgress(Math.min(season.count, 6))}</p>
+            <p className="mono font-bold">{t.seasonProgress(Math.min(season.count, 6))}</p>
             <p className="text-muted">{t.seasonRule}</p>
           </div>
         )}

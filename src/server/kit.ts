@@ -49,8 +49,6 @@ export async function tutoPdfFor(associationId: string, baseUrl: string): Promis
   }
 
   const pdf = await renderTutoPdf(input);
-  // Le bucket est créé au premier besoin (privé) ; une erreur « existe déjà » est normale.
-  await db.storage.createBucket(BUCKET, { public: false }).catch(() => null);
   const { error } = await db.storage
     .from(BUCKET)
     .upload(path, pdf, { contentType: "application/pdf", upsert: true });

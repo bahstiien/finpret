@@ -30,9 +30,9 @@ export default async function AdminHome() {
       <PageHeader title="Back-office" />
       <dl className="grid grid-cols-2 gap-3 min-[700px]:grid-cols-4">
         {cards.map(([label, n]) => (
-          <Card as="div" padding="cozy" key={label}>
-            <dt className="text-sm font-semibold text-muted">{label}</dt>
-            <dd className="font-display text-3xl font-black">{n}</dd>
+          <Card as="div" key={label}>
+            <dt className="t-label">{label}</dt>
+            <dd className="num-l">{n}</dd>
           </Card>
         ))}
       </dl>

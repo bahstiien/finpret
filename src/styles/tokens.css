@@ -3,40 +3,55 @@
 /* Le thème suit le système ; data-theme="light" | "dark" sur <html> force un choix manuel. */
 :root {
   color-scheme: light;
-  --bg: #f4f3f8;
+  --bg: #fff8e7;
   --surface: #ffffff;
   --ink: #17151f;
-  --muted: #6b6878;
-  --line: #eceaf2;
+  --muted: #4a4658;
+  --line: #17151f;
   --violet: #7a5af8;
   --banana: #ffd23f;
   --green: #1fa85a;
-  --blue-soft: #dcebff;
-  --blue-ink: #1f4e8c;
-  --pink-soft: #ffe6ec;
-  --pink-ink: #a3264a;
+  --blue-soft: #4d96ff;
+  --blue-ink: #17151f;
+  --pink-soft: #ff6b9d;
+  --pink-ink: #17151f;
   --yellow-soft: #fff6d6;
-  --peach: #ffe3d6;
-  --peach-ink: #a33a12;
-  --chip: #f1f0f5;
-  --violet-soft: #ece7ff;
+  --peach: #ff8c42;
+  --peach-ink: #17151f;
+  --chip: #fff6d6;
+  --violet-soft: #fff6d6;
   --violet-strong: #4b2fc9;
   --nav: #17151f;
-  --on-nav: #ffffff;
-  --green-soft: #e2f5e6;
-  --green-ink: #17633a;
+  --on-nav: #fff8e7;
+  --green-soft: #1fa85a;
+  --green-ink: #17151f;
   --green-strong: #17803f;
   --cream-ink: #7a5a00;
+  --banane: #ffd23f;
+  --on-banane: #17151f;
+  --on-violet: #ffffff;
+  --blue: #4d96ff;
+  --pink: #ff6b9d;
+  --yellow: #fff6d6;
+  --on-fill: #17151f;
+  --ink-fixed: #17151f;
+  --focus: #7a5af8;
+  --kit-band: #7a5af8;
+  --on-kit-band: #ffffff;
+  --kit-offer: #ffd23f;
+  --on-kit-offer: #17151f;
+  --kit-annot: #e5007e;
+  --on-kit-annot: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #121019;
-    --surface: #1e1b27;
+    --bg: #181818;
+    --surface: #1f1f1f;
     --ink: #f3f1f8;
     --muted: #a6a2b4;
-    --line: #2c2838;
+    --line: #313131;
     --blue-soft: #1d2b44;
     --blue-ink: #a9c8f5;
     --pink-soft: #3a1d29;
@@ -44,10 +59,10 @@
     --yellow-soft: #352d14;
     --peach: #3d2419;
     --peach-ink: #f5a582;
-    --chip: #2a2635;
+    --chip: #272727;
     --violet-soft: #2a2345;
     --violet-strong: #c4b5fd;
-    --nav: #0b0a10;
+    --nav: #000000;
     --on-nav: #f3f1f8;
     --green-soft: #183324;
     --green-ink: #86efac;
@@ -58,11 +73,11 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #121019;
-  --surface: #1e1b27;
+  --bg: #181818;
+  --surface: #1f1f1f;
   --ink: #f3f1f8;
   --muted: #a6a2b4;
-  --line: #2c2838;
+  --line: #313131;
   --blue-soft: #1d2b44;
   --blue-ink: #a9c8f5;
   --pink-soft: #3a1d29;
@@ -70,10 +85,10 @@
   --yellow-soft: #352d14;
   --peach: #3d2419;
   --peach-ink: #f5a582;
-  --chip: #2a2635;
+  --chip: #272727;
   --violet-soft: #2a2345;
   --violet-strong: #c4b5fd;
-  --nav: #0b0a10;
+  --nav: #000000;
   --on-nav: #f3f1f8;
   --green-soft: #183324;
   --green-ink: #86efac;
@@ -81,31 +96,127 @@
   --cream-ink: #ffd86b;
 }
 
+/* Rayons (échelle Tailwind) et courbe de mouvement : utilitaires rounded-card, rounded-sheet, rounded-pill, ease-base. */
+@theme {
+  --radius-card: 0.25rem;
+  --radius-sheet: 0.25rem;
+  --radius-pill: 9999px;
+  --radius-r1: 2px;
+  --radius-r2: 4px;
+  --ease-base: steps(2);
+}
+
+/* Rôles et domaines (alias), rayons, cibles tactiles, durées, inclinaisons, z-index du design system « Fin Prêt Néo ». */
+:root {
+  --$comment: Rôles et domaines (design system « Fin Prêt Néo »). Alias de couleurs : un domaine = un aplat, banane = cta (une seule action principale par écran), violet = sel (sélection). Texte sur aplat : on-fill, sauf on-violet (16 px gras minimum) et on-nav.;
+  --menu: var(--violet);
+  --on-menu: var(--on-violet);
+  --courses: var(--green);
+  --on-courses: var(--on-fill);
+  --stock: var(--blue);
+  --on-stock: var(--on-fill);
+  --progres: var(--banane);
+  --on-progres: var(--on-fill);
+  --session: var(--peach);
+  --on-session: var(--on-fill);
+  --alerte: var(--pink);
+  --on-alerte: var(--on-fill);
+  --cta: var(--banane);
+  --on-cta: var(--on-banane);
+  --sel: var(--violet);
+  --on-sel: var(--on-violet);
+  --info: var(--blue);
+  --on-info: var(--on-fill);
+  --success: var(--green);
+  --on-success: var(--on-fill);
+  --warning: var(--banane);
+  --on-warning: var(--on-fill);
+  --danger: var(--pink);
+  --on-danger: var(--on-fill);
+  --r0: 0px;
+  --r1: 2px;
+  --r2: 4px;
+  --r-pill: 999px;
+  --touch-min: 44px;
+  --touch-main: 52px;
+  --touch-session: 60px;
+  --t-fast: 90ms;
+  --t-stamp: 360ms;
+  --tilt-1: -1deg;
+  --tilt-2: 2deg;
+  --tilt-l: -1.5deg;
+  --tilt-r: 1.5deg;
+  --tilt-sticker: -3deg;
+  --z-timers: 25;
+  --z-nav: 30;
+  --z-coach: 40;
+  --z-sheet: 60;
+}
+
+/* Bordure et ombres dures (néo-brutalisme) : 2 px / 3 px, décalage x = y, flou 0. */
+:root {
+  --bw: 2px;
+  --shadow-sm-px: 2px;
+  --shadow-base-px: 3px;
+  --shadow-lg-px: 5px;
+  --off-sm: var(--shadow-sm-px);
+  --off: var(--shadow-base-px);
+  --off-lg: var(--shadow-lg-px);
+  --sh-sm: var(--off-sm) var(--off-sm) 0 var(--line);
+  --sh: var(--off) var(--off) 0 var(--line);
+  --sh-lg: var(--off-lg) var(--off-lg) 0 var(--line);
+  --sh-violet: var(--off) var(--off) 0 var(--violet);
+  --sh-banane: var(--off) var(--off) 0 var(--banane);
+}
+@media (min-width: 900px) {
+  :root {
+    --bw: 3px;
+    --shadow-sm-px: 3px;
+    --shadow-base-px: 6px;
+    --shadow-lg-px: 9px;
+  }
+}
+
 /* Zone qui reste en mode clair quel que soit le thème : bandeaux de marque et maquettes d'écrans. */
 .theme-light {
   color-scheme: light;
-  --bg: #f4f3f8;
+  --bg: #fff8e7;
   --surface: #ffffff;
   --ink: #17151f;
-  --muted: #6b6878;
-  --line: #eceaf2;
+  --muted: #4a4658;
+  --line: #17151f;
   --violet: #7a5af8;
   --banana: #ffd23f;
   --green: #1fa85a;
-  --blue-soft: #dcebff;
-  --blue-ink: #1f4e8c;
-  --pink-soft: #ffe6ec;
-  --pink-ink: #a3264a;
+  --blue-soft: #4d96ff;
+  --blue-ink: #17151f;
+  --pink-soft: #ff6b9d;
+  --pink-ink: #17151f;
   --yellow-soft: #fff6d6;
-  --peach: #ffe3d6;
-  --peach-ink: #a33a12;
-  --chip: #f1f0f5;
-  --violet-soft: #ece7ff;
+  --peach: #ff8c42;
+  --peach-ink: #17151f;
+  --chip: #fff6d6;
+  --violet-soft: #fff6d6;
   --violet-strong: #4b2fc9;
   --nav: #17151f;
-  --on-nav: #ffffff;
-  --green-soft: #e2f5e6;
-  --green-ink: #17633a;
+  --on-nav: #fff8e7;
+  --green-soft: #1fa85a;
+  --green-ink: #17151f;
   --green-strong: #17803f;
   --cream-ink: #7a5a00;
+  --banane: #ffd23f;
+  --on-banane: #17151f;
+  --on-violet: #ffffff;
+  --blue: #4d96ff;
+  --pink: #ff6b9d;
+  --yellow: #fff6d6;
+  --on-fill: #17151f;
+  --ink-fixed: #17151f;
+  --focus: #7a5af8;
+  --kit-band: #7a5af8;
+  --on-kit-band: #ffffff;
+  --kit-offer: #ffd23f;
+  --on-kit-offer: #17151f;
+  --kit-annot: #e5007e;
+  --on-kit-annot: #ffffff;
 }

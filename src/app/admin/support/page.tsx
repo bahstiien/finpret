@@ -35,7 +35,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
   return (
     <>
       <PageHeader title="Support" />
-      <form className="flex flex-wrap items-end gap-3 rounded-card bg-surface p-5">
+      <form className="card flex flex-wrap items-end gap-3 !shadow-none">
         <TextField
           id="q"
           name="q"
@@ -46,18 +46,18 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
         />
         <Button type="submit">Chercher</Button>
       </form>
-      {q && !found && <p className="text-muted">Aucun compte avec cet e-mail.</p>}
+      {q && !found && <p className="muted">Aucun compte avec cet e-mail.</p>}
       {found && (
-        <Card padding="cozy" className="flex flex-col gap-3">
+        <Card className="flex flex-col gap-3 !shadow-none">
           <p>
-            <b>{found.email}</b> · <code className="text-xs">{found.id}</code>
+            <b>{found.email}</b> · <code className="mono t-small">{found.id}</code>
           </p>
           {(households ?? []).map((h) => {
             const s = (subs ?? []).find((x) => x.household_id === h.id);
             return (
               <div
                 key={h.id}
-                className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3"
+                className="flex flex-wrap items-center justify-between gap-3 border-t-[length:var(--bw)] border-line pt-3"
               >
                 <span>
                   <b>{h.name}</b> · {s?.plan ?? "?"} / {s?.status ?? "?"}

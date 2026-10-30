@@ -81,6 +81,7 @@ export function WeekOpsPanel({
   const markButton = (p: PreparationItem, state: "started" | "prepared", label: string) => (
     <Button
       variant="secondary"
+      size="sm"
       disabled={busy !== null || !online}
       aria-label={t.markAria(label.toLowerCase(), p.name)}
       onClick={() => mark(p.uid, state)}
@@ -90,23 +91,23 @@ export function WeekOpsPanel({
   );
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="font-extrabold">{t.title}</h2>
-        <Button variant="ghost" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+        <h2 className="t-2">{t.title}</h2>
+        <Button variant="outline" size="sm" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
           {open ? t.hide : t.open}
         </Button>
       </div>
       {open && (
         <>
-          <p className="text-sm text-muted">{t.intro}</p>
+          <p className="t-small muted">{t.intro}</p>
           {preparations.length === 0 ? (
-            <p className="text-muted">{t.noPreps}</p>
+            <p className="muted">{t.noPreps}</p>
           ) : (
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col">
               {preparations.map((p) => (
-                <li key={p.uid} className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-semibold">{p.name}</span>
+                <li key={p.uid} className="row flex-wrap justify-between">
+                  <span className="t-ui">{p.name}</span>
                   {p.state === "planned" ? (
                     <span className="flex gap-2">
                       {markButton(p, "started", t.started)}
@@ -114,11 +115,11 @@ export function WeekOpsPanel({
                     </span>
                   ) : p.state === "started" ? (
                     <span className="flex items-center gap-2">
-                      <span className="text-sm text-muted">{t.stateStarted}</span>
+                      <span className="pill tone-yellow">{t.stateStarted}</span>
                       {markButton(p, "prepared", t.prepared)}
                     </span>
                   ) : (
-                    <span className="text-sm text-muted">
+                    <span className={`pill ${p.state === "prepared" ? "tone-green" : "tone-chip"}`}>
                       {p.state === "prepared" ? t.statePrepared : t.stateLocked}
                     </span>
                   )}
@@ -127,16 +128,16 @@ export function WeekOpsPanel({
             </ul>
           )}
 
-          <h3 className="pt-2 font-extrabold">{t.transferTitle}</h3>
+          <h3 className="t-3 pt-2">{t.transferTitle}</h3>
           {transfers.length === 0 || otherWeeks.length === 0 ? (
-            <p className="text-muted">{t.noTransfer}</p>
+            <p className="muted">{t.noTransfer}</p>
           ) : (
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-muted">{t.transferIntro}</p>
-              <label className="flex flex-col gap-1 text-sm font-semibold">
+              <p className="t-small muted">{t.transferIntro}</p>
+              <label className="field-label flex flex-col gap-1">
                 {t.ingredient}
                 <select
-                  className="min-h-11 rounded-md border border-line bg-surface px-3"
+                  className="input"
                   value={chosen?.key}
                   onChange={(e) => setPick(e.target.value)}
                 >
@@ -147,10 +148,10 @@ export function WeekOpsPanel({
                   ))}
                 </select>
               </label>
-              <label className="flex flex-col gap-1 text-sm font-semibold">
+              <label className="field-label flex flex-col gap-1">
                 {t.toWeek}
                 <select
-                  className="min-h-11 rounded-md border border-line bg-surface px-3"
+                  className="input"
                   value={target}
                   onChange={(e) => setTarget(e.target.value)}
                 >
@@ -161,11 +162,11 @@ export function WeekOpsPanel({
                   ))}
                 </select>
               </label>
-              <label className="flex flex-col gap-1 text-sm font-semibold">
+              <label className="field-label flex flex-col gap-1">
                 {`${t.quantity} (${chosen?.unit ?? ""})`}
                 <input
                   inputMode="decimal"
-                  className="min-h-11 rounded-md border border-line bg-surface px-3"
+                  className="input mono"
                   placeholder={String(chosen?.balance ?? "")}
                   value={qty}
                   onChange={(e) => setQty(e.target.value)}

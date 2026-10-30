@@ -105,11 +105,11 @@ export function ImportScreen({
   };
 
   return (
-    <section className="flex max-w-2xl flex-col gap-5" aria-labelledby="import-title">
-      <h1 id="import-title" className="font-display text-3xl font-bold">
+    <section className="card tone-violet flex max-w-2xl flex-col gap-4" aria-labelledby="import-title">
+      <h1 id="import-title" className="t-1">
         {t.title}
       </h1>
-      <p className="text-muted">{t.lead}</p>
+      <p>{t.lead}</p>
       <form
         className="flex flex-col gap-3"
         onSubmit={(e) => {
@@ -244,29 +244,29 @@ function ReviewForm({
       }}
     >
       <header className="flex flex-col gap-2">
-        <h1 id="review-title" className="font-display text-3xl font-bold">
+        <h1 id="review-title" className="t-1">
           {t.review}
         </h1>
         {form.sourceUrl && (
-          <p className="text-muted">
+          <p className="muted">
             {fr.discover.source(form.sourceName ?? "")} ·{" "}
-            <a href={form.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline">
+            <a href={form.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" className="lnk">
               {t.sourceLink}
             </a>
           </p>
         )}
         {lines.length > 0 && (
-          <p className="font-semibold" data-testid="import-quality">
+          <p className="pill tone-banane self-start mono" data-testid="import-quality">
             {t.quality(q.matched, q.total)}
           </p>
         )}
         {servings !== null && servings !== 4 && form.kind !== "cake" && !editId && (
-          <p className="text-sm text-muted">{t.servingsFrom(servings)}</p>
+          <p className="t-small muted">{t.servingsFrom(servings)}</p>
         )}
       </header>
 
       {askServings && lines.length > 0 && (
-        <div className="flex flex-wrap items-end gap-2 rounded-card bg-banana/30 p-4">
+        <div className="card tone-banane flex flex-wrap items-end gap-2">
           <TextField
             id="servings"
             label={t.servingsAsk}
@@ -289,7 +289,7 @@ function ReviewForm({
       />
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-2 text-xl font-bold">{t.ingredients}</legend>
+        <legend className="t-2 mb-2">{t.ingredients}</legend>
         <ul className="flex flex-col gap-3">
           {lines.map((l, i) => {
             const isNew = !l.key;
@@ -297,10 +297,10 @@ function ReviewForm({
               <li
                 key={i}
                 data-uncertain={l.uncertain || undefined}
-                className={`flex flex-col gap-2 rounded-card p-4 ${l.uncertain ? "border-2 border-banana bg-banana/20" : "bg-surface"}`}
+                className={`card flex flex-col gap-3 ${l.uncertain ? "tone-banane" : ""}`}
               >
-                {l.original && <p className="text-sm text-muted">{t.original(l.original)}</p>}
-                {l.uncertain && <p className="text-xs font-bold text-ink uppercase">{t.uncertain}</p>}
+                {l.original && <p className="t-small muted">{t.original(l.original)}</p>}
+                {l.uncertain && <p className="t-kicker">{t.uncertain}</p>}
                 <div className="grid gap-2 min-[700px]:grid-cols-[2fr_1fr_1fr_auto]">
                   <SelectField
                     id={`ing-${i}`}
@@ -360,7 +360,7 @@ function ReviewForm({
                   </SelectField>
                   <button
                     type="button"
-                    className="grid size-11 place-items-center self-end rounded-full hover:bg-chip"
+                    className="iconbtn self-end"
                     aria-label={t.removeLine(l.label)}
                     onClick={() => setLines((ls) => ls.filter((_, j) => j !== i))}
                   >
@@ -424,7 +424,7 @@ function ReviewForm({
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-2 text-xl font-bold">{t.classify}</legend>
+        <legend className="t-2 mb-2">{t.classify}</legend>
         <div className="grid gap-3 min-[700px]:grid-cols-3">
           <SelectField
             id="kind"
@@ -518,7 +518,7 @@ function ReviewForm({
           </div>
         )}
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold">{t.months}</span>
+          <span className="field-label">{t.months}</span>
           <div className="flex flex-wrap gap-2">
             <ChipToggle
               pressed={!form.months}
@@ -544,7 +544,7 @@ function ReviewForm({
           </div>
         </div>
         <div className="grid gap-3 min-[700px]:grid-cols-2">
-          <p className="text-sm font-semibold min-[700px]:col-span-2">{t.macros}</p>
+          <p className="field-label min-[700px]:col-span-2">{t.macros}</p>
           <NumberField id="kcal" label={t.kcal} value={form.kcal} onChange={(v) => set("kcal", v)} />
           <NumberField
             id="protein-g"
@@ -556,15 +556,15 @@ function ReviewForm({
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-1 text-xl font-bold">{t.steps}</legend>
-        <p className="text-sm text-muted">{initial.rewritten ? t.stepsRewritten : t.stepsLead}</p>
+        <legend className="t-2 mb-1">{t.steps}</legend>
+        <p className="t-small muted">{initial.rewritten ? t.stepsRewritten : t.stepsLead}</p>
         <ol className="flex flex-col gap-3">
           {form.steps.map((s, i) => (
             <li key={i} className="flex items-start gap-2">
               <label htmlFor={`step-${i}`} className="sr-only">
                 {t.stepLabel(i + 1)}
               </label>
-              <span aria-hidden="true" className="mt-3 w-6 shrink-0 font-bold">
+              <span aria-hidden="true" className="mono mt-3 w-6 shrink-0 font-bold">
                 {i + 1}.
               </span>
               <textarea
@@ -577,24 +577,24 @@ function ReviewForm({
                     form.steps.map((x, j) => (j === i ? e.target.value : x)),
                   )
                 }
-                className="min-h-11 w-full rounded-2xl border-2 border-line bg-surface px-4 py-2 focus:border-violet focus:outline-none"
+                className="input w-full py-2"
               />
               <div className="flex flex-col">
                 <StepButton
                   label={t.moveUp(i + 1)}
-                  icon="▲"
+                  icon="up"
                   disabled={i === 0}
                   onClick={() => set("steps", swap(form.steps, i, i - 1))}
                 />
                 <StepButton
                   label={t.moveDown(i + 1)}
-                  icon="▼"
+                  icon="down"
                   disabled={i === form.steps.length - 1}
                   onClick={() => set("steps", swap(form.steps, i, i + 1))}
                 />
                 <StepButton
                   label={t.removeStep(i + 1)}
-                  icon="✕"
+                  icon="close"
                   onClick={() =>
                     set(
                       "steps",
@@ -626,7 +626,7 @@ function ReviewForm({
             {t.saveAndPlan}
           </Button>
         )}
-        <Link href="/app/discover" className="inline-flex min-h-11 items-center px-4 font-bold underline">
+        <Link href="/app/discover" className="btn btn--ghost">
           {t.cancel}
         </Link>
       </div>
@@ -672,7 +672,7 @@ function StepButton({
   onClick,
 }: {
   label: string;
-  icon: string;
+  icon: "up" | "down" | "close";
   disabled?: boolean;
   onClick: () => void;
 }) {
@@ -682,9 +682,9 @@ function StepButton({
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className="grid size-11 place-items-center rounded-full text-sm hover:bg-chip disabled:opacity-30"
+      className="iconbtn disabled:cursor-not-allowed"
     >
-      <span aria-hidden="true">{icon}</span>
+      <Icon name={icon === "close" ? "close" : "chevronDown"} className={`size-4 ${icon === "up" ? "rotate-180" : ""}`} />
     </button>
   );
 }

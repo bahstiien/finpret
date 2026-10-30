@@ -38,7 +38,7 @@ export function PauseSheet({ options, canEdit }: { options: PauseOption[]; canEd
         {t.planPause}
       </Button>
       <Sheet open={open} onClose={() => setOpen(false)} title={t.planPause}>
-        <p className="text-muted">{t.planPauseHelp}</p>
+        <p className="t-small muted">{t.planPauseHelp}</p>
         <ul className="flex flex-col gap-2">
           {options.map((o) => (
             <li key={o.weekStart}>
@@ -48,12 +48,10 @@ export function PauseSheet({ options, canEdit }: { options: PauseOption[]; canEd
                 onClick={() => toggle(o)}
                 aria-pressed={o.planned}
                 data-planned={o.planned}
-                className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-2xl px-4 text-left font-semibold disabled:opacity-50 ${
-                  o.planned ? "bg-violet-soft text-violet-strong" : "bg-chip"
-                }`}
+                className={`btn btn--block !justify-between !normal-case ${o.planned ? "btn--secondary" : "btn--outline"}`}
               >
                 <span>{t.pauseWeek(formatShort(o.weekStart))}</span>
-                <span className="inline-flex items-center gap-1 text-sm">
+                <span className="t-small inline-flex items-center gap-1">
                   {o.planned && <Icon name="pause" className="size-4" />}
                   {o.planned ? t.cancelPause : o.disabled ? t.noPauseLeft : t.planPause}
                 </span>

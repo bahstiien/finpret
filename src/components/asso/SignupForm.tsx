@@ -22,13 +22,13 @@ export function SignupForm() {
         maxLength={120}
       />
       <TextField id="rna" name="rna" label={t.rna} required inputMode="text" autoComplete="off" />
-      <p className="-mt-2 text-sm text-muted">{t.rnaHint}</p>
+      <p className="t-small muted -mt-2">{t.rnaHint}</p>
       <TextField id="email" name="email" type="email" label={t.email} required autoComplete="email" />
       <TextField id="manager" name="manager" label={t.manager} required maxLength={80} autoComplete="name" />
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-2 text-sm font-semibold">{t.schools}</legend>
+        <legend className="t-label mb-2">{t.schools}</legend>
         {Array.from({ length: schools }, (_, i) => (
-          <div key={i} className="flex flex-wrap items-end gap-2 rounded-2xl bg-bg p-3">
+          <div key={i} className="flex flex-wrap items-end gap-2 rounded-r1 border-[length:var(--bw)] border-line bg-bg p-3">
             <TextField
               id={`school-${i}-name`}
               name={`school-${i}-name`}

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import type { FriseWeek } from "@/engine/progress-view";
 import { fr } from "@/i18n/fr";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -20,6 +21,10 @@ export type SessionDoneResult = {
   visible: boolean;
   /** Série actuelle après cette session. */
   current: number;
+  /** Dernières semaines de la frise (la semaine en cours en dernier), déjà calculées par la vue. */
+  frise?: FriseWeek[];
+  /** Tampons obtenus et pas encore célébrés. */
+  stamps?: { kind: "country" | "season"; key: string; label: string }[];
 };
 
 const NOTHING: SessionDoneResult = { visible: false, current: 0 };
@@ -44,7 +49,12 @@ export async function finishSessionAction(weekId: string): Promise<SessionDoneRe
   await trackEvent("session_done", { userId: user.id, householdId: household.id, dedupeKey: weekId });
   await finishSession(createProgressStore(), { householdId: household.id, weekId });
   const view = await loadProgressView(household.id, user.id, { passport: false });
-  return { visible: view.visible, current: view.streak.current };
+  return {
+    visible: view.visible,
+    current: view.streak.current,
+    frise: view.streak.frise.slice(-8),
+    stamps: view.pending.flatMap((a) => (a.kind === "streak" ? [] : [{ kind: a.kind, key: a.key, label: a.label }])),
+  };
 }
 
 const PAUSE_ERRORS = {

@@ -1,30 +1,19 @@
-"use client";
-
-import { useSyncExternalStore } from "react";
 import type { Flag as FlagData } from "@/server/menu-view";
 
-const isWindows = () => /Windows/.test(navigator.userAgent);
-
-/** Drapeau emoji, avec repli en badge du code pays sous Windows, qui n'affiche pas les drapeaux (§11). */
+/**
+ * Drapeau emoji du pays d'origine. Windows ne dessine pas ces emoji : la police Twemoji Country Flags
+ * (déclarée dans globals.css, limitée aux indicateurs régionaux) les affiche partout, sans badge de repli.
+ */
 export function Flag({ flag }: { flag: FlagData }) {
-  const windows = useSyncExternalStore(
-    () => () => {},
-    isWindows,
-    () => false,
-  );
   if (!flag) return null;
-  if (windows && flag.emoji !== "🌏") {
-    return (
-      <abbr
-        title={flag.name}
-        className="mr-1 inline-grid h-5 min-w-7 place-items-center rounded-md bg-chip px-1 align-[0.1em] text-[0.7rem] font-extrabold no-underline"
-      >
-        {flag.code.toUpperCase()}
-      </abbr>
-    );
-  }
   return (
-    <span role="img" aria-label={flag.name} className="mr-1">
+    <span
+      role="img"
+      aria-label={flag.name}
+      title={flag.name}
+      className="mr-1"
+      style={{ fontFamily: '"Twemoji Country Flags", "Apple Color Emoji", "Segoe UI Emoji", sans-serif' }}
+    >
       {flag.emoji}
     </span>
   );

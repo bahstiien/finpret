@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, Cta } from "@/components/seo/Shell";
+import { Breadcrumbs, LinkCard, PageFrame } from "@/components/seo/Shell";
 import { breadcrumbJsonLd, type Crumb } from "@/seo/jsonld";
 import { INDEXABLE_MENUS } from "@/seo/menus";
 import { pageMetadata } from "@/seo/meta";
@@ -22,21 +21,22 @@ export default function MenusIndex() {
     { name: "Menus de la semaine", path: "/menus" },
   ];
   return (
-    <main className="mx-auto w-full max-w-[860px] px-4 py-6 sm:px-8">
+    <PageFrame>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <Breadcrumbs crumbs={crumbs} />
-      <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">Menus de la semaine pour toute la famille</h1>
-      <p className="mt-3 text-lg text-muted">{DESCRIPTION}</p>
-      <ul className="mt-6 flex flex-col">
+      <header className="flex flex-col gap-4">
+        <h1 className="t-hero" style={{ fontSize: "clamp(40px, 7vw, 88px)" }}>
+          Menus de la semaine pour toute la famille
+        </h1>
+        <p className="t-body max-w-[640px] text-[19px]">{DESCRIPTION}</p>
+      </header>
+      <ul className="grid gap-4 min-[900px]:grid-cols-3">
         {INDEXABLE_MENUS.map((m) => (
-          <li key={m.slug}>
-            <Link href={`/menus/${m.slug}`} className="inline-flex min-h-11 items-center underline underline-offset-4">
-              {m.h1}
-            </Link>
+          <li key={m.slug} className="flex">
+            <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
           </li>
         ))}
       </ul>
-      <Cta />
-    </main>
+    </PageFrame>
   );
 }

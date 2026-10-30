@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Audiences } from "@/components/landing/Audiences";
-import { Benefits } from "@/components/landing/Benefits";
-import { Faq } from "@/components/landing/Faq";
-import { Features } from "@/components/landing/Features";
-import { FinalCta } from "@/components/landing/FinalCta";
-import { Hero } from "@/components/landing/Hero";
-import { HowItWorks } from "@/components/landing/HowItWorks";
-import { Proof } from "@/components/landing/Proof";
-import { Showcase } from "@/components/landing/Showcase";
+import {
+  Catalogue,
+  Faq,
+  Features,
+  FinalCta,
+  Hero,
+  Households,
+  HowItWorks,
+  Pricing,
+  SiteFooter,
+  SiteHeader,
+} from "@/components/landing/Landing";
 import { fr } from "@/i18n/fr";
 
 const t = fr.landing;
@@ -23,21 +26,22 @@ export default function HomePage() {
     <>
       <a
         href="#contenu"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-pill focus:bg-banana focus:px-5 focus:py-3 focus:font-bold focus:text-[#17151f]"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-r2 focus:bg-banana focus:px-4 focus:py-3 focus:font-bold focus:text-[#17151f]"
       >
         {t.skip}
       </a>
-      <Hero />
+      <SiteHeader />
       <main id="contenu">
-        <Proof />
-        <Benefits />
+        <Hero />
+        <Catalogue />
         <HowItWorks />
-        <Showcase />
         <Features />
-        <Audiences />
+        <Households />
+        <Pricing />
         <Faq />
+        <FinalCta />
       </main>
-      <FinalCta />
+      <SiteFooter />
     </>
   );
 }

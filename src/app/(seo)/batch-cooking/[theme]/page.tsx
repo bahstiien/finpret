@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, Cta, Faq, PageFrame } from "@/components/seo/Shell";
+import { Breadcrumbs, Faq, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
 import { displayName } from "@/seo/catalog";
 import { getHub, HUBS } from "@/seo/hubs";
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, type Crumb } from "@/seo/jsonld";
@@ -49,38 +49,38 @@ export default async function HubPage({ params }: { params: Promise<{ theme: str
       />
       <JsonLd data={faqJsonLd(h.faq)} />
       <Breadcrumbs crumbs={crumbs} />
-      <article className="mt-4">
-        <h1 className="text-3xl leading-tight font-extrabold sm:text-4xl">{h.h1}</h1>
-        <div className="mt-3 flex flex-col gap-3 text-lg text-muted">
-          {h.intro.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
+      <article className="flex flex-col gap-8">
+        <header className="flex flex-col gap-4">
+          <h1 className="t-hero" style={{ fontSize: "clamp(40px, 7vw, 88px)" }}>
+            {h.h1}
+          </h1>
+          <div className="t-body flex max-w-[640px] flex-col gap-3 text-[19px]">
+            {h.intro.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </header>
 
-        <section aria-labelledby="menus" className="mt-8">
-          <h2 id="menus" className="text-2xl font-extrabold">
-            Menus de la semaine
-          </h2>
-          <ul className="mt-3 flex flex-col">
+        <section aria-labelledby="menus" className="flex flex-col gap-3.5">
+          <SectionHead id="menus" title="Menus de la semaine" />
+          <ul className="grid gap-4 min-[900px]:grid-cols-3">
             {menus.map((m) => (
-              <li key={m.slug}>
-                <Link href={`/menus/${m.slug}`} className="inline-flex min-h-11 items-center underline underline-offset-4">
-                  {m.h1}
-                </Link>
+              <li key={m.slug} className="flex">
+                <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
               </li>
             ))}
           </ul>
         </section>
 
-        <section aria-labelledby="recettes" className="mt-8">
-          <h2 id="recettes" className="text-2xl font-extrabold">
-            Recettes pour commencer
-          </h2>
-          <p className="mt-1 text-muted">{h.recipeCount} recettes correspondent à ce thème ; en voici une sélection.</p>
-          <ul className="mt-3 flex flex-col">
+        <section aria-labelledby="recettes" className="flex flex-col gap-3.5">
+          <SectionHead id="recettes" title="Recettes pour commencer" />
+          <p>
+            <span className="mono font-bold">{h.recipeCount}</span> recettes correspondent à ce thème ; en voici une sélection.
+          </p>
+          <ul className="grid gap-x-8 sm:grid-cols-2">
             {h.recipes.map((r) => (
               <li key={r.id}>
-                <Link href={`/recettes/${r.slug}`} className="inline-flex min-h-11 items-center underline underline-offset-4">
+                <Link href={`/recettes/${r.slug}`} className="lnk inline-flex min-h-11 items-center">
                   {displayName(r)}
                 </Link>
               </li>
@@ -90,7 +90,6 @@ export default async function HubPage({ params }: { params: Promise<{ theme: str
       </article>
 
       <Faq items={h.faq} />
-      <Cta />
     </PageFrame>
   );
 }

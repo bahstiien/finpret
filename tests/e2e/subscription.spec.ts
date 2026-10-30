@@ -1,17 +1,26 @@
 import { expect, type Page, test } from "@playwright/test";
 import { adminClient, signInFromLoginPage, supabaseConfigured, uniqueEmail } from "./helpers/auth";
-import { completeOnboarding } from "./helpers/onboarding";
 
 // Réglages › Abonnement : offre, paiement, carte, résiliation, factures. Les appels Stripe qui exigent un compte
 // réel (liste des factures, carte) sont vérifiés sur leur repli ; seule la création d'un Checkout (clé de test) part vers Stripe.
 test.skip(!supabaseConfigured, "Supabase n'est pas configuré (voir .env.example)");
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
-async function signUpWithHousehold(page: Page, name: string) {
+/** Connexion, puis foyer créé directement en base : l'écran testé ne dépend pas de l'onboarding. */
+async function signUpWithHousehold(page: Page, name: string, role: "admin" | "member" = "admin") {
   const email = uniqueEmail("abonnement");
   await page.goto("/login");
   await signInFromLoginPage(page, email);
-  await completeOnboarding(page, name);
+  const admin = adminClient();
+  const { data: users } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  const userId = users.users.find((u) => u.email === email)!.id;
+  const { data: household, error } = await admin
+    .from("households")
+    .insert({ name, created_by: userId, onboarded_at: new Date().toISOString() })
+    .select("id")
+    .single();
+  if (error) throw error;
+  await admin.from("memberships").insert({ household_id: household.id, user_id: userId, role });
   return email;
 }
 
@@ -47,14 +56,16 @@ test("l'ancienne adresse redirige vers Réglages et l'essai propose les deux for
 });
 
 test("le paiement part vers Stripe Checkout", async ({ page }) => {
+  // Checkout exige une URL des conditions d'utilisation dans le Dashboard Stripe (Paramètres › Informations publiques,
+  // ex. https://<domaine>/cgv) : sans elle, Stripe refuse la session (consent_collection). À activer une fois configuré.
   test.skip(
-    !process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_"),
-    "clé Stripe de test absente : le Checkout n'est pas créé",
+    !process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_") || !process.env.STRIPE_CHECKOUT_E2E,
+    "Checkout Stripe : définir STRIPE_CHECKOUT_E2E=1 avec une clé sk_test_ et l'URL des CGV dans le Dashboard",
   );
   await signUpWithHousehold(page, "Famille Paiement");
   await page.goto("/settings/subscription");
   await page.getByTestId("choose-monthly").click();
-  await expect(page).toHaveURL(/checkout\.stripe\.com/);
+  await expect(page).toHaveURL(/checkout\.stripe\.com/, { timeout: 30_000 });
 });
 
 test("un abonnement actif affiche l'échéance, un paiement refusé et le repli sans Stripe", async ({
@@ -89,9 +100,7 @@ test("un abonnement actif affiche l'échéance, un paiement refusé et le repli 
 });
 
 test("un membre n'a qu'un message : ni paiement, ni factures", async ({ page }) => {
-  const email = await signUpWithHousehold(page, "Famille Membre");
-  const householdId = await householdIdOf(email);
-  await adminClient().from("memberships").update({ role: "member" }).eq("household_id", householdId);
+  await signUpWithHousehold(page, "Famille Membre", "member");
   await page.goto("/settings/subscription");
   await expect(page.getByText("Seul l'administrateur du foyer gère l'abonnement")).toBeVisible();
   await expect(page.getByTestId("choose-monthly")).toHaveCount(0);

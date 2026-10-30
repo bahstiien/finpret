@@ -8,8 +8,8 @@ import { fr } from "@/i18n/fr";
 export function SettingsNav({ sections }: { sections: (keyof typeof fr.settings.sections)[] }) {
   const pathname = usePathname();
   return (
-    <nav aria-label={fr.settings.title} className="-mx-4 overflow-x-auto px-4">
-      <ul className="flex gap-2">
+    <nav aria-label={fr.settings.title} className="-mx-4 overflow-x-auto px-4 pt-1 pb-3">
+      <ul className="flex gap-3">
         {sections.map((s) => {
           const href = `/settings/${s}`;
           const active = pathname === href;
@@ -18,8 +18,8 @@ export function SettingsNav({ sections }: { sections: (keyof typeof fr.settings.
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`inline-flex min-h-11 items-center rounded-pill px-4 text-sm font-bold whitespace-nowrap ${
-                  active ? "bg-ink text-surface" : "bg-surface text-ink hover:bg-chip"
+                className={`chiptg whitespace-nowrap ${
+                  active ? "!bg-violet !text-white !shadow-none translate-x-0.5 translate-y-0.5" : ""
                 }`}
               >
                 {fr.settings.sections[s]}
@@ -30,7 +30,7 @@ export function SettingsNav({ sections }: { sections: (keyof typeof fr.settings.
         <li>
           <Link
             href="/app/progress?from=profile"
-            className="inline-flex min-h-11 items-center gap-2 rounded-pill bg-violet-soft px-4 text-sm font-bold whitespace-nowrap text-violet-strong"
+            className="chiptg whitespace-nowrap !bg-banana !text-ink"
           >
             <Icon name="passport" className="size-4" />
             {fr.progress.nav}

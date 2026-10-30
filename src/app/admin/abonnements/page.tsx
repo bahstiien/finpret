@@ -23,22 +23,22 @@ export default async function AdminSubscriptionsPage() {
       <PageHeader title="Abonnements" />
       <dl className="grid grid-cols-2 gap-3 min-[700px]:grid-cols-4">
         {(["trial", "monthly", "yearly", "free"] as const).map((p) => (
-          <Card as="div" padding="cozy" key={p}>
-            <dt className="text-sm font-semibold text-muted">
+          <Card as="div" key={p}>
+            <dt className="t-label">
               {{ trial: "Essai", monthly: "Mensuels", yearly: "Annuels", free: "Gratuits" }[p]}
             </dt>
-            <dd className="font-display text-3xl font-black">{counts[p] ?? 0}</dd>
+            <dd className="num-l">{counts[p] ?? 0}</dd>
           </Card>
         ))}
       </dl>
-      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
+      <Card as="ul" className="!shadow-none">
         {(subs ?? []).slice(0, 50).map((s) => (
-          <li key={s.household_id} className="flex flex-wrap justify-between gap-2 py-3 text-sm">
+          <li key={s.household_id} className="row t-small flex-wrap justify-between">
             <span>
               <b>{byId.get(s.household_id)?.name ?? "?"}</b> · {s.plan} · {s.status}
               {byId.get(s.household_id)?.association_id ? " · association" : ""}
             </span>
-            <span className="text-muted">
+            <span className="mono muted">
               {s.plan === "trial" && s.trial_ends_at
                 ? `essai jusqu'au ${formatShort(s.trial_ends_at.slice(0, 10))}`
                 : s.current_period_end

@@ -18,8 +18,8 @@ export default async function SignupPage() {
   return (
     <>
       <PageHeader title={t.title} />
-      <p className="text-muted">{t.lead}</p>
-      <Card as="div" padding="cozy">
+      <p className="muted">{t.lead}</p>
+      <Card as="div">
         <SignupForm />
       </Card>
     </>

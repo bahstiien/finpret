@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
-/* Couleurs : design-system/tokens.json → src/styles/tokens.css (pnpm tokens). Rayons et thème Tailwind ci-dessous. */
+/* Couleurs : design-system/tokens.json → src/styles/tokens.css (pnpm tokens). Rayons et courbe de mouvement : même fichier généré. */
 @import "../styles/tokens.css";
+
+/* Primitives néo-brutalistes de la maquette v2.1 (.btn, .card, .pill, .input, .seg, .stamp…). */
+@import "../styles/neo.css" layer(components);
 
 @custom-variant dark {
   @media (prefers-color-scheme: dark) {
@@ -40,14 +43,24 @@
   --color-green-strong: var(--green-strong);
   --color-cream-ink: var(--cream-ink);
 
-  --font-display: var(--font-gabarito), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  /* Archivo Black (titres), Space Grotesk (texte), Space Mono (chiffres). */
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
 
-  --radius-card: 28px;
-  --radius-sheet: 32px;
-  --radius-pill: 999px;
+  /* Ombres dures décalées, flou 0, couleur de la bordure. */
+  --shadow-hard-sm: var(--shadow-sm-px) var(--shadow-sm-px) 0 0 var(--line);
+  --shadow-hard: var(--shadow-base-px) var(--shadow-base-px) 0 0 var(--line);
+  --shadow-hard-lg: var(--shadow-lg-px) var(--shadow-lg-px) 0 0 var(--line);
+  --shadow-float: var(--shadow-lg-px) var(--shadow-lg-px) 0 0 var(--line);
+}
 
-  --shadow-float: 0 8px 24px rgb(23 21 31 / 0.12);
+/* Drapeaux emoji : Windows ne les dessine pas, on charge la police Twemoji Country Flags (CC-BY 4.0, © Twitter, Inc. et contributeurs ; build via country-flag-emoji-polyfill). Seuls les indicateurs régionaux passent par elle. */
+@font-face {
+  font-family: "Twemoji Country Flags";
+  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E007F;
+  src: url("/fonts/TwemojiCountryFlags.woff2") format("woff2");
+  font-display: swap;
 }
 
 @layer base {
@@ -66,31 +79,55 @@
     font-family: var(--font-display);
     text-wrap: balance;
   }
+  h1,
+  h2,
+  h3 {
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
   h1 {
-    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  /* Paragraphes et listes : pas de mot isolé sur la dernière ligne. */
+  p,
+  li,
+  dd,
+  dt,
+  summary {
+    text-wrap: pretty;
   }
   body {
     font-variant-numeric: tabular-nums;
   }
   /* Retour tactile : les contrôles s'enfoncent légèrement sous le doigt. */
+  a[class*="rounded-xl"],
+  button[class*="rounded-xl"],
   a[class*="rounded-pill"],
   button[class*="rounded-pill"],
   button[class*="rounded-full"],
   a[class*="rounded-full"] {
     transition:
-      transform 120ms ease,
-      background-color 150ms ease,
-      opacity 150ms ease;
+      transform 200ms var(--ease-base),
+      background-color 300ms var(--ease-base),
+      opacity 300ms var(--ease-base);
   }
+  a[class*="rounded-xl"]:active,
+  button[class*="rounded-xl"]:active:not(:disabled),
   a[class*="rounded-pill"]:active,
   button[class*="rounded-pill"]:active:not(:disabled),
   button[class*="rounded-full"]:active:not(:disabled),
   a[class*="rounded-full"]:active {
-    transform: scale(0.97);
+    transform: none;
   }
+  /* Bouton à ombre dure : survol = translate(2,2) ombre réduite, clic = translate(6,6) sans ombre. */
   :focus-visible {
     outline: 3px solid var(--violet);
-    outline-offset: 2px;
+    outline-offset: 3px;
+  }
+  /* Sur un aplat violet, le contour violet disparaît : on passe au jaune de la marque. */
+  .on-violet :focus-visible {
+    outline-color: var(--banana);
   }
 }
 
@@ -106,49 +143,17 @@
 }
 
 .timer-ready {
-  animation: finpret-pulse 2s ease-in-out infinite;
+  animation: finpret-pulse 1s var(--ease-base) infinite alternate;
 }
 
 /* Chaque écran apparaît en douceur : repère visuel de la navigation, sans bloquer. */
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 .page-enter {
-  animation: page-enter 220ms ease-out both;
-}
-@keyframes skeleton {
-  50% {
-    opacity: 0.55;
-  }
-}
-.skeleton {
-  animation: skeleton 1.4s ease-in-out infinite;
-  background: var(--chip);
-  border-radius: var(--radius-card);
-}
-
-@keyframes stamp-in {
-  from {
-    opacity: 0;
-    scale: 1.4;
-  }
-  to {
-    opacity: 1;
-    scale: 1;
-  }
+  /* Pas de fondu : la maquette interdit opacity et fade. */
 }
 
 @media (prefers-reduced-motion: reduce) {
   .timer-ready,
-  .page-enter,
-  .skeleton {
+  .page-enter {
     animation: none;
   }
   a:active,
@@ -170,7 +175,7 @@
 .print-sheet {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   max-width: 190mm;
   padding: 16px;
   border-radius: var(--radius-card);
@@ -187,7 +192,7 @@
 .print-table th,
 .print-table td {
   border: 1px solid currentColor;
-  padding: 4px 5px;
+  padding: 4px;
   text-align: left;
   vertical-align: top;
 }
@@ -197,7 +202,7 @@
 .print-notes {
   min-height: 22mm;
   border: 1px dashed currentColor;
-  padding: 4px 6px;
+  padding: 4px 8px;
 }
 
 @media print {
@@ -221,4 +226,11 @@
     color: #000 !important;
     background: transparent !important;
   }
+}
+
+/* Archivo Black n'a qu'une graisse : on évite le faux gras des utilitaires font-bold sur les titres. */
+h1,
+h2,
+h3 {
+  font-weight: 400 !important;
 }

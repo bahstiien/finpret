@@ -8,6 +8,7 @@ import { removeEditor, revokeEditorInvitation } from "@/server/actions/asso";
 import { requireManager } from "@/server/asso-session";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
+import { Pill } from "@/components/ui/Pill";
 
 const t = fr.asso.team;
 
@@ -37,14 +38,17 @@ export default async function TeamPage() {
   return (
     <>
       <PageHeader title={t.title} />
-      <p className="text-muted">{t.lead}</p>
-      <Card padding="cozy" aria-label={t.members}>
-        <h2 className="mb-3 text-xl font-extrabold">{t.members}</h2>
-        <ul className="flex flex-col divide-y divide-line">
+      <p className="muted">{t.lead}</p>
+      <Card aria-label={t.members}>
+        <h2 className="t-2 mb-3">{t.members}</h2>
+        <ul>
           {people.map((m) => (
-            <li key={m.user_id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-              <span>
-                <b>{m.email}</b> · {m.role === "manager" ? t.manager : t.editor}
+            <li key={m.user_id} className="row flex-wrap justify-between">
+              <span className="flex min-w-0 flex-wrap items-center gap-2">
+                <b className="t-ui [overflow-wrap:anywhere]">{m.email}</b>
+                <Pill tone={m.role === "manager" ? "violet" : "chip"}>
+                  {m.role === "manager" ? t.manager : t.editor}
+                </Pill>
               </span>
               {m.role === "menu_editor" && (
                 <ActionForm
@@ -58,17 +62,17 @@ export default async function TeamPage() {
           ))}
         </ul>
       </Card>
-      <Card padding="cozy" className="flex flex-col gap-4">
-        <h2 className="text-xl font-extrabold">{t.invite}</h2>
+      <Card className="flex flex-col gap-4">
+        <h2 className="t-2">{t.invite}</h2>
         <InviteEditorForm />
       </Card>
-      <Card padding="cozy" aria-label={t.pending} data-testid="asso-invitations">
-        <h2 className="mb-3 text-xl font-extrabold">{t.pending}</h2>
-        {!invitations?.length && <p className="text-muted">{t.none}</p>}
-        <ul className="flex flex-col divide-y divide-line">
+      <Card aria-label={t.pending} data-testid="asso-invitations">
+        <h2 className="t-2 mb-3">{t.pending}</h2>
+        {!invitations?.length && <p className="muted">{t.none}</p>}
+        <ul>
           {(invitations ?? []).map((i) => (
-            <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-              <span>{i.email}</span>
+            <li key={i.id} className="row flex-wrap justify-between">
+              <span className="t-body [overflow-wrap:anywhere]">{i.email}</span>
               <ActionForm action={revokeEditorInvitation} fields={{ invitationId: i.id }} label={t.revoke} />
             </li>
           ))}

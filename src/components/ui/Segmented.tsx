@@ -13,7 +13,7 @@ export function Segmented<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex gap-1 rounded-pill bg-chip p-1">
+    <div role="radiogroup" aria-label={label} className="seg">
       {options.map((o) => {
         const active = o.value === value;
         return (
@@ -36,9 +36,7 @@ export function Segmented<T extends string>({
               e.preventDefault();
               onChange(options[(i + dir + options.length) % options.length]!.value);
             }}
-            className={`min-h-11 rounded-pill px-4 text-sm font-bold transition ${
-              active ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"
-            }`}
+            className=""
           >
             {o.label}
           </button>

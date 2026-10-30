@@ -147,7 +147,7 @@ export function DiscoverScreen({
       <div
         role="tablist"
         aria-label={t.segments}
-        className="flex gap-2 self-start rounded-pill bg-surface p-1"
+        className="seg self-start"
       >
         {(["recipes", "breakfasts"] as const).map((s) => (
           <button
@@ -156,7 +156,7 @@ export function DiscoverScreen({
             aria-selected={segment === s}
             type="button"
             onClick={() => setSegment(s)}
-            className={`min-h-11 rounded-pill px-5 font-bold ${segment === s ? "bg-ink text-surface" : ""}`}
+            className="aria-selected:!bg-[var(--sel)] aria-selected:!text-[var(--on-sel)]"
           >
             {t.segmentLabels[s]}
           </button>
@@ -171,7 +171,7 @@ export function DiscoverScreen({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.search}
-        className="min-h-12 rounded-pill border-2 border-line bg-surface px-5 focus:border-violet focus:outline-none"
+        className="input"
       />
 
       {segment === "recipes" ? (
@@ -181,7 +181,8 @@ export function DiscoverScreen({
               type="button"
               onClick={() => setOrigin("")}
               data-testid="origin-chip"
-              className="inline-flex min-h-11 items-center gap-2 self-start rounded-pill bg-violet-soft px-4 font-bold text-violet-strong"
+              className="chiptg self-start"
+              aria-pressed="true"
             >
               {t.originChip(countryLabel(origin))}
               <Icon name="close" className="size-4" label={t.clearOrigin} />
@@ -238,7 +239,7 @@ export function DiscoverScreen({
               </ChipToggle>
             )}
           </div>
-          <p className="text-sm text-muted" aria-live="polite">
+          <p className="t-small muted mono" aria-live="polite">
             {t.count(list.length)}
           </p>
           <ul className="grid gap-3 min-[900px]:grid-cols-2" data-testid="discover-list">
@@ -257,13 +258,13 @@ export function DiscoverScreen({
       ) : (
         <ul className="grid gap-3 min-[900px]:grid-cols-2">
           {bfList.map((b) => (
-            <Card as="li" padding="cozy" key={b.id} className="flex flex-col gap-1">
-              <span className="text-xs font-bold text-violet-strong uppercase">
+            <Card as="li" padding="cozy" key={b.id} className="flex flex-col gap-2">
+              <span className="pill tone-violet self-start">
                 {t.breakfastTypes[b.type]}
               </span>
-              <b className="text-lg">{b.name}</b>
-              <p className="text-muted">{b.description}</p>
-              <p className="text-sm font-semibold">{t.macros(b.kcal, b.protein)}</p>
+              <h2 className="t-3">{b.name}</h2>
+              <p className="muted">{b.description}</p>
+              <p className="t-small mono">{t.macros(b.kcal, b.protein)}</p>
             </Card>
           ))}
         </ul>
@@ -299,30 +300,30 @@ function RecipeCard({
   };
   return (
     <li
-      className={`flex flex-col gap-2 rounded-card bg-surface p-5 ${r.excluded ? "outline-2 outline-peach-ink" : ""}`}
+      className={`card flex flex-col gap-3 ${r.excluded ? "tone-peach" : ""}`}
       data-testid={`recipe-${r.id}`}
     >
-      <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-        <span className="text-violet-strong uppercase">{t.kinds[r.kind]}</span>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="t-kicker">{t.kinds[r.kind]}</span>
         {r.seasonal && (
-          <span className="rounded-pill bg-green-soft px-2 py-0.5 text-green-ink">{t.inSeason}</span>
+          <span className="pill tone-green">{t.inSeason}</span>
         )}
         {r.freezes && (
-          <span className="rounded-pill bg-blue-soft px-2 py-0.5 text-blue-ink">{t.freezes}</span>
+          <span className="pill tone-blue">{t.freezes}</span>
         )}
-        {r.favorite && <span className="rounded-pill bg-yellow-soft px-2 py-0.5">{t.favorite}</span>}
-        {r.imported && <span className="rounded-pill bg-violet px-2 py-0.5 text-white">{t.mine}</span>}
+        {r.favorite && <span className="pill tone-banane">{t.favorite}</span>}
+        {r.imported && <span className="pill tone-violet">{t.mine}</span>}
       </div>
-      <b className="text-lg leading-tight">
+      <h2 className="t-3">
         <Flag flag={r.flag} />
         {r.name}
-      </b>
-      {r.description && <p className="text-sm text-muted">{r.description}</p>}
-      {!r.macrosUnknown && <p className="text-sm font-semibold">{t.macros(r.kcal, r.protein)}</p>}
+      </h2>
+      {r.description && <p className="t-small muted">{r.description}</p>}
+      {!r.macrosUnknown && <p className="t-small mono font-bold">{t.macros(r.kcal, r.protein)}</p>}
       {r.source && (
-        <p className="text-sm text-muted" data-testid="recipe-source">
+        <p className="t-small muted" data-testid="recipe-source">
           {r.source.name && r.source.url ? (
-            <a href={r.source.url} target="_blank" rel="noopener noreferrer nofollow" className="underline">
+            <a href={r.source.url} target="_blank" rel="noopener noreferrer nofollow" className="lnk">
               {t.source(r.source.name)}
             </a>
           ) : (
@@ -332,36 +333,36 @@ function RecipeCard({
       )}
       {r.excluded && (
         <p
-          className="rounded-2xl bg-peach px-3 py-2 text-sm font-semibold text-peach-ink"
+          className="callout tone-warning text-sm font-bold"
           data-testid="excluded"
         >
           {t.excluded(r.reasons.join(", ") || t.notYourDiet)}
         </p>
       )}
       <details open={open || undefined}>
-        <summary className="min-h-11 cursor-pointer content-center font-semibold">{t.details}</summary>
+        <summary className="t-ui min-h-11 cursor-pointer content-center">{t.details}</summary>
         <div className="flex flex-col gap-2 pt-2">
-          <h3 className="font-extrabold">{t.ingredientsFor4}</h3>
-          <ul className="list-disc pl-5 text-sm">
+          <h3 className="t-label">{t.ingredientsFor4}</h3>
+          <ul className="list-disc pl-4 text-sm">
             {r.ingredients.map((i) => (
               <li key={i}>{i}</li>
             ))}
           </ul>
-          <h3 className="font-extrabold">{fr.menuScreen.steps}</h3>
-          <ol className="list-decimal pl-5 text-sm">
+          <h3 className="t-label">{fr.menuScreen.steps}</h3>
+          <ol className="list-decimal pl-4 text-sm">
             {r.steps.map((s, i) => (
               <li key={i}>{s}</li>
             ))}
           </ol>
           {r.allergens.length > 0 && (
-            <p className="text-sm text-muted">{t.allergens(r.allergens.join(", "))}</p>
+            <p className="t-small muted">{t.allergens(r.allergens.join(", "))}</p>
           )}
-          {r.unverifiedAllergens && <p className="text-sm font-semibold">{t.unverifiedAllergens}</p>}
+          {r.unverifiedAllergens && <p className="callout tone-warning text-sm font-bold">{t.unverifiedAllergens}</p>}
         </div>
       </details>
       <div className="flex flex-wrap gap-2">
         {canPlan && !r.excluded && (
-          <Button type="button" variant="outline" onClick={onPlan}>
+          <Button type="button" variant="secondary" size="sm" onClick={onPlan}>
             {t.plan}
           </Button>
         )}
@@ -369,7 +370,7 @@ function RecipeCard({
           <>
             <Link
               href={`/app/discover/import?edit=${r.id}`}
-              className="inline-flex min-h-11 items-center rounded-pill px-4 font-bold underline"
+              className={buttonClass({ variant: "outline", size: "sm" })}
             >
               {t.edit}
             </Link>
@@ -377,7 +378,7 @@ function RecipeCard({
               type="button"
               disabled={removing}
               onClick={remove}
-              className="min-h-11 rounded-pill px-4 font-bold text-peach-ink underline"
+              className="btn btn--danger btn--sm"
             >
               {t.remove}
             </button>
@@ -403,7 +404,7 @@ function PlanSheet({
   const slots = ["6-lunch", "6-dinner", "7-lunch", "7-dinner"];
   return (
     <Sheet open onClose={onClose} title={t.planTitle(recipe.short)}>
-      <p className="text-muted">{fr.menu.weekOf(formatShort(week.start))}</p>
+      <p className="muted">{fr.menu.weekOf(formatShort(week.start))}</p>
       {recipe.kind === "cake" ? (
         <Button
           type="button"
@@ -415,29 +416,29 @@ function PlanSheet({
       ) : (
         <>
           <fieldset className="flex flex-col gap-2">
-            <legend className="mb-1 text-sm font-semibold">{t.chooseSlot}</legend>
+            <legend className="field-label mb-1">{t.chooseSlot}</legend>
             {slots.map((k) => {
               const [d, m] = k.split("-") as [string, "lunch" | "dinner"];
               return (
                 <label
                   key={k}
-                  className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl bg-bg px-4 ${slot === k ? "outline-3 outline-violet" : ""}`}
+                  className={`nb-sm flex min-h-12 cursor-pointer items-center gap-3 px-4 ${slot === k ? "tone-violet" : ""}`}
                 >
                   <input
                     type="radio"
                     name="slot"
                     checked={slot === k}
                     onChange={() => setSlot(k)}
-                    className="size-5 accent-violet"
+                    className="size-5 accent-[var(--ink)]"
                   />
-                  <span className="font-semibold first-letter:uppercase">
+                  <span className="t-ui first-letter:uppercase">
                     {fr.days[Number(d) - 1]} {fr.meals[m].toLowerCase()}
                   </span>
                 </label>
               );
             })}
           </fieldset>
-          <p className="text-sm text-muted">{t.weekendOnly}</p>
+          <p className="t-small muted">{t.weekendOnly}</p>
           <Button
             type="button"
             disabled={!slot || pending}

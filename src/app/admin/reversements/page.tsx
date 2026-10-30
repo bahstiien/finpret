@@ -29,24 +29,24 @@ export default async function AdminPayoutsPage() {
           <a
             key={q}
             href={`/admin/reversements/export?quarter=${q}`}
-            className="inline-flex min-h-11 items-center rounded-pill border-2 border-ink px-4 font-bold"
+            className="btn btn--outline btn--sm"
           >
             Export CSV {q}
           </a>
         ))}
       </div>
-      <Card as="ul" padding="cozy" className="flex flex-col divide-y divide-line">
+      <Card as="ul" className="!shadow-none">
         {(data ?? []).map((p) => {
           const a = byId.get(p.association_id);
           return (
             <li
               key={p.id}
-              className="flex flex-wrap items-center justify-between gap-3 py-3"
+              className="row flex-wrap justify-between"
               data-testid={`payout-${p.quarter}`}
             >
               <span>
-                <b>{a?.name ?? "?"}</b> · {p.quarter} · {euros.format(p.amount_cents / 100)} ·{" "}
-                {STATUS[p.status]}
+                <b>{a?.name ?? "?"}</b> · <span className="mono">{p.quarter}</span> ·{" "}
+                <span className="mono">{euros.format(p.amount_cents / 100)}</span> · {STATUS[p.status]}
                 {p.paid_at ? ` le ${formatShort(p.paid_at.slice(0, 10))}` : ""}
                 {a?.iban_last4 ? ` · IBAN •••• ${a.iban_last4}` : " · IBAN manquant"}
               </span>
@@ -62,7 +62,7 @@ export default async function AdminPayoutsPage() {
             </li>
           );
         })}
-        {!data?.length && <li className="text-muted">Aucun versement.</li>}
+        {!data?.length && <li className="muted">Aucun versement.</li>}
       </Card>
     </>
   );

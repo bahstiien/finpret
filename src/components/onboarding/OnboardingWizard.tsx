@@ -72,28 +72,28 @@ export function OnboardingWizard({
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-6">
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-semibold text-muted">{t.progress(step + 1, STEPS.length)}</p>
+        <p className="t-kicker mono">{t.progress(step + 1, STEPS.length)}</p>
         <div
           role="progressbar"
           aria-valuemin={1}
           aria-valuemax={STEPS.length}
           aria-valuenow={step + 1}
           aria-label={t.progress(step + 1, STEPS.length)}
-          className="h-2 overflow-hidden rounded-pill bg-line"
+          className="bar"
         >
           <div
-            className="h-full rounded-pill bg-violet transition-all"
+            className="bar-fill"
             style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
           />
         </div>
       </div>
 
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-black">{t.steps[current].title}</h1>
-        <p className="text-muted">{t.steps[current].lead}</p>
+        <h1 className="t-1">{t.steps[current].title}</h1>
+        <p className="muted">{t.steps[current].lead}</p>
       </div>
 
-      <Card padding="cozy" className="flex flex-col gap-5">
+      <Card padding="cozy" className="flex flex-col gap-4">
         {current === "household" && (
           <HouseholdStep data={data} update={update} schools={schools} associationName={associationName} />
         )}
@@ -112,18 +112,13 @@ export function OnboardingWizard({
             {t.back}
           </Button>
         )}
-        <Button type="button" className="flex-1" onClick={() => next()} disabled={pending}>
+        <Button type="button" variant="primary" size="lg" className="flex-1" onClick={() => next()} disabled={pending}>
           {step === STEPS.length - 1 ? t.finish : t.next}
         </Button>
         {current !== "household" && (
-          <button
-            type="button"
-            className="min-h-11 w-full text-sm font-semibold text-muted underline"
-            onClick={() => next(true)}
-            disabled={pending}
-          >
+          <Button type="button" variant="ghost" className="btn--block" onClick={() => next(true)} disabled={pending}>
             {t.skip}
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -155,9 +150,9 @@ function HouseholdStep({
         onChange={(e) => update((d) => ((d.household.name = e.target.value), d))}
       />
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-2 text-sm font-semibold">{s.members}</legend>
+        <legend className="t-label mb-2">{s.members}</legend>
         {members.map((m, i) => (
-          <div key={i} className="flex flex-wrap items-end gap-2 rounded-2xl bg-bg p-3">
+          <div key={i} className="nb-sm tone-bg flex flex-wrap items-end gap-2 p-3">
             <TextField
               id={`member-${i}`}
               label={`${s.memberName} (${m.kind === "adult" ? s.adult : s.child})`}
@@ -195,7 +190,7 @@ function HouseholdStep({
                     </option>
                   ))}
                 </SelectField>
-                <p className="text-sm text-muted">{e.schoolHint}</p>
+                <p className="t-small muted">{e.schoolHint}</p>
                 {m.schoolId && (
                   <div role="group" aria-label={e.canteenDays} className="flex flex-wrap gap-2">
                     {[1, 2, 3, 4, 5].map((day) => (
@@ -223,7 +218,7 @@ function HouseholdStep({
               <button
                 type="button"
                 aria-label={s.remove(m.name)}
-                className="grid size-11 place-items-center rounded-full bg-chip text-lg"
+                className="iconbtn text-lg"
                 onClick={() =>
                   update((d) => ((d.household.members = d.household.members.filter((_, j) => j !== i)), d))
                 }
@@ -308,7 +303,7 @@ function DietStep({
         ))}
       </SelectField>
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-semibold">{s.allergens}</legend>
+        <legend className="t-label mb-2">{s.allergens}</legend>
         <div className="flex flex-wrap gap-2">
           {(Object.entries(ALLERGENS) as [keyof typeof ALLERGENS, string][]).map(([key, label]) => (
             <ChipToggle
@@ -347,7 +342,7 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
   return (
     <>
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-extrabold">{s.grid}</h2>
+        <h2 className="t-3">{s.grid}</h2>
         <SlotGrid
           days={weekdays}
           dayLabels={fr.daysShort}
@@ -372,11 +367,11 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
       </div>
       {data.household.members.length > 1 && (
         <div className="flex flex-col gap-3">
-          <h2 className="text-lg font-extrabold">{s.presence}</h2>
-          <p className="text-sm text-muted">{s.presenceHint}</p>
+          <h2 className="t-3">{s.presence}</h2>
+          <p className="t-small muted">{s.presenceHint}</p>
           {data.household.members.map((m, i) => (
-            <details key={i} className="rounded-2xl bg-bg p-3">
-              <summary className="min-h-11 cursor-pointer content-center font-semibold">
+            <details key={i} className="nb-sm tone-bg p-3">
+              <summary className="t-ui min-h-11 cursor-pointer content-center">
                 {m.name || `#${i + 1}`}
               </summary>
               <SlotGrid
@@ -403,7 +398,7 @@ function RhythmStep({ data, update }: { data: OnboardingInput; update: Update })
         </div>
       )}
       <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-extrabold">{s.session}</h2>
+        <h2 className="t-3">{s.session}</h2>
         <div className="flex flex-wrap gap-3">
           <SelectField
             id="session-day"

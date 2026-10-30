@@ -25,11 +25,11 @@ export function Simulator() {
   };
   const amount = estimateAnnualAmount(families, share);
   return (
-    <Card as="div" className="flex flex-col gap-6 sm:p-8">
+    <Card as="div" className="flex flex-col gap-6 min-[900px]:p-8">
       <div className="grid gap-6 sm:grid-cols-2">
-        <label className="flex flex-col gap-2 font-bold">
-          <span>
-            {t.families} : <output>{families}</output>
+        <label className="flex flex-col gap-2">
+          <span className="t-label">
+            {t.families} : <output className="mono">{families}</output>
           </span>
           <input
             type="range"
@@ -44,9 +44,9 @@ export function Simulator() {
             className="h-11 w-full accent-violet"
           />
         </label>
-        <label className="flex flex-col gap-2 font-bold">
-          <span>
-            {t.share} : <output>{share} %</output>
+        <label className="flex flex-col gap-2">
+          <span className="t-label">
+            {t.share} : <output className="mono">{share} %</output>
           </span>
           <input
             type="range"
@@ -62,10 +62,10 @@ export function Simulator() {
           />
         </label>
       </div>
-      <p className="text-2xl font-black sm:text-3xl" aria-live="polite" data-testid="simulator-result">
+      <p className="card tone-banane t-2 !shadow-none" aria-live="polite" data-testid="simulator-result">
         {t.result(euros.format(amount))}
       </p>
-      <p className="text-sm text-muted">{t.note}</p>
+      <p className="t-small muted">{t.note}</p>
     </Card>
   );
 }
