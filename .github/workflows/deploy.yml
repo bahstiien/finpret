@@ -65,8 +65,6 @@ jobs:
             ${{ env.IMAGE }}:latest
           # Valeurs publiques (visibles dans le navigateur) : variables du dépôt, pas des secrets.
           build-args: |
-            NEXT_PUBLIC_SUPABASE_URL=${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
-            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
             NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ vars.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
             NEXT_PUBLIC_SENTRY_DSN=${{ vars.NEXT_PUBLIC_SENTRY_DSN }}
           cache-from: type=gha
@@ -103,9 +101,25 @@ jobs:
           # Étiquette en cours, gardée pour pouvoir revenir en arrière.
           OLD="$(grep -s '^APP_TAG=' .env | cut -d= -f2 || true)"
 
-          echo "APP_TAG=$NEW" > .env
-          docker compose pull app
-          docker compose up -d --remove-orphans
+          # .env contient aussi les mots de passe de la base : seule la ligne APP_TAG change.
+          set_tag() {
+            if grep -q '^APP_TAG=' .env; then sed -i "s/^APP_TAG=.*/APP_TAG=$1/" .env; else echo "APP_TAG=$1" >> .env; fi
+          }
+
+          rollback() {
+            echo "$1 : retour à ${OLD:-aucune version précédente}."
+            docker compose logs --tail 50 migrate app || true
+            if [ -n "$OLD" ]; then
+              set_tag "$OLD"
+              docker compose up -d
+            fi
+            exit 1
+          }
+
+          set_tag "$NEW"
+          docker compose pull app migrate
+          # Le service `migrate` joue les migrations ; l'app ne redémarre que s'il réussit.
+          docker compose up -d --remove-orphans || rollback "Migrations ou démarrage en échec"
 
           # Attend que le conteneur soit « healthy » (90 s au plus).
           for i in $(seq 1 18); do
@@ -119,11 +133,5 @@ jobs:
             sleep 5
           done
 
-          echo "L'app ne répond pas : retour à ${OLD:-aucune version précédente}."
-          docker compose logs --tail 50 app || true
-          if [ -n "$OLD" ]; then
-            echo "APP_TAG=$OLD" > .env
-            docker compose up -d
-          fi
-          exit 1
+          rollback "L'app ne répond pas"
           REMOTE

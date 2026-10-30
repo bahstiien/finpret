@@ -14,7 +14,11 @@ export function requireEnv(name) {
   return value;
 }
 
-/** SSL pour une base distante (Supabase hébergé), pas pour la base locale de la CI. */
+/**
+ * SSL pour une base distante, pas pour une base locale ni pour le réseau interne Docker du VPS
+ * (`?sslmode=disable` dans l'URL, voir deploy/docker-compose.yml).
+ */
 export function pgSsl(connectionString) {
+  if (/[?&]sslmode=disable\b/.test(connectionString)) return false;
   return /@(localhost|127\.0\.0\.1)[:/]/.test(connectionString) ? false : { rejectUnauthorized: false };
 }

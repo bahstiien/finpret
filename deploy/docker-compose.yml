@@ -1,9 +1,50 @@
-# À copier sur le VPS dans /home/deploy/finpret/ avec le Caddyfile et un .env.production (jamais dans Git).
+# À copier sur le VPS dans /home/deploy/finpret/ avec le Caddyfile, le dossier db-init/, backup.sh,
+# un .env (voir compose.env.example) et un .env.production (voir .env.example), jamais dans Git.
 services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manque dans .env}
+      POSTGRES_DB: finpret
+      # Lu par db-init/01-roles.sh à la création du volume.
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manque dans .env}
+    # Port ouvert sur la boucle locale du VPS seulement (jamais sur Internet) : accès d'administration par tunnel SSH.
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d finpret"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  # Migrations SQL jouées avant chaque démarrage de l'app, par la même image (scripts/migrate.mjs), en propriétaire.
+  migrate:
+    image: ghcr.io/bahstiien/finpret:${APP_TAG:-latest}
+    command: ["node", "scripts/migrate.mjs"]
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/finpret?sslmode=disable
+    depends_on:
+      db:
+        condition: service_healthy
+
   app:
     image: ghcr.io/bahstiien/finpret:${APP_TAG:-latest}
     restart: unless-stopped
     env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql://finpret_app:${APP_DB_PASSWORD}@db:5432/finpret?sslmode=disable
+      FILES_DIR: /data/files
+    volumes:
+      - files:/data/files
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     # Pas de ports publiés : seul Caddy est exposé, Docker contourne le pare-feu UFW.
     expose:
       - "3000"
@@ -28,5 +69,8 @@ services:
       - caddy_config:/config
 
 volumes:
+  pgdata:
+  # PDF des kits et relevés d'associations (src/server/files.ts), sauvegardés avec la base (backup.sh).
+  files:
   caddy_data:
   caddy_config:
