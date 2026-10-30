@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, Cta } from "@/components/seo/Shell";
+import { Breadcrumbs, LinkCard, PageFrame } from "@/components/seo/Shell";
 import { INDEXABLE_HUBS } from "@/seo/hubs";
 import { breadcrumbJsonLd, type Crumb } from "@/seo/jsonld";
 import { pageMetadata } from "@/seo/meta";
@@ -22,21 +21,22 @@ export default function BatchCookingIndex() {
     { name: "Batch cooking", path: "/batch-cooking" },
   ];
   return (
-    <main className="mx-auto w-full max-w-[860px] px-4 py-6 sm:px-8">
+    <PageFrame>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <Breadcrumbs crumbs={crumbs} />
-      <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">Batch cooking : guides, menus et recettes</h1>
-      <p className="mt-3 text-lg text-muted">{DESCRIPTION}</p>
-      <ul className="mt-6 flex flex-col">
+      <header className="flex flex-col gap-4">
+        <h1 className="t-hero" style={{ fontSize: "clamp(40px, 7vw, 88px)" }}>
+          Batch cooking : guides, menus et recettes
+        </h1>
+        <p className="t-body max-w-[640px] text-[19px]">{DESCRIPTION}</p>
+      </header>
+      <ul className="grid gap-4 min-[900px]:grid-cols-3">
         {INDEXABLE_HUBS.map((h) => (
-          <li key={h.slug}>
-            <Link href={`/batch-cooking/${h.slug}`} className="inline-flex min-h-11 items-center underline underline-offset-4">
-              {h.h1}
-            </Link>
+          <li key={h.slug} className="flex">
+            <LinkCard href={`/batch-cooking/${h.slug}`} kicker="Batch cooking" tone="tone-session" title={h.h1} />
           </li>
         ))}
       </ul>
-      <Cta />
-    </main>
+    </PageFrame>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, Cta, Faq, PageFrame } from "@/components/seo/Shell";
+import { Breadcrumbs, Faq, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
 import { displayName } from "@/seo/catalog";
 import { getHub, INDEXABLE_HUBS } from "@/seo/hubs";
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, type Crumb } from "@/seo/jsonld";
@@ -52,93 +52,91 @@ export default async function MenuPage({ params }: { params: Promise<{ slug: str
       />
       <JsonLd data={faqJsonLd(m.faq)} />
       <Breadcrumbs crumbs={crumbs} />
-      <article className="mt-4">
-        <h1 className="text-3xl leading-tight font-extrabold sm:text-4xl">{m.h1}</h1>
-        <div className="mt-3 flex flex-col gap-3 text-lg text-muted">
-          {m.intro.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
+      <article className="flex flex-col gap-8">
+        <header className="flex flex-col gap-4">
+          <h1 className="t-hero" style={{ fontSize: "clamp(40px, 7vw, 88px)" }}>
+            {m.h1}
+          </h1>
+          <div className="t-body flex max-w-[640px] flex-col gap-3 text-[19px]">
+            {m.intro.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </header>
 
-        <section aria-labelledby="repas" className="mt-8">
-          <h2 id="repas" className="text-2xl font-extrabold">
-            Les {m.recipes.length} repas de la semaine
-          </h2>
-          <ol className="mt-3 flex flex-col gap-3">
+        <section aria-labelledby="repas" className="flex flex-col gap-3.5">
+          <SectionHead id="repas" title={`Les ${m.recipes.length} repas de la semaine`} />
+          <ol className="grid gap-4 min-[900px]:grid-cols-2">
             {m.recipes.map((r, i) => (
-              <li key={r.id} className="rounded-card bg-surface p-4">
-                <p className="text-sm text-muted">Repas {i + 1}</p>
-                <h3 className="text-lg font-bold">
-                  <Link href={`/recettes/${r.slug}`} className="underline underline-offset-4">
+              <li key={r.id} className="card flex flex-col gap-1.5">
+                <p className="t-kicker">Repas {i + 1}</p>
+                <h3 className="t-3">
+                  <Link href={`/recettes/${r.slug}`} className="lnk">
                     {displayName(r)}
                   </Link>
                 </h3>
-                {r.description && <p className="mt-1 text-muted">{r.description}</p>}
+                {r.description && <p className="t-small">{r.description}</p>}
               </li>
             ))}
           </ol>
         </section>
 
         {m.plan && m.sessionMin && (
-          <section aria-labelledby="planning" className="mt-8">
-            <h2 id="planning" className="text-2xl font-extrabold">
-              Planning de batch cooking du dimanche
-            </h2>
-            <p className="mt-2 text-muted">
-              Durée estimée : environ {minutes(m.sessionMin)} pour une personne en cuisine. Lance les plats au four et les
-              attentes longues en premier, puis enchaîne.
+          <section aria-labelledby="planning" className="flex flex-col gap-3.5">
+            <SectionHead id="planning" title="Planning de batch cooking du dimanche" />
+            <p>
+              Durée estimée : environ <span className="mono font-bold">{minutes(m.sessionMin)}</span> pour une personne en
+              cuisine. Lance les plats au four et les attentes longues en premier, puis enchaîne.
             </p>
-            <ol className="mt-3 flex list-decimal flex-col gap-2 pl-6">
-              {m.plan.map((s) => (
-                <li key={s.slug}>
-                  <Link href={`/recettes/${s.slug}`} className="font-bold underline underline-offset-4">
-                    {s.name}
-                  </Link>
-                  : {s.activeMin} min de travail actif{s.passiveMin ? `, ${s.passiveMin} min d'attente` : ""}
-                  {s.oven ? ", au four" : ""}.
+            <ol className="flex flex-col gap-3.5">
+              {m.plan.map((s, i) => (
+                <li key={s.slug} className="card tone-session flex items-start gap-4">
+                  <span className="t-hero w-14 flex-none text-[48px] leading-[.8]" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p>
+                    <Link href={`/recettes/${s.slug}`} className="lnk">
+                      {s.name}
+                    </Link>
+                    : <span className="mono font-bold">{s.activeMin} min</span> de travail actif
+                    {s.passiveMin ? `, ${s.passiveMin} min d'attente` : ""}
+                    {s.oven ? ", au four" : ""}.
+                  </p>
                 </li>
               ))}
             </ol>
           </section>
         )}
 
-        <section aria-labelledby="courses" className="mt-8">
-          <h2 id="courses" className="text-2xl font-extrabold">
-            Liste de courses pour {m.combo.persons} personnes
-          </h2>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+        <section aria-labelledby="courses" className="flex flex-col gap-3.5">
+          <SectionHead id="courses" title={`Liste de courses pour ${m.combo.persons} personnes`} />
+          <div className="grid gap-4 sm:grid-cols-2">
             {m.shopping.map((g) => (
-              <div key={g.aisle}>
-                <h3 className="font-bold">{g.label}</h3>
-                <ul className="mt-1">
+              <section key={g.aisle} className="card tone-courses flex flex-col gap-2">
+                <h3 className="t-ui">{g.label}</h3>
+                <ul>
                   {g.items.map((it) => (
-                    <li key={it.label} className="border-b border-line py-1.5">
-                      {it.qty && <span className="font-bold">{it.qty} </span>}
-                      {it.label.toLowerCase()}
+                    <li key={it.label} className="row !min-h-11">
+                      <span className="row-main">{it.label.toLowerCase()}</span>
+                      {it.qty && <span className="mono font-bold">{it.qty}</span>}
                     </li>
                   ))}
                 </ul>
-              </div>
+              </section>
             ))}
           </div>
-          {m.pantry.length > 0 && (
-            <p className="mt-4 text-muted">À vérifier dans ton placard : {m.pantry.join(", ").toLowerCase()}.</p>
-          )}
+          {m.pantry.length > 0 && <p>À vérifier dans ton placard : {m.pantry.join(", ").toLowerCase()}.</p>}
         </section>
       </article>
 
       <Faq items={m.faq} />
 
       {hub && (
-        <p className="mt-8">
-          Pour aller plus loin :{" "}
-          <Link href={`/batch-cooking/${hub.slug}`} className="font-bold underline underline-offset-4">
-            {hub.label}
-          </Link>
-          .
-        </p>
+        <section aria-label="Pour aller plus loin" className="flex flex-col gap-3.5">
+          <p className="t-kicker">Pour aller plus loin :</p>
+          <LinkCard href={`/batch-cooking/${hub.slug}`} kicker="Batch cooking" tone="tone-session" title={hub.label} />
+        </section>
       )}
-      <Cta />
     </PageFrame>
   );
 }
