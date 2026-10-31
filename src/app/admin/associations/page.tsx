@@ -1,7 +1,10 @@
+import Link from "next/link";
+import { AdminForm } from "@/components/admin/AdminForm";
 import { RejectForm } from "@/components/admin/RejectForm";
 import { ActionForm } from "@/components/ui/ActionForm";
 import { checkAssociationEmail, checkRnaOrSiren } from "@/lib/rna";
 import { approveAssociation, setAssociationSuspended } from "@/server/actions/admin";
+import { createAssociationAsAdmin } from "@/server/actions/asso-admin";
 import { requireAdmin } from "@/server/admin";
 import { withAdmin } from "@/server/db";
 import { Card } from "@/components/ui/Card";
@@ -24,7 +27,7 @@ const STATUS_TONE: Record<keyof typeof STATUS, PillTone> = {
 
 /** Validation des associations : contrôle du RNA/SIREN et de l'e-mail, puis validation ou refus motivé. */
 export default async function AdminAssociationsPage() {
-  await requireAdmin();
+  const { role } = await requireAdmin();
   const data = await withAdmin((db) =>
     db
       .selectFrom("associations")
@@ -48,6 +51,33 @@ export default async function AdminAssociationsPage() {
   return (
     <>
       <PageHeader title="Associations" />
+      {role === "owner" && (
+        <Card className="flex flex-col gap-3">
+          <h2 className="t-2">Créer une association</h2>
+          <p className="t-small muted">
+            L&apos;association est validée d&apos;emblée. Le responsable devient administrateur de l&apos;association et de
+            son école ; son compte est créé au besoin et il reçoit le code et un lien de connexion.
+          </p>
+          <AdminForm
+            action={createAssociationAsAdmin}
+            inputs={[
+              { name: "name", label: "Nom de l'association", required: true, placeholder: "APE Jules Ferry" },
+              { name: "rna", label: "RNA / SIREN", required: true },
+              { name: "managerName", label: "Nom du responsable", required: true },
+              { name: "managerEmail", label: "E-mail du responsable", type: "email", required: true },
+              { name: "schoolName", label: "École", required: true },
+              { name: "city", label: "Ville", required: true },
+              { name: "uai", label: "UAI de l'école (option)" },
+              { name: "code", label: "Code (vide = généré)", placeholder: "APE-JULESFERRY" },
+              { name: "yearly", label: "Rétribution annuel (€, vide = 8)", type: "number" },
+              { name: "monthly", label: "Rétribution par mois (€, vide = 0,50)", type: "number" },
+            ]}
+            submit="Créer l'association"
+            variant="primary"
+            resetOnSuccess
+          />
+        </Card>
+      )}
       {!rows.length && <p className="muted">Aucune association pour l&apos;instant.</p>}
       <ul className="flex flex-col gap-3">
         {rows.map((a) => {
@@ -61,7 +91,11 @@ export default async function AdminAssociationsPage() {
               data-testid={`asso-${a.code}`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="t-2">{a.name}</h2>
+                <h2 className="t-2">
+                  <Link href={`/admin/associations/${a.id}`} className="underline">
+                    {a.name}
+                  </Link>
+                </h2>
                 <Pill tone={STATUS_TONE[a.status]}>{STATUS[a.status]}</Pill>
               </div>
               <p className="t-small">

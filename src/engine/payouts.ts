@@ -12,15 +12,20 @@ export const MIN_PAYOUT_CENTS = 2000;
 
 export type LineKind = "yearly" | "monthly" | "refund";
 
-/** Ligne de reversement d'une facture payée, ou null (offre inconnue, facture à 0 €). */
+/** Montants propres à une association (centimes) ; null = barème standard. */
+export type Rates = { yearly?: number | null; monthly?: number | null };
+
+/** Ligne de reversement d'une facture payée, ou null (offre inconnue, facture à 0 €, rétribution fixée à 0). */
 export function lineForInvoice(
   plan: "monthly" | "yearly" | null,
   amountPaidCents: number,
+  rates: Rates = {},
 ): { kind: LineKind; amount: number } | null {
   if (!plan || amountPaidCents <= 0) return null;
-  return plan === "yearly"
-    ? { kind: "yearly", amount: YEARLY_CENTS }
-    : { kind: "monthly", amount: MONTHLY_CENTS };
+  const amount =
+    plan === "yearly" ? (rates.yearly ?? YEARLY_CENTS) : (rates.monthly ?? MONTHLY_CENTS);
+  if (amount <= 0) return null;
+  return { kind: plan, amount };
 }
 
 /** Ligne négative qui annule une ligne déjà comptée. */
