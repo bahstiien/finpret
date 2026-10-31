@@ -9,10 +9,9 @@ export type AssociationRole = "manager" | "menu_editor";
 
 export type AssociationStatus = "approved" | "pending" | "rejected" | "suspended";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
 export type HouseholdRole = "admin" | "member" | "viewer";
 
@@ -72,8 +71,17 @@ export interface AdminAudit {
   target: string | null;
 }
 
+export interface AdminNotes {
+  admin_id: string | null;
+  body: string;
+  created_at: Generated<string>;
+  id: Generated<number>;
+  user_id: string;
+}
+
 export interface Admins {
   created_at: Generated<string>;
+  role: Generated<"owner" | "support">;
   user_id: string;
 }
 
@@ -178,6 +186,8 @@ export interface AuthSessions {
 
 export interface AuthUsers {
   aud: string | null;
+  ban_reason: string | null;
+  banned_at: string | null;
   created_at: Generated<string>;
   email: string | null;
   email_verified: Generated<boolean>;
@@ -579,6 +589,7 @@ export interface DB {
   adaptation_events: AdaptationEvents;
   adaptation_previews: AdaptationPreviews;
   admin_audit: AdminAudit;
+  admin_notes: AdminNotes;
   admins: Admins;
   aisles: Aisles;
   association_invitations: AssociationInvitations;

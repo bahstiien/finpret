@@ -49,7 +49,8 @@ export async function createCheckoutSession(formData: FormData) {
       ...(sub?.stripe_customer_id ? { customer: sub.stripe_customer_id } : { customer_email: user.email }),
       client_reference_id: household.id,
       subscription_data: { metadata: { household_id: household.id } },
-      ...(useCoupon ? { discounts: [{ coupon: cfg.associationCoupon }] } : {}),
+      // Stripe n'accepte pas `discounts` et `allow_promotion_codes` ensemble : le coupon d'association prime.
+      ...(useCoupon ? { discounts: [{ coupon: cfg.associationCoupon }] } : { allow_promotion_codes: true }),
       automatic_tax: { enabled: false },
       billing_address_collection: "required",
       // Rétractation de 14 jours et renonciation : case à cocher (texte juridique à fournir, TODO(juriste)).
