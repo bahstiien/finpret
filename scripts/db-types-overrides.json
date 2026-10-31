@@ -1,4 +1,5 @@
 {
+  "admins.role": "\"owner\" | \"support\"",
   "achievements.kind": "\"streak\" | \"country\" | \"season\"",
   "adaptation_events.kind": "\"apply\" | \"undo\"",
   "canteen_menus.source": "\"manual\" | \"pdf\" | \"url\"",

@@ -5,6 +5,7 @@ import { magicLink } from "better-auth/plugins/magic-link";
 import pg from "pg";
 import { FEATURES } from "@/lib/features";
 import { sendMagicLink, sendPasswordReset, sendVerificationEmail } from "@/server/emails";
+import { withAdmin } from "@/server/db";
 import { trackEvent } from "@/server/events";
 
 /**
@@ -140,6 +141,17 @@ function createAuth() {
     },
     socialProviders: { ...google, ...apple },
     databaseHooks: {
+      // Compte suspendu depuis le back-office : aucune nouvelle session (les sessions ouvertes sont supprimées à la suspension).
+      session: {
+        create: {
+          before: async (session) => {
+            const banned = await withAdmin((db) =>
+              db.selectFrom("auth.users").select("banned_at").where("id", "=", session.userId).executeTakeFirst(),
+            );
+            return banned?.banned_at ? false : { data: session };
+          },
+        },
+      },
       user: { create: { after: async (user) => void (await trackEvent("signup", { userId: user.id })) } },
     },
     plugins: [

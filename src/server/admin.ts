@@ -11,7 +11,15 @@ export async function requireAdminIdentity() {
   // Le back-office n'existe pas pour les autres comptes.
   if (!isAdmin) notFound();
   const session = (await getAuthSession())!.session;
-  return { user, sessionId: session.id, mfaVerified: Boolean(session.mfaVerifiedAt) };
+  const row = await withAdmin((db) =>
+    db.selectFrom("admins").select("role").where("user_id", "=", user.id).executeTakeFirst(),
+  );
+  return {
+    user,
+    sessionId: session.id,
+    mfaVerified: Boolean(session.mfaVerifiedAt),
+    role: row?.role ?? ("support" as const),
+  };
 }
 
 /**
@@ -19,9 +27,16 @@ export async function requireAdminIdentity() {
  * session (src/server/mfa.ts). Sinon, activation ou saisie du code sur /admin/mfa.
  */
 export async function requireAdmin() {
-  const { user, mfaVerified } = await requireAdminIdentity();
+  const { user, mfaVerified, role } = await requireAdminIdentity();
   if (!mfaVerified) redirect("/admin/mfa");
-  return { user };
+  return { user, role };
+}
+
+/** Action d'écriture du back-office : réservée au rôle `owner` (le rôle `support` consulte seulement). */
+export async function requireOwner() {
+  const admin = await requireAdmin();
+  if (admin.role !== "owner") throw new Error("Action réservée aux administrateurs complets.");
+  return admin;
 }
 
 /** Toute action d'écriture du back-office est journalisée dans `admin_audit`. */

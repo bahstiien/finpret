@@ -1,61 +1,141 @@
+import Link from "next/link";
+import { sql } from "kysely";
 import { formatShort } from "@/lib/dates";
 import { requireAdmin } from "@/server/admin";
 import { withAdmin } from "@/server/db";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
+import { Pill } from "@/components/ui/Pill";
 
-/** Abonnements : répartition par offre et derniers foyers (sans donnée personnelle des membres). */
-export default async function AdminSubscriptionsPage() {
+const PLAN_LABEL: Record<string, string> = { trial: "Essai", monthly: "Mensuel", yearly: "Annuel", free: "Gratuit" };
+const STATUSES = ["", "trialing", "active", "past_due", "canceled"] as const;
+
+/** Suivi des abonnements : répartition (tous foyers), alertes d'impayé, essais qui se terminent, liste filtrable. */
+export default async function AdminSubscriptionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
   await requireAdmin();
-  const { subs, households } = await withAdmin(async (db) => {
-    const subs = await db
+  const sp = await searchParams;
+  const status = STATUSES.find((s) => s === sp.status) ?? "";
+  const { byPlan, byStatus, subs, endingSoon } = await withAdmin(async (db) => {
+    const byPlan = await db
       .selectFrom("subscriptions")
-      .select(["household_id", "plan", "status", "trial_ends_at", "current_period_end", "updated_at"])
-      .orderBy("updated_at", "desc")
-      .limit(200)
+      .select(["plan", sql<number>`count(*)`.as("n")])
+      .groupBy("plan")
       .execute();
-    const ids = subs.map((s) => s.household_id);
-    const households = ids.length
-      ? await db
-          .selectFrom("households")
-          .select(["id", "name", "association_id"])
-          .where("id", "in", ids)
-          .execute()
-      : [];
-    return { subs, households };
+    const byStatus = await db
+      .selectFrom("subscriptions")
+      .select(["status", sql<number>`count(*)`.as("n")])
+      .groupBy("status")
+      .execute();
+    let q = db
+      .selectFrom("subscriptions as s")
+      .innerJoin("households as h", "h.id", "s.household_id")
+      .select([
+        "s.household_id",
+        "h.name",
+        "h.association_id",
+        "s.plan",
+        "s.status",
+        "s.trial_ends_at",
+        "s.current_period_end",
+        "s.updated_at",
+        sql<string | null>`(select u.email from memberships m join auth.users u on u.id = m.user_id
+          where m.household_id = s.household_id and m.role = 'admin' order by m.created_at limit 1)`.as("owner_email"),
+        sql<string | null>`(select m.user_id from memberships m
+          where m.household_id = s.household_id and m.role = 'admin' order by m.created_at limit 1)`.as("owner_id"),
+      ])
+      .orderBy("s.updated_at", "desc")
+      .limit(100);
+    if (status) q = q.where("s.status", "=", status);
+    const subs = await q.execute();
+    const endingSoon = Number(
+      (
+        await db
+          .selectFrom("subscriptions")
+          .select(sql<number>`count(*)`.as("n"))
+          .where("plan", "=", "trial")
+          .where(sql<boolean>`trial_ends_at between now() and now() + interval '7 days'`)
+          .executeTakeFirst()
+      )?.n ?? 0,
+    );
+    return { byPlan, byStatus, subs, endingSoon };
   });
-  const byId = new Map(households.map((h) => [h.id, h]));
-  const counts: Record<string, number> = {};
-  for (const s of subs) counts[s.plan] = (counts[s.plan] ?? 0) + 1;
+  const plan = (p: string) => Number(byPlan.find((r) => r.plan === p)?.n ?? 0);
+  const st = (s: string) => Number(byStatus.find((r) => r.status === s)?.n ?? 0);
   return (
     <>
-      <PageHeader title="Abonnements" />
+      <PageHeader
+        title="Abonnements"
+        actions={
+          <a href="/admin/abonnements/export" className="btn btn--outline">
+            Exporter en CSV
+          </a>
+        }
+      />
       <dl className="grid grid-cols-2 gap-3 min-[700px]:grid-cols-4">
         {(["trial", "monthly", "yearly", "free"] as const).map((p) => (
           <Card as="div" key={p}>
-            <dt className="t-label">
-              {{ trial: "Essai", monthly: "Mensuels", yearly: "Annuels", free: "Gratuits" }[p]}
-            </dt>
-            <dd className="num-l">{counts[p] ?? 0}</dd>
+            <dt className="t-label">{PLAN_LABEL[p]}</dt>
+            <dd className="num-l">{plan(p)}</dd>
           </Card>
         ))}
+        <Card as="div" tone={st("past_due") ? "pink" : "surface"}>
+          <dt className="t-label">Paiements en échec</dt>
+          <dd className="num-l">{st("past_due")}</dd>
+        </Card>
+        <Card as="div">
+          <dt className="t-label">Essais finissant sous 7 j</dt>
+          <dd className="num-l">{endingSoon}</dd>
+        </Card>
+        <Card as="div">
+          <dt className="t-label">Résiliés</dt>
+          <dd className="num-l">{st("canceled")}</dd>
+        </Card>
       </dl>
+      <nav aria-label="Filtre par statut" className="flex flex-wrap gap-2">
+        {STATUSES.map((s) => (
+          <Link
+            key={s}
+            href={s ? `/admin/abonnements?status=${s}` : "/admin/abonnements"}
+            className={`btn btn--sm ${s === status ? "" : "btn--outline"}`}
+          >
+            {s || "tous"}
+          </Link>
+        ))}
+      </nav>
       <Card as="ul" className="!shadow-none">
-        {subs.slice(0, 50).map((s) => (
-          <li key={s.household_id} className="row t-small flex-wrap justify-between">
+        {subs.map((s) => (
+          <li key={s.household_id} className="row t-small flex-wrap justify-between gap-2">
             <span>
-              <b>{byId.get(s.household_id)?.name ?? "?"}</b> · {s.plan} · {s.status}
-              {byId.get(s.household_id)?.association_id ? " · association" : ""}
+              <b>{s.name}</b>
+              {s.owner_email && s.owner_id && (
+                <>
+                  {" · "}
+                  <Link href={`/admin/comptes/${s.owner_id}`} className="underline">
+                    {s.owner_email}
+                  </Link>
+                </>
+              )}
+              {s.association_id ? " · association" : ""}
             </span>
-            <span className="mono muted">
-              {s.plan === "trial" && s.trial_ends_at
-                ? `essai jusqu'au ${formatShort(s.trial_ends_at.slice(0, 10))}`
-                : s.current_period_end
-                  ? `renouvellement ${formatShort(s.current_period_end.slice(0, 10))}`
-                  : ""}
+            <span className="flex flex-wrap items-center gap-2">
+              <Pill tone={s.status === "past_due" ? "pink" : s.plan === "trial" ? "yellow" : "green"}>
+                {PLAN_LABEL[s.plan] ?? s.plan} · {s.status}
+              </Pill>
+              <span className="mono muted">
+                {s.plan === "trial" && s.trial_ends_at
+                  ? `essai jusqu'au ${formatShort(s.trial_ends_at.slice(0, 10))}`
+                  : s.current_period_end
+                    ? `renouvellement ${formatShort(s.current_period_end.slice(0, 10))}`
+                    : ""}
+              </span>
             </span>
           </li>
         ))}
+        {!subs.length && <li className="muted">Aucun abonnement.</li>}
       </Card>
     </>
   );

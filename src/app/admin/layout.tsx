@@ -5,14 +5,17 @@ import { requireAdminIdentity } from "@/server/admin";
 export const metadata: Metadata = { title: "Back-office", robots: { index: false, follow: false } };
 
 const LINKS = [
+  ["/admin/comptes", "Comptes"],
   ["/admin/associations", "Associations"],
   ["/admin/ecoles", "Écoles"],
   ["/admin/menus", "Menus"],
   ["/admin/abonnements", "Abonnements"],
+  ["/admin/codes-promo", "Codes promo"],
   ["/admin/reversements", "Reversements"],
   ["/admin/prospects", "Prospects"],
   ["/admin/support", "Support"],
   ["/admin/journal", "Journal"],
+  ["/admin/admins", "Admins"],
 ] as const;
 
 /** Back-office : réservé aux comptes de la table `admins` (les autres obtiennent une page introuvable). */
