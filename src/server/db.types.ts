@@ -140,6 +140,8 @@ export interface Associations {
   manager_name: string;
   name: string;
   reject_reason: string | null;
+  retribution_monthly_cents: number | null;
+  retribution_yearly_cents: number | null;
   rna_or_siren: string;
   status: Generated<AssociationStatus>;
 }

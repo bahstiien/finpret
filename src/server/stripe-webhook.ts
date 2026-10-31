@@ -186,7 +186,15 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       const associationId = household?.association_id;
       const invoiceId = str(obj.id);
       if (!associationId || !invoiceId) return;
-      const line = lineForInvoice(planOfPrice(invoicePriceId(obj), cfg), num(obj.amount_paid));
+      const asso = await db
+        .selectFrom("associations")
+        .select(["retribution_yearly_cents", "retribution_monthly_cents"])
+        .where("id", "=", associationId)
+        .executeTakeFirst();
+      const line = lineForInvoice(planOfPrice(invoicePriceId(obj), cfg), num(obj.amount_paid), {
+        yearly: asso?.retribution_yearly_cents,
+        monthly: asso?.retribution_monthly_cents,
+      });
       if (!line) return;
       // Une facture ne compte qu'une fois (index unique) : un doublon est normal, pas une erreur.
       await db

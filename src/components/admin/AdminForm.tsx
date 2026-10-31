@@ -11,6 +11,7 @@ type Input = {
   type?: "text" | "number" | "email" | "password" | "textarea" | "select";
   placeholder?: string;
   required?: boolean;
+  defaultValue?: string;
   options?: [value: string, label: string][];
 };
 
@@ -58,9 +59,9 @@ export function AdminForm({
         <label key={i.name} className="field-label flex flex-col gap-1">
           {i.label}
           {i.type === "textarea" ? (
-            <textarea name={i.name} required={i.required} placeholder={i.placeholder} rows={3} maxLength={2000} className="input" />
+            <textarea name={i.name} required={i.required} defaultValue={i.defaultValue} placeholder={i.placeholder} rows={3} maxLength={2000} className="input" />
           ) : i.type === "select" ? (
-            <select name={i.name} required={i.required} className="input">
+            <select name={i.name} required={i.required} defaultValue={i.defaultValue} className="input">
               {i.options?.map(([v, l]) => (
                 <option key={v} value={v}>
                   {l}
@@ -72,6 +73,7 @@ export function AdminForm({
               name={i.name}
               type={i.type ?? "text"}
               required={i.required}
+              defaultValue={i.defaultValue}
               placeholder={i.placeholder}
               step={i.type === "number" ? "any" : undefined}
               className="input"
