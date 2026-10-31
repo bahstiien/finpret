@@ -1127,5 +1127,369 @@
    "Mélange avec {flocons} de flocons, {raisinssecs} de raisins secs, {amande} de poudre d'amande et {coco} de coco.",
    "Tasse dans un moule, enfourne 15 min à 170 °C, laisse refroidir 1 h avant de couper en 12 barres."
   ]
+ },
+ {
+  "id": "x_g_brownie_haricots",
+  "n": "Brownie fondant aux haricots rouges",
+  "t": "gateau",
+  "tm": "40 min",
+  "parts": "12 parts",
+  "m": [
+   165,
+   6,
+   20,
+   7
+  ],
+  "diff": 2,
+  "kid": "Elle ou il mélange la pâte à la cuillère.",
+  "ing": {
+   "haricotsrouges": 1,
+   "chocolat": 100,
+   "oeufs": 2,
+   "sucre": 60,
+   "cacao": 2,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Fais fondre {chocolat} de chocolat noir.",
+   "Mixe {haricotsrouges} de haricots rouges égouttés et rincés avec {oeufs}, {sucre} de sucre, {cacao} de cacao et {levure} de levure.",
+   "Ajoute le chocolat fondu, verse dans un moule et enfourne 25 min : le centre doit rester fondant."
+  ]
+ },
+ {
+  "id": "x_g_fondant_chocolat",
+  "n": "Fondant au chocolat",
+  "t": "gateau",
+  "tm": "35 min",
+  "parts": "8 parts",
+  "m": [
+   290,
+   6,
+   27,
+   18
+  ],
+  "diff": 1,
+  "kid": "Il casse le chocolat en morceaux.",
+  "ing": {
+   "chocolat": 200,
+   "beurre": 100,
+   "sucre": 100,
+   "oeufs": 4,
+   "farine": 30
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Fais fondre {chocolat} de chocolat avec {beurre} de beurre.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute le chocolat puis {farine} de farine.",
+   "Verse dans un moule beurré et enfourne 20 min. Le cœur doit trembler."
+  ]
+ },
+ {
+  "id": "x_g_tarte_poires_amandine",
+  "n": "Tarte aux poires amandine",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "m": [
+   310,
+   6,
+   33,
+   17
+  ],
+  "diff": 3,
+  "kid": "Elle ou il dispose les poires sur la crème.",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "ing": {
+   "patebrisee": 1,
+   "poire": 4,
+   "amande": 100,
+   "beurre": 80,
+   "sucre": 80,
+   "oeufs": 2
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule et pique le fond.",
+   "Mélange {beurre} de beurre mou, {sucre} de sucre, {amande} de poudre d'amande et {oeufs} œufs. Étale sur la pâte.",
+   "Pose {poire} en lamelles, enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x_g_gateau_pommes",
+  "n": "Gâteau moelleux aux pommes",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "m": [
+   260,
+   5,
+   38,
+   10
+  ],
+  "diff": 1,
+  "kid": "Il épluche les pommes avec un économe d'enfant.",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "ing": {
+   "pomme": 4,
+   "farine": 150,
+   "sucre": 100,
+   "oeufs": 3,
+   "beurre": 80,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Épluche et coupe {pomme} en dés.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre fondu, {farine} de farine et {levure} de levure.",
+   "Incorpore les pommes, verse dans un moule beurré et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x_g_cake_pruneaux",
+  "n": "Cake aux pruneaux et à la cannelle",
+  "t": "gateau",
+  "tm": "60 min",
+  "parts": "10 parts",
+  "m": [
+   230,
+   5,
+   36,
+   8
+  ],
+  "diff": 1,
+  "kid": "Il coupe les pruneaux aux ciseaux.",
+  "ing": {
+   "pruneaux": 150,
+   "farine": 180,
+   "sucre": 80,
+   "oeufs": 3,
+   "yaourt": 1,
+   "huileneutre": 50,
+   "levure": 1,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Coupe {pruneaux} de pruneaux en morceaux.",
+   "Mélange {yaourt} de yaourt nature, {oeufs} œufs, {sucre} de sucre et {huileneutre} d'huile, puis {farine} de farine, {levure} de levure et 1 c.c. de cannelle.",
+   "Ajoute les pruneaux, verse dans un moule à cake et enfourne 45 min."
+  ]
+ },
+ {
+  "id": "x_g_cookies_avoine_raisins",
+  "n": "Cookies flocons d'avoine et raisins secs",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "16 cookies",
+  "m": [
+   125,
+   3,
+   18,
+   5
+  ],
+  "diff": 1,
+  "kid": "Elle ou il façonne les boules.",
+  "ing": {
+   "flocons": 150,
+   "farine": 80,
+   "beurre": 80,
+   "sucre": 70,
+   "oeufs": 1,
+   "raisinssecs": 60,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {oeufs} œuf.",
+   "Incorpore {flocons} de flocons d'avoine, {farine} de farine, {levure} de levure et {raisinssecs} de raisins secs.",
+   "Dépose 16 petits tas sur une plaque et enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x_g_biscuits_miel_noix",
+  "n": "Biscuits au miel et aux noix",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "20 biscuits",
+  "m": [
+   95,
+   2,
+   11,
+   5
+  ],
+  "diff": 1,
+  "kid": "Il écrase les noix avec un rouleau.",
+  "ing": {
+   "farine": 200,
+   "beurre": 90,
+   "miel": 3,
+   "noix": 60,
+   "oeufs": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {beurre} de beurre mou et {miel} de miel.",
+   "Ajoute {oeufs} œuf, {farine} de farine, {levure} de levure et {noix} de noix concassées.",
+   "Forme des boules, aplatis-les et enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x_g_crepes_banane",
+  "n": "Crêpes à la banane, sans sucre ajouté",
+  "t": "crepe",
+  "tm": "30 min",
+  "parts": "12 crêpes",
+  "m": [
+   105,
+   4,
+   15,
+   3
+  ],
+  "diff": 2,
+  "kid": "Elle ou il écrase la banane.",
+  "ing": {
+   "farine": 125,
+   "oeufs": 2,
+   "lait": 300,
+   "banane": 2
+  },
+  "steps": [
+   "Écrase {banane} avec une fourchette.",
+   "Mélange avec {farine} de farine, {oeufs} œufs et {lait} de lait jusqu'à obtenir une pâte lisse. Laisse reposer 15 min.",
+   "Cuis les crêpes dans une poêle chaude légèrement huilée."
+  ]
+ },
+ {
+  "id": "x_g_gaufres_yaourt",
+  "n": "Gaufres légères au yaourt",
+  "t": "crepe",
+  "tm": "30 min",
+  "parts": "8 gaufres",
+  "m": [
+   150,
+   5,
+   22,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il verse la pâte dans le gaufrier.",
+  "ing": {
+   "farine": 200,
+   "yaourt": 2,
+   "oeufs": 2,
+   "sucre": 40,
+   "levure": 1,
+   "huileneutre": 30
+  },
+  "steps": [
+   "Mélange {yaourt} de yaourt nature, {oeufs} œufs, {sucre} de sucre et {huileneutre} d'huile.",
+   "Ajoute {farine} de farine et {levure} de levure. Laisse reposer 10 min.",
+   "Cuis dans un gaufrier chaud 3 à 4 min."
+  ]
+ },
+ {
+  "id": "x_g_brioche_tressee",
+  "n": "Brioche tressée au lait",
+  "t": "brioche",
+  "tm": "2 h 30",
+  "parts": "10 parts",
+  "m": [
+   235,
+   6,
+   33,
+   9
+  ],
+  "diff": 4,
+  "kid": "Elle ou il tresse les trois boudins de pâte.",
+  "ing": {
+   "farine": 500,
+   "lait": 150,
+   "oeufs": 2,
+   "beurre": 80,
+   "sucre": 60,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul} de levure, {sucre} de sucre, {lait} de lait tiédi, {oeufs} œufs et {beurre} de beurre mou 10 min.",
+   "Laisse lever 1 h 30 à couvert. Divise en 3 boudins, tresse, laisse reposer 30 min.",
+   "Dore au jaune d'œuf et enfourne 25 min à 170 °C."
+  ]
+ },
+ {
+  "id": "x_g_fondant_marrons",
+  "n": "Fondant aux marrons et au chocolat",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "10 parts",
+  "m": [
+   235,
+   4,
+   33,
+   9
+  ],
+  "diff": 2,
+  "kid": "Il mélange la crème de marrons et le chocolat.",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "ing": {
+   "chataigne": 250,
+   "chocolat": 100,
+   "beurre": 80,
+   "oeufs": 3,
+   "sucre": 40
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Fais fondre {chocolat} de chocolat et {beurre} de beurre.",
+   "Écrase {chataigne} de châtaignes cuites en purée, mélange avec le chocolat, {sucre} de sucre et {oeufs} œufs.",
+   "Verse dans un moule beurré et enfourne 25 min."
+  ]
+ },
+ {
+  "id": "x_g_gateau_abricots_amande",
+  "n": "Gâteau aux abricots et à la poudre d'amande",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "m": [
+   275,
+   7,
+   28,
+   15
+  ],
+  "diff": 2,
+  "kid": "Elle ou il dénoyaute les abricots.",
+  "months": [
+   6,
+   7,
+   8
+  ],
+  "ing": {
+   "abricots": 400,
+   "amande": 100,
+   "farine": 80,
+   "sucre": 80,
+   "beurre": 80,
+   "oeufs": 3
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Coupe {abricots} d'abricots en deux.",
+   "Mélange {beurre} de beurre mou, {sucre} de sucre, {oeufs} œufs, {amande} de poudre d'amande et {farine} de farine.",
+   "Verse la pâte, enfonce les abricots côté bombé vers le haut. Enfourne 35 min."
+  ]
  }
 ]

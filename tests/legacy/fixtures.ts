@@ -8,9 +8,18 @@ import type { BankEntry, ComfortSetting, DietRules, MenuSettings } from "@/engin
 import { DEFAULT_MENU_SETTINGS } from "@/engine/types";
 import type { LegacyState } from "./legacy";
 
-// Le prototype ne connaît que les 110 plats d'origine : les plats de saison ajoutés ensuite (hv_, pr_, et_, au_) sont écartés.
-const LEGACY_ADDED = /^(hv|pr|et|au)_/;
-const { seed } = validateSeed({ ...rawSeed, mains: rawSeed.mains.filter((r) => !LEGACY_ADDED.test(r.id)) });
+// Le prototype ne connaît que les recettes d'origine : les plats de saison (hv_, pr_, et_, au_) et les recettes ajoutées ensuite (x_) sont écartés.
+const LEGACY_ADDED = /^(hv|pr|et|au|x)_/;
+const LEGACY_BREAKFASTS = 25;
+const legacyOnly = <T extends { id: string }>(list: T[]) => list.filter((r) => !LEGACY_ADDED.test(r.id));
+const { seed } = validateSeed({
+  ...rawSeed,
+  mains: legacyOnly(rawSeed.mains),
+  soups: legacyOnly(rawSeed.soups),
+  simples: legacyOnly(rawSeed.simples),
+  cakes: legacyOnly(rawSeed.cakes),
+  breakfasts: rawSeed.breakfasts.slice(0, LEGACY_BREAKFASTS),
+});
 export const LIB = libraryFromSeed(seed!);
 
 export function engineEnv(state: LegacyState, seedNumber: number, diet?: DietRules): Env {

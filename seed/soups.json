@@ -1531,5 +1531,206 @@
   ],
   "box": "1 bocal par soir",
   "jj": "Croûtons : {pain} en dés avec {emmental} d'emmental, 5 min à l'air fryer."
+ },
+ {
+  "id": "x_soupe_lentilles_corail_curry",
+  "n": "Soupe de lentilles corail à la tomate et au curry, skyr et pain complet",
+  "s": "Soupe lentilles-tomate",
+  "p": "veg",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   500,
+   28,
+   74,
+   8
+  ],
+  "diff": 1,
+  "o": "in",
+  "d": "Soupe épaisse de lentilles corail, tomate et curry.",
+  "ing": {
+   "lentillescorail": 250,
+   "tomates": 1,
+   "carotte": 3,
+   "oignon": 1,
+   "curry": 1,
+   "skyr": 300,
+   "pain": 8
+  },
+  "prepMin": 8,
+  "prep": [
+   "Épluche {carotte} et coupe-les en rondelles. Émince l'oignon. Rince {lentillescorail} de lentilles corail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Fais revenir l'oignon avec 1 c.s. de curry, ajoute les carottes, les lentilles, {tomates} de tomates concassées et 1,2 L d'eau salée. Cuis 25 min, puis mixe."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe et sers avec {skyr} de skyr et {pain}."
+ },
+ {
+  "id": "x_soupe_minestrone_haricots",
+  "n": "Minestrone aux haricots blancs, pâtes et parmesan",
+  "s": "Minestrone",
+  "p": "veg",
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   480,
+   24,
+   70,
+   10
+  ],
+  "diff": 1,
+  "o": "it",
+  "d": "Légumes d'été, haricots blancs et petites pâtes dans un bouillon parfumé.",
+  "ing": {
+   "haricotsblancs": 2,
+   "carotte": 3,
+   "courgette": 2,
+   "tomates": 1,
+   "patescompletes": 100,
+   "parmesan": 40,
+   "oignon": 1
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {carotte} et {courgette} en petits dés. Émince l'oignon. Égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 30,
+    "a": [
+     "Fais revenir l'oignon et les carottes, ajoute {tomates} de tomates concassées et 1,5 L d'eau salée, cuis 15 min. Ajoute courgettes et haricots 10 min, puis les pâtes ({patescompletes}) 8 min."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe et sers avec {parmesan} de parmesan râpé."
+ },
+ {
+  "id": "x_soupe_poireaux_pdt_jambon",
+  "n": "Soupe poireaux-pommes de terre et dés de jambon",
+  "s": "Soupe poireaux-jambon",
+  "p": "porc",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   470,
+   24,
+   56,
+   16
+  ],
+  "diff": 1,
+  "o": "fr",
+  "d": "Velouté de poireaux et pommes de terre, dés de jambon, un peu de crème.",
+  "ing": {
+   "poireau": 4,
+   "pommedeterre": 600,
+   "jambon": 4,
+   "creme": 100,
+   "pain": 4
+  },
+  "prepMin": 10,
+  "prep": [
+   "Lave {poireau} et coupe-les en rondelles. Épluche {pommedeterre} de pommes de terre et coupe-les en dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Fais fondre les poireaux 5 min dans une casserole, ajoute les pommes de terre et 1,2 L d'eau salée. Cuis 20 min, ajoute {creme} de crème et mixe."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe, ajoute {jambon} de jambon en dés et sers avec {pain}."
+ },
+ {
+  "id": "x_soupe_thai_poulet_coco",
+  "n": "Soupe thaï au poulet, lait de coco et nouilles de riz",
+  "s": "Soupe thaï poulet-coco",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": false,
+  "m": [
+   520,
+   38,
+   52,
+   17
+  ],
+  "diff": 2,
+  "o": "th",
+  "d": "Bouillon coco-gingembre, poulet, champignons et nouilles de riz.",
+  "ing": {
+   "poulet": 400,
+   "laitcoco": 400,
+   "champignons": 200,
+   "nouillesriz": 150,
+   "gingembre": 1,
+   "citron": 1,
+   "soja": 2
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {poulet} de poulet en lanières. Émince {champignons} de champignons, râpe {gingembre} de gingembre."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Porte 800 ml d'eau à ébullition avec {laitcoco} de lait de coco, le gingembre et {soja} de sauce soja. Ajoute le poulet 8 min, puis les champignons 5 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 5,
+    "wait": false,
+    "a": [
+     "Cuis {nouillesriz} de nouilles de riz à part, égoutte. Presse le jus de {citron} dans la soupe."
+    ]
+   }
+  ],
+  "box": "soupe et nouilles séparées",
+  "jj": "Réchauffe la soupe et verse sur les nouilles."
  }
 ]

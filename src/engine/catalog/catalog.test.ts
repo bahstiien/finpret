@@ -27,9 +27,9 @@ describe("validité du seed (§7.6)", () => {
 
   it("contient les volumes annoncés", () => {
     expect(Object.keys(seed!.ingredients)).toHaveLength(152);
-    expect(seed!.mains.length + seed!.soups.length + seed!.simples.length).toBe(324);
-    expect(seed!.cakes).toHaveLength(35);
-    expect(seed!.breakfasts).toHaveLength(25);
+    expect(seed!.mains.length + seed!.soups.length + seed!.simples.length).toBe(372);
+    expect(seed!.cakes).toHaveLength(47);
+    expect(seed!.breakfasts).toHaveLength(35);
   });
 
   it("donne une entrée d'allergènes à chaque ingrédient, avec des allergènes réglementaires", () => {
@@ -43,11 +43,11 @@ describe("validité du seed (§7.6)", () => {
 describe("lignes du catalogue", () => {
   it("produit une ligne par recette, avec des identifiants uniques", () => {
     const counts = Object.groupBy(rows!.recipes, (r) => r.kind);
-    expect(counts.main).toHaveLength(250);
-    expect(counts.soup).toHaveLength(30);
-    expect(counts.simple).toHaveLength(44);
-    expect(counts.cake).toHaveLength(35);
-    expect(counts.breakfast).toHaveLength(25);
+    expect(counts.main).toHaveLength(258);
+    expect(counts.soup).toHaveLength(34);
+    expect(counts.simple).toHaveLength(80);
+    expect(counts.cake).toHaveLength(47);
+    expect(counts.breakfast).toHaveLength(35);
     expect(new Set(rows!.recipes.map((r) => r.id)).size).toBe(rows!.recipes.length);
   });
 
