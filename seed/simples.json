@@ -1213,5 +1213,984 @@
    "Mélange avec {feta} de feta, le jus d'1 citron, 2 c.s. d'huile et de la menthe si tu en as.",
    "Sers frais."
   ]
+ },
+ {
+  "id": "x_croque_chevre_miel",
+  "n": "Croque chèvre-jambon au miel et salade verte",
+  "s": "Croque chèvre-miel",
+  "o": "fr",
+  "m": [
+   440,
+   24,
+   40,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "painmie": 8,
+   "chevre": 150,
+   "jambon": 4,
+   "miel": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Monte {painmie} en croques avec {chevre} de chèvre en tranches, {jambon} de jambon et un filet de miel.",
+   "Cuis-les 8 min à 190 °C dans l'air fryer, en 2 fournées si besoin.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x_omelette_champignons_pdt",
+  "n": "Omelette champignons-persil et pommes de terre sautées",
+  "s": "Omelette champignons",
+  "o": "fr",
+  "m": [
+   480,
+   28,
+   42,
+   22
+  ],
+  "diff": 2,
+  "ing": {
+   "oeufs": 8,
+   "champignons": 300,
+   "pommedeterre": 600,
+   "persil": 1,
+   "emmental": 80
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en dés et fais-les sauter 15 min à la poêle, couvertes, avec un peu d'huile.",
+   "Fais dorer {champignons} de champignons émincés, ajoute le persil ({persil}) ciselé.",
+   "Bats {oeufs}, verse-les sur les champignons, ajoute {emmental} d'emmental râpé et cuis en omelette. Sers avec les pommes de terre."
+  ]
+ },
+ {
+  "id": "x_pates_citron_ricotta",
+  "n": "Pâtes citron-ricotta et petits pois",
+  "s": "Pâtes citron-ricotta",
+  "o": "it",
+  "m": [
+   610,
+   28,
+   90,
+   14
+  ],
+  "diff": 1,
+  "pasta": true,
+  "ing": {
+   "patescompletes": 320,
+   "ricotta": 250,
+   "citron": 1,
+   "petitspois": 200,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes dans l'eau salée, ajoute {petitspois} de petits pois pour les 3 dernières minutes.",
+   "Mélange {ricotta} de ricotta avec le zeste et le jus de {citron}, {parmesan} de parmesan, sel et poivre.",
+   "Égoutte en gardant un peu d'eau de cuisson, mélange avec la sauce et sers aussitôt."
+  ]
+ },
+ {
+  "id": "x_pates_poulet_creme",
+  "n": "Pâtes crémeuses au poulet et aux champignons",
+  "s": "Pâtes poulet-champignons",
+  "o": "fr",
+  "m": [
+   640,
+   45,
+   75,
+   17
+  ],
+  "diff": 2,
+  "pasta": true,
+  "comfort": true,
+  "ing": {
+   "patescompletes": 320,
+   "poulet": 400,
+   "champignons": 250,
+   "creme": 200,
+   "ail": 1
+  },
+  "steps": [
+   "Coupe {poulet} de poulet en lanières et fais-les dorer 6 min à la poêle. Réserve.",
+   "Fais revenir {champignons} de champignons émincés et l'ail, ajoute {creme} de crème, sel et poivre, puis le poulet. Laisse réduire 3 min.",
+   "Cuis {patescompletes} de pâtes, égoutte et mélange avec la sauce."
+  ]
+ },
+ {
+  "id": "x_gnocchis_lardons_epinards",
+  "n": "Gnocchis poêlés aux lardons, épinards et crème",
+  "s": "Gnocchis lardons-épinards",
+  "o": "it",
+  "m": [
+   560,
+   20,
+   78,
+   18
+  ],
+  "diff": 1,
+  "comfort": true,
+  "ing": {
+   "gnocchis": 800,
+   "lardons": 150,
+   "epinards": 200,
+   "creme": 150
+  },
+  "steps": [
+   "Fais dorer {lardons} de lardons à sec dans une grande poêle, réserve-les.",
+   "Fais dorer {gnocchis} de gnocchis dans la graisse, 8 min, en remuant.",
+   "Ajoute {epinards} d'épinards, {creme} de crème et les lardons. Laisse fondre 3 min, poivre."
+  ]
+ },
+ {
+  "id": "x_riz_cantonais",
+  "n": "Riz cantonais maison",
+  "s": "Riz cantonais",
+  "o": "cn",
+  "m": [
+   520,
+   24,
+   78,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 300,
+   "oeufs": 4,
+   "jambon": 4,
+   "petitspois": 200,
+   "carotte": 2,
+   "soja": 3
+  },
+  "steps": [
+   "Cuis {riz} de riz, rince-le à l'eau froide et égoutte-le bien.",
+   "Fais sauter {carotte} en petits dés et {petitspois} de petits pois 5 min, ajoute {jambon} de jambon en lanières.",
+   "Pousse sur le côté, brouille {oeufs}, ajoute le riz et {soja} de sauce soja. Fais sauter 3 min à feu vif."
+  ]
+ },
+ {
+  "id": "x_nouilles_poulet_brocoli",
+  "n": "Nouilles de riz sautées au poulet, brocoli et gingembre",
+  "s": "Nouilles poulet-brocoli",
+  "o": "cn",
+  "m": [
+   500,
+   40,
+   60,
+   10
+  ],
+  "diff": 2,
+  "ing": {
+   "nouillesriz": 250,
+   "poulet": 400,
+   "brocoli": 300,
+   "soja": 3,
+   "gingembre": 1,
+   "sesame": 1,
+   "ail": 2
+  },
+  "steps": [
+   "Fais tremper {nouillesriz} de nouilles de riz selon le paquet, égoutte.",
+   "Fais sauter {poulet} de poulet en lamelles 5 min avec l'ail et {gingembre} râpé, ajoute {brocoli} de brocoli en petits bouquets et 4 c.s. d'eau, couvre 4 min.",
+   "Ajoute les nouilles, {soja} de sauce soja et {sesame} de sésame. Remue 2 min."
+  ]
+ },
+ {
+  "id": "x_bowl_saumon_edamame",
+  "n": "Bowl de riz, saumon rôti, edamame et concombre",
+  "s": "Bowl saumon-edamame",
+  "o": "jp",
+  "m": [
+   620,
+   38,
+   65,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 280,
+   "saumon": 400,
+   "edamame": 200,
+   "concombre": 1,
+   "soja": 2,
+   "sesame": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz. Enfourne {saumon} de saumon 12 min à 200 °C avec 1 c.s. de sauce soja.",
+   "Cuis {edamame} d'edamame 4 min à l'eau bouillante. Coupe {concombre} en demi-lunes.",
+   "Dresse le riz, le saumon émietté, l'edamame et le concombre. Assaisonne avec {soja} de sauce soja et {sesame} de sésame."
+  ]
+ },
+ {
+  "id": "x_wraps_thon_crudites",
+  "n": "Wraps au thon, skyr et crudités",
+  "s": "Wraps thon-crudités",
+  "o": "fr",
+  "m": [
+   430,
+   28,
+   50,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "tortilla": 8,
+   "thon": 2,
+   "skyr": 150,
+   "concombre": 1,
+   "tomatefraiche": 3,
+   "salade": 1,
+   "mais": 1
+  },
+  "steps": [
+   "Écrase {thon} de thon avec {skyr} de skyr, sel, poivre et un filet de citron.",
+   "Coupe {concombre} et {tomatefraiche} en dés, égoutte {mais} de maïs, émince {salade}.",
+   "Garnis {tortilla} de tortillas, roule-les serré et coupe en deux."
+  ]
+ },
+ {
+  "id": "x_burgers_maison_wedges",
+  "n": "Burgers maison et potatoes au four",
+  "s": "Burgers maison",
+  "o": "us",
+  "m": [
+   700,
+   38,
+   62,
+   32
+  ],
+  "diff": 2,
+  "ing": {
+   "painburger": 4,
+   "steak": 4,
+   "cheddar": 80,
+   "tomatefraiche": 2,
+   "salade": 1,
+   "pommedeterre": 800,
+   "oignon": 1
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en quartiers, huile, paprika, sel : 30 min à 200 °C au four.",
+   "Poêle {steak} 3 min de chaque côté, ajoute {cheddar} de cheddar sur la fin pour qu'il fonde.",
+   "Toaste {painburger}, garnis de steak, tomate ({tomatefraiche}) en rondelles, {salade} et oignon émincé."
+  ]
+ },
+ {
+  "id": "x_tacos_boeuf_haricots",
+  "n": "Tacos de bœuf, haricots rouges et cheddar",
+  "s": "Tacos de bœuf",
+  "o": "mx",
+  "m": [
+   590,
+   36,
+   55,
+   25
+  ],
+  "diff": 2,
+  "ing": {
+   "tortilla": 8,
+   "boeuf": 400,
+   "haricotsrouges": 1,
+   "tomates": 1,
+   "cheddar": 100,
+   "salade": 1,
+   "cumin": 1,
+   "paprika": 1
+  },
+  "steps": [
+   "Fais revenir {boeuf} de bœuf haché 6 min avec 1 c.c. de cumin et 1 c.c. de paprika.",
+   "Ajoute {haricotsrouges} de haricots rouges égouttés et {tomates} de tomates concassées, mijote 8 min.",
+   "Garnis {tortilla} de tortillas avec la viande, {cheddar} de cheddar et {salade} émincée."
+  ]
+ },
+ {
+  "id": "x_quesadillas_haricots_noirs",
+  "n": "Quesadillas haricots noirs-maïs et poivron",
+  "s": "Quesadillas haricots noirs",
+  "o": "mx",
+  "m": [
+   520,
+   24,
+   55,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "tortilla": 8,
+   "haricotsnoirs": 1,
+   "mais": 1,
+   "cheddar": 150,
+   "poivron": 1
+  },
+  "steps": [
+   "Écrase grossièrement {haricotsnoirs} de haricots noirs égouttés avec le maïs ({mais}) et le poivron ({poivron}) en dés.",
+   "Étale sur la moitié de {tortilla} de tortillas, ajoute {cheddar} de cheddar râpé, replie.",
+   "Fais dorer 3 min de chaque côté à la poêle."
+  ]
+ },
+ {
+  "id": "x_chili_express_riz",
+  "n": "Chili con carne express et riz",
+  "s": "Chili express",
+  "o": "mx",
+  "m": [
+   610,
+   38,
+   76,
+   15
+  ],
+  "diff": 1,
+  "ing": {
+   "boeuf": 400,
+   "haricotsrouges": 2,
+   "tomates": 1,
+   "riz": 250,
+   "poivron": 1,
+   "cumin": 1,
+   "paprika": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Fais revenir {boeuf} de bœuf haché avec le poivron ({poivron}) en dés, 1 c.c. de cumin et 1 c.c. de paprika.",
+   "Ajoute {haricotsrouges} de haricots rouges et {tomates} de tomates concassées, mijote 15 min. Sers sur le riz."
+  ]
+ },
+ {
+  "id": "x_dal_corail_epinards",
+  "n": "Dal de lentilles corail, épinards et riz",
+  "s": "Dal corail-épinards",
+  "o": "in",
+  "m": [
+   560,
+   24,
+   86,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "lentillescorail": 300,
+   "laitcoco": 200,
+   "riz": 250,
+   "curry": 2,
+   "epinards": 150,
+   "oignon": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Fais revenir l'oignon émincé avec 2 c.s. de curry, ajoute {lentillescorail} de lentilles corail et 700 ml d'eau, cuis 15 min.",
+   "Ajoute {laitcoco} de lait de coco et {epinards} d'épinards, laisse tomber 3 min. Sers sur le riz."
+  ]
+ },
+ {
+  "id": "x_poulet_curry_coco",
+  "n": "Poulet au curry coco, poivron et riz",
+  "s": "Poulet curry coco",
+  "o": "in",
+  "m": [
+   620,
+   42,
+   70,
+   18
+  ],
+  "diff": 2,
+  "ing": {
+   "poulet": 500,
+   "laitcoco": 200,
+   "riz": 250,
+   "poivron": 1,
+   "curry": 2,
+   "oignon": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Fais dorer {poulet} de poulet en dés avec l'oignon et 2 c.s. de curry, 5 min.",
+   "Ajoute le poivron ({poivron}) en lanières et {laitcoco} de lait de coco, mijote 10 min. Sers sur le riz."
+  ]
+ },
+ {
+  "id": "x_saumon_pesto_haricots",
+  "n": "Saumon, pâtes au pesto et haricots verts",
+  "s": "Saumon pesto",
+  "o": "it",
+  "m": [
+   660,
+   38,
+   70,
+   24
+  ],
+  "diff": 1,
+  "pasta": true,
+  "ing": {
+   "saumon": 400,
+   "pesto": 1,
+   "patescompletes": 300,
+   "haricotsverts": 250
+  },
+  "steps": [
+   "Enfourne {saumon} de saumon 12 min à 200 °C.",
+   "Cuis {patescompletes} de pâtes, ajoute {haricotsverts} de haricots verts pour les 6 dernières minutes.",
+   "Égoutte, mélange avec {pesto} de pesto et pose le saumon émietté dessus."
+  ]
+ },
+ {
+  "id": "x_cabillaud_citron_semoule",
+  "n": "Cabillaud poêlé au citron, courgettes et semoule",
+  "s": "Cabillaud citron",
+  "o": "fr",
+  "m": [
+   450,
+   40,
+   56,
+   7
+  ],
+  "diff": 1,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "ing": {
+   "cabillaud": 500,
+   "semoule": 250,
+   "courgette": 2,
+   "citron": 1
+  },
+  "steps": [
+   "Verse de l'eau bouillante salée sur {semoule} de semoule, couvre 5 min, égrène.",
+   "Fais sauter {courgette} en demi-rondelles 8 min. Poêle {cabillaud} de cabillaud 3 min de chaque côté.",
+   "Arrose avec le jus de {citron}, sers sur la semoule."
+  ]
+ },
+ {
+  "id": "x_steaks_champignons_pdt",
+  "n": "Steaks hachés, champignons à la crème et pommes de terre",
+  "s": "Steaks champignons",
+  "o": "fr",
+  "m": [
+   560,
+   32,
+   52,
+   24
+  ],
+  "diff": 1,
+  "comfort": true,
+  "ing": {
+   "steak": 4,
+   "champignons": 300,
+   "pommedeterre": 700,
+   "creme": 100
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre en cubes 15 min à l'eau salée.",
+   "Poêle {steak} 3 min de chaque côté, réserve. Dans la même poêle, fais dorer {champignons} de champignons, ajoute {creme} de crème.",
+   "Sers les steaks nappés de champignons avec les pommes de terre."
+  ]
+ },
+ {
+  "id": "x_saucisses_lentilles_moutarde",
+  "n": "Saucisses fumées, lentilles vertes et carottes",
+  "s": "Saucisses-lentilles",
+  "o": "fr",
+  "m": [
+   580,
+   30,
+   60,
+   22
+  ],
+  "diff": 1,
+  "comfort": true,
+  "ing": {
+   "saucisse": 4,
+   "lentillesvertes": 300,
+   "carotte": 2,
+   "moutarde": 1
+  },
+  "steps": [
+   "Cuis {lentillesvertes} de lentilles vertes avec {carotte} en dés, 20 min à l'eau frémissante.",
+   "Ajoute {saucisse} en rondelles pour les 5 dernières minutes.",
+   "Égoutte, assaisonne avec {moutarde} de moutarde, sel et poivre."
+  ]
+ },
+ {
+  "id": "x_croque_saumon_ricotta",
+  "n": "Croque saumon fumé-ricotta et concombre",
+  "s": "Croque saumon-ricotta",
+  "o": "fr",
+  "m": [
+   420,
+   26,
+   40,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "painmie": 8,
+   "saumonfume": 160,
+   "ricotta": 200,
+   "concombre": 1
+  },
+  "steps": [
+   "Tartine {painmie} de ricotta ({ricotta}) et garnis de {saumonfume} de saumon fumé.",
+   "Referme en croques et cuis 6 min à 190 °C dans l'air fryer.",
+   "Sers avec {concombre} en bâtonnets."
+  ]
+ },
+ {
+  "id": "x_salade_chevre_chaud",
+  "n": "Salade de chèvre chaud, pommes et noix",
+  "s": "Salade chèvre chaud",
+  "o": "fr",
+  "m": [
+   430,
+   19,
+   33,
+   25
+  ],
+  "diff": 1,
+  "ing": {
+   "pain": 4,
+   "chevre": 200,
+   "salade": 1,
+   "noix": 40,
+   "miel": 1,
+   "pomme": 2
+  },
+  "steps": [
+   "Pose {chevre} de chèvre en rondelles sur {pain} de pain, filet de miel : 8 min à 200 °C.",
+   "Coupe {pomme} en lamelles, concasse {noix} de noix, mélange avec {salade}.",
+   "Assaisonne d'huile, de vinaigre et de moutarde, pose les tartines chaudes dessus."
+  ]
+ },
+ {
+  "id": "x_salade_pois_chiches_feta",
+  "n": "Salade grecque de pois chiches, feta et olives",
+  "s": "Salade pois chiches-feta",
+  "o": "gr",
+  "m": [
+   430,
+   20,
+   42,
+   19
+  ],
+  "diff": 1,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "poischiches": 2,
+   "feta": 150,
+   "concombre": 1,
+   "tomatefraiche": 3,
+   "olives": 60,
+   "persil": 1
+  },
+  "steps": [
+   "Égoutte {poischiches} de pois chiches. Coupe {concombre} et {tomatefraiche} en dés.",
+   "Mélange avec {olives} d'olives, {feta} de feta émiettée et le persil ({persil}) ciselé.",
+   "Assaisonne d'huile d'olive, de citron et d'origan."
+  ]
+ },
+ {
+  "id": "x_salade_quinoa_poulet_menthe",
+  "n": "Salade de quinoa, poulet grillé, concombre et menthe",
+  "s": "Salade quinoa-poulet",
+  "o": "lb",
+  "m": [
+   520,
+   42,
+   50,
+   15
+  ],
+  "diff": 1,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "quinoa": 220,
+   "poulet": 400,
+   "concombre": 1,
+   "tomatefraiche": 2,
+   "menthe": 1,
+   "citron": 1
+  },
+  "steps": [
+   "Cuis {quinoa} de quinoa 12 min, égoutte et laisse tiédir.",
+   "Poêle {poulet} de poulet en dés, 7 min, avec sel et paprika.",
+   "Mélange avec {concombre}, {tomatefraiche} en dés, la menthe ({menthe}) ciselée et le jus de {citron}."
+  ]
+ },
+ {
+  "id": "x_tartines_ricotta_tomate",
+  "n": "Tartines ricotta, tomates et basilic",
+  "s": "Tartines ricotta-tomate",
+  "o": "it",
+  "m": [
+   330,
+   16,
+   40,
+   11
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "pain": 8,
+   "ricotta": 250,
+   "tomatefraiche": 4,
+   "basilic": 1
+  },
+  "steps": [
+   "Grille {pain} de pain.",
+   "Tartine de {ricotta} de ricotta, sel et poivre.",
+   "Pose {tomatefraiche} en rondelles et le basilic ({basilic}) ciselé, filet d'huile d'olive."
+  ]
+ },
+ {
+  "id": "x_oeufs_epinards_gratines",
+  "n": "Œufs aux épinards gratinés et mouillettes",
+  "s": "Œufs épinards gratinés",
+  "o": "fr",
+  "m": [
+   420,
+   27,
+   22,
+   24
+  ],
+  "diff": 2,
+  "ing": {
+   "oeufs": 8,
+   "epinardssurg": 400,
+   "emmental": 100,
+   "creme": 100,
+   "pain": 4
+  },
+  "steps": [
+   "Décongèle {epinardssurg} d'épinards, presse-les, mélange avec {creme} de crème, sel et muscade.",
+   "Répartis dans 4 ramequins, casse 2 œufs ({oeufs} au total) dans chacun, ajoute {emmental} d'emmental râpé.",
+   "Enfourne 12 min à 200 °C. Sers avec {pain} de pain grillé en mouillettes."
+  ]
+ },
+ {
+  "id": "x_croquettes_thon_pdt",
+  "n": "Croquettes de thon et pommes de terre, salade verte",
+  "s": "Croquettes thon-pdt",
+  "o": "fr",
+  "m": [
+   460,
+   26,
+   56,
+   13
+  ],
+  "diff": 2,
+  "ing": {
+   "pommedeterre": 700,
+   "thon": 2,
+   "oeufs": 2,
+   "chapelure": 60,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre à l'eau, écrase-les.",
+   "Mélange avec {thon} de thon émietté, {oeufs} œufs, persil, sel, poivre. Forme 8 galettes, roule dans {chapelure} de chapelure.",
+   "Dore 4 min de chaque côté à la poêle huilée. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x_poelee_saucisses_poivrons",
+  "n": "Poêlée de saucisses fumées, poivrons et pommes de terre",
+  "s": "Poêlée saucisses-poivrons",
+  "o": "es",
+  "m": [
+   520,
+   22,
+   52,
+   26
+  ],
+  "diff": 1,
+  "comfort": true,
+  "ing": {
+   "saucisse": 4,
+   "poivron": 2,
+   "pommedeterre": 600,
+   "oignon": 1
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en dés, fais-les sauter 12 min à la poêle huilée, couvertes.",
+   "Ajoute l'oignon, {poivron} en lanières et {saucisse} en rondelles, 8 min.",
+   "Assaisonne de paprika, sel, poivre."
+  ]
+ },
+ {
+  "id": "x_pizza_chevre_miel",
+  "n": "Pizza chèvre-miel-oignons et salade verte",
+  "s": "Pizza chèvre-miel",
+  "o": "it",
+  "m": [
+   610,
+   28,
+   72,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "pizza": 2,
+   "passata": 150,
+   "chevre": 200,
+   "oignon": 1,
+   "miel": 1,
+   "mozzarella": 150,
+   "salade": 1
+  },
+  "steps": [
+   "Préchauffe le four à 240 °C. Étale {pizza} et nappe de {passata} de passata.",
+   "Ajoute l'oignon émincé, {mozzarella} de mozzarella et {chevre} de chèvre en rondelles. Enfourne 12 min.",
+   "Filet de miel à la sortie du four, sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x_pizza_saumon_fume",
+  "n": "Pizza blanche au saumon fumé et courgette",
+  "s": "Pizza saumon fumé",
+  "o": "it",
+  "m": [
+   560,
+   30,
+   68,
+   16
+  ],
+  "diff": 1,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "ing": {
+   "pizza": 2,
+   "fromageblanc": 250,
+   "saumonfume": 160,
+   "courgette": 1
+  },
+  "steps": [
+   "Préchauffe le four à 240 °C. Étale {pizza}, nappe de {fromageblanc} de fromage blanc salé et poivré.",
+   "Ajoute {courgette} en fines lamelles, enfourne 12 min.",
+   "Répartis {saumonfume} de saumon fumé à la sortie du four."
+  ]
+ },
+ {
+  "id": "x_flammekueche",
+  "n": "Tarte flambée aux lardons et aux oignons",
+  "s": "Tarte flambée",
+  "o": "fr",
+  "m": [
+   560,
+   25,
+   64,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "pizza": 2,
+   "fromageblanc": 250,
+   "lardons": 150,
+   "oignon": 2
+  },
+  "steps": [
+   "Préchauffe le four à 240 °C. Étale {pizza} très finement.",
+   "Nappe de {fromageblanc} de fromage blanc, poivre et muscade. Ajoute les oignons émincés et {lardons} de lardons.",
+   "Enfourne 10 à 12 min, jusqu'à ce que les bords soient dorés."
+  ]
+ },
+ {
+  "id": "x_ramen_express",
+  "n": "Ramen express, œuf mollet et épinards",
+  "s": "Ramen express",
+  "o": "jp",
+  "m": [
+   500,
+   24,
+   66,
+   15
+  ],
+  "diff": 2,
+  "ing": {
+   "nouillesramen": 250,
+   "oeufs": 4,
+   "epinards": 150,
+   "champignons": 200,
+   "soja": 3,
+   "gingembre": 1,
+   "bouillon": 2
+  },
+  "steps": [
+   "Cuis {oeufs} 6 min 30 dans l'eau bouillante, passe-les sous l'eau froide, écale.",
+   "Porte 1,2 L d'eau à ébullition avec {bouillon} cubes de bouillon, {gingembre} râpé et {soja} de sauce soja. Ajoute {champignons} de champignons émincés 4 min.",
+   "Cuis {nouillesramen} de nouilles à part, répartis dans les bols avec {epinards} d'épinards, le bouillon et les œufs coupés en deux."
+  ]
+ },
+ {
+  "id": "x_bo_bun_poulet",
+  "n": "Bo bun au poulet, nouilles de riz et cacahuètes",
+  "s": "Bo bun poulet",
+  "o": "vn",
+  "m": [
+   540,
+   38,
+   62,
+   14
+  ],
+  "diff": 2,
+  "ing": {
+   "nouillesriz": 250,
+   "poulet": 400,
+   "carotte": 2,
+   "concombre": 1,
+   "menthe": 1,
+   "cacahuetes": 40,
+   "salade": 1,
+   "soja": 2
+  },
+  "steps": [
+   "Fais mariner {poulet} de poulet en lanières 10 min avec {soja} de sauce soja. Poêle-le 6 min.",
+   "Cuis {nouillesriz} de nouilles de riz, rince à l'eau froide.",
+   "Dans les bols : {salade} émincée, {carotte} râpées, {concombre} en bâtonnets, nouilles, poulet, la menthe ({menthe}) et {cacahuetes} de cacahuètes concassées."
+  ]
+ },
+ {
+  "id": "x_kebab_maison_pita",
+  "n": "Pitas poulet façon kebab, sauce yaourt",
+  "s": "Pitas façon kebab",
+  "o": "lb",
+  "m": [
+   560,
+   45,
+   52,
+   16
+  ],
+  "diff": 2,
+  "ing": {
+   "painpita": 4,
+   "poulet": 500,
+   "yaourt": 2,
+   "tomatefraiche": 2,
+   "salade": 1,
+   "oignon": 1,
+   "paprika": 1,
+   "cumin": 1
+  },
+  "steps": [
+   "Émince {poulet} de poulet, poêle-le 7 min avec 1 c.c. de paprika et 1 c.c. de cumin.",
+   "Mélange {yaourt} de yaourt avec une gousse d'ail, du sel et du citron.",
+   "Réchauffe {painpita}, garnis de poulet, {tomatefraiche} en rondelles, {salade}, oignon émincé et sauce."
+  ]
+ },
+ {
+  "id": "x_pitas_houmous_feta",
+  "n": "Pitas houmous, feta et crudités",
+  "s": "Pitas houmous-feta",
+  "o": "lb",
+  "m": [
+   450,
+   18,
+   55,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "painpita": 4,
+   "houmous": 200,
+   "concombre": 1,
+   "tomatefraiche": 2,
+   "feta": 100,
+   "carotte": 2
+  },
+  "steps": [
+   "Réchauffe {painpita} au grille-pain.",
+   "Tartine de {houmous} de houmous.",
+   "Garnis de {concombre} en bâtonnets, {tomatefraiche} en rondelles, {carotte} râpées et {feta} de feta émiettée."
+  ]
+ },
+ {
+  "id": "x_pates_aubergine_tomate",
+  "n": "Pâtes à l'aubergine, tomate et mozzarella",
+  "s": "Pâtes aubergine-mozzarella",
+  "o": "it",
+  "m": [
+   570,
+   22,
+   88,
+   14
+  ],
+  "diff": 2,
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "aubergine": 2,
+   "passata": 300,
+   "mozzarella": 125,
+   "ail": 1,
+   "basilic": 1
+  },
+  "steps": [
+   "Coupe {aubergine} en dés et fais-les dorer 10 min à la poêle huilée avec l'ail.",
+   "Ajoute {passata} de passata, mijote 8 min. Cuis {patescompletes} de pâtes.",
+   "Mélange les pâtes avec la sauce, ajoute {mozzarella} de mozzarella en dés et le basilic ({basilic})."
+  ]
+ },
+ {
+  "id": "x_risotto_courgette_chevre",
+  "n": "Risotto courgette-chèvre",
+  "s": "Risotto courgette-chèvre",
+  "o": "it",
+  "m": [
+   560,
+   20,
+   86,
+   15
+  ],
+  "diff": 3,
+  "comfort": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "rizrond": 300,
+   "courgette": 3,
+   "chevre": 120,
+   "bouillon": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Fais revenir {courgette} en petits dés 5 min, réserve la moitié.",
+   "Nacre {rizrond} de riz rond 2 min, ajoute le bouillon ({bouillon} cube dans 1 L d'eau chaude) louche par louche en remuant, 18 min.",
+   "Hors du feu, ajoute {parmesan} de parmesan, {chevre} de chèvre et les courgettes réservées."
+  ]
  }
 ]

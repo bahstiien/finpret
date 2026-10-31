@@ -14723,5 +14723,473 @@
   "jj": "Réchauffe 10 min au four ou 3 min au micro-ondes à puissance moyenne. À consommer dans les 2 jours.",
   "o": "gb",
   "comfort": true
+ },
+ {
+  "id": "x_poulet_laque_miel_soja",
+  "n": "Poulet laqué miel-soja, riz et brocoli",
+  "s": "Poulet laqué miel-soja",
+  "p": "volaille",
+  "grp": "poulet-laque",
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   560,
+   42,
+   62,
+   14
+  ],
+  "diff": 2,
+  "o": "cn",
+  "d": "Poulet caramélisé au miel et au soja, brocoli croquant, riz.",
+  "ing": {
+   "poulet": 600,
+   "riz": 250,
+   "brocoli": 400,
+   "miel": 2,
+   "soja": 3,
+   "gingembre": 1,
+   "ail": 2
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {poulet} de poulet en dés. Mélange 2 c.s. de miel, {soja} de sauce soja, 2 gousses d'ail hachées et {gingembre} râpé, ajoute le poulet. Coupe {brocoli} de brocoli en bouquets."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 12,
+    "a": [
+     "Rince {riz} de riz et cuis-le à l'eau salée. Égoutte et étale sur une plaque."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 12,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Poêle le poulet mariné à feu vif 8 à 10 min, en 2 fois si besoin, jusqu'à ce qu'il soit caramélisé."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 5,
+    "wait": false,
+    "a": [
+     "Cuis le brocoli 5 min à la vapeur ou à l'eau bouillante salée, égoutte."
+    ]
+   }
+  ],
+  "box": "riz, poulet laqué et brocoli",
+  "jj": "Réchauffe 2 min au micro-ondes."
+ },
+ {
+  "id": "x_boulettes_dinde_boulgour",
+  "n": "Boulettes de dinde, sauce tomate et boulgour",
+  "s": "Boulettes de dinde",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "m": [
+   520,
+   44,
+   58,
+   12
+  ],
+  "diff": 2,
+  "o": "it",
+  "d": "Boulettes de dinde au persil, sauce tomate maison, boulgour.",
+  "ing": {
+   "dinde": 600,
+   "boulgour": 250,
+   "passata": 400,
+   "oeufs": 1,
+   "chapelure": 40,
+   "oignon": 1,
+   "persil": 1,
+   "ail": 1
+  },
+  "prepMin": 12,
+  "prep": [
+   "Mélange {dinde} de dinde hachée avec {oeufs} œuf, {chapelure} de chapelure, le persil ({persil}) ciselé, sel et poivre. Forme 20 boulettes. Émince l'oignon."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 18,
+    "a": [
+     "Dépose les boulettes sur une plaque et enfourne 18 min à 200 °C."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Fais revenir l'oignon et l'ail 3 min, ajoute {passata} de passata, sel, origan, mijote 12 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Cuis {boulgour} de boulgour 12 min dans 2 fois son volume d'eau salée."
+    ]
+   }
+  ],
+  "box": "boulgour, boulettes, sauce à part",
+  "jj": "Réchauffe 2 min au micro-ondes."
+ },
+ {
+  "id": "x_gratin_pdt_jambon_haricots",
+  "n": "Gratin de pommes de terre au jambon et haricots verts",
+  "s": "Gratin pommes de terre-jambon",
+  "p": "porc",
+  "grp": "gratin",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   600,
+   28,
+   54,
+   29
+  ],
+  "diff": 2,
+  "o": "fr",
+  "d": "Pommes de terre fondantes à la crème, jambon et emmental gratiné.",
+  "ing": {
+   "pommedeterre": 1000,
+   "jambon": 4,
+   "creme": 300,
+   "emmental": 100,
+   "haricotsverts": 400,
+   "ail": 1
+  },
+  "prepMin": 12,
+  "prep": [
+   "Épluche {pommedeterre} de pommes de terre et coupe-les en rondelles fines. Coupe {jambon} de jambon en lanières."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 8,
+    "passive": 50,
+    "a": [
+     "Dans un plat frotté d'ail, alterne pommes de terre et jambon, verse {creme} de crème mélangée à 100 ml d'eau, sel, poivre. Couvre {emmental} d'emmental râpé. Enfourne 50 min à 180 °C."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Cuis {haricotsverts} de haricots verts 8 min à l'eau bouillante salée."
+    ]
+   }
+  ],
+  "box": "gratin en parts, haricots verts",
+  "jj": "Réchauffe au four ou au micro-ondes."
+ },
+ {
+  "id": "x_saumon_lentilles_carottes",
+  "n": "Saumon au four, lentilles vertes et carottes",
+  "s": "Saumon-lentilles",
+  "p": "poisson",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   560,
+   41,
+   50,
+   20
+  ],
+  "diff": 1,
+  "o": "fr",
+  "d": "Pavé de saumon à la moutarde et au citron, lentilles et carottes fondantes.",
+  "ing": {
+   "saumon": 500,
+   "lentillesvertes": 250,
+   "carotte": 4,
+   "moutarde": 2,
+   "citron": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Épluche {carotte} et coupe-les en rondelles. Mélange {moutarde} de moutarde avec le jus de {citron}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 22,
+    "a": [
+     "Cuis {lentillesvertes} de lentilles avec les carottes dans l'eau frémissante, 22 min. Égoutte, sale."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Badigeonne {saumon} de saumon de moutarde au citron, enfourne 12 min à 200 °C."
+    ]
+   }
+  ],
+  "box": "lentilles-carottes et saumon",
+  "jj": "Réchauffe doucement 2 min au micro-ondes."
+ },
+ {
+  "id": "x_agneau_pois_chiches_cannelle",
+  "n": "Agneau mijoté aux pois chiches, cannelle et semoule",
+  "s": "Agneau aux pois chiches",
+  "p": "boeuf",
+  "grp": "mijote",
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   610,
+   40,
+   62,
+   21
+  ],
+  "diff": 2,
+  "o": "ma",
+  "d": "Épaule d'agneau fondante, pois chiches, tomates et épices douces.",
+  "ing": {
+   "agneau": 600,
+   "poischiches": 2,
+   "tomates": 1,
+   "oignon": 2,
+   "cannelle": 1,
+   "cumin": 1,
+   "raselhanout": 2,
+   "semoule": 250
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {agneau} d'agneau en cubes. Émince les oignons. Égoutte {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 60,
+    "a": [
+     "Fais dorer l'agneau avec les oignons, ajoute 1 c.c. de cannelle, 1 c.c. de cumin, {raselhanout} de ras el-hanout, {tomates} de tomates concassées et 200 ml d'eau. Couvre et mijote 60 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Ajoute les pois chiches pour les 15 dernières minutes."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 5,
+    "a": [
+     "Verse de l'eau bouillante salée sur {semoule} de semoule, couvre 5 min, égrène."
+    ]
+   }
+  ],
+  "box": "semoule, agneau et pois chiches",
+  "jj": "Réchauffe 3 min au micro-ondes."
+ },
+ {
+  "id": "x_chili_dinde_patate_douce",
+  "n": "Chili de dinde et patate douce",
+  "s": "Chili dinde-patate douce",
+  "p": "volaille",
+  "grp": "chili",
+  "fridge": 4,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   530,
+   38,
+   68,
+   10
+  ],
+  "diff": 1,
+  "o": "mx",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "d": "Chili épais, dinde, patate douce fondante, haricots rouges.",
+  "ing": {
+   "dinde": 500,
+   "patatedouce": 600,
+   "haricotsrouges": 2,
+   "tomates": 2,
+   "cumin": 1,
+   "paprika": 2,
+   "oignon": 1,
+   "riz": 250
+  },
+  "prepMin": 10,
+  "prep": [
+   "Épluche {patatedouce} de patate douce et coupe-la en dés. Émince l'oignon. Égoutte {haricotsrouges} de haricots rouges."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 30,
+    "a": [
+     "Fais revenir l'oignon et {dinde} de dinde hachée, ajoute 1 c.c. de cumin et {paprika} de paprika, {tomates} de tomates concassées, la patate douce et les haricots. Couvre et mijote 30 min en ajoutant un peu d'eau si besoin."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Cuis {riz} de riz à l'eau salée."
+    ]
+   }
+  ],
+  "box": "riz et chili",
+  "jj": "Réchauffe 3 min au micro-ondes."
+ },
+ {
+  "id": "x_curry_pois_chiches_epinards",
+  "n": "Curry de pois chiches, épinards et riz",
+  "s": "Curry pois chiches-épinards",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   560,
+   20,
+   85,
+   14
+  ],
+  "diff": 1,
+  "o": "in",
+  "d": "Pois chiches fondants dans une sauce tomate-coco au curry, épinards.",
+  "ing": {
+   "poischiches": 3,
+   "epinards": 300,
+   "tomates": 1,
+   "laitcoco": 200,
+   "riz": 250,
+   "curry": 2,
+   "gingembre": 1,
+   "oignon": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Émince l'oignon, râpe {gingembre} de gingembre. Égoutte {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon et le gingembre avec {curry} de curry. Ajoute {tomates} de tomates concassées, les pois chiches et {laitcoco} de lait de coco, mijote 15 min. Ajoute {epinards} d'épinards en fin de cuisson."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Cuis {riz} de riz à l'eau salée."
+    ]
+   }
+  ],
+  "box": "riz et curry",
+  "jj": "Réchauffe 2 min au micro-ondes."
+ },
+ {
+  "id": "x_pates_four_ricotta_epinards",
+  "n": "Pâtes au four ricotta-épinards",
+  "s": "Pâtes au four ricotta-épinards",
+  "p": "veg",
+  "pasta": true,
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "m": [
+   590,
+   28,
+   75,
+   18
+  ],
+  "diff": 2,
+  "o": "it",
+  "d": "Pâtes gratinées, sauce tomate, ricotta et épinards.",
+  "ing": {
+   "patescompletes": 400,
+   "ricotta": 250,
+   "epinards": 300,
+   "passata": 400,
+   "mozzarella": 150,
+   "parmesan": 30,
+   "ail": 1,
+   "origan": 1
+  },
+  "prepMin": 5,
+  "prep": [
+   "Hache l'ail. Mélange {ricotta} de ricotta avec {epinards} d'épinards hachés, du sel et du poivre."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 10,
+    "a": [
+     "Cuis {patescompletes} de pâtes 3 min de moins que le temps indiqué, égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Fais revenir l'ail, ajoute {passata} de passata et 1 c.c. d'origan, mijote 8 min."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Mélange pâtes, sauce et ricotta-épinards dans un plat. Couvre de {mozzarella} de mozzarella et {parmesan} de parmesan. Enfourne 20 min à 190 °C."
+    ]
+   }
+  ],
+  "box": "gratin en parts",
+  "jj": "Réchauffe au four ou au micro-ondes."
  }
 ]

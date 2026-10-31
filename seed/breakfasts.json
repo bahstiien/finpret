@@ -223,5 +223,95 @@
    330,
    16
   ]
+ },
+ {
+  "t": "sucre",
+  "n": "Porridge pomme-noix",
+  "d": "Flocons d'avoine cuits au lait, 1 pomme en dés, quelques noix et une pincée de cannelle.",
+  "m": [
+   410,
+   14
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Fromage blanc, flocons et miel",
+  "d": "Un bol de fromage blanc, 3 c.s. de flocons d'avoine, un filet de miel et des raisins secs.",
+  "m": [
+   330,
+   20
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Tartine beurre de cacahuète et banane",
+  "d": "2 tranches de pain complet, 1 c.s. de beurre de cacahuète, une banane en rondelles.",
+  "m": [
+   420,
+   14
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Œufs au plat, tomate et pain grillé",
+  "d": "2 œufs au plat, une tomate en rondelles, 2 tranches de pain complet grillé.",
+  "m": [
+   380,
+   20
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Tartine cottage et concombre",
+  "d": "Pain complet grillé, cottage cheese, concombre en rondelles, sel, poivre.",
+  "m": [
+   300,
+   22
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Smoothie bowl fruits rouges et skyr",
+  "d": "Fruits rouges mixés avec du skyr, flocons d'avoine et noix par-dessus.",
+  "m": [
+   340,
+   24
+  ]
+ },
+ {
+  "t": "sucre",
+  "n": "Crêpes avoine-banane",
+  "d": "1 banane, 2 œufs et 4 c.s. de flocons mixés, cuits à la poêle comme des crêpes épaisses.",
+  "m": [
+   370,
+   19
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Omelette fromage et herbes",
+  "d": "2 œufs, un peu d'emmental râpé, ciboulette ou persil, avec une tranche de pain complet.",
+  "m": [
+   390,
+   23
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Toast chèvre-miel",
+  "d": "Pain complet grillé, chèvre frais, filet de miel, noix concassées.",
+  "m": [
+   350,
+   15
+  ]
+ },
+ {
+  "t": "sale",
+  "n": "Œuf cocotte aux épinards",
+  "d": "1 œuf cuit au four sur un lit d'épinards à la crème légère, avec du pain grillé.",
+  "m": [
+   330,
+   17
+  ]
  }
 ]
