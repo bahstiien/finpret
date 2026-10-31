@@ -9,7 +9,7 @@ import { DEFAULT_MENU_SETTINGS } from "@/engine/types";
 import type { LegacyState } from "./legacy";
 
 // Le prototype ne connaît que les recettes d'origine : les plats de saison (hv_, pr_, et_, au_) et les recettes ajoutées ensuite (x_) sont écartés.
-const LEGACY_ADDED = /^(hv|pr|et|au|x)_/;
+const LEGACY_ADDED = /^(hv|pr|et|au|x\d*)_/;
 const LEGACY_BREAKFASTS = 25;
 const legacyOnly = <T extends { id: string }>(list: T[]) => list.filter((r) => !LEGACY_ADDED.test(r.id));
 const { seed } = validateSeed({
