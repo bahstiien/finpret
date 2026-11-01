@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Space_Grotesk, Space_Mono } from "next/font/google";
+import { NewVersionGuard } from "@/components/ui/NewVersionGuard";
 import { fr } from "@/i18n/fr";
 import "./globals.css";
 
@@ -38,7 +39,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Thème choisi sur cet appareil (§11), appliqué avant l'affichage pour éviter un flash. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        {children}
+        <NewVersionGuard />
+      </body>
     </html>
   );
 }

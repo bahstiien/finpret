@@ -499,6 +499,7 @@ export const fr = {
     signOut: "Se déconnecter",
   },
   errors: {
+    newVersion: { text: "Une nouvelle version de Fin Prêt est disponible. Recharge la page pour continuer.", reload: "Recharger" },
     generic: "Oups, ça n'a pas marché. Réessaie dans un instant.",
     forbidden: "Tu n'as pas les droits pour faire ça.",
     subscriptionCancel:
