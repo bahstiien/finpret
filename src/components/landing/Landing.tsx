@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { Pill } from "@/components/ui/Pill";
+import { fr } from "@/i18n/fr";
 import { landingV2 as t } from "@/i18n/landing";
+import { FEATURES } from "@/lib/features";
 import { Icon, type IconName } from "./Icon";
 
 /** Landing (maquette v2.1) : sections bordées, aplats par domaine, ombres dures. */
@@ -268,10 +271,17 @@ export function Pricing() {
             <p className="t-kicker">{p.asso.kicker}</p>
             <p className="t-ui text-lg">{p.asso.text}</p>
           </div>
-          <Link href="/associations" className="btn btn--outline !bg-surface !text-ink">
-            {p.asso.cta}
-            <Icon name="arrow" className="ic" />
-          </Link>
+          {FEATURES.associations ? (
+            <Link href="/associations" className="btn btn--outline !bg-surface !text-ink">
+              {p.asso.cta}
+              <Icon name="arrow" className="ic" />
+            </Link>
+          ) : (
+            <span className="btn btn--outline is-disabled" aria-disabled="true">
+              {p.asso.cta}
+              <Pill tone="banane">{fr.common.comingSoon}</Pill>
+            </span>
+          )}
         </div>
       </div>
     </section>
@@ -321,11 +331,17 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-center justify-between gap-5">
           <Logo />
           <nav aria-label={f.nav} className="flex flex-wrap gap-x-5 gap-y-2">
-            {f.links.map((l) => (
-              <Link key={l.href} href={l.href} className="lnk t-small">
-                {l.label}
-              </Link>
-            ))}
+            {f.links.map((l) =>
+              FEATURES.associations ? (
+                <Link key={l.href} href={l.href} className="lnk t-small">
+                  {l.label}
+                </Link>
+              ) : (
+                <span key={l.href} className="t-small muted">
+                  {l.label} <Pill tone="banane">{fr.common.comingSoon}</Pill>
+                </span>
+              ),
+            )}
           </nav>
         </div>
         <div className="flex flex-wrap justify-between gap-3 border-t-[length:var(--bw)] border-line pt-4">

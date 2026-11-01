@@ -9,6 +9,7 @@ import { Pill } from "@/components/ui/Pill";
 import { fr } from "@/i18n/fr";
 import { brandLabel, cardExpired } from "@/lib/billing";
 import { formatLong } from "@/lib/dates";
+import { FEATURES } from "@/lib/features";
 import {
   cancelSubscription,
   changePlan,
@@ -116,8 +117,9 @@ export default async function SubscriptionPage({
                     <Pill tone="green">{t.associationBadge("de ton association")}</Pill>
                   </p>
                 )}
-                <Button type="submit" data-testid={`choose-${plan}`}>
+                <Button type="submit" data-testid={`choose-${plan}`} disabled={!FEATURES.onlinePayment}>
                   {t.choose}
+                  {!FEATURES.onlinePayment && <Pill tone="banane">{fr.common.comingSoon}</Pill>}
                 </Button>
               </form>
             ))}
@@ -254,7 +256,7 @@ export default async function SubscriptionPage({
         </ul>
       </Card>
 
-      {isAdmin && !hasAssociation && (
+      {isAdmin && !hasAssociation && FEATURES.associations && (
         <Card padding="cozy">
           <AssociationCodeForm />
         </Card>

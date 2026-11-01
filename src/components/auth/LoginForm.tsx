@@ -5,6 +5,7 @@ import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Callout } from "@/components/ui/Layout";
 import { Icon } from "@/components/ui/Icon";
+import { Pill } from "@/components/ui/Pill";
 import { Segmented } from "@/components/ui/Segmented";
 import { FormMessage, TextField } from "@/components/ui/Field";
 import { Checkbox } from "@/components/ui/Extras";
@@ -207,15 +208,22 @@ function Alternatives({ next, mode }: { next: string; mode: AuthMode }) {
         <span className="h-[var(--bw)] flex-1 bg-line" />
       </div>
 
-      {(FEATURES.appleSignIn ? (["apple", "google"] as const) : (["google"] as const)).map((provider) => (
-        <form key={provider} action={signInWithProvider}>
-          <input type="hidden" name="provider" value={provider} />
-          <input type="hidden" name="next" value={next} />
-          <Button type="submit" variant="outline" className="btn--block">
+      {(FEATURES.appleSignIn ? (["apple", "google"] as const) : (["google"] as const)).map((provider) =>
+        provider === "google" && !FEATURES.googleSignIn ? (
+          <Button key={provider} type="button" variant="outline" className="btn--block" disabled>
             {t[provider]}
+            <Pill tone="banane">{fr.common.comingSoon}</Pill>
           </Button>
-        </form>
-      ))}
+        ) : (
+          <form key={provider} action={signInWithProvider}>
+            <input type="hidden" name="provider" value={provider} />
+            <input type="hidden" name="next" value={next} />
+            <Button type="submit" variant="outline" className="btn--block">
+              {t[provider]}
+            </Button>
+          </form>
+        ),
+      )}
 
       {mode === "login" &&
         (state.status === "sent" ? (
