@@ -209,7 +209,7 @@ export function RecipePickerSheet({
       .normalize("NFD")
       .replace(/\p{Diacritic}/gu, "")
       .toLowerCase();
-  const list = useMemo(() => {
+  const filtered = useMemo(() => {
     const q = normalize(query.trim());
     return options
       .filter((o) => !q || normalize(o.name).includes(q))
@@ -217,15 +217,26 @@ export function RecipePickerSheet({
         if (filter === "ideas" || filter === "seasonal") return o.seasonal;
         if (filter === "quick") return o.quick;
         if (filter === "favorites") return o.favorite;
+        if (filter === "comfort") return !!o.comfort;
+        if (filter === "pasta") return !!o.pasta;
         if (filter.startsWith("type:")) return o.type === filter.slice(5);
         return true;
-      })
-      .slice(0, 60);
+      });
   }, [options, query, filter]);
+  const list = useMemo(() => {
+    const head = filtered.slice(0, 60);
+    const picked = filtered.find((o) => o.id === choice);
+    return picked && !head.includes(picked) ? [picked, ...head] : head;
+  }, [filtered, choice]);
+  /** Tirage au sort dans la sélection filtrée, en évitant de retomber sur le choix courant. */
+  const pickRandom = () => {
+    const pool = filtered.length > 1 ? filtered.filter((o) => o.id !== choice) : filtered;
+    if (pool.length) setChoice(pool[Math.floor(Math.random() * pool.length)]!.id);
+  };
   const chosen = options.find((o) => o.id === choice);
   const filters =
     mode === "weekend"
-      ? (["ideas", "quick", "favorites", "all"] as const).map((f) => ({ key: f, label: t.picker.filters[f] }))
+      ? (["ideas", "comfort", "quick", "pasta", "favorites", "all"] as const).map((f) => ({ key: f, label: t.picker.filters[f] }))
       : [
           { key: "seasonal", label: t.picker.filters.seasonal },
           ...Object.entries(fr.settings.menu.cakeTypeLabels).map(([k, label]) => ({
@@ -261,15 +272,15 @@ export function RecipePickerSheet({
             {f.label}
           </ChipToggle>
         ))}
-        {mode === "cake" && (
-          <ChipToggle
-            pressed={false}
-            onToggle={() => list.length && setChoice(list[Math.floor(Math.random() * list.length)]!.id)}
-          >
-            {t.picker.random}
-          </ChipToggle>
-        )}
       </div>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={filtered.length === 0}
+        onClick={pickRandom}
+      >
+        {t.picker.randomCount(filtered.length)}
+      </Button>
       <fieldset className="flex max-h-[40dvh] flex-col gap-2 overflow-y-auto p-1">
         <legend className="sr-only">{t.picker.legend}</legend>
         {list.length === 0 && <p className="t-small muted">{t.picker.empty}</p>}

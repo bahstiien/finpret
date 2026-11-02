@@ -16,7 +16,7 @@ import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
 import { deleteImportedRecipe } from "@/server/actions/imports";
-import { setCakeAction, setWeekendAction } from "@/server/actions/menu";
+import { replaceDishAction, setCakeAction, setWeekendAction } from "@/server/actions/menu";
 import type { Flag as FlagData } from "@/server/menu-view";
 import { buttonClass } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/Layout";
@@ -57,6 +57,16 @@ export type DiscoverRecipe = {
   diets: string[];
 };
 
+/** Plat déjà prévu dans la semaine, que « Mettre au menu » peut remplacer. */
+export type PlannedDish = {
+  kind: "main" | "soup" | "simple";
+  index: number;
+  id: string;
+  name: string;
+  /** Repas concernés, ex. « lundi midi, mardi soir ». */
+  when: string;
+};
+
 type Breakfast = {
   id: string;
   name: string;
@@ -77,12 +87,14 @@ export function DiscoverScreen({
   breakfasts,
   regions,
   week,
+  dishes,
   hasRestrictions,
   canEdit,
   openId,
   openPlan,
   initialOrigin,
 }: {
+  dishes: PlannedDish[];
   recipes: DiscoverRecipe[];
   breakfasts: Breakfast[];
   regions: string[];
@@ -144,11 +156,7 @@ export function DiscoverScreen({
           </Link>
         )}
       </div>
-      <div
-        role="tablist"
-        aria-label={t.segments}
-        className="seg self-start"
-      >
+      <div role="tablist" aria-label={t.segments} className="seg self-start">
         {(["recipes", "breakfasts"] as const).map((s) => (
           <button
             key={s}
@@ -259,9 +267,7 @@ export function DiscoverScreen({
         <ul className="grid gap-3 min-[900px]:grid-cols-2">
           {bfList.map((b) => (
             <Card as="li" padding="cozy" key={b.id} className="flex flex-col gap-2">
-              <span className="pill tone-violet self-start">
-                {t.breakfastTypes[b.type]}
-              </span>
+              <span className="pill tone-violet self-start">{t.breakfastTypes[b.type]}</span>
               <h2 className="t-3">{b.name}</h2>
               <p className="muted">{b.description}</p>
               <p className="t-small mono">{t.macros(b.kcal, b.protein)}</p>
@@ -269,7 +275,9 @@ export function DiscoverScreen({
           ))}
         </ul>
       )}
-      {target && week && <PlanSheet recipe={target} week={week} onClose={() => setTarget(null)} />}
+      {target && week && (
+        <PlanSheet recipe={target} week={week} dishes={dishes} onClose={() => setTarget(null)} />
+      )}
     </>
   );
 }
@@ -305,12 +313,8 @@ function RecipeCard({
     >
       <div className="flex flex-wrap items-center gap-2">
         <span className="t-kicker">{t.kinds[r.kind]}</span>
-        {r.seasonal && (
-          <span className="pill tone-green">{t.inSeason}</span>
-        )}
-        {r.freezes && (
-          <span className="pill tone-blue">{t.freezes}</span>
-        )}
+        {r.seasonal && <span className="pill tone-green">{t.inSeason}</span>}
+        {r.freezes && <span className="pill tone-blue">{t.freezes}</span>}
         {r.favorite && <span className="pill tone-banane">{t.favorite}</span>}
         {r.imported && <span className="pill tone-violet">{t.mine}</span>}
       </div>
@@ -332,10 +336,7 @@ function RecipeCard({
         </p>
       )}
       {r.excluded && (
-        <p
-          className="callout tone-warning text-sm font-bold"
-          data-testid="excluded"
-        >
+        <p className="callout tone-warning text-sm font-bold" data-testid="excluded">
           {t.excluded(r.reasons.join(", ") || t.notYourDiet)}
         </p>
       )}
@@ -354,10 +355,10 @@ function RecipeCard({
               <li key={i}>{s}</li>
             ))}
           </ol>
-          {r.allergens.length > 0 && (
-            <p className="t-small muted">{t.allergens(r.allergens.join(", "))}</p>
+          {r.allergens.length > 0 && <p className="t-small muted">{t.allergens(r.allergens.join(", "))}</p>}
+          {r.unverifiedAllergens && (
+            <p className="callout tone-warning text-sm font-bold">{t.unverifiedAllergens}</p>
           )}
-          {r.unverifiedAllergens && <p className="callout tone-warning text-sm font-bold">{t.unverifiedAllergens}</p>}
         </div>
       </details>
       <div className="flex flex-wrap gap-2">
@@ -374,12 +375,7 @@ function RecipeCard({
             >
               {t.edit}
             </Link>
-            <button
-              type="button"
-              disabled={removing}
-              onClick={remove}
-              className="btn btn--danger btn--sm"
-            >
+            <button type="button" disabled={removing} onClick={remove} className="btn btn--danger btn--sm">
               {t.remove}
             </button>
           </>
@@ -393,15 +389,25 @@ function RecipeCard({
 function PlanSheet({
   recipe,
   week,
+  dishes,
   onClose,
 }: {
   recipe: DiscoverRecipe;
   week: { id: string; start: string };
+  dishes: PlannedDish[];
   onClose: () => void;
 }) {
-  const [slot, setSlot] = useState<string | null>(null);
+  // « slot:6-lunch » (créneau du week-end) ou « dish:main:2 » (plat de la semaine à remplacer).
+  const [pick, setPick] = useState<string | null>(null);
   const { run, pending } = useMenuAction();
   const slots = ["6-lunch", "6-dinner", "7-lunch", "7-dinner"];
+  const replaceable = dishes.filter((d) => d.kind === recipe.kind && d.id !== recipe.id);
+  const confirm = () => {
+    if (!pick) return;
+    const [type, a, b] = pick.split(":") as [string, string, string?];
+    if (type === "slot") return run(() => setWeekendAction(week.id, a, recipe.id), onClose);
+    return run(() => replaceDishAction(week.id, a as PlannedDish["kind"], Number(b), recipe.id), onClose);
+  };
   return (
     <Sheet open onClose={onClose} title={t.planTitle(recipe.short)}>
       <p className="muted">{fr.menu.weekOf(formatShort(week.start))}</p>
@@ -422,13 +428,13 @@ function PlanSheet({
               return (
                 <label
                   key={k}
-                  className={`nb-sm flex min-h-12 cursor-pointer items-center gap-3 px-4 ${slot === k ? "tone-violet" : ""}`}
+                  className={`nb-sm flex min-h-12 cursor-pointer items-center gap-3 px-4 ${pick === `slot:${k}` ? "tone-violet" : ""}`}
                 >
                   <input
                     type="radio"
                     name="slot"
-                    checked={slot === k}
-                    onChange={() => setSlot(k)}
+                    checked={pick === `slot:${k}`}
+                    onChange={() => setPick(`slot:${k}`)}
                     className="size-5 accent-[var(--ink)]"
                   />
                   <span className="t-ui first-letter:uppercase">
@@ -438,12 +444,33 @@ function PlanSheet({
               );
             })}
           </fieldset>
+          <fieldset className="flex flex-col gap-2">
+            <legend className="field-label mb-1">{t.replaceTitle}</legend>
+            {replaceable.length === 0 && <p className="t-small muted">{t.replaceNone}</p>}
+            {replaceable.map((d) => {
+              const v = `dish:${d.kind}:${d.index}`;
+              return (
+                <label
+                  key={v}
+                  className={`nb-sm flex min-h-12 cursor-pointer items-center gap-3 px-4 ${pick === v ? "tone-violet" : ""}`}
+                >
+                  <input
+                    type="radio"
+                    name="slot"
+                    checked={pick === v}
+                    onChange={() => setPick(v)}
+                    className="size-5 accent-[var(--ink)]"
+                  />
+                  <span className="t-ui">
+                    {d.name}
+                    {d.when && <span className="t-small muted"> · {d.when}</span>}
+                  </span>
+                </label>
+              );
+            })}
+          </fieldset>
           <p className="t-small muted">{t.weekendOnly}</p>
-          <Button
-            type="button"
-            disabled={!slot || pending}
-            onClick={() => run(() => setWeekendAction(week.id, slot!, recipe.id), onClose)}
-          >
+          <Button type="button" disabled={!pick || pending} onClick={confirm}>
             {t.confirmPlan}
           </Button>
         </>

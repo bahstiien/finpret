@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DiscoverScreen, type DiscoverRecipe } from "@/components/discover/DiscoverScreen";
+import { DiscoverScreen, type DiscoverRecipe, type PlannedDish } from "@/components/discover/DiscoverScreen";
 import { ALLERGENS } from "@/engine/catalog/allergens";
 import type { Protein } from "@/engine/catalog/schema";
 import { allIngredientKeys, breakfastId, dietTags, recipeAllergens } from "@/engine/catalog/derive";
@@ -150,8 +150,44 @@ export default async function DiscoverPage({
     };
   });
 
+  // Plats déjà prévus en semaine : ce que « Mettre au menu » peut remplacer.
+  const planned = (id: string) =>
+    (env.mainById.get(id) ?? env.soupById.get(id) ?? env.simpleById.get(id))?.s ?? id;
+  const when = (slots: { day: number; meal: "lunch" | "dinner" }[]) =>
+    slots.map((s) => `${fr.days[s.day - 1]} ${fr.meals[s.meal].toLowerCase()}`).join(", ");
+  const dishes: PlannedDish[] = week
+    ? [
+        ...week.plan.groups.map((g, index) => ({
+          kind: "main" as const,
+          index,
+          id: g.id,
+          name: planned(g.id),
+          when: when(g.meals.filter((m) => !week.plan.removed.includes(`${m.day}-${m.meal}`))),
+        })),
+        ...(week.plan.soup
+          ? [
+              {
+                kind: "soup" as const,
+                index: 0,
+                id: week.plan.soup.id,
+                name: planned(week.plan.soup.id),
+                when: when(week.plan.soup.days.map((day) => ({ day, meal: "dinner" as const }))),
+              },
+            ]
+          : []),
+        ...week.plan.simples.map((s, index) => ({
+          kind: "simple" as const,
+          index,
+          id: s.id,
+          name: planned(s.id),
+          when: when([{ day: s.day, meal: "dinner" }]),
+        })),
+      ]
+    : [];
+
   return (
     <DiscoverScreen
+      dishes={dishes}
       recipes={[...recipes, ...cakes]}
       breakfasts={breakfasts}
       regions={[...new Set(recipes.map((r) => r.region).filter((x): x is string => !!x))]}
