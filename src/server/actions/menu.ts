@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
   moveSlot,
   moveTargets,
+  replaceDish,
   setGuests,
   setWeekend,
   suggestWeekend,
@@ -244,6 +245,36 @@ export async function setWeekendAction(weekId: string, key: string, recipeId: st
       ? t.weekendSet(shortOf(env, recipeId), slotLabel(key)) + (res.pastaClash ? ` ${t.pastaWarning}` : "")
       : t.weekendCleared(slotLabel(key));
     return { plan: res.week, message };
+  });
+}
+
+/** « Mettre au menu » depuis Découvrir : la recette remplace un plat déjà prévu en semaine. */
+export async function replaceDishAction(
+  weekId: string,
+  kind: "main" | "soup" | "simple",
+  index: number,
+  recipeId: string,
+) {
+  if (
+    !["main", "soup", "simple"].includes(kind) ||
+    !Number.isInteger(index) ||
+    !z.string().min(1).safeParse(recipeId).success
+  ) {
+    return { ok: false as const, error: fr.errors.generic };
+  }
+  return editWeek(weekId, ({ env, plan }) => {
+    const res = replaceDish(env, plan, kind, index, recipeId);
+    if (!res.ok) return { error: t.replaceFailed[res.reason] };
+    const warn = [
+      res.warnings.pasta && t.pastaWarning,
+      res.warnings.tooLate && t.tooLate(shortOf(env, recipeId)),
+    ]
+      .filter(Boolean)
+      .join(" ");
+    return {
+      plan: res.week,
+      message: `${t.replaced(shortOf(env, res.replaced), [shortOf(env, recipeId).toLowerCase()])}${warn ? ` ${warn}` : ""}`,
+    };
   });
 }
 

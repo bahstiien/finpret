@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { LIB } from "../../tests/legacy/fixtures";
 import { recipeAllergens } from "./catalog/derive";
 import { addsPastaClash, generateWeek, pastaClash, pastaCount } from "./compose";
-import { moveSlot, moveTargets, setGuests, swap, toggleMeal } from "./edit";
+import { moveSlot, moveTargets, replaceDish, setGuests, swap, toggleMeal } from "./edit";
 import { createEnv } from "./env";
 import { fill, fmtQ, packBuy, shopQ, snapNum } from "./format";
 import { dailyAverages } from "./nutrition";
@@ -307,5 +307,23 @@ describe("garde-manger, totaux et session", () => {
     const avg = dailyAverages(e, week);
     expect(avg.kcal).toBeGreaterThan(500);
     expect(avg.protein).toBeGreaterThan(20);
+  });
+});
+
+describe("remplacer un plat prévu par une recette choisie (Découvrir)", () => {
+  it("garde les repas du plat remplacé et refuse une recette déjà au menu", () => {
+    const { e, week } = generate(3);
+    const used = week.groups.map((g) => g.id);
+    const pick = LIB.mains.find((r) => !used.includes(r.id))!;
+    const res = replaceDish(e, week, "main", 0, pick.id);
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.replaced).toBe(used[0]);
+    expect(res.week.groups[0]!.id).toBe(pick.id);
+    expect(res.week.groups[0]!.meals).toEqual(week.groups[0]!.meals);
+    expect(week.groups[0]!.id).toBe(used[0]); // la semaine d'origine n'est pas modifiée
+    expect(replaceDish(e, week, "main", 0, used[1]!)).toEqual({ ok: false, reason: "already_planned" });
+    expect(replaceDish(e, week, "main", 99, pick.id)).toEqual({ ok: false, reason: "unknown_dish" });
+    expect(replaceDish(e, week, "soup", 0, pick.id).ok).toBe(false);
   });
 });

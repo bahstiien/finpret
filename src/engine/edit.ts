@@ -7,6 +7,7 @@ import {
   monthOf,
   pastaClash,
   pickMains,
+  weekRecipeIds,
 } from "./compose";
 import { allowed, anyRecipe, bankRecipe, effectiveSettings, type Env } from "./env";
 import { shuffle } from "./random";
@@ -172,6 +173,46 @@ export function swap(
   ids.forEach((id, i) => (w.groups[i]!.id = id));
   w.doubles = w.doubles.filter((i) => byId(w.groups[i]!.id).freeze);
   return { ok: true, week: w, replaced: old, added };
+}
+
+export type ReplaceResult =
+  | { ok: true; week: WeekPlan; replaced: string; warnings: { pasta: boolean; tooLate: boolean } }
+  | { ok: false; reason: "unknown_dish" | "already_planned" | "wrong_kind" };
+
+/**
+ * « Mettre au menu » depuis Découvrir : la recette choisie prend la place d'un plat déjà prévu en semaine
+ * (plat de batch, soupe ou soir simple), pour les mêmes repas. Choix manuel : un conflit de pâtes ou un
+ * dépassement de conservation n'est qu'un avertissement.
+ */
+export function replaceDish(
+  env: Env,
+  week: WeekPlan,
+  kind: Exclude<SwapKind, "bank">,
+  idx: number,
+  recipeId: string,
+): ReplaceResult {
+  const w = clone(week);
+  const target = kind === "soup" ? w.soup : kind === "simple" ? w.simples[idx] : w.groups[idx];
+  if (!target) return { ok: false, reason: "unknown_dish" };
+  const lib = kind === "soup" ? env.soupById : kind === "simple" ? env.simpleById : env.mainById;
+  if (!lib.has(recipeId)) return { ok: false, reason: "wrong_kind" };
+  const old = target.id;
+  if (old === recipeId || [...weekRecipeIds(w), ...Object.values(w.weekend ?? {})].includes(recipeId)) {
+    return { ok: false, reason: "already_planned" };
+  }
+  target.id = recipeId;
+  w.locked = (w.locked ?? []).filter((x) => x !== old);
+  if (kind === "main") w.doubles = w.doubles.filter((i) => env.mainById.get(w.groups[i]!.id)?.freeze);
+  const main = kind === "main" ? env.mainById.get(recipeId) : undefined;
+  return {
+    ok: true,
+    week: w,
+    replaced: old,
+    warnings: {
+      pasta: addsPastaClash(env, week, w),
+      tooLate: !!main && !main.freeze && w.groups[idx]!.meals.some((x) => x.day > main.fridge),
+    },
+  };
 }
 
 /** « Retirer » ou « Remettre » un repas : rien n'est cuisiné ni acheté pour ce créneau. */
