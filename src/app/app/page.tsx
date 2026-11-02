@@ -59,6 +59,8 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
     seasonal: eligible(env, r, month),
     quick: quick(r),
     favorite: env.ratings[r.id] === 1,
+    comfort: !!r.comfort,
+    pasta: !!r.pasta,
     type: "steps" in r ? "simple" : "main",
   }));
   const cakeOptions: PickerOption[] = env.lib.cakes.map((c) => ({

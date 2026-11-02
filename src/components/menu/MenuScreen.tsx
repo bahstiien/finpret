@@ -38,6 +38,8 @@ export type PickerOption = {
   seasonal: boolean;
   quick: boolean;
   favorite: boolean;
+  comfort?: boolean;
+  pasta?: boolean;
   type: string;
 };
 
