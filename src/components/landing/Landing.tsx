@@ -178,6 +178,33 @@ export function HowItWorks() {
   );
 }
 
+export function Examples() {
+  const e = t.examples;
+  return (
+    <section aria-labelledby="ex-t" className="border-t-[length:var(--bw)] border-line bg-surface">
+      <div className={`${wrap} ${sectionPad}`}>
+        <div className="sh">
+          <h2 id="ex-t" className="t-1">
+            {e.title}
+          </h2>
+          <span className="rule" />
+        </div>
+        <p className="max-w-[680px] text-lg leading-[1.45]">{e.lead}</p>
+        <ul className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
+          {e.items.map((i) => (
+            <li key={i.href} className="flex">
+              <Link href={i.href} className="card tone-menu flex min-h-11 w-full flex-col gap-2 no-underline">
+                <span className="t-3">{i.title}</span>
+                <span className="t-small">{i.text}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export function Features() {
   return (
     <section

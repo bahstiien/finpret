@@ -1,4 +1,4 @@
-import { fill, fmtQ, shopQ } from "@/engine/format";
+import { fill, fmtQ, shopQ, snapNum } from "@/engine/format";
 import type { Library } from "@/engine/types";
 import { rawSeed } from "@/engine/catalog/seed-files";
 import { seedSchema, type Cake, type Main, type Simple, type Soup } from "@/engine/catalog/schema";
@@ -35,7 +35,7 @@ export type RecipeView = {
   cookMin: number | null;
   totalMin: number | null;
   /** Temps de travail actif (hors attente), en minutes. */
-  activeMin: number;
+  activeMin: number | null;
   yieldText: string;
   fridgeDays: number | null;
   freezable: boolean;
@@ -45,6 +45,10 @@ export type RecipeView = {
   difficulty: number;
   nutrition: { kcal: number; protein: number; carbs: number; fat: number } | null;
   months: number[] | null;
+  /** Vrai si la recette change selon le mois (variantes de saison) : ses quantités ne sont alors vraies qu'une partie de l'année. */
+  seasonal: boolean;
+  /** Durée telle qu'écrite dans le seed (goûters : « 55 min », « 3 h dont 2 h de pousse »). */
+  timeText: string | null;
   variants: Variant[];
   batch: boolean;
   oven: boolean;
@@ -133,11 +137,13 @@ function fromBatch(r: Main | Soup, kind: "plat" | "soupe"): RecipeView {
     fridgeDays: r.fridge,
     freezable: r.freeze,
     storage: r.box || null,
-    reheat: r.jj || null,
+    reheat: r.jj ? fill(lib, r.jj, ing, 1) : null,
     kidTip: r.kid ?? null,
     difficulty: r.diff,
     nutrition: nutrition(r.m, r.mu),
     months: r.months ?? null,
+    seasonal: Boolean(sv?.length),
+    timeText: null,
     variants: (sv ?? []).slice(1).map((v) => ({ label: v.l, months: v.m, ingredients: lines(v.ing) })),
     batch: true,
     oven: ("oven" in r && r.oven === true) || blocks.some((b) => b.mode === "four"),
@@ -167,7 +173,7 @@ function fromSimple(r: Simple): RecipeView {
     prepMin: null,
     cookMin: null,
     totalMin: null,
-    activeMin: 20,
+    activeMin: null,
     yieldText: "4 portions",
     fridgeDays: null,
     freezable: false,
@@ -177,6 +183,8 @@ function fromSimple(r: Simple): RecipeView {
     difficulty: r.diff,
     nutrition: nutrition(r.m, r.mu),
     months: r.months ?? null,
+    seasonal: false,
+    timeText: null,
     variants: [],
     batch: false,
     oven: false,
@@ -207,7 +215,7 @@ function fromCake(r: Cake): RecipeView {
     prepMin: null,
     cookMin: null,
     totalMin: total || null,
-    activeMin: 20,
+    activeMin: null,
     yieldText: r.parts,
     fridgeDays: null,
     freezable: false,
@@ -217,6 +225,8 @@ function fromCake(r: Cake): RecipeView {
     difficulty: r.diff,
     nutrition: nutrition(r.m, r.mu),
     months: r.months ?? null,
+    seasonal: false,
+    timeText: r.tm,
     variants: [],
     batch: false,
     oven: true,
@@ -253,6 +263,23 @@ export const getRecipe = (slug: string) => bySlug.get(slug) ?? null;
 
 /** Quantité d'achat dans les contenants du commerce, pour la liste de courses. */
 export const buyQty = (key: string, qty: number) => shopQ(lib, key, qty);
+
+/**
+ * Quantités totales de plusieurs recettes mises à l'échelle (`scale` = portions / 4), comme le moteur
+ * (`scaleIngredients` puis `totals`) : chaque recette est arrondie au contenant du commerce avant l'addition.
+ */
+export function scaledTotals(recipes: readonly RecipeView[], scale: number): Record<string, number> {
+  const total: Record<string, number> = {};
+  for (const r of recipes) {
+    for (const [k, q] of Object.entries(r.raw)) {
+      if (!lib.ingredients[k]) continue;
+      let v = snapNum(lib, k, q * scale);
+      if (lib.ingredients[k]!.u === "boite") v = Math.max(1, Math.round(v));
+      total[k] = (total[k] ?? 0) + v;
+    }
+  }
+  return total;
+}
 export const labelOf = (key: string) => lib.ingredients[key]?.l ?? key;
 export const aisleOf = (key: string) => lib.ingredients[key]?.c ?? "divers";
 export const AISLE_LABELS = new Map<string, string>([...seed.aisles, ["base", "Placard (à vérifier chez toi)"]]);

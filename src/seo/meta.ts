@@ -40,8 +40,7 @@ export const menuTitle = (m: MenuView) => fitTitle(m.h1);
 
 export function menuDescription(m: MenuView): string {
   const names = m.recipes.map((r) => r.short).join(", ");
-  const time = m.sessionMin ? ` Session de ${m.sessionMin} min.` : "";
-  return clamp(`${m.recipes.length} dîners, liste de courses et planning.${time} ${names}.`, DESCRIPTION_MAX);
+  return clamp(`${m.recipes.length} dîners de batch cooking et liste de courses. ${names}.`, DESCRIPTION_MAX);
 }
 
 export const hubTitle = (h: HubView) => fitTitle(h.h1);

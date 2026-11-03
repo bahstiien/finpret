@@ -173,7 +173,7 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
                 </div>
                 <ul className="flex flex-col gap-1.5">
                   {r.fridgeDays !== null && <li>Se conserve {r.fridgeDays} jours au frigo après la session de batch cooking.</li>}
-                  <li>{r.freezable ? "Se congèle : décongèle-le la veille au frigo." : "Ne se congèle pas : prévois-le dans les premiers jours."}</li>
+                  <li>{r.freezable ? "Se congèle." : "Congélation non prévue pour cette recette."}</li>
                   {r.storage && <li>Conditionnement : {r.storage}.</li>}
                   {r.reheat && <li>Le jour du repas : {r.reheat}</li>}
                 </ul>

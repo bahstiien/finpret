@@ -25,9 +25,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: path.startsWith("/associations") || path === "/" ? "monthly" : "yearly",
     priority: path === "/" ? 1 : path.startsWith("/associations") ? 0.8 : 0.3,
   }));
-  const seo: MetadataRoute.Sitemap = seoPaths().map(({ path, priority }) => ({
+  const seo: MetadataRoute.Sitemap = seoPaths().map(({ path, priority, lastmod }) => ({
     url: `${SITE_URL}${path}`,
-    lastModified: CONTENT_LASTMOD,
+    lastModified: lastmod ?? CONTENT_LASTMOD,
     changeFrequency: "monthly",
     priority,
   }));
