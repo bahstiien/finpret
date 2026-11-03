@@ -432,8 +432,10 @@ export interface PushSubscriptions {
 
 export interface Ratings {
   household_id: string;
+  kids_liked: Generated<boolean>;
   recipe_id: string;
-  value: number;
+  too_long: Generated<boolean>;
+  value: number | null;
 }
 
 export interface RecipeCooks {

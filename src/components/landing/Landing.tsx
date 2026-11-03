@@ -296,6 +296,33 @@ export function HowItWorks() {
   );
 }
 
+export function Examples() {
+  const e = t.examples;
+  return (
+    <section aria-labelledby="ex2-t" className="border-t-[length:var(--bw)] border-line bg-surface">
+      <div className={`${wrap} ${sectionPad}`}>
+        <div className="sh">
+          <h2 id="ex2-t" className="t-1">
+            {e.title}
+          </h2>
+          <span className="rule" />
+        </div>
+        <p className="max-w-[680px] text-lg leading-[1.45]">{e.lead}</p>
+        <ul className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
+          {e.items.map((i) => (
+            <li key={i.href} className="flex">
+              <Link href={i.href} className="card tone-menu flex min-h-11 w-full flex-col gap-2 no-underline">
+                <span className="t-3">{i.title}</span>
+                <span className="t-small">{i.text}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export function Features() {
   return (
     <section
@@ -451,6 +478,11 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-center justify-between gap-5">
           <Logo />
           <nav aria-label={f.nav} className="flex flex-wrap gap-x-5 gap-y-2">
+            {f.explore.map((l) => (
+              <Link key={l.href} href={l.href} className="lnk t-small">
+                {l.label}
+              </Link>
+            ))}
             {f.links.map((l) =>
               FEATURES.associations ? (
                 <Link key={l.href} href={l.href} className="lnk t-small">

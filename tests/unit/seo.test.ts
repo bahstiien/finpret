@@ -39,8 +39,10 @@ describe("robots.txt et sitemap", () => {
     expect(urls).toContain("https://finpret.app/associations/comment-ca-marche");
     expect(urls).toHaveLength(PUBLIC_PATHS.length + seoPaths().length);
     expect(urls).toContain("https://finpret.app/recettes");
-    expect(urls).toContain("https://finpret.app/menus/semaine-4-personnes-batch-cooking");
-    expect(urls).toContain("https://finpret.app/batch-cooking/en-2-heures");
+    for (const slug of ["avec-liste-de-courses", "2-adultes-2-enfants", "vegetarien"]) {
+      expect(urls).toContain(`https://finpret.app/menu-de-la-semaine/${slug}`);
+    }
+    expect(urls.some((u) => u.includes("/menus/semaine-"))).toBe(false);
     expect(urls.some((u) => /\/(ecole|app|asso|admin|join)(\/|$)/.test(u))).toBe(false);
   });
 });

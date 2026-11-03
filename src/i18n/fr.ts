@@ -51,9 +51,9 @@ export const fr = {
   },
   /** Métadonnées de la page d'accueil ; les textes de la page sont dans `landing.ts`. */
   landing: {
-    metaTitle: "Fin Prêt · Application de batch cooking pour les familles",
+    metaTitle: "Fin Prêt — Application de batch cooking pour les familles",
     metaDescription:
-      "Application de batch cooking pour les familles : Fin Prêt organise les repas autour de la vraie semaine de ton foyer, prépare les courses et te guide pendant la session de préparation.",
+      "Menus de saison, liste de courses et session de batch cooking guidée : Fin Prêt organise les repas autour de la vraie semaine de ta famille.",
     skip: "Aller au contenu",
   },
   login: {
@@ -663,7 +663,13 @@ export const fr = {
     cake: (day: string) => `Goûter du ${day} :`,
     change: "Changer",
     double: "Doubler ❄",
-    like: (name: string) => `J'aime ${name}`,
+    like: (name: string) => `À refaire : ${name}`,
+    likeShort: "À refaire",
+    kids: (name: string) => `Aimé des enfants : ${name}`,
+    kidsShort: "Aimé des enfants",
+    tooLong: (name: string) => `Trop long à préparer : ${name}`,
+    tooLongShort: "Trop long",
+    feedbackHint: "Facultatif. Retouche un bouton pour corriger ton avis.",
     dislike: (name: string) => `Ne plus proposer ${name}`,
     dishes: "Plats de la semaine",
     dishCount: (n: number) => `${n} plat${n > 1 ? "s" : ""}`,
@@ -750,6 +756,11 @@ export const fr = {
     seasonalFruit: "fruit de saison",
     importCta: "Importer une recette",
     mine: "Mes recettes",
+    myRecipes: "Mes recettes",
+    myRecipesHint: "Tes favoris et les recettes que tu as ajoutées.",
+    myRecipesEmpty:
+      "Pas encore de favori. Touche « À refaire » sur un plat de ton menu, il apparaîtra ici.",
+    allRecipes: "Tout le catalogue",
     source: (name: string) => `Source : ${name}`,
     manualSource: "Recette ajoutée à la main",
     edit: "Modifier",
@@ -1154,7 +1165,9 @@ export const fr = {
     slotOff: (slot: string) => `Rien de prévu ${slot}. Ce choix est gardé pour les semaines suivantes.`,
     slotOn: (slot: string) => `Repas de nouveau prévu ${slot}.`,
     regenerated: (slot: string) => `Nouveau menu généré avec ${slot}.`,
-    liked: "Ajouté à tes favoris : il reviendra plus souvent.",
+    liked: "Noté « à refaire » : il reviendra plus souvent, sans se répéter d'une semaine à l'autre.",
+    kidsLiked: "Noté « aimé des enfants » : il sera un peu plus souvent proposé.",
+    tooLong: "Noté « trop long » : il sera proposé moins souvent, mais pas exclu.",
     disliked: "Il ne sera plus proposé.",
     dislikedReplaced: "Il ne sera plus proposé et a été remplacé dans ta semaine.",
     dislikedNoReplacement:

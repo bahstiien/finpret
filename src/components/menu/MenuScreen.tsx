@@ -9,12 +9,13 @@ import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import {
   prepareWeekAction,
-  rateAction,
+  feedbackAction,
   suggestWeekendAction,
   swapDish,
   toggleDoubleAction,
   toggleGridSlot,
 } from "@/server/actions/menu";
+import type { FeedbackAction } from "@/engine/feedback";
 import type { DishCard, MenuView } from "@/server/menu-view";
 import { DayProgram } from "./DayProgram";
 import type { StreakState } from "@/engine/streak";
@@ -310,7 +311,7 @@ export function MenuScreen({
               dish={d}
               canEdit={canEdit}
               pending={pending}
-              onRate={(v) => run(() => rateAction(view.weekId, d.recipeId, v))}
+              onFeedback={(a) => run(() => feedbackAction(view.weekId, d.recipeId, a))}
               onDouble={() => run(() => toggleDoubleAction(view.weekId, d.index))}
               onSwap={() => run(() => swapDish(view.weekId, d.kind, d.index))}
             />
@@ -613,14 +614,14 @@ function DishCardView({
   dish,
   canEdit,
   pending,
-  onRate,
+  onFeedback,
   onDouble,
   onSwap,
 }: {
   dish: DishCard;
   canEdit: boolean;
   pending: boolean;
-  onRate: (v: 1 | -1) => void;
+  onFeedback: (a: FeedbackAction) => void;
   onDouble: () => void;
   onSwap: () => void;
 }) {
@@ -634,49 +635,74 @@ function DishCardView({
         <p className="t-small muted">{dish.detail}</p>
       </div>
       {canEdit && (
-        <div className="mt-auto flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            aria-pressed={dish.rating === 1}
-            aria-label={t.like(dish.name)}
-            disabled={pending}
-            onClick={() => onRate(1)}
-            className={`iconbtn ${dish.rating === 1 ? "[background:var(--green)]" : ""}`}
-          >
-            <Icon name="thumbUp" className="size-5" />
-          </button>
-          <button
-            type="button"
-            aria-pressed={dish.rating === -1}
-            aria-label={t.dislike(dish.name)}
-            disabled={pending}
-            onClick={() => onRate(-1)}
-            className={`iconbtn ${dish.rating === -1 ? "[background:var(--peach)]" : ""}`}
-          >
-            <Icon name="thumbDown" className="size-5" />
-          </button>
-          {dish.canDouble && (
+        <div className="mt-auto flex flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t.feedbackHint}>
             <button
               type="button"
-              aria-pressed={dish.doubled}
+              aria-pressed={dish.rating === 1}
+              aria-label={t.like(dish.name)}
               disabled={pending}
-              onClick={onDouble}
-              className="chiptg"
+              onClick={() => onFeedback("redo")}
+              className={`chiptg ${dish.rating === 1 ? "[background:var(--green)]" : ""}`}
             >
-              {t.double}
+              <Icon name="thumbUp" className="size-5" />
+              {t.likeShort}
             </button>
-          )}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={pending}
-            onClick={onSwap}
-            aria-label={`${t.change} ${dish.name}`}
-            className="flex-1"
-          >
-            {t.change}
-          </Button>
+            <button
+              type="button"
+              aria-pressed={dish.kids}
+              aria-label={t.kids(dish.name)}
+              disabled={pending}
+              onClick={() => onFeedback("kids")}
+              className={`chiptg ${dish.kids ? "[background:var(--green)]" : ""}`}
+            >
+              {t.kidsShort}
+            </button>
+            <button
+              type="button"
+              aria-pressed={dish.long}
+              aria-label={t.tooLong(dish.name)}
+              disabled={pending}
+              onClick={() => onFeedback("long")}
+              className={`chiptg ${dish.long ? "[background:var(--peach)]" : ""}`}
+            >
+              {t.tooLongShort}
+            </button>
+            <button
+              type="button"
+              aria-pressed={dish.rating === -1}
+              aria-label={t.dislike(dish.name)}
+              disabled={pending}
+              onClick={() => onFeedback("refuse")}
+              className={`iconbtn ${dish.rating === -1 ? "[background:var(--peach)]" : ""}`}
+            >
+              <Icon name="thumbDown" className="size-5" />
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {dish.canDouble && (
+              <button
+                type="button"
+                aria-pressed={dish.doubled}
+                disabled={pending}
+                onClick={onDouble}
+                className="chiptg"
+              >
+                {t.double}
+              </button>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={pending}
+              onClick={onSwap}
+              aria-label={`${t.change} ${dish.name}`}
+              className="flex-1"
+            >
+              {t.change}
+            </Button>
+          </div>
         </div>
       )}
     </Card>

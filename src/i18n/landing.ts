@@ -227,7 +227,7 @@ export const landingV2 = {
   catalogue: {
     label: "Le catalogue",
     items: [
-      { n: "522", label: "recettes de repas" },
+      { n: "521", label: "recettes de repas" },
       { n: "47", label: "goûters" },
       { n: "35", label: "petits-déjeuners" },
     ],
@@ -389,10 +389,37 @@ export const landingV2 = {
     ],
   },
   finalCta: { title: "Prêt pour ta première semaine ?", cta: "Préparer ma semaine" },
+  examples: {
+    title: "D'autres exemples de semaine",
+    lead: "Avant de te connecter, regarde à quoi ressemble une semaine : les dîners, les portions, la liste de courses et l'organisation.",
+    items: [
+      {
+        href: "/menu-de-la-semaine/avec-liste-de-courses",
+        title: "Menu de la semaine avec liste de courses",
+        text: "Cinq dîners pour deux adultes, avec les courses rayon par rayon.",
+      },
+      {
+        href: "/menu-de-la-semaine/2-adultes-2-enfants",
+        title: "Menu pour 2 adultes et 2 enfants",
+        text: "Comment les portions des enfants changent les quantités à acheter.",
+      },
+      {
+        href: "/menu-de-la-semaine/vegetarien",
+        title: "Menu de la semaine végétarien",
+        text: "Cinq dîners sans viande ni poisson, œufs et laitages autorisés.",
+      },
+    ],
+  },
   footer: {
     nav: "Pied de page",
     legal: "Informations légales",
     links: [{ href: "/associations", label: "Associations" }],
+    /** Pages publiques du catalogue : liens toujours actifs, pour que les robots les découvrent depuis l'accueil. */
+    explore: [
+      { href: "/recettes", label: "Recettes" },
+      { href: "/menus", label: "Menus de la semaine" },
+      { href: "/batch-cooking", label: "Guides batch cooking" },
+    ],
     legalLinks: [
       { href: "/cgu", label: "CGU" },
       { href: "/cgv", label: "CGV" },

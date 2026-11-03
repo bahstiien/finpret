@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { landingExample, landingV2 } from "@/i18n/landing";
+import { RECIPES } from "@/seo/catalog";
 import { libraryFromSeed } from "@/engine/catalog/library";
 import { rawSeed } from "@/engine/catalog/seed-files";
 import { validateSeed } from "@/engine/catalog/validate";
@@ -75,8 +76,10 @@ const example = weekFor(landingExample.weekStart, 1);
 describe("landing : catalogue", () => {
   it("annonce les vrais effectifs du catalogue", () => {
     const [recipes, snacks, breakfasts] = landingV2.catalogue.items;
-    expect(Number(recipes.n)).toBe(seed!.mains.length + seed!.soups.length + seed!.simples.length);
-    expect(Number(snacks.n)).toBe(seed!.cakes.length);
+    // Recettes distinctes par nom (le seed contient un doublon exact), comme le catalogue public.
+    const kinds = (...k: string[]) => RECIPES.filter((r) => k.includes(r.kind)).length;
+    expect(Number(recipes.n)).toBe(kinds("plat", "soupe", "simple"));
+    expect(Number(snacks.n)).toBe(kinds("gouter"));
     expect(Number(breakfasts.n)).toBe(seed!.breakfasts.length);
   });
 });

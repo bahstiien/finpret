@@ -48,6 +48,9 @@ export function SeoHeader() {
 export function SeoFooter() {
   const links = [
     ["/recettes", "Toutes les recettes"],
+    ["/menu-de-la-semaine/avec-liste-de-courses", "Menu et liste de courses"],
+    ["/menu-de-la-semaine/2-adultes-2-enfants", "Menu pour 2 adultes et 2 enfants"],
+    ["/menu-de-la-semaine/vegetarien", "Menu végétarien"],
     ["/menus", "Menus de la semaine"],
     ["/batch-cooking", "Batch cooking"],
     ["/mentions-legales", "Mentions légales"],
@@ -107,7 +110,7 @@ export function SectionHead({ id, title, tag }: { id: string; title: ReactNode; 
 }
 
 /** Bandeau de fin de page : inscription gratuite. */
-export function Cta() {
+export function Cta({ label = CTA_LABEL, lead }: { label?: string; lead?: string } = {}) {
   return (
     <section aria-labelledby="cta" className="tone-dark border-y-[length:var(--bw)] border-line">
       <div className={`${WRAP} flex flex-wrap items-center justify-between gap-5 py-12`}>
@@ -116,14 +119,14 @@ export function Cta() {
             Fin Prêt
           </p>
           <h2 id="cta" className="t-1">
-            {CTA_LABEL}
+            {label}
           </h2>
           <p className="t-body">
-            Fin Prêt compose ta semaine selon ton foyer et la saison, et prépare ta liste de courses.
+            {lead ?? "Fin Prêt compose ta semaine selon ton foyer et la saison, et prépare ta liste de courses."}
           </p>
         </div>
         <Link href={SIGNUP_PATH} className="btn btn--primary btn--lg">
-          {CTA_LABEL}
+          {label}
           <Icon name="chevronRight" className="ic" />
         </Link>
       </div>
@@ -132,11 +135,11 @@ export function Cta() {
 }
 
 /** Page publique : contenu centré, puis bandeau d'inscription pleine largeur. */
-export function PageFrame({ children }: { children: ReactNode }) {
+export function PageFrame({ children, cta }: { children: ReactNode; cta?: { label: string; lead?: string } }) {
   return (
     <main className="flex-1">
       <div className={`${WRAP} flex flex-col gap-8 py-8`}>{children}</div>
-      <Cta />
+      <Cta {...cta} />
     </main>
   );
 }

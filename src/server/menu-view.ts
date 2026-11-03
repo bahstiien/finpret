@@ -44,6 +44,8 @@ export type DishCard = {
   flag: Flag;
   detail: string;
   rating: 1 | -1 | null;
+  kids: boolean;
+  long: boolean;
   doubled: boolean;
   canDouble: boolean;
 };
@@ -239,6 +241,7 @@ export function buildMenuView(
   const mains = activeMains(env, w, pm);
   const so = activeSoup(env, w, pm);
   const rating = (id: string) => (env.ratings[id] ?? null) as 1 | -1 | null;
+  const flags = (id: string) => ({ kids: !!env.feedback[id]?.kids, long: !!env.feedback[id]?.long });
   const dishes: DishCard[] = [
     ...mains.map((x) => ({
       kind: "main" as const,
@@ -248,6 +251,7 @@ export function buildMenuView(
       flag: flagOf(x.r.o),
       detail: t.portions(fmtP(x.cookP), x.doubled),
       rating: rating(x.r.id),
+      ...flags(x.r.id),
       doubled: x.doubled,
       canDouble: x.r.freeze && ctx.settings.equipment.freezer,
     })),
@@ -261,6 +265,7 @@ export function buildMenuView(
             flag: flagOf(so.r.o),
             detail: t.soup,
             rating: rating(so.r.id),
+            ...flags(so.r.id),
             doubled: false,
             canDouble: false,
           },
@@ -274,6 +279,7 @@ export function buildMenuView(
       flag: flagOf(s.r.o),
       detail: t.simpleOn(fr.days[s.day - 1]!),
       rating: rating(s.r.id),
+      ...flags(s.r.id),
       doubled: false,
       canDouble: false,
     })),
@@ -287,6 +293,7 @@ export function buildMenuView(
         flag: flagOf(r.o),
         detail: t.bankOn(`${fr.days[b.day - 1]} ${fr.meals[b.meal].toLowerCase()}`),
         rating: rating(b.id),
+        ...flags(b.id),
         doubled: false,
         canDouble: false,
       };

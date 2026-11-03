@@ -1,13 +1,16 @@
 import { RECIPES } from "./catalog";
+import { EXAMPLES, EXAMPLES_LASTMOD } from "./exemples";
 import { INDEXABLE_HUBS } from "./hubs";
 import { INDEXABLE_MENUS } from "./menus";
 
 /** Chemins indexables de la couche SEO (index, recettes, menus, hubs) : seuls ceux-ci entrent dans le sitemap. */
-export const SEO_INDEX_PATHS = ["/recettes", "/menus", "/batch-cooking"] as const;
+export const SEO_INDEX_PATHS = ["/recettes", "/menus"] as const;
 
-export function seoPaths(): { path: string; priority: number }[] {
+export function seoPaths(): { path: string; priority: number; lastmod?: string }[] {
   return [
+    ...EXAMPLES.map((e) => ({ path: e.path, priority: 0.9, lastmod: EXAMPLES_LASTMOD })),
     ...SEO_INDEX_PATHS.map((path) => ({ path, priority: 0.8 })),
+    ...(INDEXABLE_HUBS.length ? [{ path: "/batch-cooking", priority: 0.8 }] : []),
     ...INDEXABLE_HUBS.map((h) => ({ path: `/batch-cooking/${h.slug}`, priority: 0.8 })),
     ...INDEXABLE_MENUS.map((m) => ({ path: `/menus/${m.slug}`, priority: 0.7 })),
     ...RECIPES.map((r) => ({ path: `/recettes/${r.slug}`, priority: 0.6 })),
