@@ -3,6 +3,7 @@ import { ORIGINS } from "@/engine/origins";
 import { shareFonts } from "@/app/api/share/fonts";
 import { displayName, getRecipe, RECIPES } from "@/seo/catalog";
 import { getHub, HUBS } from "@/seo/hubs";
+import { EXAMPLES, getExample } from "@/seo/exemples";
 import { getMenu, MENUS } from "@/seo/menus";
 
 /** Image de partage 1200 × 630 générée pour chaque recette, menu et hub (le catalogue ne contient pas de photos). */
@@ -14,6 +15,7 @@ export function generateStaticParams() {
     ...RECIPES.map((r) => ({ type: "recettes", slug: r.slug })),
     ...MENUS.map((m) => ({ type: "menus", slug: m.slug })),
     ...HUBS.map((h) => ({ type: "batch-cooking", slug: h.slug })),
+    ...EXAMPLES.map((e) => ({ type: "menu-de-la-semaine", slug: e.slug })),
     ...["recettes", "menus", "batch-cooking"].map((type) => ({ type, slug: "index" })),
   ];
 }
@@ -39,6 +41,10 @@ function describe(type: string, slug: string): Described | null {
   if (type === "menus") {
     const m = getMenu(slug);
     return m ? { kicker: "MENU DE LA SEMAINE", title: m.h1, foot: `${m.recipes.length} dîners + liste de courses`, stamp: null } : null;
+  }
+  if (type === "menu-de-la-semaine") {
+    const e = getExample(slug);
+    return e ? { kicker: "MENU DE LA SEMAINE", title: e.h1, foot: "5 dîners + liste de courses", stamp: null } : null;
   }
   const h = getHub(slug);
   return h ? { kicker: "BATCH COOKING", title: h.h1, foot: "Menus, recettes et FAQ", stamp: null } : null;

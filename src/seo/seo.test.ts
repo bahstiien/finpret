@@ -30,10 +30,16 @@ describe("menus", () => {
   it("respecte les contraintes et le seuil de recettes distinctes", () => {
     for (const m of MENUS) {
       expect(new Set(m.recipes.map((r) => r.id)).size, m.slug).toBe(m.recipes.length);
-      expect(m.indexable, m.slug).toBe(m.recipes.length >= MIN_RECIPES_PER_MENU);
+      expect(m.recipes.length, m.slug).toBeGreaterThanOrEqual(MIN_RECIPES_PER_MENU);
       if (m.combo.constraint === "vegetarien") expect(m.recipes.every((r) => r.vegetarian), m.slug).toBe(true);
-      if (m.combo.format === "batch") expect(m.plan, m.slug).toHaveLength(m.recipes.length);
     }
+  });
+  it("reste en noindex : les menus générés ne sont pas des pages à indexer", () => {
+    for (const m of MENUS) expect(m.indexable, m.slug).toBe(false);
+  });
+  it("n'invente ni durée de session ni conseil de conservation", () => {
+    const text = MENUS.flatMap((m) => [...m.intro, ...m.faq.map((f) => f.a)]).join(" ");
+    expect(text).not.toMatch(/décongèle|quelques minutes|minutes au total|20 minutes/i);
   });
   it("est déterministe", () => {
     const a = MENUS[0]!.recipes.map((r) => r.id);

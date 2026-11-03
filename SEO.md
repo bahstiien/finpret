@@ -12,6 +12,7 @@ Couche de pages publiques, indexables et rendues côté serveur, générées à 
 | `/menus/{slug}` | 5 repas, planning de batch cooking, liste de courses consolidée, FAQ | `COMBINATIONS` (`src/seo/config.ts`) |
 | `/batch-cooking` | index des hubs | `src/seo/hubs.ts` |
 | `/batch-cooking/{theme}` | introduction, menus et recettes liés, FAQ | `HUB_DEFS` |
+| `/menu-de-la-semaine/{slug}` | 3 exemples de semaine éditoriaux (avec liste de courses ; 2 adultes + 2 enfants ; végétarien) : portions, 5 dîners, organisation, courses, CTA de personnalisation | `src/seo/exemples.ts` |
 | `/og/{type}/{slug}` | image de partage 1200×630 générée | `src/app/og/` |
 | `/sitemap.xml`, `/robots.txt` | indexation | `src/app/sitemap.ts`, `src/app/robots.ts` |
 
@@ -117,3 +118,7 @@ Les requêtes sont des hypothèses de longue traîne, **non mesurées** : à con
 | 20 | `/recettes` | recettes batch cooking familiales | Parcourir les recettes |
 
 Après les photos, les recettes à fort potentiel sont celles qui se congèlent et ont une origine identifiable (curry, lasagnes, chili…) : à prioriser à partir des requêtes réelles de la Search Console.
+
+## Exemples de semaine (`/menu-de-la-semaine/{slug}`)
+
+Série volontairement courte (3 pages). Les données viennent du seed et des règles du moteur : portions par âge (`portionForAge`), quantités arrondies aux contenants (`snapNum`, `shopQ`), conservation au frigo (`fridge`, dimanche = jour 0) et congélation (`freeze`). Aucune durée de session n'est affichée : seule la somme du travail actif des recettes l'est, présentée comme telle. Les plats n'ont ni variante de saison ni mois restreints, et aucun plat n'apparaît dans deux pages. `src/seo/exemples.test.ts` vérifie ces règles. Analyse du catalogue : `docs/SEO_CATALOGUE.md`.

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
 import { Breadcrumbs, Faq, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
 import { displayName } from "@/seo/catalog";
+import { EXAMPLES_BASE } from "@/seo/exemples";
 import { getHub, INDEXABLE_HUBS } from "@/seo/hubs";
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, type Crumb } from "@/seo/jsonld";
 import { getMenu, MENUS } from "@/seo/menus";
@@ -12,8 +13,6 @@ import { menuDescription, menuTitle, pageMetadata } from "@/seo/meta";
 export const dynamicParams = false;
 
 export const generateStaticParams = () => MENUS.map((m) => ({ slug: m.slug }));
-
-const minutes = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} h ${String(n % 60).padStart(2, "0")}` : `${n} min`);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -34,7 +33,7 @@ export default async function MenuPage({ params }: { params: Promise<{ slug: str
   const m = getMenu(slug);
   if (!m) notFound();
 
-  const hub = INDEXABLE_HUBS.find((h) => h.menu(m)) ?? (m.combo.format === "batch" ? getHub("pour-debutant") : null);
+  const hub = INDEXABLE_HUBS.find((h) => h.menu(m)) ?? getHub("pour-debutant");
   const crumbs: Crumb[] = [
     { name: "Accueil", path: "/" },
     { name: "Menus de la semaine", path: "/menus" },
@@ -81,33 +80,6 @@ export default async function MenuPage({ params }: { params: Promise<{ slug: str
           </ol>
         </section>
 
-        {m.plan && m.sessionMin && (
-          <section aria-labelledby="planning" className="flex flex-col gap-3.5">
-            <SectionHead id="planning" title="Planning de batch cooking du dimanche" />
-            <p>
-              Durée estimée : environ <span className="mono font-bold">{minutes(m.sessionMin)}</span> pour une personne en
-              cuisine. Lance les plats au four et les attentes longues en premier, puis enchaîne.
-            </p>
-            <ol className="flex flex-col gap-3.5">
-              {m.plan.map((s, i) => (
-                <li key={s.slug} className="card tone-session flex items-start gap-4">
-                  <span className="t-hero w-14 flex-none text-[48px] leading-[.8]" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p>
-                    <Link href={`/recettes/${s.slug}`} className="lnk">
-                      {s.name}
-                    </Link>
-                    : <span className="mono font-bold">{s.activeMin} min</span> de travail actif
-                    {s.passiveMin ? `, ${s.passiveMin} min d'attente` : ""}
-                    {s.oven ? ", au four" : ""}.
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </section>
-        )}
-
         <section aria-labelledby="courses" className="flex flex-col gap-3.5">
           <SectionHead id="courses" title={`Liste de courses pour ${m.combo.persons} personnes`} />
           <div className="grid gap-4 sm:grid-cols-2">
@@ -130,6 +102,16 @@ export default async function MenuPage({ params }: { params: Promise<{ slug: str
       </article>
 
       <Faq items={m.faq} />
+
+      <section aria-label="Exemple de semaine" className="flex flex-col gap-3.5">
+        <p className="t-kicker">Un exemple complet, avec l&apos;organisation de la semaine :</p>
+        <LinkCard
+          href={`${EXAMPLES_BASE}/${m.combo.constraint === "vegetarien" ? "vegetarien" : "avec-liste-de-courses"}`}
+          kicker="Exemple de semaine"
+          tone="tone-menu"
+          title={m.combo.constraint === "vegetarien" ? "Menu de la semaine végétarien" : "Menu de la semaine avec liste de courses"}
+        />
+      </section>
 
       {hub && (
         <section aria-label="Pour aller plus loin" className="flex flex-col gap-3.5">
