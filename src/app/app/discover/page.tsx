@@ -41,7 +41,7 @@ export default async function DiscoverPage({
   const week = next ?? current;
   const month = monthOf(week?.start_date ?? today);
   // Environnement sans filtre de régime : Découvrir montre tout, en signalant ce qui est exclu.
-  const env = createEnv({ lib, pantry: ctx.pantry, ratings: ctx.ratings, random: Math.random });
+  const env = createEnv({ lib, pantry: ctx.pantry, ratings: ctx.ratings, feedback: ctx.feedback, random: Math.random });
   const rules = toDietRules(ctx.settings);
   const allergenName = (a: string) => ALLERGENS[a as keyof typeof ALLERGENS] ?? a;
 

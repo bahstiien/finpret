@@ -14,6 +14,12 @@ import {
   toggleMeal,
 } from "@/engine/edit";
 import type { Env } from "@/engine/env";
+import {
+  type FeedbackAction,
+  isEmptyFeedback,
+  type RecipeFeedback,
+  toggleFeedback,
+} from "@/engine/feedback";
 import { changedOccurrences, ensureOccurrenceIds, listOccurrences } from "@/engine/occurrences";
 import type { WeekPlan } from "@/engine/types";
 import { slotMap } from "@/engine/week";
@@ -342,34 +348,56 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
   return { ok: true as const, data: { message: t.regenerated(slotLabel(k)) } };
 }
 
-/** 👍 / 👎 : un refus remplace le plat s'il est dans la semaine. */
-export async function rateAction(weekId: string | null, recipeId: string, value: 1 | -1) {
+const feedbackActionSchema = z.enum(["redo", "refuse", "kids", "long"]);
+
+/**
+ * Retour rapide sur un plat, facultatif et en un tap : « à refaire » (👍), « aimé des enfants », « trop long »
+ * (temps, sans lien avec le goût) ou refus (👎, qui remplace le plat s'il est dans la semaine).
+ * Retoucher un signal actif le retire : c'est aussi le geste pour corriger un avis.
+ */
+export async function feedbackAction(weekId: string | null, recipeId: string, action: FeedbackAction) {
   const { household } = await requireHousehold("/app");
   if (household.role === "viewer") return { ok: false as const, error: fr.errors.forbidden };
-  if (![1, -1].includes(value) || !recipeId) return { ok: false as const, error: fr.errors.generic };
+  if (!feedbackActionSchema.safeParse(action).success || !recipeId)
+    return { ok: false as const, error: fr.errors.generic };
   const ctx = await loadHouseholdContext(household.id);
-  const current = ctx.ratings[recipeId];
+  const prev: RecipeFeedback = {
+    taste: ctx.ratings[recipeId] ?? null,
+    kids: !!ctx.feedback[recipeId]?.kids,
+    long: !!ctx.feedback[recipeId]?.long,
+  };
+  const next = toggleFeedback(prev, action);
   try {
     await withSession(async (db) => {
-      if (current === value)
+      if (isEmptyFeedback(next))
         await db
           .deleteFrom("ratings")
           .where("household_id", "=", household.id)
           .where("recipe_id", "=", recipeId)
           .execute();
-      else
+      else {
+        const row = { value: next.taste, kids_liked: next.kids, too_long: next.long };
         await db
           .insertInto("ratings")
-          .values({ household_id: household.id, recipe_id: recipeId, value })
-          .onConflict((oc) => oc.columns(["household_id", "recipe_id"]).doUpdateSet({ value }))
+          .values({ household_id: household.id, recipe_id: recipeId, ...row })
+          .onConflict((oc) => oc.columns(["household_id", "recipe_id"]).doUpdateSet(row))
           .execute();
+      }
     });
   } catch (e) {
     return { ok: false as const, error: toUserMessage(e) };
   }
   revalidatePath("/app", "layout");
-  if (current === value) return { ok: true as const, data: { message: t.ratingCleared } };
-  if (value === 1) return { ok: true as const, data: { message: t.liked } };
+  const on = {
+    redo: next.taste === 1,
+    refuse: next.taste === -1,
+    kids: next.kids,
+    long: next.long,
+  }[action];
+  if (!on) return { ok: true as const, data: { message: t.ratingCleared } };
+  if (action === "redo") return { ok: true as const, data: { message: t.liked } };
+  if (action === "kids") return { ok: true as const, data: { message: t.kidsLiked } };
+  if (action === "long") return { ok: true as const, data: { message: t.tooLong } };
 
   const row = weekId ? ctx.weeks.find((w) => w.id === weekId) : null;
   if (!row) return { ok: true as const, data: { message: t.disliked } };
@@ -384,6 +412,11 @@ export async function rateAction(weekId: string | null, recipeId: string, value:
   return res.ok
     ? { ok: true as const, data: { message: t.dislikedReplaced } }
     : { ok: true as const, data: { message: t.dislikedNoReplacement } };
+}
+
+/** Ancien point d'entrée 👍 / 👎, gardé pour les onglets restés ouverts pendant un déploiement. */
+export async function rateAction(weekId: string | null, recipeId: string, value: 1 | -1) {
+  return feedbackAction(weekId, recipeId, value === 1 ? "redo" : "refuse");
 }
 
 /** « Préparer la semaine suivante » (dès le jeudi) ou « Générer un nouveau menu ». */

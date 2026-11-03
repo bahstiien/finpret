@@ -1,5 +1,6 @@
 import type { Main } from "./catalog/schema";
 import { allowed, anyRecipe, bankRecipe, effectiveSettings, type Env, isWorld } from "./env";
+import { isLiked } from "./feedback";
 import { shuffle } from "./random";
 import { eligible, wshuffle } from "./season";
 import { assignGroups, buildSlots, gMax, type WeekSlots } from "./slots";
@@ -327,13 +328,14 @@ export function generateWeek(
 ): GenerateResult {
   const { env, settings: s, previous, history } = input;
   const current = history[0] ?? [];
+  // Un plat aimé (à refaire, aimé des enfants) peut revenir plus tôt, mais jamais deux semaines de suite :
+  // les deux semaines les plus récentes le bloquent, la fenêtre complète ne bloque que les autres.
   const recent = [
     ...new Set([
       ...current,
       ...history
         .slice(1, Math.max(1, s.noRepeatWeeks))
-        .flat()
-        .filter((id) => env.ratings[id] !== 1),
+        .flatMap((ids, i) => (i === 0 ? ids : ids.filter((id) => !isLiked(env, id)))),
     ]),
   ];
   const T = comfortTarget(s, previous);

@@ -1,6 +1,6 @@
 import type { Cake, Main, Protein, Simple, Soup } from "./catalog/schema";
 import { allIngredientKeys, dietTags, recipeAllergens } from "./catalog/derive";
-import type { DietRules, Library, Pantry, Ratings } from "./types";
+import type { DietRules, Feedback, Library, Pantry, Ratings } from "./types";
 
 /**
  * Environnement d'un calcul du moteur : catalogue filtré, garde-manger, avis et tirage aléatoire.
@@ -10,6 +10,8 @@ export type Env = {
   lib: Library;
   pantry: Pantry;
   ratings: Ratings;
+  /** Retours « aimé par les enfants » / « trop long » : simples pondérations du tirage, jamais des filtres. */
+  feedback: Feedback;
   random: () => number;
   /** Dernier recours de la génération : les recettes refusées (👎) redeviennent possibles. */
   ignoreDislike: boolean;
@@ -44,6 +46,7 @@ export function createEnv(options: {
   lib: Library;
   pantry?: Pantry;
   ratings?: Ratings;
+  feedback?: Feedback;
   random: () => number;
   diet?: DietRules;
   bonus?: Record<string, number>;
@@ -79,6 +82,7 @@ export function createEnv(options: {
     lib,
     pantry: options.pantry ?? {},
     ratings: options.ratings ?? {},
+    feedback: options.feedback ?? {},
     random: options.random,
     ignoreDislike: false,
     diet: options.diet ?? null,
