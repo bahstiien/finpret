@@ -3,6 +3,7 @@ export * from "./allocation";
 export * from "./compose";
 export * from "./edit";
 export * from "./env";
+export * from "./feedback";
 export * from "./format";
 export * from "./nutrition";
 export * from "./occurrences";

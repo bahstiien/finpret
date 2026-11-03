@@ -31,6 +31,8 @@ export type Library = {
 /** Garde-manger : quantité en stock, ou null pour « assez ». Un ingrédient absent n'est pas en stock. */
 export type Pantry = Record<string, number | null>;
 export type Ratings = Record<string, 1 | -1>;
+/** Retours rapides facultatifs par recette : « aimé par les enfants » (goût) et « trop long » (temps). */
+export type Feedback = Record<string, { kids?: true; long?: true }>;
 /** Réserve du congélateur : nombre de repas par recette, avec la date de congélation (la plus ancienne sert en premier). */
 export type BankEntry = { recipeId: string; portions: number; frozenAt: string };
 

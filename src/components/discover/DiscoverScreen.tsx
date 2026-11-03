@@ -130,6 +130,12 @@ export function DiscoverScreen({
     );
   }, [recipes, query, region, origin, kind, seasonal, favorites, mine, vegetarian, showAll]);
 
+  // « Mes recettes » : favoris (« à refaire ») et recettes du foyer, en tête tant qu'aucun filtre n'est actif.
+  const idle = !query.trim() && !region && !origin && !kind && !seasonal && !favorites && !mine && !vegetarian;
+  const mineList = useMemo(() => recipes.filter((r) => !r.excluded && (r.favorite || r.imported)), [recipes]);
+  const mineIds = new Set(mineList.map((r) => r.id));
+  const shown = idle ? list.filter((r) => !mineIds.has(r.id)) : list;
+
   const bfList = breakfasts.filter(
     (b) => !query.trim() || normalize(b.name).includes(normalize(query.trim())),
   );
@@ -239,11 +245,38 @@ export function DiscoverScreen({
               </ChipToggle>
             )}
           </div>
+          {idle && (
+            <section className="flex flex-col gap-3" aria-labelledby="my-recipes-title" data-testid="my-recipes">
+              <div>
+                <h2 id="my-recipes-title" className="t-2">
+                  {t.myRecipes}
+                </h2>
+                <p className="t-small muted">{t.myRecipesHint}</p>
+              </div>
+              {mineList.length ? (
+                <ul className="grid gap-3 min-[900px]:grid-cols-2">
+                  {mineList.map((r) => (
+                    <RecipeCard
+                      key={r.id}
+                      recipe={r}
+                      canPlan={!!week}
+                      canEdit={canEdit}
+                      open={r.id === openId}
+                      onPlan={() => setTarget(r)}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <p className="callout text-sm">{t.myRecipesEmpty}</p>
+              )}
+              <h2 className="t-2">{t.allRecipes}</h2>
+            </section>
+          )}
           <p className="t-small muted mono" aria-live="polite">
-            {t.count(list.length)}
+            {t.count(shown.length)}
           </p>
           <ul className="grid gap-3 min-[900px]:grid-cols-2" data-testid="discover-list">
-            {list.map((r) => (
+            {shown.map((r) => (
               <RecipeCard
                 key={r.id}
                 recipe={r}

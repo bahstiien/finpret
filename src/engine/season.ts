@@ -1,5 +1,5 @@
 import type { Env } from "./env";
-import { isFav } from "./env";
+import { feedbackBias } from "./feedback";
 import type { Resolved } from "./types";
 
 /** Saisonnalité et variantes (§7.2) : port de vegKeys, pantryCovers, optOk, eligible, resolve, pantryScore, wshuffle. */
@@ -57,12 +57,12 @@ export function pantryScore(env: Env, r: Seasonal | null | undefined): number {
     .reduce((s, k) => s + (["viande", "frais", "legumes"].includes(env.lib.ingredients[k]!.c) ? 1 : 0.3), 0);
 }
 
-/** Tirage pondéré : priorité au garde-manger et aux favoris (+0,7), léger bonus pour les recettes importées. */
+/** Tirage pondéré : priorité au garde-manger et aux plats à refaire (−0,7), aimés des enfants (−0,4), espacement des plats trop longs (+0,8), léger bonus pour les recettes importées. */
 export function wshuffle<R extends Seasonal & { id: string }>(env: Env, arr: readonly R[]): R[] {
   return arr
     .map((r) => ({
       r,
-      k: env.random() - 1.0 * pantryScore(env, r) - (isFav(env, r) ? 0.7 : 0) - (env.bonus[r.id] ?? 0),
+      k: env.random() - 1.0 * pantryScore(env, r) + feedbackBias(env, r.id) - (env.bonus[r.id] ?? 0),
     }))
     .sort((a, b) => a.k - b.k)
     .map((x) => x.r);

@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import type { Member, PresenceRule } from "@/engine/portions";
 import { householdPortions } from "@/engine/portions";
-import type { BankEntry, Pantry, Ratings, WeekPlan } from "@/engine/types";
+import type { BankEntry, Feedback, Pantry, Ratings, WeekPlan } from "@/engine/types";
 import { type HouseholdSettings, parseSettings } from "@/lib/settings";
 import type { Db } from "@/server/db";
 import { withSession } from "@/server/session";
@@ -30,6 +30,7 @@ export type HouseholdContext = {
   pantry: Pantry;
   bank: BankEntry[];
   ratings: Ratings;
+  feedback: Feedback;
   /** Semaines enregistrées, la plus récente d'abord. */
   weeks: WeekRow[];
 };
@@ -71,7 +72,7 @@ async function load(db: Db, householdId: string): Promise<HouseholdContext> {
     .execute();
   const ratings = await db
     .selectFrom("ratings")
-    .select(["recipe_id", "value"])
+    .select(["recipe_id", "value", "kids_liked", "too_long"])
     .where("household_id", "=", householdId)
     .execute();
   const weeks = await db
@@ -122,7 +123,17 @@ async function load(db: Db, householdId: string): Promise<HouseholdContext> {
       portions: f.portions,
       frozenAt: f.frozen_at,
     })),
-    ratings: Object.fromEntries(ratings.map((r) => [r.recipe_id, r.value as 1 | -1])),
+    ratings: Object.fromEntries(
+      ratings.filter((r) => r.value !== null).map((r) => [r.recipe_id, r.value as 1 | -1]),
+    ),
+    feedback: Object.fromEntries(
+      ratings
+        .filter((r) => r.kids_liked || r.too_long)
+        .map((r) => [
+          r.recipe_id,
+          { ...(r.kids_liked && { kids: true as const }), ...(r.too_long && { long: true as const }) },
+        ]),
+    ),
     weeks: weeks as WeekRow[],
   };
 }
