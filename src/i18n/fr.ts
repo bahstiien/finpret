@@ -289,6 +289,7 @@ export const fr = {
     signOut: "Se déconnecter",
   },
   errors: {
+    newVersion: { text: "Une nouvelle version de Fin Prêt est disponible. Recharge la page pour continuer.", reload: "Recharger" },
     generic: "Oups, ça n'a pas marché. Réessaie dans un instant.",
     forbidden: "Tu n'as pas les droits pour faire ça.",
     subscriptionCancel:
@@ -562,7 +563,7 @@ export const fr = {
     emailOpen: "Ouvrir l'application",
     emailFooter: "Tu reçois cet e-mail parce que tu as activé les rappels par e-mail dans tes réglages.",
   },
-  common: { close: "Fermer", loading: "Chargement", cancel: "Annuler", soon: "Cet onglet arrive bientôt." },
+  common: { close: "Fermer", loading: "Chargement", cancel: "Annuler", soon: "Cet onglet arrive bientôt.", comingSoon: "Prochainement" },
   nav: {
     label: "Navigation principale",
     menu: "Menu",

@@ -24,6 +24,12 @@ export const FEATURES = {
   shoppingSessionNotifications: false,
   /** Achats réels (journal `purchase_events`, courses réelles L1) : activation par foyer pilote, distincte de l'écriture hors ligne. */
   realPurchases: false,
+  /** Connexion Google : bouton affiché avec l'étiquette « Prochainement » tant que le drapeau est à `false`. */
+  googleSignIn: false,
+  /** Paiement en ligne (Stripe Checkout) : offres affichées avec « Prochainement » tant que le drapeau est à `false`. */
+  onlinePayment: false,
+  /** Parcours associations (liens d'entrée, code d'association) : « Prochainement » tant que le drapeau est à `false`. */
+  associations: false,
   /** Cantine saisie par enfant ou par lien (M10) : remplacée par les menus d'école publiés par l'association. */
   householdCanteen: true,
 } as const;

@@ -120,18 +120,21 @@ describe("landing : exemple de semaine", () => {
 
   it("gestes du jour J : décongélation et plats décrits par les recettes", () => {
     const storage = session.steps.at(-1)!.tasks.join("\n");
-    expect(storage).toContain("Gratin de coquillettes, jeudi midi : à sortir mercredi soir");
-    expect(storage).toContain("Poulet citron-épinards, vendredi soir : à sortir jeudi soir");
-    expect(storage).toContain("Gratin de blettes, vendredi midi : à sortir jeudi soir");
+    expect(storage).toContain("Bolognaise dinde-lentilles, jeudi midi : à sortir mercredi soir");
+    expect(storage).toContain("Agneau confit-pommes de terre, vendredi soir : à sortir jeudi soir");
+    expect(storage).toContain("Curry pois chiches-épinards, vendredi midi : à sortir jeudi soir");
     expect(storage.match(/à sortir/g)).toHaveLength(3);
     const jj = (id: string) => env.mainById.get(id)!.jj!;
-    expect(jj("pr_pates_champi_noix")).toMatch(/^Cuis .*pâtes.*sauce chaude/);
-    expect(jj("gratin_coquillettes")).toMatch(/^Réchauffe au four/);
-    expect(jj("poulet_epinards")).toMatch(/boulgour 10 min/);
-    expect(jj("pr_gratin_blettes")).toMatch(/micro-ondes.*10 min au four/);
+    expect(jj("pates_saumon")).toMatch(/^Cuis .*pâtes, réchauffe la sauce.*fromage blanc/);
+    expect(jj("x2_hp_bolognaise_dinde_lentilles")).toMatch(/^Réchauffe 2 min au micro-ondes/);
+    expect(jj("x2_an_agneau_confit_pommes_de_terre")).toMatch(/^Réchauffe 2 min au micro-ondes/);
+    expect(jj("x_curry_pois_chiches_epinards")).toMatch(/^Réchauffe 2 min au micro-ondes/);
+    expect(env.soupById.get(week.soup!.id)!.jj).toMatch(/^Réchauffe, ajoute les pois chiches/);
+    // La carte du hero reprend une recette de l'exemple.
+    expect(landingV2.hero.menuCard.title).toBe(landingExample.recipesList[1]!.name);
   });
 
-  it("courses : 22 articles par rayon, identiques à la landing", () => {
+  it("courses : articles par rayon, identiques à la landing", () => {
     const { items } = shoppingList(env, week, pm, {}, true, []);
     const labelOf = Object.fromEntries(lib.aisles);
     const byAisle = new Map<string, string[]>();
@@ -143,7 +146,8 @@ describe("landing : exemple de semaine", () => {
     expect(new Map([...byAisle].map(([k, v]) => [k, v.map(plain).sort()]))).toEqual(
       new Map([...fromLanding].map(([k, v]) => [k, [...v].sort()])),
     );
-    expect(items).toHaveLength(22);
+    expect(items).toHaveLength(landingExample.shopping.reduce((n, g) => n + g.items.length, 0));
+    expect(items).toHaveLength(20);
   });
 
   it("session : durée estimée, niveau débutant, portionnage et rangement", () => {

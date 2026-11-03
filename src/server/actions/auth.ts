@@ -206,7 +206,10 @@ export async function signInWithEmail(_prev: LoginState, formData: FormData): Pr
 }
 
 const oauthSchema = z.object({
-  provider: z.enum(["apple", "google"]).refine((p) => FEATURES.appleSignIn || p !== "apple"),
+  provider: z
+    .enum(["apple", "google"])
+    .refine((p) => FEATURES.appleSignIn || p !== "apple")
+    .refine((p) => FEATURES.googleSignIn || p !== "google"),
   next: z.string().optional(),
 });
 

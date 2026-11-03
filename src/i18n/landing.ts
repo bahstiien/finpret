@@ -16,16 +16,16 @@ export const landingExample = {
   recipes: 5,
   portions: 26.25,
   /** Durée estimée par l'application (minutes) : niveau « à l'aise », puis niveau « débutant » (+20 % par étape). */
-  sessionMinutes: 159,
-  beginnerMinutes: 182,
+  sessionMinutes: 163,
+  beginnerMinutes: 184,
   /** Fourchette des estimations sur 24 semaines générées pour ce foyer (4 dates × 6 graines). */
-  rangeMinutes: [120, 189],
+  rangeMinutes: [123, 203],
   boxes: 10,
   fridgeMeals: 7,
   freezerMeals: 3,
   recipesList: [
     {
-      name: "Pâtes champignons-noix",
+      name: "Pâtes saumon-poireaux",
       meals: [
         ["lundi soir", 3.25],
         ["mardi midi", 2],
@@ -33,103 +33,101 @@ export const landingExample = {
       gestures: [
         {
           kind: "Assembler",
-          text: "cuire les pâtes, les mélanger à la sauce chaude, ajouter noix et parmesan.",
+          text: "cuire les pâtes, réchauffer doucement la sauce, ajouter le fromage blanc hors du feu.",
         },
       ],
     },
     {
-      name: "Gratin de coquillettes",
+      name: "Bolognaise dinde-lentilles",
       meals: [
         ["mercredi soir", 3.25],
         ["jeudi midi", 2],
       ],
       gestures: [
-        { kind: "Réchauffer", text: "au four, avec un trait de lait." },
+        { kind: "Réchauffer", text: "2 min au micro-ondes ; pâtes et sauce sont dans des boîtes à part." },
         { kind: "Décongeler", text: "la boîte de jeudi midi sort du congélateur mercredi soir." },
       ],
     },
     {
-      name: "Poulet citron-épinards",
+      name: "Agneau confit-pommes de terre",
       meals: [
         ["lundi midi", 2],
         ["vendredi soir", 3.25],
       ],
       gestures: [
-        { kind: "Assembler", text: "cuire le boulgour 10 min ; la sauce est dans un pot à part." },
+        { kind: "Réchauffer", text: "2 min au micro-ondes." },
         { kind: "Décongeler", text: "la boîte de vendredi soir sort du congélateur jeudi soir." },
       ],
     },
     {
-      name: "Gratin de blettes",
+      name: "Curry pois chiches-épinards",
       meals: [
         ["mercredi midi", 2],
         ["vendredi midi", 2],
       ],
       gestures: [
-        { kind: "Réchauffer", text: "2 min au micro-ondes, ou 10 min au four pour regratiner." },
+        { kind: "Réchauffer", text: "2 min au micro-ondes ; riz et curry sont dans la même boîte." },
         { kind: "Décongeler", text: "la boîte de vendredi midi sort du congélateur jeudi soir." },
       ],
     },
     {
-      name: "Velouté poireaux",
+      name: "Velouté chou-fleur",
       meals: [
         ["mardi soir", 3.25],
         ["jeudi soir", 3.25],
       ],
-      gestures: [{ kind: "Réchauffer", text: "puis emmental râpé et pain à table." }],
+      gestures: [{ kind: "Réchauffer", text: "puis pois chiches, parmesan râpé et pain à table." }],
     },
   ],
   shopping: [
-    { aisle: "Viande et poisson", items: ["Jambon blanc découenné : 8 tranches", "Blanc de poulet : 790 g"] },
     {
-      aisle: "Crèmerie et œufs",
+      aisle: "Viande et poisson",
       items: [
-        "Ricotta : 1 pot de 250 g",
-        "Parmesan râpé : 50 g",
-        "Emmental râpé : 340 g",
-        "Skyr nature : 200 g",
-        "Fromage blanc : 1 pot de 500 g",
-        "Œufs : 4",
-        "Yaourt nature : 1 pot",
+        "Pavés de saumon : 3 pavés de 125 g",
+        "Haché de dinde : 790 g",
+        "Épaule d'agneau désossée : 920 g",
       ],
     },
     {
       aisle: "Fruits et légumes",
       items: [
-        "Champignons de Paris : 1 barquette de 250 g + 1 barquette de 500 g",
-        "Épinards frais : 2 sachets de 500 g",
+        "Poireaux : 4",
         "Citrons : 2",
-        "Blettes : 600 g",
-        "Pommes de terre : 1,1 kg",
-        "Poireaux : 5",
-        "Bananes bien mûres : 3",
+        "Carottes : 3",
+        "Pommes de terre : 1,2 kg",
+        "Épinards frais : 1 sachet de 500 g",
+        "Gingembre frais : 1",
+        "Chou-fleur : 1,3 kg",
       ],
     },
-    { aisle: "Boulangerie", items: ["Pain complet (tranches) : 13"] },
+    {
+      aisle: "Crèmerie et œufs",
+      items: ["Fromage blanc : 1 pot de 500 g", "Parmesan râpé : 100 g", "Œufs : 1"],
+    },
     {
       aisle: "Épicerie",
       items: [
         "Pâtes complètes : 2 paquets de 500 g",
-        "Noix : 70 g",
-        "Boulgour : 320 g",
-        "Haricots blancs : 2 boîtes de 400 g",
-        "Poudre d'amande : 1 sachet de 125 g",
+        "Lentilles corail : 1 sachet de 500 g",
+        "Tomates concassées : 4 boîtes de 400 g",
+        "Pois chiches : 5 boîtes de 400 g",
+        "Lait de coco light : 1 boîte de 200 ml",
+        "Noix : 60 g",
       ],
     },
+    { aisle: "Boulangerie", items: ["Pain complet (tranches) : 13"] },
   ],
   /** Étapes de la session telles que le moteur les ordonne : minute de départ et libellé. */
   sessionSteps: [
     { at: 0, text: "Mise en place : four préchauffé, boîtes et pots prêts." },
-    { at: 5, text: "Gratin de blettes : découpe, cuisson, puis four (30 min)." },
-    { at: 28, text: "Velouté poireaux : deux fournées de 25 min." },
-    { at: 39, text: "Gratin de coquillettes : pâtes, béchamel, puis four (20 min)." },
-    {
-      at: 69,
-      text: "Pâtes champignons-noix et poulet citron-épinards : découpe et cuisson sur les plaques.",
-    },
-    { at: 109, text: "Refroidissement : minuteur de 25 min." },
-    { at: 134, text: "Portionnage : 10 boîtes étiquetées." },
-    { at: 149, text: "Rangement : 7 repas au frigo, 3 au congélateur." },
+    { at: 5, text: "Agneau confit-pommes de terre : découpe, puis four (90 min)." },
+    { at: 23, text: "Velouté chou-fleur : découpe, puis deux fournées de 25 min." },
+    { at: 34, text: "Bolognaise dinde-lentilles : découpe, mijotage (25 min), pâtes." },
+    { at: 60, text: "Curry pois chiches-épinards : découpe, curry (20 min), riz." },
+    { at: 75, text: "Pâtes saumon-poireaux : découpe, poireaux, saumon." },
+    { at: 113, text: "Refroidissement : minuteur de 25 min." },
+    { at: 138, text: "Portionnage : 10 boîtes étiquetées." },
+    { at: 153, text: "Rangement : 7 repas au frigo, 3 au congélateur." },
   ],
 } as const;
 
@@ -158,8 +156,8 @@ export const landingV2 = {
     secondary: "Voir un exemple de semaine",
     menuCard: {
       kicker: "Menu · mercredi soir",
-      title: "Gratin de coquillettes",
-      note: "Réchauffer au four",
+      title: "Bolognaise dinde-lentilles",
+      note: "Réchauffer au micro-ondes",
       portions: "3,25 portions",
     },
     sessionCard: {
@@ -213,7 +211,7 @@ export const landingV2 = {
     shoppingTitle: "La liste de courses",
     shoppingSummary: `Voir les ${shoppingCount} articles par rayon`,
     shoppingNote:
-      "Comprend aussi le goûter de la semaine (un gâteau moelleux à la banane), qui ne fait pas partie des 10 repas.",
+      "Comprend aussi le goûter de la semaine (des biscuits au miel et aux noix), qui ne fait pas partie des 10 repas.",
     sessionTitle: "Aperçu de la session de préparation",
     sessionUnit: "min",
     sessionLead: `Dans cet exemple, l'application estime la session à ${hm(ex.sessionMinutes)} (${hm(ex.beginnerMinutes)} au niveau débutant).`,
@@ -229,7 +227,7 @@ export const landingV2 = {
   catalogue: {
     label: "Le catalogue",
     items: [
-      { n: "372", label: "recettes de repas" },
+      { n: "522", label: "recettes de repas" },
       { n: "47", label: "goûters" },
       { n: "35", label: "petits-déjeuners" },
     ],

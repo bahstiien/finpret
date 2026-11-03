@@ -6,6 +6,7 @@ import { z } from "zod";
 import { normalizeCode } from "@/lib/association-code";
 import { fr } from "@/i18n/fr";
 import { approvedAssociation, attachHousehold } from "@/server/associations";
+import { FEATURES } from "@/lib/features";
 import { stripeAvailable, stripeClient, stripeConfig } from "@/server/stripe";
 import { requireHousehold, withSession } from "@/server/session";
 
@@ -22,6 +23,7 @@ const appUrl = () => (process.env.APP_URL ?? "http://localhost:3000").replace(/\
  * appliqué automatiquement à l'annuel d'un foyer rattaché, TVA incluse dans le prix, adresse de facturation demandée.
  */
 export async function createCheckoutSession(formData: FormData) {
+  if (!FEATURES.onlinePayment) redirect(`${BASE}?error=notConfigured`);
   const { user, household } = await requireHousehold(BASE);
   if (household.role !== "admin") redirect(`${BASE}?error=notAdmin`);
   const plan = z.enum(["monthly", "yearly"]).safeParse(formData.get("plan"));
@@ -96,6 +98,7 @@ export async function createPortalSession() {
 
 /** « J'ai un code d'association » : rattache le foyer (D11) et prolonge l'essai à 30 jours. */
 export async function applyAssociationCode(_prev: BillingState, formData: FormData): Promise<BillingState> {
+  if (!FEATURES.associations) return { error: t.errors.generic };
   const { user, household } = await requireHousehold(BASE);
   if (household.role !== "admin") return { error: t.errors.notAdmin };
   const association = await approvedAssociation(normalizeCode(String(formData.get("code") ?? "")));

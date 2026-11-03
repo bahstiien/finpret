@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/Button";
+import { Pill } from "@/components/ui/Pill";
 import { fr } from "@/i18n/fr";
 
 const t = fr.print;
@@ -71,12 +72,9 @@ export function PrintSheet({ data }: { data: PrintData }) {
           </div>
           <div className="flex shrink-0 gap-2">
             {data.chips.map((c) => (
-              <span
-                key={c}
-                className="mono rounded-r1 border border-current px-3 py-1 text-xs font-bold whitespace-nowrap"
-              >
+              <Pill key={c} className="mono">
                 {c}
-              </span>
+              </Pill>
             ))}
           </div>
         </header>
@@ -141,12 +139,12 @@ export function PrintSheet({ data }: { data: PrintData }) {
 
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div>
-            <b className="block">{t.average}</b>
+            <b className="print-label block">{t.average}</b>
             {data.average}
           </div>
           {data.canteen.map((c) => (
             <div key={c.name}>
-              <b className="block">{t.canteen(c.name)}</b>
+              <b className="print-label block">{t.canteen(c.name)}</b>
               {c.menus.length ? (
                 c.menus.map((m) => (
                   <span key={m.day} className="block">
@@ -159,7 +157,7 @@ export function PrintSheet({ data }: { data: PrintData }) {
             </div>
           ))}
           <div>
-            <b className="block">{t.breakfasts}</b>
+            <b className="print-label block">{t.breakfasts}</b>
             {data.breakfasts.sweet && (
               <span className="block">
                 <b>{t.sweet}</b> : {data.breakfasts.sweet.name}. {data.breakfasts.sweet.description}
@@ -173,7 +171,7 @@ export function PrintSheet({ data }: { data: PrintData }) {
           </div>
           {data.cake && (
             <div className="col-span-2">
-              <b className="block">
+              <b className="print-label block">
                 {t.cake(data.cake.name)} ({data.cake.meta})
               </b>
               <span className="block">{data.cake.ingredients.join(" · ")}</span>
