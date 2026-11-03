@@ -10,10 +10,10 @@ export const landingV2 = {
     start: "Commencer",
   },
   hero: {
-    sticker: "10 repas · 2 h 30",
-    titlePlain: "2 h 30 le dimanche.",
-    titleMark: "10 repas dans la semaine.",
-    lead: "Fin Prêt compose un menu de saison pour ta famille, prépare la liste de courses et te guide minute par minute pendant une seule session. Le reste de la semaine, tu réchauffes.",
+    sticker: "Application de batch cooking",
+    titlePlain: "Batch cooking en famille.",
+    titleMark: "10 repas en 2 h 30.",
+    lead: "Le dimanche, Fin Prêt compose le menu de saison de ta famille, prépare la liste de courses et te guide minute par minute pendant une seule session. Le reste de la semaine, tu réchauffes.",
     cta: "Préparer ma semaine",
     secondary: "Comment ça marche",
     menuCard: { kicker: "Menu · mardi soir", title: "Tajine de poulet au citron", country: "Maroc", time: "50 min" },
@@ -99,6 +99,12 @@ export const landingV2 = {
     nav: "Pied de page",
     legal: "Informations légales",
     links: [{ href: "/associations", label: "Associations" }],
+    /** Pages publiques du catalogue : liens toujours actifs, pour que les robots les découvrent depuis l'accueil. */
+    explore: [
+      { href: "/recettes", label: "Recettes" },
+      { href: "/menus", label: "Menus de la semaine" },
+      { href: "/batch-cooking", label: "Guides batch cooking" },
+    ],
     legalLinks: [
       { href: "/cgu", label: "CGU" },
       { href: "/cgv", label: "CGV" },

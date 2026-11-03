@@ -331,6 +331,11 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-center justify-between gap-5">
           <Logo />
           <nav aria-label={f.nav} className="flex flex-wrap gap-x-5 gap-y-2">
+            {f.explore.map((l) => (
+              <Link key={l.href} href={l.href} className="lnk t-small">
+                {l.label}
+              </Link>
+            ))}
             {f.links.map((l) =>
               FEATURES.associations ? (
                 <Link key={l.href} href={l.href} className="lnk t-small">
