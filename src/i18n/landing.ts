@@ -1,7 +1,145 @@
-/** Textes de la landing (maquette v2.1). Tutoiement, espaces insécables avant « ? : ; ! ». */
+/**
+ * Textes de la landing (maquette v2.1). Tutoiement, espaces insécables avant « ? : ; ! ».
+ *
+ * Règle éditoriale : chaque chiffre ou fonction annoncé ici doit exister dans le produit. Les chiffres de
+ * l'exemple de semaine (`example`) et du catalogue sont vérifiés par `src/engine/landing-example.test.ts`,
+ * qui régénère la semaine avec le vrai moteur. Fonctions reportées (`src/lib/features.ts`) : ne pas les citer.
+ */
+
+const hm = (minutes: number) => `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, "0")}`;
+
+/** Exemple de semaine : sortie du moteur (graine 1, semaine du 1er mars 2027, réglages et équipement par défaut). */
+export const landingExample = {
+  weekStart: "2027-03-01",
+  household: "2 adultes et 2 enfants de 7 et 4 ans, qui mangent à la cantine le midi en semaine",
+  meals: 10,
+  recipes: 5,
+  portions: 26.25,
+  /** Durée estimée par l'application (minutes) : niveau « à l'aise », puis niveau « débutant » (+20 % par étape). */
+  sessionMinutes: 159,
+  beginnerMinutes: 182,
+  /** Fourchette des estimations sur 24 semaines générées pour ce foyer (4 dates × 6 graines). */
+  rangeMinutes: [120, 189],
+  boxes: 10,
+  fridgeMeals: 7,
+  freezerMeals: 3,
+  recipesList: [
+    {
+      name: "Pâtes champignons-noix",
+      meals: [
+        ["lundi soir", 3.25],
+        ["mardi midi", 2],
+      ],
+      gestures: [
+        {
+          kind: "Assembler",
+          text: "cuire les pâtes, les mélanger à la sauce chaude, ajouter noix et parmesan.",
+        },
+      ],
+    },
+    {
+      name: "Gratin de coquillettes",
+      meals: [
+        ["mercredi soir", 3.25],
+        ["jeudi midi", 2],
+      ],
+      gestures: [
+        { kind: "Réchauffer", text: "au four, avec un trait de lait." },
+        { kind: "Décongeler", text: "la boîte de jeudi midi sort du congélateur mercredi soir." },
+      ],
+    },
+    {
+      name: "Poulet citron-épinards",
+      meals: [
+        ["lundi midi", 2],
+        ["vendredi soir", 3.25],
+      ],
+      gestures: [
+        { kind: "Assembler", text: "cuire le boulgour 10 min ; la sauce est dans un pot à part." },
+        { kind: "Décongeler", text: "la boîte de vendredi soir sort du congélateur jeudi soir." },
+      ],
+    },
+    {
+      name: "Gratin de blettes",
+      meals: [
+        ["mercredi midi", 2],
+        ["vendredi midi", 2],
+      ],
+      gestures: [
+        { kind: "Réchauffer", text: "2 min au micro-ondes, ou 10 min au four pour regratiner." },
+        { kind: "Décongeler", text: "la boîte de vendredi midi sort du congélateur jeudi soir." },
+      ],
+    },
+    {
+      name: "Velouté poireaux",
+      meals: [
+        ["mardi soir", 3.25],
+        ["jeudi soir", 3.25],
+      ],
+      gestures: [{ kind: "Réchauffer", text: "puis emmental râpé et pain à table." }],
+    },
+  ],
+  shopping: [
+    { aisle: "Viande et poisson", items: ["Jambon blanc découenné : 8 tranches", "Blanc de poulet : 790 g"] },
+    {
+      aisle: "Crèmerie et œufs",
+      items: [
+        "Ricotta : 1 pot de 250 g",
+        "Parmesan râpé : 50 g",
+        "Emmental râpé : 340 g",
+        "Skyr nature : 200 g",
+        "Fromage blanc : 1 pot de 500 g",
+        "Œufs : 4",
+        "Yaourt nature : 1 pot",
+      ],
+    },
+    {
+      aisle: "Fruits et légumes",
+      items: [
+        "Champignons de Paris : 1 barquette de 250 g + 1 barquette de 500 g",
+        "Épinards frais : 2 sachets de 500 g",
+        "Citrons : 2",
+        "Blettes : 600 g",
+        "Pommes de terre : 1,1 kg",
+        "Poireaux : 5",
+        "Bananes bien mûres : 3",
+      ],
+    },
+    { aisle: "Boulangerie", items: ["Pain complet (tranches) : 13"] },
+    {
+      aisle: "Épicerie",
+      items: [
+        "Pâtes complètes : 2 paquets de 500 g",
+        "Noix : 70 g",
+        "Boulgour : 320 g",
+        "Haricots blancs : 2 boîtes de 400 g",
+        "Poudre d'amande : 1 sachet de 125 g",
+      ],
+    },
+  ],
+  /** Étapes de la session telles que le moteur les ordonne : minute de départ et libellé. */
+  sessionSteps: [
+    { at: 0, text: "Mise en place : four préchauffé, boîtes et pots prêts." },
+    { at: 5, text: "Gratin de blettes : découpe, cuisson, puis four (30 min)." },
+    { at: 28, text: "Velouté poireaux : deux fournées de 25 min." },
+    { at: 39, text: "Gratin de coquillettes : pâtes, béchamel, puis four (20 min)." },
+    {
+      at: 69,
+      text: "Pâtes champignons-noix et poulet citron-épinards : découpe et cuisson sur les plaques.",
+    },
+    { at: 109, text: "Refroidissement : minuteur de 25 min." },
+    { at: 134, text: "Portionnage : 10 boîtes étiquetées." },
+    { at: 149, text: "Rangement : 7 repas au frigo, 3 au congélateur." },
+  ],
+} as const;
+
+const ex = landingExample;
+const shoppingCount = ex.shopping.reduce((n, g) => n + g.items.length, 0);
+
 export const landingV2 = {
   nav: {
     label: "Navigation du site",
+    example: "Un exemple",
     how: "Comment ça marche",
     features: "Fonctionnalités",
     households: "Foyers",
@@ -10,72 +148,209 @@ export const landingV2 = {
     start: "Commencer",
   },
   hero: {
-    sticker: "10 repas · 2 h 30",
-    titlePlain: "2 h 30 le dimanche.",
-    titleMark: "10 repas dans la semaine.",
-    lead: "Fin Prêt compose un menu de saison pour ta famille, prépare la liste de courses et te guide minute par minute pendant une seule session. Le reste de la semaine, tu réchauffes.",
+    sticker: "Application de batch cooking pour les familles",
+    titlePlain: "Des soirées libérées,",
+    titleMark: "moins de décisions autour des repas.",
+    lead: "Fin Prêt organise les repas autour de la vraie semaine de ta famille : qui est à table à chaque repas, les repas à ne pas prévoir, le régime, l'équipement.",
+    method:
+      "La méthode, c'est le batch cooking : tu prépares plusieurs repas en une session, par exemple le dimanche. Ensuite, il reste à réchauffer, à assembler ou à décongeler.",
     cta: "Préparer ma semaine",
-    secondary: "Comment ça marche",
-    menuCard: { kicker: "Menu · mardi soir", title: "Tajine de poulet au citron", country: "Maroc", time: "50 min" },
-    sessionCard: { kicker: "Session du dimanche", time: "2:30", caption: "pour 10 repas" },
-    coursesCard: {
-      kicker: "Courses · lentilles corail",
-      need: "Besoin",
-      bought: "Acheté",
-      left: "Reste",
-      grams: "500 g",
-      zero: "0",
+    secondary: "Voir un exemple de semaine",
+    menuCard: {
+      kicker: "Menu · mercredi soir",
+      title: "Gratin de coquillettes",
+      note: "Réchauffer au four",
+      portions: "3,25 portions",
     },
-    stamp: "Passeport · Italie",
+    sessionCard: {
+      kicker: "Cette semaine d'exemple",
+      big: String(ex.meals),
+      caption: `repas, ${ex.recipes} recettes à cuisiner`,
+    },
+    coursesCard: {
+      kicker: "Courses · par rayon",
+      cells: [
+        ["Articles", String(shoppingCount), ""],
+        ["Rayons", String(ex.shopping.length), ""],
+        ["Recettes", String(ex.recipes), "tone-success"],
+      ],
+    },
+    stamp: "Batch cooking",
+  },
+  example: {
+    id: "exemple",
+    title: "Un exemple de semaine, pas à pas",
+    lead: `Une semaine générée par Fin Prêt avec ses réglages par défaut. Foyer : ${ex.household}.`,
+    stats: [
+      {
+        n: String(ex.meals),
+        label: "repas à prévoir",
+        hint: "5 déjeuners et 5 dîners, du lundi au vendredi",
+      },
+      {
+        n: String(ex.recipes),
+        label: "recettes",
+        hint: "4 plats et 1 soupe : une recette couvre en général 2 repas",
+      },
+      {
+        n: "26,25",
+        label: "portions",
+        hint: "1 portion = 1 adulte ; un enfant de 7 ans compte 0,75, de 4 ans 0,5",
+      },
+      {
+        n: String(shoppingCount),
+        label: "articles à acheter",
+        hint: "hors produits du placard, en contenants du commerce",
+      },
+    ],
+    recipesTitle: "Les repas, recette par recette",
+    recipesLead:
+      "Chaque boîte porte le jour et le repas. Au moment de manger, il reste un geste court, selon la recette.",
+    portionsLabel: "portions",
+    mealsLabel: "Repas couverts",
+    gesturesLabel: "Le jour J",
+    soupTag: "Soupe",
+    shoppingTitle: "La liste de courses",
+    shoppingSummary: `Voir les ${shoppingCount} articles par rayon`,
+    shoppingNote:
+      "Comprend aussi le goûter de la semaine (un gâteau moelleux à la banane), qui ne fait pas partie des 10 repas.",
+    sessionTitle: "Aperçu de la session de préparation",
+    sessionUnit: "min",
+    sessionLead: `Dans cet exemple, l'application estime la session à ${hm(ex.sessionMinutes)} (${hm(ex.beginnerMinutes)} au niveau débutant).`,
+    methodTitle: "Comment lire cet exemple",
+    method: [
+      "« 10 repas » désigne les occasions de repas du foyer : 5 déjeuners et 5 dîners, du lundi au vendredi. Ce ne sont pas 10 recettes ni 10 portions.",
+      "Les portions comptent les personnes présentes à chaque repas : ici, les enfants ne mangent pas à la maison le midi.",
+      `La durée est une estimation calculée à partir des durées indiquées dans les recettes, de ton équipement et de ton niveau : 5 min de mise en place, 25 min de refroidissement, 15 min de portionnage et 10 min de rangement, durées fixes. La vaisselle est proposée pendant le refroidissement ; le rangement de la cuisine après la session n'est pas compté.`,
+      `Ce n'est pas une durée mesurée en cuisine. Sur 24 semaines générées pour ce foyer, l'estimation va de ${hm(ex.rangeMinutes[0])} à ${hm(ex.rangeMinutes[1])}. Le jour de la session se choisit dans les réglages : le dimanche n'est qu'un exemple.`,
+    ],
+    cta: "Préparer ma semaine",
   },
   catalogue: {
     label: "Le catalogue",
     items: [
-      { n: "184", label: "repas" },
-      { n: "35", label: "goûters" },
-      { n: "25", label: "petits-déjeuners" },
+      { n: "372", label: "recettes de repas" },
+      { n: "47", label: "goûters" },
+      { n: "35", label: "petits-déjeuners" },
     ],
     season: "De saison, toute l'année",
   },
   how: {
-    title: "Comment ça marche",
+    title: "La méthode : le batch cooking",
+    lead: "Cuisiner une fois pour plusieurs repas, au lieu de se demander chaque soir quoi faire. Fin Prêt s'occupe du menu, des courses et du déroulé.",
     steps: [
-      { n: "01", title: "Qui est à table ?", text: "Adultes, enfants, régimes, allergies. Fin Prêt compose 10 repas de saison." },
-      { n: "02", title: "Les courses", text: "Une liste triée par rayon. Tu notes ce que tu achètes, elle calcule ce qu'il reste." },
-      { n: "03", title: "La session", text: "Dimanche, 2 h 30 guidées pas à pas, minuteurs compris." },
-      { n: "04", title: "La semaine", text: "Tu réchauffes. Fin Prêt te dit quoi sortir du congélateur, et quand." },
+      {
+        n: "01",
+        title: "Qui est à table ?",
+        text: "Adultes, enfants, cantine ou repas décalés, régime, allergies, équipement. Fin Prêt prévoit les repas du lundi au vendredi.",
+      },
+      {
+        n: "02",
+        title: "Un menu, des courses",
+        text: "Peu de recettes pour beaucoup de repas, de saison. La liste est triée par rayon, en contenants du commerce.",
+      },
+      {
+        n: "03",
+        title: "Une session de préparation",
+        text: "Le jour que tu choisis, par exemple le dimanche : étapes guidées, minuteurs, portionnage en boîtes.",
+      },
+      {
+        n: "04",
+        title: "Pendant la semaine",
+        text: "Selon la recette, tu réchauffes, tu assembles (des pâtes à cuire, une sauce à ajouter) ou tu sors une boîte du congélateur la veille.",
+      },
     ],
   },
   features: {
     title: "Fonctionnalités",
     items: [
-      { tone: "menu", icon: "utensils", title: "Menu de saison", text: "Midis, soirs, week-end. Change un plat en un geste." },
-      { tone: "courses", icon: "basket", title: "Courses réelles", text: "Besoin, acheté, reste. Un produit introuvable ? Le menu s'adapte." },
-      { tone: "session", icon: "timer", title: "Session guidée", text: "Étapes numérotées, minuteurs en parallèle, lisibles à un mètre." },
-      { tone: "stock", icon: "snowflake", title: "Congélateur", text: "Chaque plat rangé par contenant, avec le rappel « à sortir demain »." },
-      { tone: "progres", icon: "sparkle", title: "Nos progrès", text: "Une série de semaines, un passeport de recettes sur la carte du monde." },
-      { tone: "", icon: "compass", title: "Adapter mon menu", text: "Il manque un ingrédient ? Jusqu'à 3 propositions, et tu peux annuler." },
+      {
+        tone: "menu",
+        icon: "utensils",
+        title: "Menu de saison",
+        text: "Midis et soirs, du lundi au vendredi. Change un plat en un geste.",
+      },
+      {
+        tone: "courses",
+        icon: "basket",
+        title: "Courses par rayon",
+        text: "En contenants du commerce, cochées à plusieurs en temps réel, lisibles hors ligne.",
+      },
+      {
+        tone: "session",
+        icon: "timer",
+        title: "Session guidée",
+        text: "Étapes numérotées, minuteurs en parallèle, lisibles à un mètre.",
+      },
+      {
+        tone: "stock",
+        icon: "snowflake",
+        title: "Rappels utiles",
+        text: "Le plat du soir, et « avant de dormir » : ce qu'il faut sortir du congélateur pour le lendemain.",
+      },
+      {
+        tone: "progres",
+        icon: "sparkle",
+        title: "Nos progrès",
+        text: "Une série de semaines, un passeport de recettes sur la carte du monde.",
+      },
+      {
+        tone: "",
+        icon: "compass",
+        title: "Régime et allergies",
+        text: "Régime du foyer, allergènes, ingrédients refusés : les recettes concernées ne sont pas proposées.",
+      },
     ],
   },
   households: {
     title: "Pour quel foyer ?",
     items: [
-      { tone: "banane", tilt: false, tag: "Parents actifs", title: "Les soirs de semaine sont réglés", text: "Une session le dimanche, plus de « on mange quoi ce soir ? » à 19 h." },
-      { tone: "pink", tilt: true, tag: "Garde alternée", title: "Une semaine sur deux, sans gâchis", text: "Indique les jours où les enfants sont là, les quantités suivent." },
-      { tone: "blue", tilt: false, tag: "Couple", title: "Juste ce qu'il faut pour deux", text: "Des portions réalistes et des restes qui finissent au congélateur." },
-      { tone: "green", tilt: true, tag: "Végétarien", title: "Varié, sans viande ni ennui", text: "Filtres régime et allergènes : le menu s'y plie, la liste aussi." },
+      {
+        tone: "banane",
+        tilt: false,
+        tag: "Parents actifs",
+        title: "Moins de décisions en semaine",
+        text: "Les repas sont prévus à l'avance : le soir, il reste un geste court, pas un menu à inventer.",
+      },
+      {
+        tone: "pink",
+        tilt: true,
+        tag: "Cantine et repas décalés",
+        title: "Les quantités suivent qui mange",
+        text: "Indique qui est à table à chaque repas, par exemple les enfants à la cantine le midi : les portions s'ajustent.",
+      },
+      {
+        tone: "blue",
+        tilt: false,
+        tag: "Couple",
+        title: "Juste ce qu'il faut pour deux",
+        text: "Des quantités calculées pour le nombre de personnes présentes à chaque repas.",
+      },
+      {
+        tone: "green",
+        tilt: true,
+        tag: "Végétarien",
+        title: "Varié, sans viande ni ennui",
+        text: "Filtres régime et allergènes : le menu s'y plie, la liste aussi.",
+      },
     ],
   },
   pricing: {
     title: "Tarifs",
-    lead: "Deux formules, le même Fin Prêt : menu de saison, courses, session guidée, congélateur et progrès.",
-    monthly: { label: "Au mois", price: "5,99 €", per: "/ mois", note: "Facturé chaque mois.", cta: "Choisir le mois" },
+    lead: "Deux formules, le même Fin Prêt : menu de saison, courses, session guidée, rappels et progrès.",
+    monthly: {
+      label: "Au mois",
+      price: "5,99 €",
+      per: "/ mois",
+      note: "Facturé chaque mois.",
+      cta: "Choisir le mois",
+    },
     yearly: {
       label: "À l'année",
       badge: "−30 %",
-      price: "49,99 €",
+      price: "49,99 €",
       per: "/ an",
-      note: "Soit 4,17 € par mois : 21,89 € d'économie sur l'année.",
+      note: "Soit 4,17 € par mois : 21,89 € d'économie sur l'année.",
       cta: "Choisir l'année",
     },
     asso: {
@@ -87,14 +362,35 @@ export const landingV2 = {
   faq: {
     title: "Questions",
     items: [
-      { q: "Combien de temps dure la session ?", a: "Environ 2 h 30 pour 10 repas. La session te dit quoi faire, dans quel ordre, et lance les minuteurs." },
-      { q: "Et si on mange dehors un soir ?", a: "Retire le repas : la liste et la session s'ajustent. Le plat peut aussi partir au congélateur." },
-      { q: "Ça marche pour un foyer végétarien ?", a: "Oui. Choisis tes filtres régime et allergènes, le menu s'y plie." },
-      { q: "Et sans réseau au supermarché ?", a: "Ta liste reste lisible hors ligne. Les achats se saisissent au retour du réseau." },
-      { q: "Combien ça coûte ?", a: "5,99 € par mois, ou 49,99 € par an (soit 4,17 € par mois)." },
+      {
+        q: "Qu'est-ce que le batch cooking ?",
+        a: "C'est cuisiner en une session plusieurs repas de la semaine, puis les conserver au frigo ou au congélateur. Fin Prêt compose le menu, prépare la liste de courses et te guide pendant la session.",
+      },
+      {
+        q: "« 10 repas », ça veut dire 10 recettes ?",
+        a: "Non. Les 10 repas sont les déjeuners et dîners du lundi au vendredi. Une recette couvre en général deux repas : avec les réglages par défaut, une semaine compte environ 5 recettes. Les portions dépendent des personnes présentes à chaque repas.",
+      },
+      {
+        q: "Combien de temps dure la session ?",
+        a: `Ça dépend de la semaine. L'application estime la durée à partir des recettes, de ton équipement et de ton niveau, et t'avertit si elle dépasse la durée maximale que tu as fixée. Dans notre exemple, l'estimation est de ${hm(ex.sessionMinutes)}. Ce n'est pas une durée mesurée.`,
+      },
+      {
+        q: "Faut-il cuisiner le dimanche ?",
+        a: "Non, le dimanche est un exemple. Tu choisis le jour de ta session dans les réglages. Une session reste une seule séance : elle n'est pas découpée en plusieurs.",
+      },
+      { q: "Et si on mange dehors un soir ?", a: "Retire le repas : la liste et la session s'ajustent." },
+      {
+        q: "Ça marche pour un foyer végétarien ?",
+        a: "Oui. Choisis tes filtres régime et allergènes, le menu s'y plie.",
+      },
+      {
+        q: "Et sans réseau au supermarché ?",
+        a: "Ta liste reste lisible hors ligne. Pour cocher un article, il faut du réseau.",
+      },
+      { q: "Combien ça coûte ?", a: "5,99 € par mois, ou 49,99 € par an (soit 4,17 € par mois)." },
     ],
   },
-  finalCta: { title: "Prêt pour dimanche ?", cta: "Préparer ma semaine" },
+  finalCta: { title: "Prêt pour ta première semaine ?", cta: "Préparer ma semaine" },
   footer: {
     nav: "Pied de page",
     legal: "Informations légales",
