@@ -53,7 +53,7 @@ export function Logo({ className = "size-12 text-2xl" }: { className?: string })
 
 const FRIEZE_TONES = ["violet", "green", "blue", "pink", "peach"] as const;
 
-/** Frise décorative : une case par repas (10 repas en une session). */
+/** Frise décorative : une case par repas (les 10 repas du lundi au vendredi). */
 export function MealFrieze({ count = 10, size = 14 }: { count?: number; size?: number }) {
   return (
     <span className="frieze" aria-hidden="true" style={{ "--frieze-size": `${size}px` } as React.CSSProperties}>

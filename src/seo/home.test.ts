@@ -14,8 +14,10 @@ describe("accueil", () => {
     expect(metaTitle).toMatch(/familles/i);
   });
 
-  it("le H1 exprime le besoin", () => {
-    expect(`${landingV2.hero.titlePlain} ${landingV2.hero.titleMark}`).toMatch(/batch cooking en famille/i);
+  it("le hero annonce la catégorie et le bénéfice : batch cooking pour les familles, soirées libérées", () => {
+    const { sticker, titlePlain, titleMark } = landingV2.hero;
+    expect(sticker).toMatch(/batch cooking pour les familles/i);
+    expect(`${titlePlain} ${titleMark}`).toMatch(/soirées libérées/i);
   });
 
   it("JSON-LD : aucune note, avis ni prix", () => {

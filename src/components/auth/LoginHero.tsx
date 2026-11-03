@@ -21,17 +21,12 @@ export function LoginHero() {
           <p className="t-kicker">{t.kicker}</p>
         </div>
         <h1 className="t-hero balance !text-[clamp(36px,5.4vw,84px)]">{t.hero}</h1>
-        <p className="t-body max-w-[34rem] text-xl max-[999px]:hidden">
-          {t.heroLeadBefore}
-          <span className="mono">{t.heroLeadMeals}</span>
-          {t.heroLeadBetween}
-          <span className="mono">{t.heroLeadTime}</span>.
-        </p>
+        <p className="t-body max-w-[34rem] text-xl max-[999px]:hidden">{t.heroLead}</p>
       </div>
 
       <div className="grid max-w-[480px] grid-cols-2 gap-4 max-[999px]:hidden">
         <StatTile tone="yellow" label={t.heroMeals} value="10" />
-        <StatTile tone="session" label={t.heroSession} value="2 h 30" />
+        <StatTile tone="session" label={t.heroRecipes} value="≈ 5" />
       </div>
 
       <Bento columns={2} shadow="md" className="max-[999px]:hidden">
