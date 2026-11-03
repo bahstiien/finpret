@@ -48,7 +48,8 @@ describe("exemples de semaine", () => {
   it("donne des courses sans placeholder ni quantité vide", () => {
     for (const e of EXAMPLES) {
       expect(e.shopping.length).toBeGreaterThan(0);
-      for (const g of e.shopping) for (const it of g.items) expect(`${it.label}${it.qty}`).not.toMatch(/\{\w+\}|NaN|undefined/);
+      for (const g of e.shopping)
+        for (const it of g.items) expect(`${it.label}${it.qty}`).not.toMatch(/\{\w+\}|NaN|undefined/);
     }
   });
   it("a un goûter à faire avec les enfants seulement quand il y a des enfants", () => {
@@ -60,7 +61,7 @@ describe("exemples de semaine", () => {
   it("annonce sur l'accueil les volumes réels du catalogue", () => {
     const n = (label: string) => Number(landingV2.catalogue.items.find((i) => i.label === label)!.n);
     const kinds = (...k: string[]) => RECIPES.filter((r) => k.includes(r.kind)).length;
-    expect(n("repas")).toBe(kinds("plat", "soupe", "simple"));
+    expect(n("recettes de repas")).toBe(kinds("plat", "soupe", "simple"));
     expect(n("goûters")).toBe(kinds("gouter"));
   });
   it("entre au sitemap avec son URL canonique", () => {

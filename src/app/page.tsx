@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   Catalogue,
+  ExampleWeek,
   Examples,
   Faq,
   Features,
@@ -47,6 +48,7 @@ export default function HomePage() {
       <SiteHeader />
       <main id="contenu">
         <Hero />
+        <ExampleWeek />
         <Catalogue />
         <HowItWorks />
         <Examples />

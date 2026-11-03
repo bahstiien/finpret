@@ -408,8 +408,8 @@ export function WelcomeEmail({
       reason="Tu reçois cet e-mail car tu as créé un compte Fin Prêt."
     >
       <Text style={p}>
-        Le dimanche, tu cuisines 10&nbsp;repas en 2&nbsp;h&nbsp;30. La semaine, tu réchauffes et tu passes à
-        table. Commence par choisir ton premier menu.
+        Fin Prêt organise les repas autour de la vraie semaine de ta famille. Tu prépares plusieurs repas en une
+        session ; ensuite, il reste à réchauffer ou à assembler. Commence par choisir ton premier menu.
       </Text>
       <Cta href={url}>Choisir mon premier menu</Cta>
 
