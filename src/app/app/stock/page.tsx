@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { StockScreen } from "@/components/stock/StockScreen";
+import { daysLeft, isUrgent } from "@/engine/antigaspi";
 import { fmtQ, fmtRaw } from "@/engine/format";
 import { totals } from "@/engine/quantities";
 import { frozenTooLong, pantryStep, weeksSince } from "@/engine/stock";
@@ -58,6 +59,8 @@ export default async function StockPage() {
     .map(([k, qty]) => {
       const g = lib.ingredients[k]!;
       const need = used[k] ?? 0;
+      const useBy = ctx.useBy[k] ?? null;
+      const left = useBy ? daysLeft(useBy, today) : null;
       return {
         key: k,
         label: g.l,
@@ -67,9 +70,17 @@ export default async function StockPage() {
         display: qty === null ? fr.stock.enough : qtyText(k, qty),
         usedText: need ? qtyText(k, need) : null,
         missingText: need && qty !== null && qty < need ? qtyText(k, need - qty) : null,
+        useBy,
+        useByText: useBy ? formatShort(useBy) : null,
+        // Date courte : jours restants (négatif si dépassée) ; null sans date ou si elle est lointaine.
+        daysLeft: useBy && isUrgent(useBy, today) ? left : null,
       };
     })
-    .sort((a, b) => a.label.localeCompare(b.label, "fr"));
+    // Les ingrédients à date courte d'abord, les plus pressés en tête.
+    .sort(
+      (a, b) =>
+        (a.daysLeft ?? Infinity) - (b.daysLeft ?? Infinity) || a.label.localeCompare(b.label, "fr"),
+    );
 
   const freezable = [...env.lib.mains.filter((r) => r.freeze), ...env.lib.soups.filter((r) => r.freeze)]
     .map((r) => ({ id: r.id, name: r.n }))

@@ -15,6 +15,7 @@ import {
   adjustFreezer,
   bankDoublesAction,
   setPantry,
+  setPantryUseBy,
   updatePantryAfterSession,
 } from "@/server/actions/stock";
 import type { Flag as FlagData } from "@/server/menu-view";
@@ -40,6 +41,10 @@ type PantryRow = {
   display: string;
   usedText: string | null;
   missingText: string | null;
+  /** Date limite (AAAA-MM-JJ) et jours restants quand elle est courte. */
+  useBy: string | null;
+  useByText: string | null;
+  daysLeft: number | null;
 };
 
 const round = (unit: string, value: number) =>
@@ -202,6 +207,36 @@ export function StockScreen({
                   >
                     {p.missingText ? t.usesMissing(p.usedText, p.missingText) : t.usesOk(p.usedText)}
                   </p>
+                )}
+                {p.daysLeft !== null && (
+                  <p
+                    className="tone-peach nb-flat mt-1 inline-block px-2 py-0.5 text-sm font-bold"
+                    data-testid={`use-by-${p.key}`}
+                  >
+                    {p.daysLeft < 0 ? t.useByPast : t.useBySoon(p.daysLeft)}
+                  </p>
+                )}
+                {canEdit ? (
+                  <label className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted">
+                    {t.useByShort}
+                    <input
+                      type="date"
+                      className="input w-auto"
+                      aria-label={t.useBy(p.label)}
+                      defaultValue={p.useBy ?? ""}
+                      disabled={pending}
+                      onChange={(e) => {
+                        const value = e.target.value || null;
+                        if (value !== p.useBy) run(() => setPantryUseBy(p.key, value));
+                      }}
+                    />
+                  </label>
+                ) : (
+                  p.useByText && (
+                    <p className="mono mt-1 text-sm text-muted">
+                      {t.useByShort} {p.useByText}
+                    </p>
+                  )
                 )}
               </div>
               {canEdit && (

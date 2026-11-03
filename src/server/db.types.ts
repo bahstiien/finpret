@@ -362,6 +362,16 @@ export interface Pantry {
   ingredient_key: string;
   qty: Numeric | null;
   updated_at: Generated<string>;
+  use_by: string | null;
+}
+
+export interface PantrySaves {
+  household_id: string;
+  ingredient_key: string;
+  qty: Numeric | null;
+  saved_on: string;
+  urgent: Generated<boolean>;
+  week_id: string;
 }
 
 export interface PayoutLines {
@@ -624,6 +634,7 @@ export interface DB {
   notification_log: NotificationLog;
   packs: Packs;
   pantry: Pantry;
+  pantry_saves: PantrySaves;
   payout_lines: PayoutLines;
   payouts: Payouts;
   preparation_states: PreparationStates;

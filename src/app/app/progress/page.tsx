@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/Layout";
+import { AntigaspiCard } from "@/components/progress/AntigaspiCard";
 import { PassportBlock } from "@/components/progress/PassportBlock";
 import { PauseSheet } from "@/components/progress/PauseSheet";
 import { ProgressViewed } from "@/components/progress/ProgressViewed";
@@ -11,6 +12,8 @@ import { OriginsList } from "@/components/progress/OriginsList";
 import { ProgressStats } from "@/components/progress/ProgressStats";
 import { PAUSES_PER_QUARTER } from "@/engine/streak";
 import { flagOf } from "@/server/menu-view";
+import { loadAntigaspiImpact } from "@/server/antigaspi";
+import { loadHouseholdContext } from "@/server/household-context";
 import { loadProgressStats, loadProgressView } from "@/server/progress-view";
 import { requireHousehold } from "@/server/session";
 
@@ -22,11 +25,13 @@ const FROM = ["tile", "profile", "session"] as const;
 /** « Nos progrès » (SPEC_PROGRES §3.5, §4.4) : série de semaines fin prêtes et passeport des saveurs. */
 export default async function ProgressPage({ searchParams }: { searchParams: Promise<{ from?: string }> }) {
   const { user, household } = await requireHousehold("/app/progress");
-  const [view, params, stats] = await Promise.all([
+  const [view, params, stats, ctx] = await Promise.all([
     loadProgressView(household.id, user.id),
     searchParams,
     loadProgressStats(household.id),
+    loadHouseholdContext(household.id),
   ]);
+  const antigaspi = await loadAntigaspiImpact(household.id, ctx.timezone);
   const from = FROM.find((f) => f === params.from) ?? "tile";
   const { streak } = view;
   const percent = streak.nextMilestone
@@ -130,6 +135,8 @@ export default async function ProgressPage({ searchParams }: { searchParams: Pro
       </div>
 
       <ProgressStats sessions={stats.sessions} meals={stats.meals} origins={earnedCountries.length} />
+
+      <AntigaspiCard month={antigaspi.month} total={antigaspi.total} />
 
       <PassportBlock countries={view.countries} seasons={view.seasons} />
 
