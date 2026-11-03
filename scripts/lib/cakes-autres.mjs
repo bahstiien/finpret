@@ -169,4 +169,5 @@ const crepes = [
     ["Mélange {farine} de farine, {oeufs} et {lait} de lait, laisse reposer 1 h. Cuis les crêpes.", "Épluche {pomme}, coupe-les en dés et fais-les dorer 10 min dans {beurre} de beurre avec {sucre} de sucre.", "Garnis les crêpes de pommes et plie-les en quatre."], M.pomme),
 ];
 
-export default [...biscuits, ...brioches, ...crepes];
+const autres = [...biscuits, ...brioches, ...crepes];
+export default autres;

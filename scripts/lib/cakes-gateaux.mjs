@@ -1,7 +1,7 @@
 // 50 gâteaux, tartes, clafoutis et crumbles (type « gateau »), identifiants x3_g_.
 import { G, M } from "./cakes-lib.mjs";
 
-export default [
+const gateaux = [
   G("x3_g_quatre_quarts", "Quatre-quarts breton", "gateau", "55 min", "10 parts", "Il pèse chaque ingrédient sur la balance.",
     { beurre: 200, sucre: 200, farine: 200, oeufs: 4 },
     ["Préchauffe le four à 170 °C et beurre un moule à cake.", "Fouette {oeufs} avec {sucre} de sucre jusqu'à ce que le mélange blanchisse, ajoute {beurre} de beurre fondu.", "Incorpore {farine} de farine, verse dans le moule et enfourne 40 min."]),
@@ -153,3 +153,4 @@ export default [
     { beurrecacahuete: 6, beurre: 80, sucre: 120, oeufs: 2, farine: 150, chocolat: 80, levure: 1 },
     ["Préchauffe le four à 180 °C. Mélange {beurrecacahuete} de beurre de cacahuète, {beurre} de beurre fondu et {sucre} de sucre.", "Ajoute {oeufs}, {farine} de farine, {levure} de levure et {chocolat} de chocolat concassé.", "Étale dans un moule carré et enfourne 25 min."]),
 ];
+export default gateaux;
