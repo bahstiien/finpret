@@ -50,9 +50,9 @@ export const fr = {
     canteenDays: "Jours de cantine",
   },
   landing: {
-    metaTitle: "Fin Prêt · Le dimanche, tu cuisines. La semaine est fin prête.",
+    metaTitle: "Fin Prêt — Application de batch cooking pour les familles",
     metaDescription:
-      "Fin Prêt compose tes menus, calcule tes courses en vrais contenants et te guide pendant la session du dimanche. 10 repas en 2 h 30, plus de charge mentale en semaine.",
+      "Menus de saison, liste de courses et session de batch cooking guidée : prépare 10 repas en 2 h 30 le dimanche pour toute ta famille.",
     skip: "Aller au contenu",
     nav: {
       label: "Navigation principale",

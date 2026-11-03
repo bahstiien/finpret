@@ -21,7 +21,7 @@ export const PUBLIC_PATHS = [
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages: MetadataRoute.Sitemap = PUBLIC_PATHS.map((path) => ({
-    url: `${SITE_URL}${path === "/" ? "" : path}`,
+    url: `${SITE_URL}${path}`, // « / » : même forme que le canonical de l'accueil
     changeFrequency: path.startsWith("/associations") || path === "/" ? "monthly" : "yearly",
     priority: path === "/" ? 1 : path.startsWith("/associations") ? 0.8 : 0.3,
   }));

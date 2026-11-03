@@ -51,6 +51,30 @@ export function recipeJsonLd(r: RecipeView, imageUrl: string, description: strin
   };
 }
 
+/**
+ * Accueil : organisation, site et application. Aucune note, avis ni prix (rien de tel n'est affiché sur la page) :
+ * pas de `aggregateRating` ni d'`offers`.
+ */
+export function homeJsonLd(description: string) {
+  return {
+    "@context": CONTEXT,
+    "@graph": [
+      { "@type": "Organization", "@id": abs("/#organization"), name: BRAND, url: abs("/"), logo: abs("/icons/icon-512.png") },
+      { "@type": "WebSite", "@id": abs("/#website"), name: BRAND, url: abs("/"), inLanguage: "fr-FR", publisher: { "@id": abs("/#organization") } },
+      {
+        "@type": "SoftwareApplication",
+        name: BRAND,
+        url: abs("/"),
+        description,
+        applicationCategory: "LifestyleApplication",
+        operatingSystem: "Web (application web progressive)",
+        inLanguage: "fr-FR",
+        publisher: { "@id": abs("/#organization") },
+      },
+    ],
+  };
+}
+
 export function itemListJsonLd(name: string, items: { name: string; path: string }[]) {
   return {
     "@context": CONTEXT,
