@@ -961,5 +961,40 @@
   "l": "Châtaignes cuites",
   "u": "g",
   "c": "epicerie"
+ },
+ "noisette": {
+  "l": "Poudre de noisette",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "cerises": {
+  "l": "Cerises",
+  "u": "g",
+  "c": "legumes"
+ },
+ "prunes": {
+  "l": "Prunes ou quetsches",
+  "u": "g",
+  "c": "legumes"
+ },
+ "figues": {
+  "l": "Figues fraîches",
+  "u": "pc",
+  "n": [
+   "figue",
+   "figues"
+  ],
+  "c": "legumes"
+ },
+ "confiture": {
+  "l": "Confiture",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "ananas": {
+  "l": "Ananas au sirop",
+  "u": "boite",
+  "s": " de 570 g",
+  "c": "epicerie"
  }
 }

@@ -9,7 +9,7 @@ La spécification complète est dans `docs/SPEC.md` : **lis-la en entier avant d
 - `src/lib/features.ts` : drapeaux des fonctionnalités REPORTÉES par SPEC_JANVIER (code conservé, masqué).
 - `design-system/tokens.json` : couleurs, rôles et domaines, polices, rayons, tactile, durées ; `pnpm tokens` génère `src/styles/tokens.css`. `docs/DESIGN_SYSTEM.md` : règles visuelles du design system « Fin Prêt Néo » (néo-brutalisme, projet Claude Design).
 - `docs/SPEC.md` : périmètre, règles métier, modèle de données, écrans, critères d'acceptation.
-- `seed/*.json` : données réelles (133 ingrédients, 521 repas distincts (plats, soupes, dîners express), 47 goûters, 35 petits-déjeuners, contenants). Leur format est décrit dans `seed/README.md`.
+- `seed/*.json` : données réelles (133 ingrédients, 521 repas distincts (plats, soupes, dîners express), 150 goûters, 35 petits-déjeuners, contenants). Leur format est décrit dans `seed/README.md`.
 - `reference/menu-legacy.html` : prototype mono-utilisateur qui fonctionne en production. **Le moteur de génération, la session et les calculs de quantités doivent reproduire son comportement.** Les fonctions à porter sont listées en section 7 de la spec, avec leur nom dans ce fichier.
 - `reference/design/` : maquettes de la refonte v2 (PNG et HTML). Elles font foi pour l'interface.
 

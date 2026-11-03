@@ -32,7 +32,7 @@ export const landingV2 = {
     label: "Le catalogue",
     items: [
       { n: "521", label: "repas" },
-      { n: "47", label: "goûters" },
+      { n: "150", label: "goûters" },
       { n: "35", label: "petits-déjeuners" },
     ],
     season: "De saison, toute l'année",
