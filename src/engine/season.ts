@@ -48,13 +48,20 @@ export function resolve<R extends Seasonal & { prep?: string[]; blocks?: { a: st
   return out;
 }
 
-/** Poids du garde-manger : 1 par ingrédient de viande, de frais ou de légumes en stock, 0,3 sinon. */
+/**
+ * Poids du garde-manger : 1 par ingrédient de viande, de frais ou de légumes en stock, 0,3 sinon,
+ * plus le bonus anti-gaspi des ingrédients à date courte (`env.urgency`, vide pour le prototype).
+ */
 export function pantryScore(env: Env, r: Seasonal | null | undefined): number {
   if (!r) return 0;
   const ing = r.sv ? { ...r.ing, ...(r.sv.find((o) => pantryCovers(env, o.ing))?.ing ?? {}) } : r.ing;
   return Object.keys(ing)
     .filter((k) => inPantry(env, k))
-    .reduce((s, k) => s + (["viande", "frais", "legumes"].includes(env.lib.ingredients[k]!.c) ? 1 : 0.3), 0);
+    .reduce(
+      (s, k) =>
+        s + (["viande", "frais", "legumes"].includes(env.lib.ingredients[k]!.c) ? 1 : 0.3) + (env.urgency[k] ?? 0),
+      0,
+    );
 }
 
 /** Tirage pondéré : priorité au garde-manger et aux plats à refaire (−0,7), aimés des enfants (−0,4), espacement des plats trop longs (+0,8), léger bonus pour les recettes importées. */

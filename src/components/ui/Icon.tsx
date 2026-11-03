@@ -14,6 +14,7 @@ import {
   DotsThree,
   ForkKnife,
   Info,
+  Leaf,
   MagnifyingGlass,
   PauseCircle,
   Plus,
@@ -57,6 +58,8 @@ const GLYPHS = {
   streak: CalendarCheck,
   pause: PauseCircle,
   passport: Stamp,
+  // Anti-gaspi (écran Progrès).
+  leaf: Leaf,
   chevronRight: CaretRight,
   chevronDown: CaretDown,
   arrowBack: ArrowLeft,

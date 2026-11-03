@@ -9,6 +9,8 @@ import type { DietRules, Feedback, Library, Pantry, Ratings } from "./types";
 export type Env = {
   lib: Library;
   pantry: Pantry;
+  /** Bonus anti-gaspi par ingrédient à date courte du garde-manger (`urgencyBonus`). */
+  urgency: Record<string, number>;
   ratings: Ratings;
   /** Retours « aimé par les enfants » / « trop long » : simples pondérations du tirage, jamais des filtres. */
   feedback: Feedback;
@@ -45,6 +47,7 @@ export function dietAllows(
 export function createEnv(options: {
   lib: Library;
   pantry?: Pantry;
+  urgency?: Record<string, number>;
   ratings?: Ratings;
   feedback?: Feedback;
   random: () => number;
@@ -81,6 +84,7 @@ export function createEnv(options: {
   return {
     lib,
     pantry: options.pantry ?? {},
+    urgency: options.urgency ?? {},
     ratings: options.ratings ?? {},
     feedback: options.feedback ?? {},
     random: options.random,

@@ -1,4 +1,5 @@
 import "server-only";
+import { urgencyBonus } from "@/engine/antigaspi";
 import { generateWeek, weekRecipeIds } from "@/engine/compose";
 import { createEnv, type Env } from "@/engine/env";
 import { ensureOccurrenceIds } from "@/engine/occurrences";
@@ -31,6 +32,7 @@ export async function engineEnvFor(
   return createEnv({
     lib,
     pantry: ctx.pantry,
+    urgency: urgencyBonus(ctx.useBy, todayIn(ctx.timezone)),
     ratings: ctx.ratings,
     feedback: ctx.feedback,
     random,

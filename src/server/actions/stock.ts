@@ -80,6 +80,35 @@ export async function setPantry(key: string, qty: number | null | "remove"): Pro
   return { ok: true, data: { message: p.qty === "remove" || p.qty === 0 ? t.pantryRemoved : t.pantrySaved } };
 }
 
+const useBySchema = z.object({
+  key: z.string().min(1).max(40),
+  useBy: z.iso.date().nullable(),
+});
+
+/** Date limite d'un ingrédient du garde-manger (anti-gaspi) : le prochain menu l'écoule en priorité. */
+export async function setPantryUseBy(key: string, useBy: string | null): Promise<Result> {
+  const household = await editor();
+  if (!household) return { ok: false, error: fr.errors.forbidden };
+  if (!(await householdCan(household.id, "pantry"))) return { ok: false, error: fr.errors.upgrade };
+  const parsed = useBySchema.safeParse({ key, useBy });
+  if (!parsed.success) return { ok: false, error: fr.errors.generic };
+  const p = parsed.data;
+  try {
+    await withSession((db) =>
+      db
+        .updateTable("pantry")
+        .set({ use_by: p.useBy })
+        .where("household_id", "=", household.id)
+        .where("ingredient_key", "=", p.key)
+        .execute(),
+    );
+  } catch (e) {
+    return { ok: false, error: toUserMessage(e) };
+  }
+  revalidatePath("/app", "layout");
+  return { ok: true, data: { message: p.useBy ? t.useBySaved : t.useByCleared } };
+}
+
 export async function adjustFreezer(id: string, delta: number): Promise<Result> {
   if (!FEATURES.freezerAndLeftovers) return { ok: false, error: fr.errors.forbidden };
   const household = await editor();

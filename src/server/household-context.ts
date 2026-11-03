@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import type { UseBy } from "@/engine/antigaspi";
 import type { Member, PresenceRule } from "@/engine/portions";
 import { householdPortions } from "@/engine/portions";
 import type { BankEntry, Feedback, Pantry, Ratings, WeekPlan } from "@/engine/types";
@@ -28,6 +29,8 @@ export type HouseholdContext = {
   members: (Member & { userId?: string | null })[];
   presence: PresenceRule[];
   pantry: Pantry;
+  /** Dates limites du garde-manger (anti-gaspi), pour les ingrédients qui en ont une. */
+  useBy: UseBy;
   bank: BankEntry[];
   ratings: Ratings;
   feedback: Feedback;
@@ -61,7 +64,7 @@ async function load(db: Db, householdId: string): Promise<HouseholdContext> {
     .execute();
   const pantry = await db
     .selectFrom("pantry")
-    .select(["ingredient_key", "qty"])
+    .select(["ingredient_key", "qty", "use_by"])
     .where("household_id", "=", householdId)
     .execute();
   const freezer = await db
@@ -118,6 +121,7 @@ async function load(db: Db, householdId: string): Promise<HouseholdContext> {
       weekParity: p.week_parity,
     })),
     pantry: Object.fromEntries(pantry.map((p) => [p.ingredient_key, p.qty === null ? null : Number(p.qty)])),
+    useBy: Object.fromEntries(pantry.flatMap((p) => (p.use_by ? [[p.ingredient_key, p.use_by]] : []))),
     bank: freezer.map((f) => ({
       recipeId: f.recipe_id,
       portions: f.portions,

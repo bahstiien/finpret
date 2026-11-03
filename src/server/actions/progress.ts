@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { FriseWeek } from "@/engine/progress-view";
 import { fr } from "@/i18n/fr";
+import { recordPantrySaves } from "@/server/antigaspi";
 import { withAdmin } from "@/server/db";
 import { type ActionResult } from "@/server/errors";
 import { trackEvent } from "@/server/events";
@@ -48,6 +49,12 @@ export async function finishSessionAction(weekId: string): Promise<SessionDoneRe
   if (!data) return NOTHING;
   await trackEvent("session_done", { userId: user.id, householdId: household.id, dedupeKey: weekId });
   await finishSession(createProgressStore(), { householdId: household.id, weekId });
+  // Anti-gaspi : un échec ici ne doit pas empêcher de célébrer la session.
+  try {
+    await recordPantrySaves(household.id, weekId);
+  } catch (error) {
+    console.error("Anti-gaspi :", error instanceof Error ? error.message : error);
+  }
   const view = await loadProgressView(household.id, user.id, { passport: false });
   return {
     visible: view.visible,

@@ -1084,6 +1084,13 @@ export const fr = {
     bankDoubles: "Ranger les plats doublés au congélateur",
     pantrySaved: "Garde-manger mis à jour : la liste de courses suit.",
     pantryRemoved: "Retiré du garde-manger.",
+    useBy: (name: string) => `${name} : à utiliser avant le`,
+    useByShort: "À utiliser avant le",
+    useBySoon: (days: number) =>
+      days <= 0 ? "À utiliser aujourd'hui · le menu le cuisine en priorité" : `À utiliser d'ici ${days} jour${days > 1 ? "s" : ""} · le menu le cuisine en priorité`,
+    useByPast: "Date dépassée : vérifie-le avant de le cuisiner",
+    useBySaved: "Date notée : le prochain menu s'en servira en priorité.",
+    useByCleared: "Date retirée.",
     freezerSaved: (n: number) => `${n} repas au congélateur.`,
     freezerEmptied: "Plat retiré du congélateur.",
     freezerAdded: (n: number) => `${n} repas ajoutés au congélateur.`,
@@ -1323,6 +1330,16 @@ export const fr = {
       sessions: "Sessions",
       meals: "Repas maison",
       origins: "Origines",
+    },
+    antigaspi: {
+      title: "Anti-gaspi",
+      monthLabel: "Ce mois-ci",
+      totalLabel: "Depuis le début",
+      saved: (n: number) => (n <= 1 ? `${n} ingrédient pris dans ton stock` : `${n} ingrédients pris dans ton stock`),
+      weight: (kg: string) => `soit ${kg} kg qui n'ont pas fini à la poubelle`,
+      urgent: (n: number) => (n <= 1 ? `dont ${n} à date courte, cuisiné à temps` : `dont ${n} à date courte, cuisinés à temps`),
+      empty:
+        "Ajoute ce qui traîne dans ton frigo à l'onglet Stock, avec sa date limite : le menu le cuisine en priorité, et tu verras ici ce que tu as sauvé.",
     },
     passport: {
       originsCooked: "Origines cuisinées",
