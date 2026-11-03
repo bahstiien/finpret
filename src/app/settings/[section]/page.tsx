@@ -158,7 +158,8 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             )}
           </Card>
           <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.data.deleteHousehold}</h2>
+            <h2 className="t-2">{t.danger}</h2>
+            <h3 className="t-3">{t.data.deleteHousehold}</h3>
             <ConfirmDelete
               action={deleteHousehold}
               label={t.data.deleteHousehold}
@@ -186,9 +187,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             <h2 className="t-2">{t.profile.you}</h2>
             <ProfileNameForm initial={profile?.display_name ?? ""} />
             <p className="text-sm text-muted">{user.email}</p>
-          </Card>
-          {households.length > 1 && (
-            <Card>
+            {households.length > 1 && (
               <form action={switchHousehold} className="flex flex-wrap items-end gap-3">
                 <SelectField
                   id="householdId"
@@ -207,8 +206,8 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
                   {fr.household.switch}
                 </Button>
               </form>
-            </Card>
-          )}
+            )}
+          </Card>
           <Card className="flex flex-col gap-3">
             <h2 className="t-2">{t.profile.theme}</h2>
             <ThemeForm />
@@ -220,18 +219,19 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
             />
           </Card>
           <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.profile.devices}</h2>
+            <h2 className="t-2">{t.profile.connection}</h2>
             <p className="text-sm text-muted">{t.profile.devicesHint}</p>
-            <SignOutOthers />
+            <div className="flex flex-wrap items-start gap-3">
+              <SignOutOthers />
+              <form action={signOut}>
+                <Button type="submit" variant="outline">
+                  {fr.appShell.signOut}
+                </Button>
+              </form>
+            </div>
           </Card>
-          <Card className="flex flex-col gap-3">
-            <form action={signOut}>
-              <Button type="submit" variant="outline">
-                {fr.appShell.signOut}
-              </Button>
-            </form>
-          </Card>
-          <Card className="flex flex-col gap-3">
+          <Card className="flex flex-col gap-4">
+            <h2 className="t-2">{t.danger}</h2>
             <ActionForm
               action={leaveHousehold}
               fields={{ householdId: household.id }}
@@ -239,9 +239,7 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
               confirm={fr.settingsHousehold.leaveConfirm}
               variant="outline"
             />
-          </Card>
-          <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.data.deleteAccount}</h2>
+            <h3 className="t-3">{t.data.deleteAccount}</h3>
             <ConfirmDelete
               action={deleteAccount}
               label={t.data.deleteAccount}
