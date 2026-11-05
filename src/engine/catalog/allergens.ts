@@ -113,6 +113,9 @@ export const INGREDIENT_ALLERGENS: Record<string, readonly Allergen[]> = {
   fraises: [],
   orange: [],
   abricots: [],
+  cerises: [],
+  prunes: [],
+  figues: [],
 
   // Surgelés
   edamame: ["soja"],
@@ -155,6 +158,9 @@ export const INGREDIENT_ALLERGENS: Record<string, readonly Allergen[]> = {
   raisinssecs: ["sulfites"],
   pruneaux: [],
   coco: [], // la noix de coco n'est pas un fruit à coque réglementaire
+  noisette: ["fruits_a_coque"],
+  confiture: [],
+  ananas: [],
 
   // Placard
   bouillon: ["celeri"], // TODO(spec) : les cubes contiennent souvent du céleri, parfois du gluten

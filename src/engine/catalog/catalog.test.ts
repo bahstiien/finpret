@@ -26,9 +26,9 @@ describe("validité du seed (§7.6)", () => {
   });
 
   it("contient les volumes annoncés", () => {
-    expect(Object.keys(seed!.ingredients)).toHaveLength(152);
+    expect(Object.keys(seed!.ingredients)).toHaveLength(158);
     expect(seed!.mains.length + seed!.soups.length + seed!.simples.length).toBe(522);
-    expect(seed!.cakes).toHaveLength(47);
+    expect(seed!.cakes).toHaveLength(150);
     expect(seed!.breakfasts).toHaveLength(35);
   });
 
@@ -46,7 +46,7 @@ describe("lignes du catalogue", () => {
     expect(counts.main).toHaveLength(408);
     expect(counts.soup).toHaveLength(34);
     expect(counts.simple).toHaveLength(80);
-    expect(counts.cake).toHaveLength(47);
+    expect(counts.cake).toHaveLength(150);
     expect(counts.breakfast).toHaveLength(35);
     expect(new Set(rows!.recipes.map((r) => r.id)).size).toBe(rows!.recipes.length);
   });

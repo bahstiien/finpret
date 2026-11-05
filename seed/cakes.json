@@ -1491,5 +1491,3123 @@
    "Mélange {beurre} de beurre mou, {sucre} de sucre, {oeufs} œufs, {amande} de poudre d'amande et {farine} de farine.",
    "Verse la pâte, enfonce les abricots côté bombé vers le haut. Enfourne 35 min."
   ]
+ },
+ {
+  "id": "x3_g_quatre_quarts",
+  "n": "Quatre-quarts breton",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "10 parts",
+  "m": [
+   328,
+   5,
+   35,
+   19
+  ],
+  "diff": 3,
+  "kid": "Il pèse chaque ingrédient sur la balance.",
+  "ing": {
+   "beurre": 200,
+   "sucre": 200,
+   "farine": 200,
+   "oeufs": 4
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C et beurre un moule à cake.",
+   "Fouette {oeufs} avec {sucre} de sucre jusqu'à ce que le mélange blanchisse, ajoute {beurre} de beurre fondu.",
+   "Incorpore {farine} de farine, verse dans le moule et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_nantais",
+  "n": "Gâteau nantais aux amandes et au citron",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "m": [
+   321,
+   6,
+   21,
+   23
+  ],
+  "diff": 3,
+  "kid": "Il râpe le zeste du citron.",
+  "ing": {
+   "beurre": 125,
+   "sucre": 125,
+   "amande": 125,
+   "oeufs": 3,
+   "farine": 40,
+   "citron": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C.",
+   "Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {amande} de poudre d'amande puis {oeufs} un par un.",
+   "Ajoute {farine} de farine et le zeste de {citron}, verse dans un moule rond beurré et enfourne 40 min.",
+   "Arrose de jus de citron à la sortie du four."
+  ]
+ },
+ {
+  "id": "x3_g_basque_confiture",
+  "n": "Gâteau basque à la confiture",
+  "t": "gateau",
+  "tm": "1 h 15 dont 30 min au frais",
+  "parts": "10 parts",
+  "m": [
+   338,
+   5,
+   46,
+   14
+  ],
+  "diff": 3,
+  "kid": "Il étale la confiture sur la pâte.",
+  "ing": {
+   "farine": 250,
+   "beurre": 125,
+   "sucre": 125,
+   "oeufs": 2,
+   "amande": 50,
+   "levure": 1,
+   "confiture": 250
+  },
+  "steps": [
+   "Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {oeufs}, puis {farine} de farine, {amande} de poudre d'amande et {levure} de levure. Laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C. Étale les deux tiers de la pâte dans un moule beurré.",
+   "Garnis de {confiture} de confiture (cerise de préférence), couvre avec le reste de pâte et soude les bords.",
+   "Dore au jaune d'œuf, raye à la fourchette et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_magique_citron",
+  "n": "Gâteau magique au citron",
+  "t": "gateau",
+  "tm": "1 h 10 et 2 h au frais",
+  "parts": "8 parts",
+  "m": [
+   296,
+   7,
+   30,
+   16
+  ],
+  "diff": 3,
+  "kid": "Il sépare les blancs des jaunes avec toi.",
+  "ing": {
+   "oeufs": 4,
+   "sucre": 120,
+   "beurre": 125,
+   "farine": 115,
+   "lait": 500,
+   "citron": 1
+  },
+  "steps": [
+   "Préchauffe le four à 150 °C. Sépare les blancs des jaunes de {oeufs}.",
+   "Fouette les jaunes avec {sucre} de sucre, ajoute {beurre} de beurre fondu, {farine} de farine, puis {lait} de lait tiède et le zeste de {citron}.",
+   "Monte les blancs en neige et incorpore-les délicatement : la pâte reste très liquide.",
+   "Enfourne 50 min dans un moule carré. Laisse 2 h au frais avant de couper."
+  ]
+ },
+ {
+  "id": "x3_g_moelleux_coco",
+  "n": "Moelleux à la noix de coco",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "m": [
+   265,
+   4,
+   22,
+   18
+  ],
+  "diff": 2,
+  "kid": "Il verse la noix de coco râpée.",
+  "ing": {
+   "coco": 100,
+   "oeufs": 3,
+   "sucre": 100,
+   "beurre": 80,
+   "farine": 60,
+   "lait": 100
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre fondu et {lait} de lait.",
+   "Incorpore {coco} de noix de coco râpée et {farine} de farine, verse dans un moule beurré et enfourne 30 min."
+  ]
+ },
+ {
+  "id": "x3_g_semoule_raisins",
+  "n": "Gâteau de semoule aux raisins",
+  "t": "gateau",
+  "tm": "45 min et 2 h au frais",
+  "parts": "8 parts",
+  "m": [
+   161,
+   6,
+   27,
+   3
+  ],
+  "diff": 2,
+  "kid": "Il verse la semoule en pluie pendant que tu remues.",
+  "ing": {
+   "lait": 750,
+   "semoule": 100,
+   "sucre": 70,
+   "oeufs": 2,
+   "raisinssecs": 50
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Porte {lait} de lait à frémissement avec {sucre} de sucre.",
+   "Verse {semoule} de semoule en pluie et cuis 5 min en remuant. Hors du feu, ajoute {oeufs} battus et {raisinssecs} de raisins secs.",
+   "Verse dans un moule beurré et enfourne 25 min. Laisse refroidir puis 2 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_riz_caramel",
+  "n": "Gâteau de riz caramélisé",
+  "t": "gateau",
+  "tm": "1 h 15 et 2 h au frais",
+  "parts": "8 parts",
+  "m": [
+   212,
+   8,
+   36,
+   4
+  ],
+  "diff": 3,
+  "kid": "Il remue le riz pendant la cuisson, avec toi.",
+  "ing": {
+   "rizrond": 150,
+   "lait": 1000,
+   "sucre": 120,
+   "oeufs": 3
+  },
+  "steps": [
+   "Cuis {rizrond} de riz rond dans {lait} de lait frémissant 35 min, en remuant souvent, avec 70 g de sucre.",
+   "Fais un caramel avec le reste du sucre ({sucre} au total) et 2 c.s. d'eau, verse-le au fond d'un moule.",
+   "Préchauffe le four à 180 °C. Mélange le riz tiédi avec {oeufs} battus, verse sur le caramel et enfourne 30 min au bain-marie.",
+   "Démoule froid, après 2 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_citron",
+  "n": "Tarte au citron",
+  "t": "gateau",
+  "tm": "50 min et 1 h au frais",
+  "parts": "8 parts",
+  "m": [
+   308,
+   5,
+   31,
+   18
+  ],
+  "diff": 2,
+  "kid": "Il presse les citrons.",
+  "ing": {
+   "patebrisee": 1,
+   "citron": 4,
+   "oeufs": 3,
+   "sucre": 120,
+   "beurre": 80
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule, pique le fond et cuis-la à blanc 20 min.",
+   "Au bain-marie, fouette le zeste et le jus de {citron}, {oeufs} et {sucre} de sucre jusqu'à ce que la crème épaississe, 8 min.",
+   "Hors du feu, ajoute {beurre} de beurre en morceaux, verse sur le fond de tarte et laisse 1 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_fraises",
+  "n": "Tarte aux fraises et fromage blanc",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "months": [
+   5,
+   6,
+   7
+  ],
+  "m": [
+   199,
+   5,
+   25,
+   9
+  ],
+  "diff": 2,
+  "kid": "Il équeute les fraises et les range sur la crème.",
+  "ing": {
+   "patebrisee": 1,
+   "fraises": 500,
+   "fromageblanc": 300,
+   "sucre": 50
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule, pique le fond et cuis-la à blanc 25 min. Laisse refroidir.",
+   "Mélange {fromageblanc} de fromage blanc bien égoutté avec {sucre} de sucre.",
+   "Étale sur le fond de tarte et couvre de {fraises} de fraises coupées en deux. Sers dans la journée."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_abricots",
+  "n": "Tarte aux abricots et amandes",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   6,
+   7,
+   8
+  ],
+  "m": [
+   236,
+   4,
+   28,
+   11
+  ],
+  "diff": 2,
+  "kid": "Il range les demi-abricots en rosace.",
+  "ing": {
+   "patebrisee": 1,
+   "abricots": 700,
+   "amande": 50,
+   "sucre": 50
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Étale {patebrisee} dans un moule et pique le fond.",
+   "Saupoudre {amande} de poudre d'amande : elle absorbe le jus.",
+   "Range {abricots} d'abricots coupés en deux, face bombée vers le bas, et saupoudre de {sucre} de sucre. Enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_quetsches",
+  "n": "Tarte aux quetsches et à la cannelle",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   8,
+   9
+  ],
+  "m": [
+   230,
+   3,
+   30,
+   10
+  ],
+  "diff": 2,
+  "kid": "Il ouvre les prunes et retire les noyaux.",
+  "ing": {
+   "patebrisee": 1,
+   "prunes": 800,
+   "amande": 30,
+   "sucre": 50,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Étale {patebrisee} dans un moule et saupoudre {amande} de poudre d'amande.",
+   "Ouvre {prunes} de prunes en deux, dénoyaute-les et range-les serrées, debout.",
+   "Mélange {sucre} de sucre et {cannelle} de cannelle, saupoudre et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_rhubarbe",
+  "n": "Tarte à la rhubarbe et à la crème",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "m": [
+   275,
+   5,
+   28,
+   15
+  ],
+  "diff": 3,
+  "kid": "Il coupe la rhubarbe en tronçons avec un couteau à bout rond.",
+  "ing": {
+   "patebrisee": 1,
+   "rhubarbe": 500,
+   "oeufs": 2,
+   "creme": 200,
+   "sucre": 100
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Étale {patebrisee} dans un moule et pique le fond.",
+   "Coupe {rhubarbe} de rhubarbe en tronçons et répartis-les sur la pâte.",
+   "Fouette {oeufs}, {creme} de crème et {sucre} de sucre, verse sur la rhubarbe et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_chocolat",
+  "n": "Tarte au chocolat",
+  "t": "gateau",
+  "tm": "45 min et 1 h au frais",
+  "parts": "8 parts",
+  "m": [
+   353,
+   6,
+   27,
+   23
+  ],
+  "diff": 2,
+  "kid": "Il casse le chocolat en morceaux.",
+  "ing": {
+   "patebrisee": 1,
+   "chocolat": 200,
+   "creme": 200,
+   "lait": 100,
+   "oeufs": 2
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule, pique le fond et cuis-la à blanc 20 min.",
+   "Porte {creme} de crème et {lait} de lait à frémissement, verse sur {chocolat} de chocolat et lisse.",
+   "Ajoute {oeufs} battus, verse sur le fond de tarte et enfourne 15 min à 150 °C. Laisse 1 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_tatin",
+  "n": "Tarte Tatin aux pommes",
+  "t": "gateau",
+  "tm": "1 h 10",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   317,
+   2,
+   44,
+   14
+  ],
+  "diff": 3,
+  "kid": "Il range les quartiers de pomme bien serrés.",
+  "ing": {
+   "patebrisee": 1,
+   "pomme": 7,
+   "beurre": 60,
+   "sucre": 120
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Fais un caramel blond avec {sucre} de sucre et {beurre} de beurre, verse-le dans un moule.",
+   "Épluche {pomme} et coupe-les en quartiers. Range-les serrés sur le caramel.",
+   "Couvre avec {patebrisee}, rentre les bords et enfourne 45 min. Démoule tiède en retournant sur un plat."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_poires_chocolat",
+  "n": "Tarte poires-chocolat",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "m": [
+   324,
+   5,
+   34,
+   18
+  ],
+  "diff": 3,
+  "kid": "Il dispose les lamelles de poire.",
+  "ing": {
+   "patebrisee": 1,
+   "poire": 4,
+   "chocolat": 100,
+   "creme": 150,
+   "oeufs": 2,
+   "sucre": 30
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule et pique le fond.",
+   "Fais fondre {chocolat} de chocolat dans {creme} de crème chaude, ajoute {oeufs} battus et {sucre} de sucre.",
+   "Range {poire} épluchées en lamelles sur la pâte, verse la crème au chocolat et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_figues",
+  "n": "Tarte fine aux figues et au miel",
+  "t": "gateau",
+  "tm": "35 min",
+  "parts": "8 parts",
+  "months": [
+   8,
+   9,
+   10
+  ],
+  "m": [
+   195,
+   3,
+   21,
+   11
+  ],
+  "diff": 2,
+  "kid": "Il coupe les figues en quartiers.",
+  "ing": {
+   "patefeuilletee": 1,
+   "figues": 8,
+   "miel": 2,
+   "amande": 40
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Déroule {patefeuilletee} sur une plaque et pique-la.",
+   "Saupoudre {amande} de poudre d'amande en laissant 2 cm de bord, range {figues} en quartiers.",
+   "Arrose de {miel} de miel et enfourne 25 min."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_peches",
+  "n": "Tarte aux pêches et à la crème d'amande",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   299,
+   5,
+   29,
+   18
+  ],
+  "diff": 3,
+  "kid": "Il étale la crème d'amande sur la pâte.",
+  "ing": {
+   "patebrisee": 1,
+   "peche": 5,
+   "amande": 60,
+   "sucre": 60,
+   "oeufs": 1,
+   "beurre": 50
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule et pique le fond.",
+   "Mélange {beurre} de beurre mou, {sucre} de sucre, {amande} de poudre d'amande et {oeufs}, étale sur la pâte.",
+   "Range {peche} en quartiers sur la crème et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_flan_patissier",
+  "n": "Flan pâtissier",
+  "t": "gateau",
+  "tm": "1 h 15 et 3 h au frais",
+  "parts": "8 parts",
+  "m": [
+   298,
+   8,
+   40,
+   11
+  ],
+  "diff": 3,
+  "kid": "Il fouette les œufs et le sucre.",
+  "ing": {
+   "patebrisee": 1,
+   "lait": 750,
+   "oeufs": 3,
+   "sucre": 130,
+   "farine": 70
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule haut.",
+   "Fouette {oeufs}, {sucre} de sucre et {farine} de farine. Verse {lait} de lait bouillant dessus en fouettant.",
+   "Remets sur feu moyen et fais épaissir 3 min sans cesser de remuer.",
+   "Verse sur la pâte et enfourne 45 min. Laisse 3 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_flan_coco",
+  "n": "Flan coco sans pâte",
+  "t": "gateau",
+  "tm": "1 h et 3 h au frais",
+  "parts": "8 parts",
+  "m": [
+   240,
+   6,
+   18,
+   16
+  ],
+  "diff": 3,
+  "kid": "Il mélange le lait de coco et la noix de coco râpée.",
+  "ing": {
+   "oeufs": 4,
+   "laitcoco": 400,
+   "lait": 300,
+   "sucre": 100,
+   "coco": 50
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {laitcoco} de lait de coco, {lait} de lait et {coco} de noix de coco râpée.",
+   "Verse dans un moule et enfourne 45 min au bain-marie. Laisse 3 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_clafoutis_cerises",
+  "n": "Clafoutis aux cerises",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   6,
+   7
+  ],
+  "m": [
+   193,
+   6,
+   29,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il équeute les cerises.",
+  "ing": {
+   "cerises": 600,
+   "oeufs": 4,
+   "farine": 80,
+   "sucre": 80,
+   "lait": 300,
+   "beurre": 20
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Beurre un plat avec {beurre} de beurre et répartis {cerises} de cerises (les noyaux donnent du goût : préviens les enfants).",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {farine} de farine puis {lait} de lait.",
+   "Verse sur les cerises et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_clafoutis_poires_amande",
+  "n": "Clafoutis poires-amande",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "m": [
+   185,
+   6,
+   26,
+   6
+  ],
+  "diff": 2,
+  "kid": "Il range les lamelles de poire dans le plat.",
+  "ing": {
+   "poire": 4,
+   "oeufs": 3,
+   "amande": 60,
+   "farine": 40,
+   "sucre": 70,
+   "lait": 250
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Épluche {poire} et coupe-les en lamelles dans un plat beurré.",
+   "Fouette {oeufs} avec {sucre} de sucre, {amande} de poudre d'amande et {farine} de farine, puis {lait} de lait.",
+   "Verse sur les poires et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_crumble_fruits_rouges",
+  "n": "Crumble aux fruits rouges et amandes",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "m": [
+   220,
+   3,
+   24,
+   12
+  ],
+  "diff": 2,
+  "kid": "Il fait le sable du crumble avec les doigts.",
+  "ing": {
+   "fruitsrouges": 600,
+   "farine": 100,
+   "amande": 50,
+   "beurre": 80,
+   "sucre": 70
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Répartis {fruitsrouges} de fruits rouges dans un plat.",
+   "Sable du bout des doigts {farine} de farine, {amande} de poudre d'amande, {sucre} de sucre et {beurre} de beurre froid.",
+   "Couvre les fruits et enfourne 30 min."
+  ]
+ },
+ {
+  "id": "x3_g_crumble_rhubarbe_fraises",
+  "n": "Crumble rhubarbe-fraises",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   5,
+   6
+  ],
+  "m": [
+   203,
+   3,
+   28,
+   9
+  ],
+  "diff": 2,
+  "kid": "Il mélange les fraises et la rhubarbe dans le plat.",
+  "ing": {
+   "rhubarbe": 400,
+   "fraises": 300,
+   "farine": 100,
+   "flocons": 40,
+   "beurre": 80,
+   "sucre": 90
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Coupe {rhubarbe} de rhubarbe en tronçons et {fraises} de fraises en deux, mélange avec 40 g du sucre dans un plat.",
+   "Sable {farine} de farine, {flocons} de flocons d'avoine, le reste du sucre ({sucre} au total) et {beurre} de beurre froid.",
+   "Couvre les fruits et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_crumble_abricots",
+  "n": "Crumble aux abricots et amandes",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "months": [
+   6,
+   7,
+   8
+  ],
+  "m": [
+   233,
+   4,
+   27,
+   12
+  ],
+  "diff": 2,
+  "kid": "Il ouvre les abricots et retire les noyaux.",
+  "ing": {
+   "abricots": 800,
+   "farine": 100,
+   "amande": 50,
+   "beurre": 80,
+   "sucre": 60
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Dénoyaute {abricots} d'abricots et coupe-les en quartiers dans un plat.",
+   "Sable {farine} de farine, {amande} de poudre d'amande, {sucre} de sucre et {beurre} de beurre froid.",
+   "Couvre les fruits et enfourne 30 min."
+  ]
+ },
+ {
+  "id": "x3_g_crumble_prunes_noisette",
+  "n": "Crumble prunes-noisette",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "months": [
+   8,
+   9
+  ],
+  "m": [
+   243,
+   3,
+   30,
+   12
+  ],
+  "diff": 2,
+  "kid": "Il fait le sable du crumble avec les doigts.",
+  "ing": {
+   "prunes": 800,
+   "farine": 100,
+   "noisette": 50,
+   "beurre": 80,
+   "sucre": 70,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Dénoyaute {prunes} de prunes et range-les dans un plat avec {cannelle} de cannelle.",
+   "Sable {farine} de farine, {noisette} de poudre de noisette, {sucre} de sucre et {beurre} de beurre froid.",
+   "Couvre les fruits et enfourne 30 min."
+  ]
+ },
+ {
+  "id": "x3_g_crumble_poires_chocolat",
+  "n": "Crumble poires-chocolat",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "m": [
+   286,
+   3,
+   37,
+   14
+  ],
+  "diff": 2,
+  "kid": "Il parsème les morceaux de chocolat.",
+  "ing": {
+   "poire": 6,
+   "chocolat": 60,
+   "farine": 100,
+   "amande": 40,
+   "beurre": 80,
+   "sucre": 60
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Épluche {poire} et coupe-les en dés dans un plat, parsème {chocolat} de chocolat concassé.",
+   "Sable {farine} de farine, {amande} de poudre d'amande, {sucre} de sucre et {beurre} de beurre froid.",
+   "Couvre les fruits et enfourne 30 min."
+  ]
+ },
+ {
+  "id": "x3_g_renverse_ananas",
+  "n": "Gâteau renversé à l'ananas",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "m": [
+   304,
+   5,
+   43,
+   12
+  ],
+  "diff": 3,
+  "kid": "Il range les tranches d'ananas sur le caramel.",
+  "ing": {
+   "ananas": 1,
+   "farine": 150,
+   "sucre": 140,
+   "oeufs": 3,
+   "beurre": 100,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Fais un caramel avec 40 g de sucre, verse-le dans un moule et range {ananas} d'ananas égoutté.",
+   "Fouette {oeufs} avec le reste du sucre ({sucre} au total), ajoute {beurre} de beurre fondu, {farine} de farine et {levure} de levure.",
+   "Verse sur l'ananas et enfourne 35 min. Démoule tiède."
+  ]
+ },
+ {
+  "id": "x3_g_ricotta_citron",
+  "n": "Gâteau à la ricotta et au citron",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "m": [
+   211,
+   9,
+   24,
+   8
+  ],
+  "diff": 3,
+  "kid": "Il râpe le zeste du citron.",
+  "ing": {
+   "ricotta": 250,
+   "oeufs": 3,
+   "sucre": 100,
+   "farine": 100,
+   "amande": 50,
+   "citron": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C.",
+   "Fouette {ricotta} de ricotta, {oeufs} et {sucre} de sucre, ajoute le zeste et le jus de {citron}.",
+   "Incorpore {farine} de farine, {amande} de poudre d'amande et {levure} de levure. Enfourne 40 min dans un moule beurré."
+  ]
+ },
+ {
+  "id": "x3_g_fromage_blanc",
+  "n": "Gâteau au fromage blanc à l'alsacienne",
+  "t": "gateau",
+  "tm": "1 h 15 et 3 h au frais",
+  "parts": "10 parts",
+  "m": [
+   240,
+   8,
+   26,
+   11
+  ],
+  "diff": 3,
+  "kid": "Il fouette le fromage blanc avec le sucre.",
+  "ing": {
+   "patebrisee": 1,
+   "fromageblanc": 500,
+   "oeufs": 3,
+   "sucre": 100,
+   "farine": 40,
+   "citron": 1,
+   "creme": 100
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C. Étale {patebrisee} dans un moule haut.",
+   "Fouette {fromageblanc} de fromage blanc, {sucre} de sucre, {creme} de crème, {farine} de farine, le zeste de {citron} et les jaunes de {oeufs}.",
+   "Monte les blancs en neige, incorpore-les et verse sur la pâte. Enfourne 55 min, laisse refroidir porte entrouverte puis 3 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_cheesecake_skyr",
+  "n": "Cheesecake léger au skyr et fruits rouges",
+  "t": "gateau",
+  "tm": "1 h 10 et 3 h au frais",
+  "parts": "10 parts",
+  "m": [
+   232,
+   12,
+   23,
+   10
+  ],
+  "diff": 3,
+  "kid": "Il tasse le fond aux flocons d'avoine.",
+  "ing": {
+   "flocons": 120,
+   "beurre": 60,
+   "miel": 2,
+   "skyr": 500,
+   "ricotta": 250,
+   "oeufs": 3,
+   "sucre": 80,
+   "fruitsrouges": 200
+  },
+  "steps": [
+   "Préchauffe le four à 160 °C. Mixe {flocons} de flocons d'avoine avec {beurre} de beurre fondu et {miel} de miel, tasse au fond d'un moule.",
+   "Fouette {skyr} de skyr, {ricotta} de ricotta, {oeufs} et {sucre} de sucre, verse sur le fond.",
+   "Enfourne 50 min. Laisse 3 h au frais et sers avec {fruitsrouges} de fruits rouges."
+  ]
+ },
+ {
+  "id": "x3_g_cake_citron",
+  "n": "Cake au citron glacé",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "m": [
+   248,
+   4,
+   31,
+   12
+  ],
+  "diff": 3,
+  "kid": "Il étale le glaçage avec le dos d'une cuillère.",
+  "ing": {
+   "farine": 200,
+   "sucre": 150,
+   "oeufs": 3,
+   "beurre": 120,
+   "citron": 2,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C.",
+   "Fouette {oeufs} avec 120 g de sucre, ajoute {beurre} de beurre fondu, le zeste de {citron}, {farine} de farine et {levure} de levure.",
+   "Enfourne 45 min dans un moule à cake.",
+   "Mélange le reste du sucre ({sucre} au total) avec le jus d'un citron et nappe le cake refroidi."
+  ]
+ },
+ {
+  "id": "x3_g_cake_chocolat_noisette",
+  "n": "Cake chocolat-noisette",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "m": [
+   317,
+   5,
+   29,
+   20
+  ],
+  "diff": 3,
+  "kid": "Il casse le chocolat en morceaux.",
+  "ing": {
+   "farine": 150,
+   "noisette": 80,
+   "chocolat": 100,
+   "beurre": 120,
+   "sucre": 120,
+   "oeufs": 3,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C. Fais fondre {chocolat} de chocolat avec {beurre} de beurre.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute le chocolat, {noisette} de poudre de noisette, {farine} de farine et {levure} de levure.",
+   "Enfourne 45 min dans un moule à cake."
+  ]
+ },
+ {
+  "id": "x3_g_banana_bread",
+  "n": "Banana bread aux noix",
+  "t": "gateau",
+  "tm": "1 h 10",
+  "parts": "10 parts",
+  "m": [
+   246,
+   5,
+   30,
+   12
+  ],
+  "diff": 3,
+  "kid": "Il écrase les bananes à la fourchette.",
+  "ing": {
+   "banane": 3,
+   "farine": 200,
+   "sucre": 80,
+   "oeufs": 2,
+   "beurre": 80,
+   "noix": 60,
+   "levure": 1,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C. Écrase {banane}.",
+   "Mélange avec {oeufs}, {sucre} de sucre et {beurre} de beurre fondu, puis {farine} de farine, {levure} de levure et {cannelle} de cannelle.",
+   "Ajoute {noix} de noix concassées et enfourne 55 min dans un moule à cake."
+  ]
+ },
+ {
+  "id": "x3_g_cake_abricots_secs",
+  "n": "Cake aux abricots secs et amandes",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "m": [
+   270,
+   5,
+   29,
+   14
+  ],
+  "diff": 3,
+  "kid": "Il coupe les abricots secs aux ciseaux.",
+  "ing": {
+   "abricotssecs": 120,
+   "amande": 50,
+   "farine": 180,
+   "sucre": 90,
+   "oeufs": 3,
+   "beurre": 120,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C. Coupe {abricotssecs} d'abricots secs en dés.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre fondu, {farine} de farine, {amande} de poudre d'amande et {levure} de levure.",
+   "Ajoute les abricots et enfourne 45 min dans un moule à cake."
+  ]
+ },
+ {
+  "id": "x3_g_cake_patate_douce",
+  "n": "Cake moelleux patate douce-cannelle",
+  "t": "gateau",
+  "tm": "1 h 10",
+  "parts": "10 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   229,
+   4,
+   31,
+   10
+  ],
+  "diff": 3,
+  "kid": "Il écrase la patate douce cuite.",
+  "ing": {
+   "patatedouce": 400,
+   "farine": 180,
+   "sucre": 90,
+   "oeufs": 3,
+   "huileneutre": 80,
+   "levure": 1,
+   "cannelle": 2
+  },
+  "steps": [
+   "Cuis {patatedouce} de patates douces en cubes 15 min à la vapeur et écrase-les. Préchauffe le four à 175 °C.",
+   "Mélange avec {oeufs}, {sucre} de sucre et {huileneutre} d'huile, puis {farine} de farine, {levure} de levure et {cannelle} de cannelle.",
+   "Enfourne 45 min dans un moule à cake."
+  ]
+ },
+ {
+  "id": "x3_g_chocolat_betterave",
+  "n": "Gâteau au chocolat et à la betterave",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   244,
+   4,
+   27,
+   12
+  ],
+  "diff": 3,
+  "kid": "Il ne devine jamais qu'il y a une betterave dedans.",
+  "ing": {
+   "betterave": 250,
+   "chocolat": 150,
+   "oeufs": 3,
+   "sucre": 100,
+   "farine": 100,
+   "huileneutre": 60,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C. Fais fondre {chocolat} de chocolat.",
+   "Mixe {betterave} de betterave cuite avec {oeufs}, {sucre} de sucre et {huileneutre} d'huile.",
+   "Ajoute le chocolat, {farine} de farine et {levure} de levure. Enfourne 40 min dans un moule beurré."
+  ]
+ },
+ {
+  "id": "x3_g_carottes_noisettes",
+  "n": "Gâteau suisse aux carottes et noisettes",
+  "t": "gateau",
+  "tm": "1 h 10",
+  "parts": "10 parts",
+  "m": [
+   223,
+   6,
+   24,
+   11
+  ],
+  "diff": 3,
+  "kid": "Il râpe les carottes avec toi.",
+  "ing": {
+   "carotte": 4,
+   "noisette": 150,
+   "oeufs": 4,
+   "sucre": 150,
+   "farine": 60,
+   "citron": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C. Râpe finement {carotte}.",
+   "Fouette les jaunes de {oeufs} avec {sucre} de sucre et le zeste de {citron}, ajoute les carottes, {noisette} de poudre de noisette, {farine} de farine et {levure} de levure.",
+   "Monte les blancs en neige, incorpore-les et enfourne 50 min dans un moule rond."
+  ]
+ },
+ {
+  "id": "x3_g_courgette_citron",
+  "n": "Moelleux courgette-citron",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "m": [
+   220,
+   4,
+   28,
+   10
+  ],
+  "diff": 3,
+  "kid": "Il râpe la courgette.",
+  "ing": {
+   "courgette": 1,
+   "farine": 200,
+   "sucre": 120,
+   "oeufs": 3,
+   "huileneutre": 80,
+   "citron": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C. Râpe finement {courgette} et presse-la dans un torchon.",
+   "Fouette {oeufs} avec {sucre} de sucre et {huileneutre} d'huile, ajoute le zeste et le jus de {citron}.",
+   "Incorpore la courgette, {farine} de farine et {levure} de levure. Enfourne 45 min dans un moule à cake."
+  ]
+ },
+ {
+  "id": "x3_g_moelleux_chataigne",
+  "n": "Moelleux à la châtaigne",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   10,
+   11,
+   12,
+   1
+  ],
+  "m": [
+   236,
+   5,
+   29,
+   11
+  ],
+  "diff": 2,
+  "kid": "Il écrase les châtaignes à la fourchette.",
+  "ing": {
+   "chataigne": 300,
+   "oeufs": 3,
+   "sucre": 70,
+   "beurre": 80,
+   "farine": 50,
+   "lait": 100
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C. Mixe {chataigne} de châtaignes cuites avec {lait} de lait chaud.",
+   "Ajoute {oeufs}, {sucre} de sucre, {beurre} de beurre fondu et {farine} de farine.",
+   "Verse dans un moule beurré et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_polenta_orange",
+  "n": "Gâteau polenta-orange-amande",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   324,
+   6,
+   25,
+   22
+  ],
+  "diff": 3,
+  "kid": "Il presse les oranges.",
+  "ing": {
+   "polenta": 100,
+   "amande": 150,
+   "sucre": 130,
+   "oeufs": 3,
+   "beurre": 150,
+   "orange": 2,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C.",
+   "Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {oeufs} un par un et le zeste de {orange}.",
+   "Incorpore {amande} de poudre d'amande, {polenta} de polenta et {levure} de levure. Enfourne 45 min.",
+   "Arrose du jus des oranges à la sortie du four."
+  ]
+ },
+ {
+  "id": "x3_g_yaourt_peches",
+  "n": "Gâteau au yaourt et aux pêches",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   240,
+   6,
+   34,
+   9
+  ],
+  "diff": 3,
+  "kid": "Le pot de yaourt sert de mesure : il remplit et verse.",
+  "ing": {
+   "yaourt": 1,
+   "farine": 180,
+   "sucre": 90,
+   "oeufs": 3,
+   "huileneutre": 50,
+   "levure": 1,
+   "peche": 3
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C.",
+   "Mélange {yaourt} de yaourt, {sucre} de sucre, {oeufs} et {huileneutre} d'huile, puis {farine} de farine et {levure} de levure.",
+   "Verse dans un moule beurré, enfonce {peche} en lamelles et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_cerises_amande",
+  "n": "Moelleux cerises-amande",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   6,
+   7
+  ],
+  "m": [
+   296,
+   6,
+   27,
+   18
+  ],
+  "diff": 3,
+  "kid": "Il dénoyaute les cerises avec une paille.",
+  "ing": {
+   "cerises": 400,
+   "amande": 80,
+   "farine": 80,
+   "sucre": 100,
+   "oeufs": 3,
+   "beurre": 100,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Dénoyaute {cerises} de cerises.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre fondu, {amande} de poudre d'amande, {farine} de farine et {levure} de levure.",
+   "Verse dans un moule, répartis les cerises et enfourne 35 min."
+  ]
+ },
+ {
+  "id": "x3_g_figues_miel",
+  "n": "Gâteau aux figues et au miel",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   8,
+   9,
+   10
+  ],
+  "m": [
+   298,
+   6,
+   33,
+   16
+  ],
+  "diff": 3,
+  "kid": "Il coupe les figues en quartiers.",
+  "ing": {
+   "figues": 6,
+   "farine": 150,
+   "amande": 50,
+   "miel": 3,
+   "oeufs": 3,
+   "beurre": 100,
+   "sucre": 50,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C.",
+   "Fouette {oeufs} avec {sucre} de sucre et {miel} de miel, ajoute {beurre} de beurre fondu, {farine} de farine, {amande} de poudre d'amande et {levure} de levure.",
+   "Verse dans un moule, enfonce {figues} en quartiers et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_prunes_cannelle",
+  "n": "Gâteau alsacien aux quetsches",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 parts",
+  "months": [
+   8,
+   9
+  ],
+  "m": [
+   239,
+   4,
+   33,
+   10
+  ],
+  "diff": 3,
+  "kid": "Il range les demi-prunes en rangs serrés.",
+  "ing": {
+   "prunes": 700,
+   "farine": 200,
+   "sucre": 100,
+   "oeufs": 2,
+   "beurre": 100,
+   "lait": 80,
+   "levure": 1,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre fondu, {lait} de lait, {farine} de farine et {levure} de levure.",
+   "Étale dans un moule rectangulaire, couvre de {prunes} de prunes dénoyautées, saupoudre de {cannelle} de cannelle et enfourne 45 min."
+  ]
+ },
+ {
+  "id": "x3_g_chocolat_amandes",
+  "n": "Gâteau au chocolat et aux amandes, sans farine",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "10 parts",
+  "m": [
+   304,
+   6,
+   21,
+   21
+  ],
+  "diff": 2,
+  "kid": "Il fait fondre le chocolat avec toi.",
+  "ing": {
+   "chocolat": 200,
+   "beurre": 120,
+   "sucre": 100,
+   "oeufs": 5,
+   "amande": 50
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C. Fais fondre {chocolat} de chocolat avec {beurre} de beurre.",
+   "Fouette les jaunes de {oeufs} avec {sucre} de sucre, ajoute le chocolat et {amande} de poudre d'amande.",
+   "Monte les blancs en neige, incorpore-les et enfourne 30 min."
+  ]
+ },
+ {
+  "id": "x3_g_poires_noisettes",
+  "n": "Moelleux poires-noisettes",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "m": [
+   319,
+   6,
+   29,
+   20
+  ],
+  "diff": 3,
+  "kid": "Il dispose les lamelles de poire.",
+  "ing": {
+   "poire": 3,
+   "noisette": 100,
+   "farine": 80,
+   "sucre": 100,
+   "oeufs": 3,
+   "beurre": 100,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre fondu, {noisette} de poudre de noisette, {farine} de farine et {levure} de levure.",
+   "Verse dans un moule, couvre de {poire} en lamelles et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_orange_entiere",
+  "n": "Gâteau à l'orange entière",
+  "t": "gateau",
+  "tm": "1 h 15 et 1 h de cuisson des oranges",
+  "parts": "10 parts",
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   230,
+   8,
+   19,
+   13
+  ],
+  "diff": 3,
+  "kid": "Il mixe les oranges cuites avec toi.",
+  "ing": {
+   "orange": 2,
+   "amande": 200,
+   "sucre": 150,
+   "oeufs": 5,
+   "levure": 1
+  },
+  "steps": [
+   "Cuis {orange} entières 1 h dans l'eau frémissante, égoutte et mixe-les avec la peau (retire les pépins).",
+   "Préchauffe le four à 170 °C. Fouette {oeufs} avec {sucre} de sucre, ajoute la purée d'orange, {amande} de poudre d'amande et {levure} de levure.",
+   "Enfourne 55 min dans un moule rond."
+  ]
+ },
+ {
+  "id": "x3_g_ananas_coco",
+  "n": "Moelleux ananas-coco",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "10 parts",
+  "m": [
+   243,
+   4,
+   31,
+   11
+  ],
+  "diff": 3,
+  "kid": "Il coupe l'ananas en dés.",
+  "ing": {
+   "ananas": 1,
+   "coco": 60,
+   "farine": 150,
+   "sucre": 90,
+   "oeufs": 3,
+   "huileneutre": 60,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Égoutte {ananas} d'ananas et coupe-le en dés.",
+   "Fouette {oeufs} avec {sucre} de sucre et {huileneutre} d'huile, ajoute {coco} de noix de coco râpée, {farine} de farine et {levure} de levure.",
+   "Incorpore l'ananas et enfourne 40 min."
+  ]
+ },
+ {
+  "id": "x3_g_brownie_noix",
+  "n": "Brownie aux noix",
+  "t": "gateau",
+  "tm": "40 min",
+  "parts": "12 parts",
+  "m": [
+   318,
+   4,
+   26,
+   21
+  ],
+  "diff": 2,
+  "kid": "Il concasse les noix dans un sac avec un rouleau.",
+  "ing": {
+   "chocolat": 200,
+   "beurre": 150,
+   "sucre": 150,
+   "oeufs": 3,
+   "farine": 80,
+   "noix": 80
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Fais fondre {chocolat} de chocolat avec {beurre} de beurre.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute le chocolat, {farine} de farine et {noix} de noix concassées.",
+   "Étale dans un moule carré et enfourne 22 min : le centre reste fondant."
+  ]
+ },
+ {
+  "id": "x3_g_blondie_cacahuete",
+  "n": "Blondie au beurre de cacahuète",
+  "t": "gateau",
+  "tm": "40 min",
+  "parts": "12 parts",
+  "m": [
+   230,
+   5,
+   24,
+   13
+  ],
+  "diff": 2,
+  "kid": "Il parsème les pépites de chocolat.",
+  "ing": {
+   "beurrecacahuete": 6,
+   "beurre": 80,
+   "sucre": 120,
+   "oeufs": 2,
+   "farine": 150,
+   "chocolat": 80,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {beurrecacahuete} de beurre de cacahuète, {beurre} de beurre fondu et {sucre} de sucre.",
+   "Ajoute {oeufs}, {farine} de farine, {levure} de levure et {chocolat} de chocolat concassé.",
+   "Étale dans un moule carré et enfourne 25 min."
+  ]
+ },
+ {
+  "id": "x3_g_sables_confiture",
+  "n": "Sablés fourrés à la confiture",
+  "t": "biscuit",
+  "tm": "1 h dont 30 min au frais",
+  "parts": "20 biscuits",
+  "m": [
+   144,
+   2,
+   18,
+   7
+  ],
+  "diff": 3,
+  "kid": "Il découpe les ronds et les petits trous à l'emporte-pièce.",
+  "ing": {
+   "farine": 250,
+   "beurre": 125,
+   "sucre": 80,
+   "oeufs": 1,
+   "amande": 50,
+   "confiture": 150
+  },
+  "steps": [
+   "Mélange {farine} de farine, {amande} de poudre d'amande, {sucre} de sucre et {beurre} de beurre mou, ajoute {oeufs}. Laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C. Étale la pâte sur 3 mm, découpe 40 ronds et évide le centre de la moitié.",
+   "Enfourne 10 min. Une fois froids, colle-les deux par deux avec {confiture} de confiture."
+  ]
+ },
+ {
+  "id": "x3_g_sables_citron",
+  "n": "Sablés au citron",
+  "t": "biscuit",
+  "tm": "45 min dont 30 min au frais",
+  "parts": "24 sablés",
+  "m": [
+   87,
+   1,
+   10,
+   4
+  ],
+  "diff": 2,
+  "kid": "Il roule le boudin de pâte.",
+  "ing": {
+   "farine": 220,
+   "beurre": 120,
+   "sucre": 80,
+   "oeufs": 1,
+   "citron": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre, le zeste de {citron} et {beurre} de beurre mou, ajoute {oeufs}.",
+   "Forme un boudin et laisse-le 30 min au frais. Préchauffe le four à 180 °C.",
+   "Coupe en rondelles de 1 cm et enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x3_g_sables_cacao",
+  "n": "Sablés diamants au cacao",
+  "t": "biscuit",
+  "tm": "50 min dont 30 min au frais",
+  "parts": "25 sablés",
+  "m": [
+   86,
+   1,
+   9,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il roule le boudin dans le sucre.",
+  "ing": {
+   "farine": 200,
+   "beurre": 130,
+   "sucre": 80,
+   "cacao": 3,
+   "oeufs": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {cacao} de cacao, 60 g de sucre et {beurre} de beurre mou, ajoute {oeufs}.",
+   "Forme un boudin, roule-le dans le reste du sucre ({sucre} au total) et laisse 30 min au frais. Préchauffe le four à 180 °C.",
+   "Coupe en rondelles et enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x3_g_palets_bretons",
+  "n": "Palets bretons",
+  "t": "biscuit",
+  "tm": "45 min dont 30 min au frais",
+  "parts": "20 palets",
+  "m": [
+   118,
+   2,
+   12,
+   7
+  ],
+  "diff": 2,
+  "kid": "Il dore les palets au pinceau.",
+  "ing": {
+   "farine": 200,
+   "beurre": 150,
+   "sucre": 100,
+   "oeufs": 2,
+   "levure": 1
+  },
+  "steps": [
+   "Fouette les jaunes de {oeufs} avec {sucre} de sucre, ajoute {beurre} de beurre mou, {farine} de farine et {levure} de levure. Laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C. Étale sur 1 cm et découpe des ronds.",
+   "Dore au jaune, raye à la fourchette et enfourne 15 min dans des cercles ou des moules à muffins."
+  ]
+ },
+ {
+  "id": "x3_g_cookies_chocolat",
+  "n": "Cookies aux pépites de chocolat",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "16 cookies",
+  "m": [
+   182,
+   2,
+   22,
+   9
+  ],
+  "diff": 1,
+  "kid": "Il forme les boules de pâte.",
+  "ing": {
+   "farine": 220,
+   "beurre": 110,
+   "sucre": 110,
+   "oeufs": 1,
+   "chocolat": 150,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {oeufs}.",
+   "Incorpore {farine} de farine, {levure} de levure et {chocolat} de chocolat concassé.",
+   "Dépose 16 boules sur une plaque et enfourne 11 min : ils durcissent en refroidissant."
+  ]
+ },
+ {
+  "id": "x3_g_cookies_cacahuete",
+  "n": "Cookies au beurre de cacahuète",
+  "t": "biscuit",
+  "tm": "25 min",
+  "parts": "16 cookies",
+  "m": [
+   107,
+   3,
+   13,
+   5
+  ],
+  "diff": 1,
+  "kid": "Il fait les croisillons à la fourchette.",
+  "ing": {
+   "beurrecacahuete": 8,
+   "sucre": 100,
+   "oeufs": 1,
+   "farine": 80,
+   "flocons": 50,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {beurrecacahuete} de beurre de cacahuète, {sucre} de sucre et {oeufs}.",
+   "Ajoute {farine} de farine, {flocons} de flocons d'avoine et {levure} de levure.",
+   "Forme 16 boules, aplatis-les à la fourchette et enfourne 10 min."
+  ]
+ },
+ {
+  "id": "x3_g_cookies_double_chocolat",
+  "n": "Cookies double chocolat",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "16 cookies",
+  "m": [
+   171,
+   2,
+   20,
+   9
+  ],
+  "diff": 1,
+  "kid": "Il casse le chocolat en morceaux.",
+  "ing": {
+   "farine": 180,
+   "cacao": 3,
+   "beurre": 110,
+   "sucre": 120,
+   "oeufs": 1,
+   "chocolat": 120,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {oeufs}.",
+   "Incorpore {farine} de farine, {cacao} de cacao, {levure} de levure et {chocolat} de chocolat concassé.",
+   "Dépose 16 boules sur une plaque et enfourne 10 min."
+  ]
+ },
+ {
+  "id": "x3_g_cookies_pomme",
+  "n": "Cookies avoine, pomme et cannelle",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "16 cookies",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   110,
+   2,
+   14,
+   5
+  ],
+  "diff": 1,
+  "kid": "Il râpe la pomme.",
+  "ing": {
+   "flocons": 150,
+   "pomme": 1,
+   "farine": 80,
+   "beurre": 70,
+   "sucre": 60,
+   "oeufs": 1,
+   "cannelle": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Râpe {pomme}.",
+   "Mélange {beurre} de beurre mou et {sucre} de sucre, ajoute {oeufs}, la pomme, {flocons} de flocons d'avoine, {farine} de farine, {levure} de levure et {cannelle} de cannelle.",
+   "Dépose 16 petits tas sur une plaque et enfourne 14 min."
+  ]
+ },
+ {
+  "id": "x3_g_cantucci_noix",
+  "n": "Cantucci aux noix",
+  "t": "biscuit",
+  "tm": "50 min",
+  "parts": "30 biscuits",
+  "m": [
+   80,
+   2,
+   11,
+   3
+  ],
+  "diff": 2,
+  "kid": "Il façonne les deux boudins de pâte.",
+  "ing": {
+   "farine": 250,
+   "sucre": 150,
+   "oeufs": 2,
+   "noix": 120,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mélange {farine} de farine, {sucre} de sucre, {levure} de levure et {oeufs}, puis {noix} de noix.",
+   "Forme 2 boudins aplatis et enfourne 25 min.",
+   "Coupe-les en tranches obliques de 1 cm et remets 10 min au four. Ils se gardent 2 semaines en boîte."
+  ]
+ },
+ {
+  "id": "x3_g_amaretti",
+  "n": "Amaretti moelleux",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "20 biscuits",
+  "m": [
+   99,
+   3,
+   9,
+   6
+  ],
+  "diff": 1,
+  "kid": "Il roule les boules dans le sucre.",
+  "ing": {
+   "amande": 200,
+   "sucre": 150,
+   "oeufs": 2,
+   "citron": 1
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C.",
+   "Mélange {amande} de poudre d'amande, 120 g de sucre, le zeste de {citron} et les blancs de {oeufs} montés en neige souple.",
+   "Forme 20 boules, roule-les dans le reste du sucre ({sucre} au total) et enfourne 15 min."
+  ]
+ },
+ {
+  "id": "x3_g_sables_noisette",
+  "n": "Sablés à la noisette",
+  "t": "biscuit",
+  "tm": "45 min dont 30 min au frais",
+  "parts": "24 biscuits",
+  "m": [
+   101,
+   2,
+   9,
+   6
+  ],
+  "diff": 2,
+  "kid": "Il découpe les formes à l'emporte-pièce.",
+  "ing": {
+   "farine": 180,
+   "noisette": 80,
+   "beurre": 120,
+   "sucre": 80,
+   "oeufs": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {noisette} de poudre de noisette, {sucre} de sucre et {beurre} de beurre mou, ajoute {oeufs}. Laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C. Étale la pâte et découpe les biscuits.",
+   "Enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x3_g_langues_chat",
+  "n": "Langues de chat",
+  "t": "biscuit",
+  "tm": "30 min",
+  "parts": "30 biscuits",
+  "m": [
+   55,
+   1,
+   6,
+   3
+  ],
+  "diff": 1,
+  "kid": "Il dresse les bâtonnets à la poche.",
+  "ing": {
+   "beurre": 100,
+   "sucre": 100,
+   "oeufs": 2,
+   "farine": 100
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Mélange {beurre} de beurre mou et {sucre} de sucre.",
+   "Ajoute les blancs de {oeufs} un par un, puis {farine} de farine.",
+   "Dresse des bâtonnets de 6 cm bien espacés et enfourne 7 min : les bords doivent dorer."
+  ]
+ },
+ {
+  "id": "x3_g_madeleines_citron",
+  "n": "Madeleines au citron",
+  "t": "biscuit",
+  "tm": "40 min et 1 h de repos",
+  "parts": "24 madeleines",
+  "m": [
+   94,
+   2,
+   10,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il remplit les moules à la cuillère.",
+  "ing": {
+   "oeufs": 3,
+   "sucre": 130,
+   "farine": 150,
+   "beurre": 130,
+   "citron": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute le zeste de {citron}, {farine} de farine, {levure} de levure et {beurre} de beurre fondu. Laisse 1 h au frais.",
+   "Préchauffe le four à 220 °C. Remplis des moules à madeleines beurrés aux trois quarts.",
+   "Enfourne 4 min, baisse à 180 °C et prolonge 6 min."
+  ]
+ },
+ {
+  "id": "x3_g_madeleines_chocolat",
+  "n": "Madeleines au chocolat",
+  "t": "biscuit",
+  "tm": "40 min et 1 h de repos",
+  "parts": "24 madeleines",
+  "m": [
+   102,
+   2,
+   10,
+   6
+  ],
+  "diff": 2,
+  "kid": "Il remplit les moules à la cuillère.",
+  "ing": {
+   "oeufs": 3,
+   "sucre": 120,
+   "farine": 130,
+   "cacao": 2,
+   "beurre": 130,
+   "chocolat": 50,
+   "levure": 1
+  },
+  "steps": [
+   "Fais fondre {chocolat} de chocolat avec {beurre} de beurre. Fouette {oeufs} avec {sucre} de sucre.",
+   "Ajoute {farine} de farine, {cacao} de cacao, {levure} de levure et le chocolat fondu. Laisse 1 h au frais.",
+   "Préchauffe le four à 220 °C, remplis les moules et enfourne 4 min, puis 6 min à 180 °C."
+  ]
+ },
+ {
+  "id": "x3_g_financiers_noisette",
+  "n": "Financiers noisette-chocolat",
+  "t": "biscuit",
+  "tm": "35 min",
+  "parts": "16 financiers",
+  "m": [
+   176,
+   3,
+   14,
+   12
+  ],
+  "diff": 2,
+  "kid": "Il pose un morceau de chocolat sur chaque financier.",
+  "ing": {
+   "noisette": 100,
+   "sucre": 150,
+   "farine": 50,
+   "oeufs": 4,
+   "beurre": 120,
+   "chocolat": 40
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Fais cuire {beurre} de beurre jusqu'à ce qu'il sente la noisette.",
+   "Mélange {noisette} de poudre de noisette, {sucre} de sucre et {farine} de farine, ajoute les blancs de {oeufs} puis le beurre.",
+   "Remplis des moules, pose un morceau de {chocolat} de chocolat sur chacun et enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x3_g_flapjacks",
+  "n": "Flapjacks au miel et aux abricots secs",
+  "t": "biscuit",
+  "tm": "30 min et 1 h au frais",
+  "parts": "12 barres",
+  "m": [
+   164,
+   3,
+   20,
+   8
+  ],
+  "diff": 1,
+  "kid": "Il tasse la préparation dans le moule.",
+  "ing": {
+   "flocons": 200,
+   "abricotssecs": 100,
+   "miel": 4,
+   "beurre": 60,
+   "amande": 50
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Fais fondre {beurre} de beurre avec {miel} de miel.",
+   "Mélange avec {flocons} de flocons d'avoine, {amande} de poudre d'amande et {abricotssecs} d'abricots secs en dés.",
+   "Tasse dans un moule carré et enfourne 20 min. Coupe en barres après 1 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_bouchees_coco_cacao",
+  "n": "Bouchées coco-cacao sans cuisson",
+  "t": "biscuit",
+  "tm": "20 min et 1 h au frais",
+  "parts": "20 bouchées",
+  "m": [
+   78,
+   2,
+   7,
+   5
+  ],
+  "diff": 1,
+  "kid": "Il roule les bouchées entre ses mains.",
+  "ing": {
+   "coco": 100,
+   "flocons": 80,
+   "beurrecacahuete": 4,
+   "miel": 3,
+   "cacao": 2
+  },
+  "steps": [
+   "Mixe {flocons} de flocons d'avoine avec 70 g de noix de coco.",
+   "Ajoute {beurrecacahuete} de beurre de cacahuète, {miel} de miel et {cacao} de cacao, mélange jusqu'à ce que la pâte se tienne.",
+   "Forme 20 boules, roule-les dans le reste de la noix de coco ({coco} au total) et laisse 1 h au frais."
+  ]
+ },
+ {
+  "id": "x3_g_sables_sesame",
+  "n": "Petits sablés au sésame",
+  "t": "biscuit",
+  "tm": "45 min dont 30 min au frais",
+  "parts": "24 sablés",
+  "m": [
+   87,
+   1,
+   9,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il roule le boudin dans les graines de sésame.",
+  "ing": {
+   "farine": 200,
+   "beurre": 110,
+   "sucre": 70,
+   "sesame": 4,
+   "oeufs": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre et {beurre} de beurre mou, ajoute {oeufs}.",
+   "Forme un boudin, roule-le dans {sesame} de graines de sésame et laisse 30 min au frais. Préchauffe le four à 180 °C.",
+   "Coupe en rondelles et enfourne 12 min."
+  ]
+ },
+ {
+  "id": "x3_g_speculoos",
+  "n": "Spéculoos maison",
+  "t": "biscuit",
+  "tm": "50 min dont 30 min au frais",
+  "parts": "30 biscuits",
+  "m": [
+   83,
+   1,
+   11,
+   4
+  ],
+  "diff": 2,
+  "kid": "Il découpe les formes à l'emporte-pièce.",
+  "ing": {
+   "farine": 250,
+   "beurre": 125,
+   "sucre": 150,
+   "oeufs": 1,
+   "cannelle": 3,
+   "levure": 1
+  },
+  "steps": [
+   "Mélange {beurre} de beurre mou et {sucre} de sucre (cassonade si tu en as), ajoute {oeufs}.",
+   "Incorpore {farine} de farine, {levure} de levure et {cannelle} de cannelle. Laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C, étale finement, découpe et enfourne 10 min."
+  ]
+ },
+ {
+  "id": "x3_g_bonshommes_epices",
+  "n": "Bonshommes en pain d'épices",
+  "t": "biscuit",
+  "tm": "1 h dont 30 min au frais",
+  "parts": "20 bonshommes",
+  "months": [
+   11,
+   12,
+   1
+  ],
+  "m": [
+   112,
+   2,
+   18,
+   4
+  ],
+  "diff": 3,
+  "kid": "Il découpe les bonshommes et dessine les yeux.",
+  "ing": {
+   "farine": 300,
+   "miel": 5,
+   "beurre": 80,
+   "sucre": 50,
+   "oeufs": 1,
+   "cannelle": 2,
+   "levure": 1
+  },
+  "steps": [
+   "Fais tiédir {miel} de miel avec {beurre} de beurre et {sucre} de sucre.",
+   "Ajoute {farine} de farine, {levure} de levure, {cannelle} de cannelle et {oeufs}. Laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C, étale sur 5 mm, découpe les bonshommes et enfourne 10 min."
+  ]
+ },
+ {
+  "id": "x3_g_biscuits_cuillere",
+  "n": "Biscuits à la cuillère",
+  "t": "biscuit",
+  "tm": "35 min",
+  "parts": "30 biscuits",
+  "m": [
+   40,
+   1,
+   7,
+   1
+  ],
+  "diff": 2,
+  "kid": "Il saupoudre le sucre sur les biscuits.",
+  "ing": {
+   "oeufs": 4,
+   "sucre": 120,
+   "farine": 120
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Monte les blancs de {oeufs} en neige ferme avec la moitié de {sucre} de sucre.",
+   "Fouette les jaunes avec le reste du sucre, incorpore délicatement aux blancs puis {farine} de farine tamisée.",
+   "Dresse des bâtonnets à la poche, saupoudre de sucre et enfourne 10 min."
+  ]
+ },
+ {
+  "id": "x3_g_meringues",
+  "n": "Petites meringues",
+  "t": "biscuit",
+  "tm": "20 min et 1 h 30 au four doux",
+  "parts": "30 meringues",
+  "m": [
+   32,
+   1,
+   6,
+   1
+  ],
+  "diff": 1,
+  "kid": "Il dépose les petits tas à la cuillère.",
+  "ing": {
+   "oeufs": 3,
+   "sucre": 180
+  },
+  "steps": [
+   "Préchauffe le four à 100 °C. Monte les blancs de {oeufs} en neige, ajoute {sucre} de sucre petit à petit jusqu'à ce que la meringue soit brillante.",
+   "Dépose 30 petits tas sur une plaque.",
+   "Laisse sécher 1 h 30 au four. Garde les jaunes pour une crème ou des palets bretons."
+  ]
+ },
+ {
+  "id": "x3_g_digestives_chocolat",
+  "n": "Biscuits avoine-chocolat",
+  "t": "biscuit",
+  "tm": "35 min",
+  "parts": "20 biscuits",
+  "m": [
+   127,
+   2,
+   15,
+   7
+  ],
+  "diff": 2,
+  "kid": "Il trempe les biscuits dans le chocolat.",
+  "ing": {
+   "flocons": 100,
+   "farine": 150,
+   "beurre": 110,
+   "sucre": 70,
+   "chocolat": 100,
+   "lait": 30,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mixe {flocons} de flocons d'avoine, mélange avec {farine} de farine, {sucre} de sucre, {levure} de levure, {beurre} de beurre mou et {lait} de lait.",
+   "Étale sur 5 mm, découpe des ronds et enfourne 14 min.",
+   "Nappe un côté de {chocolat} de chocolat fondu."
+  ]
+ },
+ {
+  "id": "x3_g_shortbread",
+  "n": "Shortbread au beurre",
+  "t": "biscuit",
+  "tm": "50 min",
+  "parts": "16 biscuits",
+  "m": [
+   153,
+   2,
+   16,
+   9
+  ],
+  "diff": 2,
+  "kid": "Il pique la pâte à la fourchette.",
+  "ing": {
+   "farine": 250,
+   "beurre": 170,
+   "sucre": 80
+  },
+  "steps": [
+   "Préchauffe le four à 160 °C. Sable {farine} de farine, {sucre} de sucre et {beurre} de beurre mou jusqu'à former une pâte.",
+   "Tasse-la dans un moule carré et pique-la à la fourchette.",
+   "Enfourne 35 min et coupe en bâtonnets encore tiède."
+  ]
+ },
+ {
+  "id": "x3_g_crinkles",
+  "n": "Crinkles au chocolat",
+  "t": "biscuit",
+  "tm": "40 min et 1 h au frais",
+  "parts": "24 biscuits",
+  "m": [
+   87,
+   2,
+   11,
+   4
+  ],
+  "diff": 2,
+  "kid": "Il roule les boules dans le sucre.",
+  "ing": {
+   "chocolat": 120,
+   "beurre": 40,
+   "sucre": 100,
+   "oeufs": 2,
+   "farine": 150,
+   "cacao": 2,
+   "levure": 1
+  },
+  "steps": [
+   "Fais fondre {chocolat} de chocolat avec {beurre} de beurre. Fouette {oeufs} avec 70 g de sucre et ajoute le chocolat.",
+   "Incorpore {farine} de farine, {cacao} de cacao et {levure} de levure. Laisse 1 h au frais.",
+   "Préchauffe le four à 180 °C. Forme 24 boules, roule-les dans le reste du sucre ({sucre} au total) et enfourne 10 min."
+  ]
+ },
+ {
+  "id": "x3_g_nanterre",
+  "n": "Brioche Nanterre",
+  "t": "brioche",
+  "tm": "3 h dont 2 h 15 de pousse",
+  "parts": "10 parts",
+  "m": [
+   391,
+   9,
+   44,
+   20
+  ],
+  "diff": 4,
+  "kid": "Il range les boules de pâte dans le moule.",
+  "ing": {
+   "farine": 500,
+   "beurre": 200,
+   "oeufs": 5,
+   "sucre": 60,
+   "lait": 80,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris 10 min {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs} et {lait} de lait tiède, puis ajoute {beurre} de beurre mou en morceaux et pétris encore 5 min.",
+   "Laisse lever 1 h 30. Forme 8 boules et range-les dans un moule à cake, 45 min de pousse.",
+   "Dore à l'œuf et enfourne 30 min à 180 °C."
+  ]
+ },
+ {
+  "id": "x3_g_tarte_sucre",
+  "n": "Tarte au sucre du Nord",
+  "t": "brioche",
+  "tm": "2 h 30 dont 1 h 45 de pousse",
+  "parts": "8 parts",
+  "m": [
+   267,
+   5,
+   37,
+   11
+  ],
+  "diff": 4,
+  "kid": "Il parsème le sucre et les noisettes de beurre.",
+  "ing": {
+   "farine": 250,
+   "oeufs": 1,
+   "lait": 100,
+   "beurre": 80,
+   "sucre": 100,
+   "levureboul": 1,
+   "creme": 50
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, 20 g de sucre, {oeufs}, {lait} de lait tiède et 50 g de beurre. Laisse lever 1 h 15.",
+   "Étale la pâte dans un moule à tarte et laisse pousser 30 min. Préchauffe le four à 200 °C.",
+   "Parsème le reste du sucre ({sucre} au total, cassonade si tu en as), le reste du beurre ({beurre} au total) en noisettes et {creme} de crème. Enfourne 15 min."
+  ]
+ },
+ {
+  "id": "x3_g_couronne_rois",
+  "n": "Couronne des rois briochée à l'orange",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "10 parts",
+  "months": [
+   12,
+   1
+  ],
+  "m": [
+   331,
+   8,
+   47,
+   12
+  ],
+  "diff": 4,
+  "kid": "Il cache la fève dans la pâte.",
+  "ing": {
+   "farine": 500,
+   "beurre": 120,
+   "oeufs": 3,
+   "sucre": 80,
+   "lait": 100,
+   "orange": 1,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs}, {lait} de lait tiède et le zeste de {orange}, puis {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Forme une couronne (glisse une fève) et laisse pousser 30 min.",
+   "Dore à l'œuf et enfourne 25 min à 180 °C. Badigeonne du jus d'orange à la sortie du four."
+  ]
+ },
+ {
+  "id": "x3_g_roulee_chocolat_noisette",
+  "n": "Brioche roulée chocolat-noisette",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "10 parts",
+  "m": [
+   357,
+   8,
+   45,
+   15
+  ],
+  "diff": 4,
+  "kid": "Il étale la garniture sur la pâte.",
+  "ing": {
+   "farine": 450,
+   "lait": 150,
+   "oeufs": 2,
+   "beurre": 80,
+   "sucre": 60,
+   "levureboul": 1,
+   "chocolat": 100,
+   "noisette": 60
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs}, {lait} de lait tiède et {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Étale en rectangle, parsème {chocolat} de chocolat concassé et {noisette} de poudre de noisette, roule et coupe en 8 tronçons.",
+   "Range-les dans un moule rond, laisse pousser 30 min et enfourne 25 min à 180 °C."
+  ]
+ },
+ {
+  "id": "x3_g_chinois",
+  "n": "Chinois à la crème et aux raisins",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "10 parts",
+  "m": [
+   344,
+   9,
+   53,
+   10
+  ],
+  "diff": 4,
+  "kid": "Il parsème les raisins sur la crème.",
+  "ing": {
+   "farine": 450,
+   "lait": 500,
+   "oeufs": 4,
+   "beurre": 80,
+   "sucre": 120,
+   "raisinssecs": 80,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, 50 g de sucre, 2 œufs, 150 ml de lait tiède et {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Crème : fais épaissir le reste du lait ({lait} au total) avec le reste du sucre ({sucre} au total), 2 œufs ({oeufs} au total) et 40 g de farine. Laisse refroidir.",
+   "Étale la pâte, couvre de crème et de {raisinssecs} de raisins secs, roule, coupe en 8 et range dans un moule rond. 30 min de pousse puis 30 min à 180 °C."
+  ]
+ },
+ {
+  "id": "x3_g_buchty_confiture",
+  "n": "Petites brioches fourrées à la confiture",
+  "t": "brioche",
+  "tm": "2 h 45 dont 2 h de pousse",
+  "parts": "12 brioches",
+  "m": [
+   254,
+   6,
+   43,
+   6
+  ],
+  "diff": 4,
+  "kid": "Il dépose la confiture au centre de chaque disque.",
+  "ing": {
+   "farine": 450,
+   "lait": 180,
+   "oeufs": 2,
+   "beurre": 70,
+   "sucre": 50,
+   "levureboul": 1,
+   "confiture": 200
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs}, {lait} de lait tiède et {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Divise en 12, aplatis chaque pâton, garnis de {confiture} de confiture et referme en boule.",
+   "Serre-les dans un plat, laisse pousser 30 min et enfourne 25 min à 180 °C."
+  ]
+ },
+ {
+  "id": "x3_g_hot_cross_buns",
+  "n": "Petits pains aux raisins et à la cannelle",
+  "t": "brioche",
+  "tm": "2 h 45 dont 2 h de pousse",
+  "parts": "12 petits pains",
+  "months": [
+   3,
+   4
+  ],
+  "m": [
+   225,
+   5,
+   40,
+   5
+  ],
+  "diff": 4,
+  "kid": "Il dessine les croix sur les petits pains.",
+  "ing": {
+   "farine": 450,
+   "lait": 220,
+   "oeufs": 1,
+   "beurre": 50,
+   "sucre": 60,
+   "raisinssecs": 100,
+   "cannelle": 2,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {cannelle} de cannelle, {oeufs}, {lait} de lait tiède et {beurre} de beurre mou, puis ajoute {raisinssecs} de raisins secs. Laisse lever 1 h 30.",
+   "Forme 12 boules serrées dans un plat et laisse pousser 30 min.",
+   "Trace une croix avec un peu de pâte farine-eau et enfourne 20 min à 190 °C."
+  ]
+ },
+ {
+  "id": "x3_g_gache",
+  "n": "Gâche vendéenne",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "10 parts",
+  "m": [
+   335,
+   8,
+   46,
+   13
+  ],
+  "diff": 4,
+  "kid": "Il dore la gâche au pinceau.",
+  "ing": {
+   "farine": 500,
+   "creme": 100,
+   "oeufs": 3,
+   "beurre": 100,
+   "sucre": 80,
+   "lait": 80,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs}, {creme} de crème et {lait} de lait tiède, puis {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Forme un pain ovale, laisse pousser 30 min.",
+   "Dore à l'œuf, entaille le dessus et enfourne 30 min à 175 °C."
+  ]
+ },
+ {
+  "id": "x3_g_escargots_raisins",
+  "n": "Escargots briochés aux raisins",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "12 escargots",
+  "m": [
+   268,
+   7,
+   42,
+   8
+  ],
+  "diff": 4,
+  "kid": "Il roule la pâte en escargot.",
+  "ing": {
+   "farine": 450,
+   "lait": 300,
+   "oeufs": 3,
+   "beurre": 80,
+   "sucre": 90,
+   "raisinssecs": 100,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, 50 g de sucre, 2 œufs, 120 ml de lait tiède et {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Crème : fais épaissir le reste du lait ({lait} au total) avec le reste du sucre ({sucre} au total), 1 œuf ({oeufs} au total) et 25 g de farine.",
+   "Étale la pâte, couvre de crème et de {raisinssecs} de raisins secs, roule, coupe 12 tranches. 30 min de pousse puis 18 min à 180 °C."
+  ]
+ },
+ {
+  "id": "x3_g_pitch",
+  "n": "Pitch maison aux pépites de chocolat",
+  "t": "brioche",
+  "tm": "2 h 45 dont 2 h de pousse",
+  "parts": "10 pitchs",
+  "m": [
+   335,
+   8,
+   47,
+   12
+  ],
+  "diff": 4,
+  "kid": "Il parsème les pépites et replie la pâte.",
+  "ing": {
+   "farine": 450,
+   "lait": 160,
+   "oeufs": 2,
+   "beurre": 70,
+   "sucre": 50,
+   "levureboul": 1,
+   "chocolat": 150
+  },
+  "steps": [
+   "Pétris 10 min {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs} (garde un peu de jaune pour dorer), {lait} de lait tiède et {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Étale en grand rectangle, couvre la moitié de {chocolat} de chocolat en pépites (ou concassé), replie l'autre moitié et appuie bien.",
+   "Coupe 10 barres, range-les sur une plaque et laisse pousser 30 min.",
+   "Dore au jaune d'œuf et enfourne 15 min à 180 °C : elles doivent rester moelleuses."
+  ]
+ },
+ {
+  "id": "x3_g_pogne_orange_chocolat",
+  "n": "Brioche orange et pépites de chocolat",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "10 parts",
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   373,
+   8,
+   51,
+   15
+  ],
+  "diff": 4,
+  "kid": "Il ajoute les pépites dans la pâte.",
+  "ing": {
+   "farine": 500,
+   "orange": 1,
+   "oeufs": 3,
+   "beurre": 120,
+   "sucre": 80,
+   "lait": 60,
+   "chocolat": 80,
+   "levureboul": 1
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs}, {lait} de lait tiède, le zeste et le jus de {orange}, puis {beurre} de beurre mou.",
+   "Ajoute {chocolat} de chocolat concassé et laisse lever 1 h 30. Forme une couronne et laisse pousser 30 min.",
+   "Dore à l'œuf et enfourne 30 min à 175 °C."
+  ]
+ },
+ {
+  "id": "x3_g_tresse_noix_miel",
+  "n": "Tresse aux noix et au miel",
+  "t": "brioche",
+  "tm": "3 h dont 2 h de pousse",
+  "parts": "10 parts",
+  "m": [
+   332,
+   8,
+   44,
+   14
+  ],
+  "diff": 4,
+  "kid": "Il tresse les trois boudins.",
+  "ing": {
+   "farine": 450,
+   "lait": 180,
+   "oeufs": 1,
+   "beurre": 60,
+   "sucre": 40,
+   "levureboul": 1,
+   "noix": 120,
+   "miel": 3
+  },
+  "steps": [
+   "Pétris {farine} de farine, {levureboul}, {sucre} de sucre, {oeufs}, {lait} de lait tiède et {beurre} de beurre mou. Laisse lever 1 h 30.",
+   "Étale en rectangle, couvre de {noix} de noix concassées mêlées à {miel} de miel, roule et coupe en deux dans la longueur.",
+   "Torsade les deux brins, laisse pousser 30 min et enfourne 30 min à 175 °C."
+  ]
+ },
+ {
+  "id": "x3_g_crepes_cacao",
+  "n": "Crêpes au cacao",
+  "t": "crepe",
+  "tm": "30 min et 1 h de repos",
+  "parts": "16 crêpes",
+  "m": [
+   97,
+   4,
+   13,
+   3
+  ],
+  "diff": 1,
+  "kid": "Il verse la pâte à la louche (avec toi près de la poêle).",
+  "ing": {
+   "farine": 200,
+   "cacao": 2,
+   "oeufs": 3,
+   "lait": 500,
+   "sucre": 30,
+   "beurre": 30
+  },
+  "steps": [
+   "Mélange {farine} de farine, {cacao} de cacao et {sucre} de sucre, ajoute {oeufs} puis {lait} de lait petit à petit.",
+   "Ajoute {beurre} de beurre fondu et laisse reposer 1 h.",
+   "Cuis les crêpes dans une poêle chaude légèrement graissée."
+  ]
+ },
+ {
+  "id": "x3_g_crepes_orange",
+  "n": "Crêpes au beurre d'orange",
+  "t": "crepe",
+  "tm": "40 min et 1 h de repos",
+  "parts": "16 crêpes",
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   142,
+   4,
+   19,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il presse les oranges.",
+  "ing": {
+   "farine": 250,
+   "oeufs": 3,
+   "lait": 500,
+   "beurre": 70,
+   "sucre": 60,
+   "orange": 3
+  },
+  "steps": [
+   "Mélange {farine} de farine, 20 g de sucre, {oeufs} et {lait} de lait, laisse reposer 1 h. Cuis les crêpes.",
+   "Fais fondre {beurre} de beurre avec le reste du sucre ({sucre} au total), le zeste et le jus de {orange}, laisse réduire 5 min.",
+   "Plie les crêpes en quatre et réchauffe-les dans le beurre d'orange."
+  ]
+ },
+ {
+  "id": "x3_g_pancakes",
+  "n": "Pancakes moelleux",
+  "t": "crepe",
+  "tm": "30 min",
+  "parts": "16 pancakes",
+  "m": [
+   99,
+   3,
+   14,
+   3
+  ],
+  "diff": 1,
+  "kid": "Il retourne les pancakes à la spatule.",
+  "ing": {
+   "farine": 250,
+   "lait": 300,
+   "oeufs": 2,
+   "sucre": 30,
+   "beurre": 40,
+   "levure": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre et {levure} de levure.",
+   "Ajoute {oeufs}, {lait} de lait et {beurre} de beurre fondu, sans trop travailler la pâte.",
+   "Cuis des petites louches 2 min de chaque côté dans une poêle chaude."
+  ]
+ },
+ {
+  "id": "x3_g_pancakes_banane_avoine",
+  "n": "Pancakes banane-avoine",
+  "t": "crepe",
+  "tm": "25 min",
+  "parts": "14 pancakes",
+  "m": [
+   67,
+   3,
+   9,
+   2
+  ],
+  "diff": 1,
+  "kid": "Il écrase les bananes.",
+  "ing": {
+   "banane": 2,
+   "flocons": 120,
+   "oeufs": 3,
+   "lait": 150,
+   "levure": 1
+  },
+  "steps": [
+   "Mixe {flocons} de flocons d'avoine en farine.",
+   "Ajoute {banane} écrasées, {oeufs}, {lait} de lait et {levure} de levure.",
+   "Cuis des petites louches 2 min de chaque côté."
+  ]
+ },
+ {
+  "id": "x3_g_pancakes_fruits_rouges",
+  "n": "Pancakes aux fruits rouges",
+  "t": "crepe",
+  "tm": "30 min",
+  "parts": "16 pancakes",
+  "m": [
+   94,
+   3,
+   14,
+   3
+  ],
+  "diff": 1,
+  "kid": "Il parsème les fruits rouges sur les pancakes.",
+  "ing": {
+   "farine": 220,
+   "lait": 280,
+   "oeufs": 2,
+   "sucre": 30,
+   "huileneutre": 30,
+   "levure": 1,
+   "fruitsrouges": 150
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre, {levure} de levure, {oeufs}, {lait} de lait et {huileneutre} d'huile.",
+   "Verse des petites louches dans une poêle chaude et parsème de {fruitsrouges} de fruits rouges.",
+   "Retourne quand des bulles se forment, 1 min de plus."
+  ]
+ },
+ {
+  "id": "x3_g_pancakes_ricotta",
+  "n": "Pancakes ricotta-citron",
+  "t": "crepe",
+  "tm": "30 min",
+  "parts": "14 pancakes",
+  "m": [
+   89,
+   5,
+   10,
+   3
+  ],
+  "diff": 1,
+  "kid": "Il râpe le zeste du citron.",
+  "ing": {
+   "ricotta": 250,
+   "oeufs": 3,
+   "farine": 120,
+   "lait": 150,
+   "sucre": 30,
+   "citron": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Fouette {ricotta} de ricotta, {oeufs}, {lait} de lait, {sucre} de sucre et le zeste de {citron}.",
+   "Ajoute {farine} de farine et {levure} de levure.",
+   "Cuis des petites louches 2 min de chaque côté à feu moyen."
+  ]
+ },
+ {
+  "id": "x3_g_gaufres",
+  "n": "Gaufres croustillantes",
+  "t": "crepe",
+  "tm": "35 min et 1 h de repos",
+  "parts": "10 gaufres",
+  "m": [
+   204,
+   6,
+   24,
+   9
+  ],
+  "diff": 2,
+  "kid": "Il verse la pâte dans le gaufrier.",
+  "ing": {
+   "farine": 250,
+   "lait": 400,
+   "oeufs": 3,
+   "beurre": 80,
+   "sucre": 40,
+   "levure": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre et {levure} de levure, ajoute les jaunes de {oeufs}, {lait} de lait et {beurre} de beurre fondu.",
+   "Monte les blancs en neige et incorpore-les. Laisse reposer 1 h.",
+   "Cuis dans un gaufrier chaud 4 min."
+  ]
+ },
+ {
+  "id": "x3_g_gaufres_chocolat",
+  "n": "Gaufres au chocolat",
+  "t": "crepe",
+  "tm": "35 min",
+  "parts": "10 gaufres",
+  "m": [
+   201,
+   6,
+   25,
+   8
+  ],
+  "diff": 2,
+  "kid": "Il verse la pâte dans le gaufrier.",
+  "ing": {
+   "farine": 220,
+   "cacao": 3,
+   "lait": 350,
+   "oeufs": 3,
+   "beurre": 70,
+   "sucre": 60,
+   "levure": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {cacao} de cacao, {sucre} de sucre et {levure} de levure.",
+   "Ajoute {oeufs}, {lait} de lait et {beurre} de beurre fondu.",
+   "Cuis dans un gaufrier chaud 4 min."
+  ]
+ },
+ {
+  "id": "x3_g_gaufres_patate_douce",
+  "n": "Gaufres patate douce-cannelle",
+  "t": "crepe",
+  "tm": "40 min",
+  "parts": "10 gaufres",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   165,
+   4,
+   24,
+   6
+  ],
+  "diff": 2,
+  "kid": "Il écrase la patate douce cuite.",
+  "ing": {
+   "patatedouce": 300,
+   "farine": 180,
+   "lait": 250,
+   "oeufs": 2,
+   "beurre": 50,
+   "sucre": 30,
+   "cannelle": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Cuis {patatedouce} de patates douces 15 min à la vapeur et écrase-les.",
+   "Ajoute {oeufs}, {lait} de lait, {beurre} de beurre fondu, {sucre} de sucre, {farine} de farine, {levure} de levure et {cannelle} de cannelle.",
+   "Cuis dans un gaufrier chaud 5 min."
+  ]
+ },
+ {
+  "id": "x3_g_beignets_pommes",
+  "n": "Beignets de pommes à la poêle",
+  "t": "crepe",
+  "tm": "35 min",
+  "parts": "16 beignets",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   108,
+   2,
+   14,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il trempe les rondelles de pomme dans la pâte (tu t'occupes de la poêle).",
+  "ing": {
+   "pomme": 4,
+   "farine": 150,
+   "oeufs": 2,
+   "lait": 150,
+   "sucre": 30,
+   "levure": 1,
+   "huileneutre": 60
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre, {levure} de levure, {oeufs} et {lait} de lait.",
+   "Épluche {pomme}, retire le cœur et coupe-les en rondelles épaisses.",
+   "Trempe-les dans la pâte et dore-les 2 min de chaque côté dans {huileneutre} d'huile chaude, en plusieurs fois."
+  ]
+ },
+ {
+  "id": "x3_g_pain_perdu",
+  "n": "Pain perdu à la cannelle",
+  "t": "crepe",
+  "tm": "20 min",
+  "parts": "8 tranches",
+  "m": [
+   174,
+   7,
+   21,
+   7
+  ],
+  "diff": 1,
+  "kid": "Il trempe les tranches dans le lait.",
+  "ing": {
+   "painmie": 8,
+   "oeufs": 3,
+   "lait": 300,
+   "sucre": 40,
+   "beurre": 30,
+   "cannelle": 1
+  },
+  "steps": [
+   "Fouette {oeufs}, {lait} de lait, {sucre} de sucre et {cannelle} de cannelle.",
+   "Trempe {painmie} des deux côtés.",
+   "Dore-les 2 min de chaque côté dans {beurre} de beurre."
+  ]
+ },
+ {
+  "id": "x3_g_crepes_coco",
+  "n": "Crêpes au lait de coco",
+  "t": "crepe",
+  "tm": "30 min et 1 h de repos",
+  "parts": "16 crêpes",
+  "m": [
+   116,
+   3,
+   12,
+   6
+  ],
+  "diff": 1,
+  "kid": "Il verse la pâte à la louche (avec toi près de la poêle).",
+  "ing": {
+   "farine": 200,
+   "laitcoco": 400,
+   "lait": 100,
+   "oeufs": 3,
+   "sucre": 30
+  },
+  "steps": [
+   "Mélange {farine} de farine et {sucre} de sucre, ajoute {oeufs}.",
+   "Verse {laitcoco} de lait de coco et {lait} de lait petit à petit. Laisse reposer 1 h.",
+   "Cuis les crêpes dans une poêle chaude légèrement graissée."
+  ]
+ },
+ {
+  "id": "x3_g_dorayaki",
+  "n": "Dorayaki à la confiture",
+  "t": "crepe",
+  "tm": "35 min",
+  "parts": "10 dorayakis",
+  "m": [
+   190,
+   4,
+   38,
+   2
+  ],
+  "diff": 2,
+  "kid": "Il garnit et referme les dorayakis.",
+  "ing": {
+   "farine": 200,
+   "oeufs": 3,
+   "sucre": 80,
+   "miel": 2,
+   "lait": 60,
+   "levure": 1,
+   "confiture": 200
+  },
+  "steps": [
+   "Fouette {oeufs} avec {sucre} de sucre et {miel} de miel, ajoute {lait} de lait, {farine} de farine et {levure} de levure.",
+   "Cuis 20 petites crêpes épaisses à feu doux, 2 min de chaque côté.",
+   "Assemble-les deux par deux avec {confiture} de confiture."
+  ]
+ },
+ {
+  "id": "x3_g_pancakes_pepites",
+  "n": "Pancakes aux pépites de chocolat",
+  "t": "crepe",
+  "tm": "30 min",
+  "parts": "16 pancakes",
+  "m": [
+   126,
+   3,
+   17,
+   5
+  ],
+  "diff": 1,
+  "kid": "Il parsème les pépites sur les pancakes.",
+  "ing": {
+   "farine": 250,
+   "lait": 300,
+   "oeufs": 2,
+   "sucre": 30,
+   "beurre": 40,
+   "chocolat": 80,
+   "levure": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre et {levure} de levure, ajoute {oeufs}, {lait} de lait et {beurre} de beurre fondu.",
+   "Verse des petites louches dans une poêle chaude et parsème de {chocolat} de chocolat concassé.",
+   "Retourne au bout de 2 min et cuis 1 min de plus."
+  ]
+ },
+ {
+  "id": "x3_g_gaufres_banane",
+  "n": "Gaufres à la banane",
+  "t": "crepe",
+  "tm": "35 min",
+  "parts": "10 gaufres",
+  "m": [
+   161,
+   5,
+   22,
+   6
+  ],
+  "diff": 2,
+  "kid": "Il écrase les bananes.",
+  "ing": {
+   "banane": 2,
+   "farine": 220,
+   "lait": 250,
+   "oeufs": 2,
+   "beurre": 50,
+   "levure": 1
+  },
+  "steps": [
+   "Écrase {banane}.",
+   "Ajoute {oeufs}, {lait} de lait, {beurre} de beurre fondu, {farine} de farine et {levure} de levure.",
+   "Cuis dans un gaufrier chaud 4 min."
+  ]
+ },
+ {
+  "id": "x3_g_crepes_pommes",
+  "n": "Crêpes aux pommes caramélisées",
+  "t": "crepe",
+  "tm": "40 min et 1 h de repos",
+  "parts": "12 crêpes",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   172,
+   5,
+   25,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il garnit et plie les crêpes.",
+  "ing": {
+   "farine": 200,
+   "oeufs": 3,
+   "lait": 450,
+   "pomme": 4,
+   "beurre": 50,
+   "sucre": 60
+  },
+  "steps": [
+   "Mélange {farine} de farine, {oeufs} et {lait} de lait, laisse reposer 1 h. Cuis les crêpes.",
+   "Épluche {pomme}, coupe-les en dés et fais-les dorer 10 min dans {beurre} de beurre avec {sucre} de sucre.",
+   "Garnis les crêpes de pommes et plie-les en quatre."
+  ]
  }
 ]

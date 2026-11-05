@@ -7,7 +7,7 @@
 | mains.json (plats de batch cooking) | 408 | 407 |
 | soups.json | 34 | 34 |
 | simples.json (dîners express) | 80 | 80 |
-| cakes.json (goûters) | 47 | 47 |
+| cakes.json (goûters) | 150 | 150 |
 | breakfasts.json | 35 | 35 |
 
 Le chiffre annoncé sur l'accueil (« 184 repas, 35 goûters, 25 petits-déjeuners », `src/i18n/landing.ts`) ne correspond plus au seed : 522 repas (408 + 34 + 80), 47 goûters, 35 petits-déjeuners. Il vient d'un état antérieur du catalogue (commit « Ajoute 150 plats », 604 recettes). **À trancher par le produit** avant toute page qui citerait un volume ; les pages ajoutées ne citent aucun volume.
@@ -26,7 +26,7 @@ La couche `src/seo` publie **déjà** `/recettes/{slug}` pour toutes les recette
 
 ## Corrigé le 3 novembre 2026
 
-- Accueil : 521 repas distincts, 47 goûters, 35 petits-déjeuners (un test compare ces chiffres au seed).
+- Accueil : 521 repas distincts, 150 goûters, 35 petits-déjeuners (un test compare ces chiffres au seed).
 - Menus générés : réduits à 6 (2/4/6 personnes × classique/végétarien, batch), en `noindex`, hors sitemap ; les menus « pas cher », « enfants », « rapide » et « quotidien » (critères inférés, non issus du seed) sont supprimés. Les pages indexables de menu sont les 3 exemples.
 - Hubs : « en 2 heures » supprimé (durée de session non fiable) ; textes des autres hubs limités à des faits du catalogue ; ils restent `noindex` tant qu'aucun menu n'est indexable.
 - Contenus retirés : durée de session estimée, « décongèle-le la veille », « se réchauffent en quelques minutes », 20 min de travail actif des dîners express (désormais `null`), CTA « gratuitement ». Le texte « le jour du repas » des recettes n'affiche plus de `{placeholder}`.

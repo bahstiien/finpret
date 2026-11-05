@@ -2,7 +2,7 @@
 // mois déduits des légumes de saison, protéine déduite des ingrédients.
 // Valeurs : [quantité de référence, kcal, protéines g, glucides g, lipides g] ; g/ml → pour 100, sinon par unité du seed.
 // Féculents et légumineuses : poids sec. Estimations courantes (CIQUAL arrondi), pas des mesures.
-const N = {
+export const N = {
   poulet: [100, 120, 23, 0, 2.5], boeuf: [100, 130, 21, 0, 5], dinde: [100, 110, 23, 0, 2], jambon: [1, 50, 9, 0.3, 1.3],
   oeufs: [1, 75, 6.5, 0.5, 5], feta: [100, 265, 14, 1, 21], emmental: [100, 380, 28, 0, 29], parmesan: [100, 400, 36, 0, 28],
   skyr: [100, 62, 11, 4, 0.2], fromageblanc: [100, 60, 8, 4, 1.5], yaourt: [1, 70, 5, 8, 2], cottage: [100, 90, 11, 3, 4],
@@ -40,6 +40,8 @@ const N = {
   polenta: [100, 355, 8, 77, 1], artichaut: [1, 50, 3, 9, 0.3], blette: [100, 20, 2, 3, 0.2], olives: [100, 150, 1, 4, 15],
   sesame: [1, 55, 1.8, 1.5, 4.5], melon: [1, 150, 3, 34, 0.5], peche: [1, 60, 1, 14, 0.3], basilic: [1, 10, 1, 1, 0.2], menthe: [1, 10, 1, 1, 0.2],
   betterave: [100, 45, 1.7, 9, 0.2], patatedouce: [100, 85, 1.6, 20, 0.1], chataigne: [100, 190, 3, 40, 2],
+  noisette: [100, 630, 15, 7, 61], cerises: [100, 60, 1, 13, 0.3], prunes: [100, 50, 0.7, 11, 0.2], figues: [1, 35, 0.4, 8, 0.1],
+  confiture: [100, 250, 0.5, 60, 0.1], ananas: [1, 380, 2, 92, 0.5],
 };
 
 /** Mois de saison des légumes soumis à la saisonnalité (les autres légumes sont disponibles toute l'année). */

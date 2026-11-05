@@ -103,11 +103,12 @@ export const landingExample = {
         "Épinards frais : 1 sachet de 500 g",
         "Gingembre frais : 1",
         "Chou-fleur : 1,3 kg",
+        "Fruits rouges (frais ou surgelés) : 150 g",
       ],
     },
     {
       aisle: "Crèmerie et œufs",
-      items: ["Fromage blanc : 1 pot de 500 g", "Parmesan râpé : 100 g", "Œufs : 1"],
+      items: ["Fromage blanc : 1 pot de 500 g", "Parmesan râpé : 100 g", "Œufs : 2"],
     },
     {
       aisle: "Épicerie",
@@ -117,7 +118,6 @@ export const landingExample = {
         "Tomates concassées : 4 boîtes de 400 g",
         "Pois chiches : 5 boîtes de 400 g",
         "Lait de coco light : 1 boîte de 200 ml",
-        "Noix : 60 g",
       ],
     },
     { aisle: "Boulangerie", items: ["Pain complet (tranches) : 13"] },
@@ -216,7 +216,7 @@ export const landingV2 = {
     shoppingTitle: "La liste de courses",
     shoppingSummary: `Voir les ${shoppingCount} articles par rayon`,
     shoppingNote:
-      "Comprend aussi le goûter de la semaine (des biscuits au miel et aux noix), qui ne fait pas partie des 10 repas.",
+      "Comprend aussi le goûter de la semaine (des pancakes aux fruits rouges), qui ne fait pas partie des 10 repas.",
     sessionTitle: "Aperçu de la session de préparation",
     sessionUnit: "min",
     sessionLead: `Dans cet exemple, l'application estime la session à ${hm(ex.sessionMinutes)} (${hm(ex.beginnerMinutes)} au niveau débutant).`,
@@ -253,7 +253,7 @@ export const landingV2 = {
     label: "Le catalogue",
     items: [
       { n: "521", label: "recettes de repas" },
-      { n: "47", label: "goûters" },
+      { n: "150", label: "goûters" },
       { n: "35", label: "petits-déjeuners" },
     ],
     season: "De saison, toute l'année",
