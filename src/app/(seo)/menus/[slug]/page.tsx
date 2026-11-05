@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
 import { Breadcrumbs, Faq, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { displayName } from "@/seo/catalog";
 import { EXAMPLES_BASE } from "@/seo/exemples";
 import { getHub, INDEXABLE_HUBS } from "@/seo/hubs";
@@ -67,7 +68,10 @@ export default async function MenuPage({ params }: { params: Promise<{ slug: str
           <SectionHead id="repas" title={`Les ${m.recipes.length} repas de la semaine`} />
           <ol className="grid gap-4 min-[900px]:grid-cols-2">
             {m.recipes.map((r, i) => (
-              <li key={r.id} className="card flex flex-col gap-1.5">
+              <li key={r.id} className="card recipe-zoom flex flex-col gap-1.5">
+                {r.photo && (
+                  <RecipeImage photo={r.photo} sizes="(min-width: 900px) 560px, 100vw" decorative className="card-photo mb-2" />
+                )}
                 <p className="t-kicker">Repas {i + 1}</p>
                 <h3 className="t-3">
                   <Link href={`/recettes/${r.slug}`} className="lnk">

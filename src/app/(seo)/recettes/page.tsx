@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, PageFrame, SectionHead } from "@/components/seo/Shell";
+import { Breadcrumbs, PageFrame, RecipeTile, SectionHead } from "@/components/seo/Shell";
 import { displayName, RECIPES, type RecipeKind } from "@/seo/catalog";
 import { breadcrumbJsonLd, type Crumb } from "@/seo/jsonld";
 import { pageMetadata } from "@/seo/meta";
@@ -46,12 +45,10 @@ export default function RecipesIndex() {
         return (
           <section key={k} aria-labelledby={`k-${k}`} className="flex flex-col gap-3.5">
             <SectionHead id={`k-${k}`} title={PLURAL[k]} tag={`(${list.length})`} />
-            <ul className="grid gap-x-8 sm:grid-cols-2">
+            <ul className="grid grid-cols-2 gap-3 sm:gap-5 min-[900px]:grid-cols-3 min-[1100px]:grid-cols-4">
               {list.map((r) => (
-                <li key={r.id}>
-                  <Link href={`/recettes/${r.slug}`} className="lnk inline-flex min-h-11 items-center">
-                    {displayName(r)}
-                  </Link>
+                <li key={r.id} className="flex">
+                  <RecipeTile href={`/recettes/${r.slug}`} name={displayName(r)} photo={r.photo} />
                 </li>
               ))}
             </ul>

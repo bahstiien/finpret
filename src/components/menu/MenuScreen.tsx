@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { dur } from "@/engine/format";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
@@ -344,6 +345,13 @@ export function MenuScreen({
               <Icon name="chevronDown" />
             </summary>
             <div className="faq-body flex flex-col gap-3">
+              {r.photo && (
+                <RecipeImage
+                  photo={r.photo}
+                  sizes="(min-width: 900px) 480px, 100vw"
+                  className="nb-flat w-full max-w-[480px]"
+                />
+              )}
               {r.description && <p className="muted">{r.description}</p>}
               <h3 className="t-3">{t.ingredients}</h3>
               <ul className="list-disc pl-4">
@@ -626,7 +634,8 @@ function DishCardView({
   onSwap: () => void;
 }) {
   return (
-    <Card as="li" padding="cozy" className="flex w-72 shrink-0 snap-start flex-col gap-3">
+    <Card as="li" padding="cozy" className="recipe-zoom flex w-72 shrink-0 snap-start flex-col gap-3">
+      {dish.photo && <RecipeImage photo={dish.photo} sizes="288px" decorative className="card-photo" />}
       <div>
         <b className="t-3">
           <Flag flag={dish.flag} />
