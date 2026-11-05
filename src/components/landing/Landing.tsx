@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { Pill } from "@/components/ui/Pill";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
 import { landingExample, landingV2 as t } from "@/i18n/landing";
 import { FEATURES } from "@/lib/features";
+import { displayName, getRecipe, RECIPES, slugOf } from "@/seo/catalog";
+import { EXAMPLES } from "@/seo/exemples";
+import { recipePhoto } from "@/seo/images";
 import { Icon, type IconName } from "./Icon";
+import { TopRecipesCarousel, type TopSlide } from "./TopRecipesCarousel";
 
 /** Landing (maquette v2.1) : sections bordées, aplats par domaine, ombres dures. */
 
@@ -120,6 +125,18 @@ export function Hero() {
   );
 }
 
+/** Carrousel des recettes mises en avant (`landingV2.top.ids`), lues dans le catalogue public. */
+export function TopRecipes() {
+  const slides = t.top.ids.flatMap((id): TopSlide[] => {
+    const r = getRecipe(slugOf(id));
+    if (!r?.photo) return [];
+    const { slug, description, photo, activeMin, fridgeDays, freezable } = r;
+    return [{ slug, name: displayName(r), description, photo, activeMin, fridgeDays, freezable }];
+  });
+  if (slides.length < 2) return null;
+  return <TopRecipesCarousel slides={slides} total={RECIPES.length} />;
+}
+
 export function ExampleWeek() {
   const e = t.example;
   const x = landingExample;
@@ -146,8 +163,17 @@ export function ExampleWeek() {
         <ul className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))] min-[900px]:gap-6">
           {x.recipesList.map((r, i) => {
             const portions = r.meals.reduce((sum, [, p]) => sum + p, 0);
+            const photo = recipePhoto(r.id, r.name);
             return (
-              <li key={r.name} className="card flex flex-col gap-3">
+              <li key={r.name} className="card recipe-zoom flex flex-col gap-3">
+                {photo && (
+                  <RecipeImage
+                    photo={photo}
+                    sizes="(min-width: 1240px) 380px, (min-width: 640px) 45vw, 100vw"
+                    decorative
+                    className="card-photo"
+                  />
+                )}
                 <div className="flex flex-wrap items-center gap-2">
                   <h4 className="t-3">{r.name}</h4>
                   {i === x.recipesList.length - 1 && <span className="pill">{e.soupTag}</span>}
@@ -309,14 +335,40 @@ export function Examples() {
         </div>
         <p className="max-w-[680px] text-lg leading-[1.45]">{e.lead}</p>
         <ul className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
-          {e.items.map((i) => (
-            <li key={i.href} className="flex">
-              <Link href={i.href} className="card tone-menu flex min-h-11 w-full flex-col gap-2 no-underline">
-                <span className="t-3">{i.title}</span>
-                <span className="t-small">{i.text}</span>
-              </Link>
-            </li>
-          ))}
+          {e.items.map((i) => {
+            const photos = (EXAMPLES.find((x) => x.path === i.href)?.slots ?? [])
+              .flatMap((s) => (s.recipe.photo ? [s.recipe.photo] : []))
+              .slice(0, 3);
+            return (
+              <li key={i.href} className="flex">
+                <Link
+                  href={i.href}
+                  className="card tone-menu flex min-h-11 w-full flex-col gap-2 no-underline"
+                >
+                  {photos.length === 3 && (
+                    <span
+                      className="card-photo mb-1 grid aspect-[16/10] grid-cols-[2fr_1fr] grid-rows-2 gap-[var(--bw)] overflow-hidden bg-line"
+                      aria-hidden="true"
+                    >
+                      {photos.map((p, k) => (
+                        <RecipeImage
+                          key={p.src}
+                          photo={p}
+                          sizes={
+                            k === 0 ? "(min-width: 900px) 260px, 66vw" : "(min-width: 900px) 130px, 33vw"
+                          }
+                          decorative
+                          className={k === 0 ? "row-span-2 !aspect-auto h-full" : "!aspect-auto h-full"}
+                        />
+                      ))}
+                    </span>
+                  )}
+                  <span className="t-3">{i.title}</span>
+                  <span className="t-small">{i.text}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>

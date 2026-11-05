@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
 import { Flag } from "@/components/menu/Flag";
 import { Breadcrumbs, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
 import { Difficulty } from "@/components/ui/Extras";
 import { Icon } from "@/components/ui/Icon";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { ORIGINS } from "@/engine/origins";
 import { displayName, getRecipe, KIND_LABEL, RECIPES } from "@/seo/catalog";
 import { CONTENT_LASTMOD } from "@/seo/config";
@@ -18,9 +18,23 @@ export const dynamicParams = false;
 
 export const generateStaticParams = () => RECIPES.map((r) => ({ slug: r.slug }));
 
-const MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+const MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
 const monthRange = (m: number[]) => m.map((x) => MONTHS[x - 1]).join(", ");
-const minutes = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} h ${String(n % 60).padStart(2, "0")}` : `${n} min`);
+const minutes = (n: number) =>
+  n >= 60 ? `${Math.floor(n / 60)} h ${String(n % 60).padStart(2, "0")}` : `${n} min`;
 const DIFFICULTY = ["", "très facile", "facile", "intermédiaire", "technique"];
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -66,57 +80,60 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
       <JsonLd data={recipeJsonLd(r, image, recipeDescription(r), CONTENT_LASTMOD)} />
       <Breadcrumbs crumbs={crumbs} />
       <article className="flex flex-col gap-8">
-        <header className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center gap-2">
-            {flag && (
-              <span className="inline-flex items-center gap-2">
-                <Flag flag={flag} />
-                <span className="t-label">{flag.name}</span>
-              </span>
-            )}
-            <span className="pill tone-chip">{KIND_LABEL[r.kind]}</span>
-            {r.vegetarian && <span className="pill">Végétarien</span>}
-            {r.freezable && (
-              <span className="pill tone-stock">
-                <Icon name="snow" className="ic" />
-                Se congèle
-              </span>
-            )}
+        <header className="grid items-center gap-6 min-[1000px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] min-[1000px]:gap-10">
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="flex flex-wrap items-center gap-2">
+              {flag && (
+                <span className="inline-flex items-center gap-2">
+                  <Flag flag={flag} />
+                  <span className="t-label">{flag.name}</span>
+                </span>
+              )}
+              <span className="pill tone-chip">{KIND_LABEL[r.kind]}</span>
+              {r.vegetarian && <span className="pill">Végétarien</span>}
+              {r.freezable && (
+                <span className="pill tone-stock">
+                  <Icon name="snow" className="ic" />
+                  Se congèle
+                </span>
+              )}
+            </div>
+            <h1
+              className="t-hero break-words"
+              style={{ fontSize: r.photo ? "clamp(40px, 5vw, 72px)" : "clamp(40px, 7vw, 88px)" }}
+            >
+              {r.name}
+            </h1>
+            {r.description && <p className="t-body max-w-[640px] text-[19px]">{r.description}</p>}
+
+            <dl
+              className="bento flex flex-wrap"
+              style={{ boxShadow: "var(--sh)" }}
+            >
+              {facts.map(([k, v]) => (
+                <div key={k} className="flex-[1_1_120px] px-3 py-2.5">
+                  <dt className="t-kicker">{k}</dt>
+                  <dd className="mono text-[22px] font-bold">{v}</dd>
+                </div>
+              ))}
+              <div className="flex-[1_1_190px] px-3 py-2.5">
+                <dt className="t-kicker">Difficulté</dt>
+                <dd className="mt-1 flex items-center gap-2">
+                  <Difficulty level={level} />
+                  <span className="mono font-bold">{DIFFICULTY[r.difficulty] ?? ""}</span>
+                </dd>
+              </div>
+            </dl>
           </div>
-          <h1 className="t-hero" style={{ fontSize: "clamp(40px, 7vw, 88px)" }}>
-            {r.name}
-          </h1>
-          {r.description && <p className="t-body max-w-[640px] text-[19px]">{r.description}</p>}
 
           {r.photo && (
-            <Image
-              src={r.photo.src}
-              alt={r.photo.alt}
-              width={r.photo.width}
-              height={r.photo.height}
+            <RecipeImage
+              photo={r.photo}
+              sizes="(min-width: 1240px) 560px, (min-width: 1000px) 45vw, 100vw"
               priority
-              className="nb h-auto w-full max-w-[860px]"
+              className="nb-lg w-full max-[999px]:order-first min-[1000px]:rotate-[1.5deg]"
             />
           )}
-
-          <dl
-            className="bento max-w-[860px] grid-cols-2 min-[700px]:grid-cols-[repeat(auto-fit,minmax(130px,1fr))]"
-            style={{ boxShadow: "var(--sh)" }}
-          >
-            {facts.map(([k, v]) => (
-              <div key={k} className="px-3 py-2.5">
-                <dt className="t-kicker">{k}</dt>
-                <dd className="mono text-[22px] font-bold">{v}</dd>
-              </div>
-            ))}
-            <div className="px-3 py-2.5">
-              <dt className="t-kicker">Difficulté</dt>
-              <dd className="mt-1 flex items-center gap-2">
-                <Difficulty level={level} />
-                <span className="mono font-bold">{DIFFICULTY[r.difficulty] ?? ""}</span>
-              </dd>
-            </div>
-          </dl>
         </header>
 
         <div className="grid items-start gap-8 min-[900px]:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
@@ -136,7 +153,11 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
 
           <div className="flex min-w-0 flex-col gap-8">
             <section aria-labelledby="etapes" className="flex flex-col gap-3.5">
-              <SectionHead id="etapes" title="Préparation" tag={r.totalMin ? minutes(r.totalMin) : undefined} />
+              <SectionHead
+                id="etapes"
+                title="Préparation"
+                tag={r.totalMin ? minutes(r.totalMin) : undefined}
+              />
               <ol className="flex flex-col gap-3.5">
                 {r.steps.map((s, i) => (
                   <li key={i} className="card flex items-start gap-4">
@@ -172,7 +193,9 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
                   </h2>
                 </div>
                 <ul className="flex flex-col gap-1.5">
-                  {r.fridgeDays !== null && <li>Se conserve {r.fridgeDays} jours au frigo après la session de batch cooking.</li>}
+                  {r.fridgeDays !== null && (
+                    <li>Se conserve {r.fridgeDays} jours au frigo après la session de batch cooking.</li>
+                  )}
                   <li>{r.freezable ? "Se congèle." : "Congélation non prévue pour cette recette."}</li>
                   {r.storage && <li>Conditionnement : {r.storage}.</li>}
                   {r.reheat && <li>Le jour du repas : {r.reheat}</li>}
@@ -195,7 +218,8 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
                   Valeurs nutritionnelles
                 </h2>
                 <p>
-                  Estimation par portion adulte : <span className="mono font-bold">{r.nutrition.kcal} kcal</span>,{" "}
+                  Estimation par portion adulte :{" "}
+                  <span className="mono font-bold">{r.nutrition.kcal} kcal</span>,{" "}
                   <span className="mono font-bold">{r.nutrition.protein} g</span> de protéines,{" "}
                   <span className="mono font-bold">{r.nutrition.carbs} g</span> de glucides,{" "}
                   <span className="mono font-bold">{r.nutrition.fat} g</span> de lipides.
@@ -212,12 +236,22 @@ export default async function RecipePage({ params }: { params: Promise<{ slug: s
           <ul className="grid gap-4 min-[900px]:grid-cols-3">
             {menus.slice(0, 4).map((m) => (
               <li key={m.slug} className="flex">
-                <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
+                <LinkCard
+                  href={`/menus/${m.slug}`}
+                  kicker="Menu de la semaine"
+                  tone="tone-menu"
+                  title={m.h1}
+                />
               </li>
             ))}
             {hub && (
               <li className="flex">
-                <LinkCard href={`/batch-cooking/${hub.slug}`} kicker="Batch cooking" tone="tone-session" title={hub.label} />
+                <LinkCard
+                  href={`/batch-cooking/${hub.slug}`}
+                  kicker="Batch cooking"
+                  tone="tone-session"
+                  title={hub.label}
+                />
               </li>
             )}
           </ul>

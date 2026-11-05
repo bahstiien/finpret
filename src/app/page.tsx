@@ -12,6 +12,7 @@ import {
   Pricing,
   SiteFooter,
   SiteHeader,
+  TopRecipes,
 } from "@/components/landing/Landing";
 import { JsonLd } from "@/components/associations/JsonLd";
 import { fr } from "@/i18n/fr";
@@ -48,6 +49,7 @@ export default function HomePage() {
       <SiteHeader />
       <main id="contenu">
         <Hero />
+        <TopRecipes />
         <ExampleWeek />
         <Catalogue />
         <HowItWorks />

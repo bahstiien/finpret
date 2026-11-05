@@ -2,6 +2,7 @@
 
 import { Difficulty } from "@/components/ui/Extras";
 import { Pill } from "@/components/ui/Pill";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
 import type { MenuView } from "@/server/menu-view";
 import { Flag } from "./Flag";
@@ -56,6 +57,14 @@ function DayCard({
           key={m.key}
           className={`flex flex-col gap-2 border-t-[length:var(--bw)] border-line p-3 ${m.removed ? "tone-yellow border-dashed border-violet" : ""}`}
         >
+          {m.photo && (
+            <RecipeImage
+              photo={m.photo}
+              sizes="(min-width: 900px) 240px, 100vw"
+              decorative
+              className={`-mx-3 -mt-3 mb-1 aspect-[16/10] border-b-[length:var(--bw)] border-line ${m.removed ? "opacity-40 grayscale" : ""}`}
+            />
+          )}
           <span className="t-label">{fr.meals[m.meal]}</span>
           <p className={`t-3 ${m.removed ? "line-through" : ""}`}>
             <Flag flag={m.flag} />

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, Faq, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
+import { Breadcrumbs, Faq, LinkCard, PageFrame, RecipeTile, SectionHead } from "@/components/seo/Shell";
 import { displayName } from "@/seo/catalog";
 import { getHub, HUBS } from "@/seo/hubs";
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, type Crumb } from "@/seo/jsonld";
@@ -77,12 +76,10 @@ export default async function HubPage({ params }: { params: Promise<{ theme: str
           <p>
             <span className="mono font-bold">{h.recipeCount}</span> recettes correspondent à ce thème ; en voici une sélection.
           </p>
-          <ul className="grid gap-x-8 sm:grid-cols-2">
+          <ul className="grid grid-cols-2 gap-3 sm:gap-5 min-[900px]:grid-cols-3 min-[1100px]:grid-cols-4">
             {h.recipes.map((r) => (
-              <li key={r.id}>
-                <Link href={`/recettes/${r.slug}`} className="lnk inline-flex min-h-11 items-center">
-                  {displayName(r)}
-                </Link>
+              <li key={r.id} className="flex">
+                <RecipeTile href={`/recettes/${r.slug}`} name={displayName(r)} photo={r.photo} />
               </li>
             ))}
           </ul>

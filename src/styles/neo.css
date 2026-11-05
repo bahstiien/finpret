@@ -95,6 +95,13 @@
 .card--flat{box-shadow:none}
 @media (min-width: 900px){ .card{padding:24px} }
 
+/* Photo de recette (RecipeImage) : 4:3, fond = couleur du visuel. En tête de carte, elle déborde jusqu'aux bords. */
+.recipe-img{position:relative;aspect-ratio:4/3;overflow:hidden}
+.recipe-img img{object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.card-photo{margin:-16px -16px 0;border-bottom:var(--bw) solid var(--line);border-radius:calc(var(--r1) - var(--bw)) calc(var(--r1) - var(--bw)) 0 0}
+@media (min-width: 900px){ .card-photo{margin:-24px -24px 0} }
+a:hover .recipe-img img,a:focus-visible .recipe-img img,.recipe-zoom:hover .recipe-img img{transform:scale(1.07) rotate(-1.5deg)}
+
 /* ---------- 9. Button / LinkButton ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:var(--touch-main);padding:0 20px;border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);color:var(--ink);box-shadow:var(--sh);font-family:var(--font-body);font-weight:700;font-size:16px;line-height:1.1;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform var(--t-fast) steps(2,end),box-shadow var(--t-fast) steps(2,end)}
 .btn .ic{width:20px;height:20px}
@@ -268,6 +275,36 @@
 .faq summary::-webkit-details-marker{display:none}
 .faq[open] summary{background:var(--banane);color:var(--on-banane);border-bottom:var(--bw) solid var(--line)}
 .faq-body{padding:16px;line-height:1.55}
+
+/* Carrousel « top 5 » de l'accueil (TopRecipesCarousel) : la bande prend la couleur du fond de la photo active.
+   Le texte posé sur la bande reste à l'encre (contraste AA sur les quatre fonds des visuels). */
+.top-band{background:var(--top-bg,var(--banane));color:var(--ink-fixed);transition:background-color .8s cubic-bezier(.3,.7,.2,1);overflow:hidden}
+.top-stage{perspective:1200px}
+.top-slide{position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateX(14%) rotate(7deg) scale(.86);transition:opacity .45s ease,transform .8s cubic-bezier(.2,.9,.25,1.25)}
+.top-slide.is-before{transform:translateX(-14%) rotate(-9deg) scale(.86)}
+.top-slide.is-on{opacity:1;pointer-events:auto;transform:rotate(-2deg)}
+.top-slide.is-on img{animation:fp-top-land 7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes fp-top-land{from{transform:scale(1.34) rotate(5deg)}to{transform:scale(1.16) rotate(0)}}
+.top-steam{position:absolute;left:50%;top:6%;width:30%;transform:translateX(-50%);fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;filter:blur(3px);opacity:.85;pointer-events:none;mix-blend-mode:soft-light}
+.top-steam path{stroke-dasharray:120;stroke-dashoffset:120;animation:fp-steam 3.2s ease-in-out infinite}
+.top-steam path:nth-child(2){animation-delay:.7s}.top-steam path:nth-child(3){animation-delay:1.4s}
+@keyframes fp-steam{0%{stroke-dashoffset:120;opacity:0;transform:translateY(14px)}40%{opacity:1}100%{stroke-dashoffset:-120;opacity:0;transform:translateY(-18px)}}
+.top-stamp{position:absolute;right:-6px;bottom:-14px;background:var(--banane);animation:fp-stamp .45s cubic-bezier(.3,1.6,.5,1) both;z-index:2}
+.top-name{animation:fp-top-name .5s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes fp-top-name{from{opacity:0;transform:translateY(10px)}}
+.top-thumb{position:relative;flex:1 1 0;min-width:0;overflow:hidden;cursor:pointer;transition:flex-grow .6s cubic-bezier(.2,.8,.2,1),transform var(--t-fast) steps(2,end)}
+.top-thumb img{object-fit:cover;transform:scale(1.7);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.top-thumb.is-on{flex-grow:2.6;box-shadow:var(--sh-sm)}
+.top-thumb.is-on img{transform:scale(1.25)}
+.top-thumb:not(.is-on):hover{transform:translateY(-3px)}
+.top-thumb:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.top-progress{position:absolute;left:0;bottom:0;height:6px;width:100%;background:var(--ink-fixed);transform-origin:left;animation:fp-top-progress linear both}
+@keyframes fp-top-progress{from{transform:scaleX(0)}}
+@media (max-width: 899px){ .top-stamp{width:76px;height:76px;right:4px} .top-stamp .stamp-code{font-size:22px} }
+@media (prefers-reduced-motion: reduce){
+  .top-band,.top-slide,.top-thumb,.top-thumb img{transition:none}
+  .top-slide.is-on img,.top-name,.top-stamp{animation:none}
+}
 
 
 @media (prefers-reduced-motion: reduce) {

@@ -25,6 +25,7 @@ export const landingExample = {
   freezerMeals: 3,
   recipesList: [
     {
+      id: "pates_saumon",
       name: "Pâtes saumon-poireaux",
       meals: [
         ["lundi soir", 3.25],
@@ -38,6 +39,7 @@ export const landingExample = {
       ],
     },
     {
+      id: "x2_hp_bolognaise_dinde_lentilles",
       name: "Bolognaise dinde-lentilles",
       meals: [
         ["mercredi soir", 3.25],
@@ -49,6 +51,7 @@ export const landingExample = {
       ],
     },
     {
+      id: "x2_an_agneau_confit_pommes_de_terre",
       name: "Agneau confit-pommes de terre",
       meals: [
         ["lundi midi", 2],
@@ -60,6 +63,7 @@ export const landingExample = {
       ],
     },
     {
+      id: "x_curry_pois_chiches_epinards",
       name: "Curry pois chiches-épinards",
       meals: [
         ["mercredi midi", 2],
@@ -71,6 +75,7 @@ export const landingExample = {
       ],
     },
     {
+      id: "veloute_choufleur",
       name: "Velouté chou-fleur",
       meals: [
         ["mardi soir", 3.25],
@@ -223,6 +228,26 @@ export const landingV2 = {
       `Ce n'est pas une durée mesurée en cuisine. Sur 24 semaines générées pour ce foyer, l'estimation va de ${hm(ex.rangeMinutes[0])} à ${hm(ex.rangeMinutes[1])}. Le jour de la session se choisit dans les réglages : le dimanche n'est qu'un exemple.`,
     ],
     cta: "Préparer ma semaine",
+  },
+  top: {
+    sticker: "Notre top 5 gourmand",
+    title: "Ça, c'est ta semaine.",
+    lead: "Des plats réconfort qui se préparent le dimanche, se gardent au frigo et se congèlent. Tu n'as plus qu'à réchauffer.",
+    /** Recettes du seed mises en avant (identifiants). */
+    ids: ["lasagnes_bolo", "mac_cheese", "pr_pulled_pork", "enchiladas", "gratin_gnocchis"],
+    label: "Cinq recettes du catalogue",
+    stamp: "Top 5",
+    slide: (i: number, n: number) => `${i} sur ${n}`,
+    pick: (name: string) => `Afficher : ${name}`,
+    see: "Voir la recette",
+    prev: "Recette précédente",
+    next: "Recette suivante",
+    pause: "Mettre le défilement en pause",
+    play: "Relancer le défilement",
+    active: (n: number) => `${n} min de travail le dimanche`,
+    fridge: (d: number) => `${d} jours au frigo`,
+    freeze: "Se congèle",
+    all: (n: number) => `Voir les ${n} recettes`,
   },
   catalogue: {
     label: "Le catalogue",

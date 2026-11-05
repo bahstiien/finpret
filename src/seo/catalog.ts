@@ -3,7 +3,7 @@ import type { Library } from "@/engine/types";
 import { rawSeed } from "@/engine/catalog/seed-files";
 import { seedSchema, type Cake, type Main, type Simple, type Soup } from "@/engine/catalog/schema";
 import { originOf } from "@/engine/origins";
-import { RECIPE_PHOTOS, type RecipePhoto } from "./images";
+import { recipePhoto, type RecipePhoto } from "./images";
 
 /**
  * Catalogue public : recettes types du seed (`seed/*.json`), lues au build, sans base de données.
@@ -150,7 +150,7 @@ function fromBatch(r: Main | Soup, kind: "plat" | "soupe"): RecipeView {
     pasta: r.pasta === true,
     comfort: r.comfort === true,
     blocks,
-    photo: RECIPE_PHOTOS[slug] ?? null,
+    photo: recipePhoto(slug, r.n),
   };
 }
 
@@ -191,7 +191,7 @@ function fromSimple(r: Simple): RecipeView {
     pasta: r.pasta === true,
     comfort: r.comfort === true,
     blocks: [],
-    photo: RECIPE_PHOTOS[slug] ?? null,
+    photo: recipePhoto(slug, r.n),
   };
 }
 
@@ -233,7 +233,7 @@ function fromCake(r: Cake): RecipeView {
     pasta: false,
     comfort: false,
     blocks: [],
-    photo: RECIPE_PHOTOS[slug] ?? null,
+    photo: recipePhoto(slug, r.n),
   };
 }
 

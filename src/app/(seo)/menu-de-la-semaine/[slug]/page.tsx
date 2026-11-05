@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
 import { Breadcrumbs, Faq, LinkCard, PageFrame, SectionHead } from "@/components/seo/Shell";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { displayName } from "@/seo/catalog";
 import { SIGNUP_PATH } from "@/seo/config";
 import { dayOffset, EXAMPLES, getExample, portionLabel } from "@/seo/exemples";
@@ -93,7 +94,15 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
             {e.slots.map((s) => {
               const passive = s.recipe.blocks.reduce((t, b) => t + b.passive, 0);
               return (
-                <li key={s.recipe.id} className="card flex flex-col gap-1.5">
+                <li key={s.recipe.id} className="card recipe-zoom flex flex-col gap-1.5">
+                  {s.recipe.photo && (
+                    <RecipeImage
+                      photo={s.recipe.photo}
+                      sizes="(min-width: 900px) 560px, 100vw"
+                      decorative
+                      className="card-photo mb-2"
+                    />
+                  )}
                   <p className="t-kicker">{s.day}</p>
                   <h3 className="t-3">
                     <Link href={`/recettes/${s.recipe.slug}`} className="lnk">
@@ -156,7 +165,10 @@ export default async function ExamplePage({ params }: { params: Promise<{ slug: 
         {e.snack && (
           <section aria-labelledby="gouter" className="flex flex-col gap-3.5">
             <SectionHead id="gouter" title="Un goûter à faire avec les enfants" />
-            <div className="card flex flex-col gap-1.5">
+            <div className="card recipe-zoom flex flex-col gap-1.5 min-[900px]:max-w-[560px]">
+              {e.snack.photo && (
+                <RecipeImage photo={e.snack.photo} sizes="(min-width: 900px) 560px, 100vw" decorative className="card-photo mb-2" />
+              )}
               <h3 className="t-3">
                 <Link href={`/recettes/${e.snack.slug}`} className="lnk">
                   {e.snack.name}

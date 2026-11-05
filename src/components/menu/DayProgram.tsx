@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
 import { toggleMealAction } from "@/server/actions/menu";
 import type { MealView, MenuView } from "@/server/menu-view";
@@ -97,7 +98,15 @@ function MealRow({
         className={`absolute top-1 -left-8 size-6 border-[length:var(--bw)] border-line ${m.removed ? "border-dashed bg-chip" : "bg-violet"}`}
       />
       <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 flex-col gap-1">
+        {m.photo && (
+          <RecipeImage
+            photo={m.photo}
+            sizes="112px"
+            decorative
+            className={`nb-flat w-20 shrink-0 min-[500px]:w-28 ${m.removed ? "opacity-40 grayscale" : ""}`}
+          />
+        )}
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="t-label">
             {m.removed ? `${m.label.split(" · ")[0]} · ${t.removedLabel}` : m.label}
           </span>

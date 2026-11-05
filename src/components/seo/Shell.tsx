@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { RecipeImage } from "@/components/ui/RecipeImage";
+import type { RecipePhoto } from "@/seo/images";
 import { CTA_LABEL, SIGNUP_PATH } from "@/seo/config";
 import type { Crumb } from "@/seo/jsonld";
 
@@ -122,7 +124,8 @@ export function Cta({ label = CTA_LABEL, lead }: { label?: string; lead?: string
             {label}
           </h2>
           <p className="t-body">
-            {lead ?? "Fin Prêt compose ta semaine selon ton foyer et la saison, et prépare ta liste de courses."}
+            {lead ??
+              "Fin Prêt compose ta semaine selon ton foyer et la saison, et prépare ta liste de courses."}
           </p>
         </div>
         <Link href={SIGNUP_PATH} className="btn btn--primary btn--lg">
@@ -135,7 +138,13 @@ export function Cta({ label = CTA_LABEL, lead }: { label?: string; lead?: string
 }
 
 /** Page publique : contenu centré, puis bandeau d'inscription pleine largeur. */
-export function PageFrame({ children, cta }: { children: ReactNode; cta?: { label: string; lead?: string } }) {
+export function PageFrame({
+  children,
+  cta,
+}: {
+  children: ReactNode;
+  cta?: { label: string; lead?: string };
+}) {
   return (
     <main className="flex-1">
       <div className={`${WRAP} flex flex-col gap-8 py-8`}>{children}</div>
@@ -158,6 +167,29 @@ export function Faq({ items }: { items: readonly { q: string; a: string }[] }) {
         </details>
       ))}
     </section>
+  );
+}
+
+/** Tuile recette des listes publiques : photo (si la recette en a une), repère, nom. */
+export function RecipeTile({
+  href,
+  name,
+  photo,
+  kicker,
+  sizes = "(min-width: 1100px) 280px, (min-width: 900px) 30vw, 50vw",
+}: {
+  href: string;
+  name: string;
+  photo: RecipePhoto | null;
+  kicker?: string;
+  sizes?: string;
+}) {
+  return (
+    <Link href={href} className="card flex h-full min-h-11 w-full flex-col gap-2 no-underline">
+      {photo && <RecipeImage photo={photo} sizes={sizes} decorative className="card-photo mb-1" />}
+      {kicker ? <span className="t-kicker">{kicker}</span> : null}
+      <span className="t-3">{name}</span>
+    </Link>
   );
 }
 

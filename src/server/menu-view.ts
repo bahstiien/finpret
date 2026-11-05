@@ -7,6 +7,7 @@ import type { Meal, WeekPlan } from "@/engine/types";
 import { activeMains, activeSimples, activeSoup, isRemoved, slotMap, weekendItems } from "@/engine/week";
 import { fr } from "@/i18n/fr";
 import { addDays, dayIndex, isoWeekday } from "@/lib/dates";
+import { recipePhoto, type RecipePhoto } from "@/seo/images";
 import type { HouseholdContext } from "./household-context";
 
 /** Vue de l'écran Menu (§8.1), calculée côté serveur à partir du plan et du moteur. */
@@ -23,6 +24,7 @@ export type MealView = {
   recipeId: string;
   name: string;
   flag: Flag;
+  photo: RecipePhoto | null;
   label: string;
   how: string;
   guests: string;
@@ -42,6 +44,7 @@ export type DishCard = {
   recipeId: string;
   name: string;
   flag: Flag;
+  photo: RecipePhoto | null;
   detail: string;
   rating: 1 | -1 | null;
   kids: boolean;
@@ -54,6 +57,7 @@ export type RecipeDetail = {
   title: string;
   name: string;
   flag: Flag;
+  photo: RecipePhoto | null;
   portions: string;
   description: string | null;
   ingredients: string[];
@@ -161,6 +165,7 @@ export function buildMenuView(
           index: "i" in s ? s.i : 0,
           recipeId: r.id,
           name: r.s,
+          photo: recipePhoto(r.id, r.s),
           flag: flagOf(r.o),
           label,
           how,
@@ -187,6 +192,7 @@ export function buildMenuView(
           index: 0,
           recipeId: x.id,
           name: x.r.s,
+          photo: recipePhoto(x.r.id, x.r.s),
           flag: flagOf(x.r.o),
           label: `${fr.meals[meal]} · ${freshTime(x.r)}`,
           how: steps.map((s) => fill(lib, s, x.r.ing, sc)).join(" "),
@@ -248,6 +254,7 @@ export function buildMenuView(
       index: x.i,
       recipeId: x.r.id,
       name: x.r.s,
+      photo: recipePhoto(x.r.id, x.r.s),
       flag: flagOf(x.r.o),
       detail: t.portions(fmtP(x.cookP), x.doubled),
       rating: rating(x.r.id),
@@ -262,6 +269,7 @@ export function buildMenuView(
             index: 0,
             recipeId: so.r.id,
             name: so.r.s,
+            photo: recipePhoto(so.r.id, so.r.s),
             flag: flagOf(so.r.o),
             detail: t.soup,
             rating: rating(so.r.id),
@@ -276,6 +284,7 @@ export function buildMenuView(
       index: s.i,
       recipeId: s.r.id,
       name: s.r.s,
+      photo: recipePhoto(s.r.id, s.r.s),
       flag: flagOf(s.r.o),
       detail: t.simpleOn(fr.days[s.day - 1]!),
       rating: rating(s.r.id),
@@ -290,6 +299,7 @@ export function buildMenuView(
         index: i,
         recipeId: b.id,
         name: r.s,
+        photo: recipePhoto(r.id, r.s),
         flag: flagOf(r.o),
         detail: t.bankOn(`${fr.days[b.day - 1]} ${fr.meals[b.meal].toLowerCase()}`),
         rating: rating(b.id),
@@ -309,6 +319,7 @@ export function buildMenuView(
     recipes.push({
       title: t.recipeKinds.main,
       name: r.n,
+      photo: recipePhoto(r.id, r.n),
       flag: flagOf(r.o),
       portions: t.portions(fmtP(x.cookP), x.doubled),
       description: r.d,
@@ -323,6 +334,7 @@ export function buildMenuView(
     recipes.push({
       title: t.recipeKinds.soup,
       name: r.n,
+      photo: recipePhoto(r.id, r.n),
       flag: flagOf(r.o),
       portions: t.portions(fmtP(so.P), false),
       description: r.d,
@@ -337,6 +349,7 @@ export function buildMenuView(
     recipes.push({
       title: t.recipeKinds.simple,
       name: s.r.n,
+      photo: recipePhoto(s.r.id, s.r.n),
       flag: flagOf(s.r.o),
       portions: `${fr.days[s.day - 1]} soir`,
       description: t.simpleLead,
