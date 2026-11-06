@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { requireAdmin } from "@/server/admin";
 import { withAdmin } from "@/server/db";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
+import { Pagination } from "@/components/ui/Pagination";
 
 const PAGE = 100;
 
@@ -73,21 +73,7 @@ export default async function AdminAuditPage({
         ))}
         {!rows.length && <li className="muted">Aucune action.</li>}
       </Card>
-      {(page > 1 || hasMore) && (
-        <nav aria-label="Pagination" className="flex items-center gap-3 t-small">
-          {page > 1 && (
-            <Link href={href(page - 1)} className="btn btn--outline btn--sm">
-              Plus récentes
-            </Link>
-          )}
-          <span className="mono muted">Page {page}</span>
-          {hasMore && (
-            <Link href={href(page + 1)} className="btn btn--outline btn--sm">
-              Plus anciennes
-            </Link>
-          )}
-        </nav>
-      )}
+      <Pagination page={page} hasNext={hasMore} href={href} prevLabel="Plus récentes" nextLabel="Plus anciennes" />
     </>
   );
 }

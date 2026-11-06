@@ -5,6 +5,7 @@ import { listAccounts, PAGE_SIZE } from "@/server/crm";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
 import { Pill } from "@/components/ui/Pill";
+import { Pagination } from "@/components/ui/Pagination";
 
 const PLANS = [
   ["", "Toutes les offres"],
@@ -87,23 +88,7 @@ export default async function AdminAccountsPage({
         ))}
         {!rows.length && <li className="muted">Aucun compte.</li>}
       </Card>
-      {pages > 1 && (
-        <nav aria-label="Pagination" className="flex items-center gap-3 t-small">
-          {page > 1 && (
-            <Link href={href(page - 1)} className="btn btn--outline btn--sm">
-              Précédent
-            </Link>
-          )}
-          <span className="mono muted">
-            Page {page} / {pages}
-          </span>
-          {page < pages && (
-            <Link href={href(page + 1)} className="btn btn--outline btn--sm">
-              Suivant
-            </Link>
-          )}
-        </nav>
-      )}
+      <Pagination page={page} hasNext={page < pages} href={href} prevLabel="Précédents" nextLabel="Suivants" />
     </>
   );
 }
