@@ -19,8 +19,8 @@ export type AccountRow = {
 /** Échappe `%`, `_` et `\` d'une saisie utilisée dans un ILIKE. */
 const likePattern = (q: string) => `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 
-/** Tous les comptes (auth.users) avec foyers, dernière activité et offre du foyer actif : recherche + pagination. */
-export async function listAccounts(opts: { q?: string; plan?: string; page: number }) {
+/** Tous les comptes (auth.users) avec foyers, dernière activité et offre du foyer actif : recherche, filtres et pagination. */
+export async function listAccounts(opts: { q?: string; plan?: string; tag?: string; page: number }) {
   return withAdmin(async (db) => {
     const base = db
       .selectFrom("auth.users as u")
@@ -33,6 +33,10 @@ export async function listAccounts(opts: { q?: string; plan?: string; page: numb
         q = q.where((eb) =>
           eb.or([eb("u.email", "ilike", like), eb("u.name", "ilike", like), eb("p.display_name", "ilike", like)]),
         );
+      }
+      if (opts.tag) {
+        const tag = opts.tag;
+        q = q.where(sql<boolean>`exists (select 1 from account_tags t where t.user_id = u.id and t.tag = ${tag})`);
       }
       if (opts.plan === "none") q = q.where("s.plan", "is", null);
       else if (opts.plan) q = q.where("s.plan", "=", opts.plan as "trial" | "monthly" | "yearly" | "free");
