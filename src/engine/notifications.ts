@@ -5,7 +5,7 @@
 
 export type NotificationKind = "dinner" | "thaw" | "shopping" | "session";
 /** Notifications hors planning horaire : menus de cantine publiés, fin d'essai (SPEC_JANVIER §8). */
-export type ExtraKind = "canteen_published" | "trial_ending" | "streak_paused";
+export type ExtraKind = "canteen_published" | "trial_ending" | "streak_paused" | "renewal_notice";
 
 export type NotificationPrefs = {
   push: boolean;

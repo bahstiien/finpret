@@ -263,12 +263,13 @@ export const howItWorksFr = {
   back: "Retour à la présentation",
 };
 
-/** Pages légales : gabarits uniquement, le texte juridique est à fournir (TODO(juriste)). */
+/** Pages légales : titres et plans. Le texte des mentions légales, CGU et CGV est dans src/i18n/legal.ts. */
 export const legalFr = {
   todo: "TODO(juriste) : texte juridique à fournir avant l'ouverture. Aucun contenu juridique n'est inventé dans ce gabarit.",
+  pending: "Document en cours de finalisation : les informations surlignées seront complétées avant l'ouverture du paiement en ligne.",
   /** CGV : provenance du coût indicatif par portion affiché sur les recettes (seule page qui la mentionne). */
   prices: {
-    title: "Coût indicatif des recettes",
+    title: "Annexe — Coût indicatif des recettes",
     intro: (store: string, date: string) =>
       `Le coût par portion affiché sur les recettes est indicatif. Il est calculé à partir des prix relevés le ${date} chez ${store}, en privilégiant les produits à marque distributeur, hors promotions.`,
     estimates: "Pour les ingrédients introuvables dans ce magasin ce jour-là, le prix est une estimation tirée des sources suivantes :",

@@ -176,23 +176,33 @@ function Signup({ next }: { next: string }) {
           help={t.assoCodeHelp}
           helpIcon="users"
         />
+        <TermsCheckbox />
         <Checkbox name="news" label={t.news} defaultChecked />
         <Button type="submit" variant="primary" className="btn--block" disabled={pending}>
           {submitLabel(t.create)}
         </Button>
-        <p className="t-small muted">
-          {t.termsPrefix}
-          <Link href="/cgu" className="lnk">
-            {t.terms}
-          </Link>
-          {t.termsAnd}
-          <Link href="/confidentialite" className="lnk">
-            {t.privacy}
-          </Link>
-          .
-        </p>
       </form>
     </div>
+  );
+}
+
+/** Case obligatoire d'acceptation des CGU (et de la politique de confidentialité), liens ouverts dans un nouvel onglet. */
+export function TermsCheckbox() {
+  return (
+    <label className="inline-flex min-h-[var(--touch-min)] items-start gap-3">
+      <input type="checkbox" name="terms" className="cb mt-0.5 shrink-0" required data-testid="terms" />
+      <span className="t-small">
+        {t.termsPrefix}
+        <Link href="/cgu" className="lnk" target="_blank">
+          {t.terms}
+        </Link>
+        {t.termsAnd}
+        <Link href="/confidentialite" className="lnk" target="_blank">
+          {t.privacy}
+        </Link>
+        .
+      </span>
+    </label>
   );
 }
 

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Fragment, type ReactNode } from "react";
 import { Container } from "@/components/landing/Section";
 import { legalFr, type LegalSlug, SITE_URL } from "@/i18n/associations";
+import { type LegalBlock, type LegalDoc, legalDocs, hasPending } from "@/i18n/legal";
 import { PublicFooter, PublicHeader } from "./PublicShell";
 import { Card } from "@/components/ui/Card";
 import ingredientLabels from "../../../seed/ingredients.json";
@@ -12,46 +15,53 @@ export function legalMetadata(slug: LegalSlug): Metadata {
   return { title: page.title, alternates: { canonical: `${SITE_URL}/${slug}` } };
 }
 
-/** Informations de l'éditeur : paramétrables (COMPANY_NAME, COMPANY_ID, COMPANY_VAT), `TODO(juriste)` tant qu'elles manquent. */
-function company() {
-  const todo = "TODO(juriste)";
-  return {
-    name: process.env.COMPANY_NAME || todo,
-    id: process.env.COMPANY_ID || todo,
-    vat: process.env.COMPANY_VAT || todo,
-  };
-}
+const docOf = (slug: LegalSlug): LegalDoc | null =>
+  slug in legalDocs ? legalDocs[slug as keyof typeof legalDocs] : null;
 
-/** Gabarit de page légale : plan de la page et marqueur TODO(juriste), sans aucun contenu juridique inventé. */
+/**
+ * Page légale : texte de `src/i18n/legal.ts` (mentions légales, CGU, CGV). Les pages encore sans texte
+ * (confidentialité, partenariat) gardent leur plan et le marqueur TODO(juriste).
+ */
 export function LegalPage({ slug }: { slug: LegalSlug }) {
   const page = legalFr.pages[slug];
   if (!page) notFound();
-  const c = company();
+  const doc = docOf(slug);
   return (
     <>
       <PublicHeader signup={false} />
       <main id="contenu">
         <Container narrow className="flex flex-col gap-8 py-12 min-[900px]:py-16">
-          <h1 className="t-1">{page.title}</h1>
-          <Card as="p" tone="banane" className="t-ui" data-testid="legal-todo">
-            {legalFr.todo}
-          </Card>
-          {slug === "mentions-legales" && (
-            <Card as="dl" data-testid="company">
-              <dt className="t-label">Éditeur</dt>
-              <dd className="mono">{c.name}</dd>
-              <dt className="t-label mt-3">Immatriculation</dt>
-              <dd className="mono">{c.id}</dd>
-              <dt className="t-label mt-3">TVA</dt>
-              <dd className="mono">{c.vat}</dd>
-            </Card>
+          <header className="flex flex-col gap-2">
+            <h1 className="t-1">{page.title}</h1>
+            {doc && <p className="t-small muted">Version du {doc.version}</p>}
+          </header>
+          {doc ? (
+            <>
+              {hasPending(doc) && (
+                <Card as="p" tone="banane" className="t-ui" data-testid="legal-pending">
+                  {legalFr.pending}
+                </Card>
+              )}
+              {doc.sections.map((s) => (
+                <section key={s.title} className="flex flex-col gap-3">
+                  <h2 className="t-2">{s.title}</h2>
+                  <Blocks blocks={s.blocks} />
+                </section>
+              ))}
+            </>
+          ) : (
+            <>
+              <Card as="p" tone="banane" className="t-ui" data-testid="legal-todo">
+                {legalFr.todo}
+              </Card>
+              {page.sections.map((s) => (
+                <section key={s} className="flex flex-col gap-2">
+                  <h2 className="t-2">{s}</h2>
+                  <p className="mono muted">TODO(juriste)</p>
+                </section>
+              ))}
+            </>
           )}
-          {page.sections.map((s) => (
-            <section key={s} className="flex flex-col gap-2">
-              <h2 className="t-2">{s}</h2>
-              <p className="mono muted">TODO(juriste)</p>
-            </section>
-          ))}
           {slug === "cgv" && <PriceSources />}
         </Container>
       </main>
@@ -60,7 +70,97 @@ export function LegalPage({ slug }: { slug: LegalSlug }) {
   );
 }
 
-/** Provenance des prix de référence (seed/prices.json) : magasin, date du relevé et sources des estimations. */
+function Blocks({ blocks }: { blocks: LegalBlock[] }) {
+  return (
+    <>
+      {blocks.map((b, i) => {
+        if ("p" in b) return <p key={i}>{rich(b.p)}</p>;
+        if ("h3" in b) return <h3 key={i} className="t-3 mt-2">{b.h3}</h3>;
+        if ("ul" in b)
+          return (
+            <ul key={i} className="flex list-disc flex-col gap-1 pl-5">
+              {b.ul.map((li, j) => <li key={j}>{rich(li)}</li>)}
+            </ul>
+          );
+        if ("ol" in b)
+          return (
+            <ol key={i} className="flex list-decimal flex-col gap-1 pl-5">
+              {b.ol.map((li, j) => <li key={j}>{rich(li)}</li>)}
+            </ol>
+          );
+        if ("table" in b)
+          return (
+            <div key={i} className="overflow-x-auto">
+              <table className="w-full border-collapse text-left">
+                <thead>
+                  <tr>
+                    {b.table.head.map((h) => (
+                      <th key={h} scope="col" className="t-label border-2 border-[var(--ink)] p-2">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {b.table.rows.map((row) => (
+                    <tr key={row[0]}>
+                      {row.map((cell, j) => (
+                        <td key={j} className="border-2 border-[var(--ink)] p-2">
+                          {rich(cell)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        return (
+          <Card key={i} as="div" className="flex flex-col gap-3">
+            {b.box.title && <p className="t-ui">{b.box.title}</p>}
+            <Blocks blocks={b.box.blocks} />
+          </Card>
+        );
+      })}
+    </>
+  );
+}
+
+const TOKEN = /\*\*(.+?)\*\*|\[(.+?)\]\((.+?)\)|\{\{(.+?)\}\}/g;
+
+/** `**gras**`, `[libellé](lien)` (interne : Link ; externe ou mailto : a) et `{{à confirmer}}` (surligné). */
+function rich(text: string): ReactNode {
+  const out: ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(TOKEN)) {
+    if (m.index > last) out.push(text.slice(last, m.index));
+    const k = m.index;
+    if (m[1] !== undefined) out.push(<strong key={k}>{m[1]}</strong>);
+    else if (m[2] !== undefined && m[3] !== undefined)
+      out.push(
+        m[3].startsWith("/") ? (
+          <Link key={k} href={m[3]} className="lnk">
+            {m[2]}
+          </Link>
+        ) : (
+          <a key={k} href={m[3]} className="lnk" {...(m[3].startsWith("http") ? { rel: "noopener noreferrer" } : {})}>
+            {m[2]}
+          </a>
+        ),
+      );
+    else
+      out.push(
+        <mark key={k} className="tone-banane px-1" data-testid="legal-todo-item">
+          {m[4]}
+        </mark>,
+      );
+    last = k + m[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return <Fragment>{out}</Fragment>;
+}
+
+/** Annexe des CGV : provenance des prix de référence (seed/prices.json), magasin, date du relevé et sources des estimations. */
 function PriceSources() {
   const t = legalFr.prices;
   const { store, observedAt } = prices._meta;

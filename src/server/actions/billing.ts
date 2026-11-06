@@ -20,7 +20,8 @@ const appUrl = () => (process.env.APP_URL ?? "http://localhost:3000").replace(/\
 
 /**
  * Stripe Checkout (mode abonnement) : e-mail du compte, foyer en `client_reference_id`, coupon d'association
- * appliqué automatiquement à l'annuel d'un foyer rattaché, TVA incluse dans le prix, adresse de facturation demandée.
+ * appliqué automatiquement à l'annuel d'un foyer rattaché, adresse de facturation demandée. Franchise en base de TVA
+ * (art. 293 B du CGI) : pas de taxe calculée ; la mention figure dans le pied de facture par défaut du compte Stripe.
  */
 export async function createCheckoutSession(formData: FormData) {
   if (!FEATURES.onlinePayment) redirect(`${BASE}?error=notConfigured`);
@@ -55,7 +56,7 @@ export async function createCheckoutSession(formData: FormData) {
       ...(useCoupon ? { discounts: [{ coupon: cfg.associationCoupon }] } : { allow_promotion_codes: true }),
       automatic_tax: { enabled: false },
       billing_address_collection: "required",
-      // Rétractation de 14 jours et renonciation : case à cocher (texte juridique à fournir, TODO(juriste)).
+      // Case « J'accepte les CGV et demande l'exécution immédiate » : URL des CGV et texte réglés dans le tableau de bord Stripe.
       consent_collection: { terms_of_service: "required" },
       locale: "fr",
       success_url: `${appUrl()}${BASE}?ok=1`,
