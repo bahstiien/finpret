@@ -14,6 +14,8 @@ import { TopRecipesCarousel, type TopSlide } from "./TopRecipesCarousel";
 
 const wrap = "mx-auto w-full max-w-[1240px] px-4 min-[900px]:px-10";
 const sectionPad = "flex flex-col gap-7 py-14";
+/** Les ancres de la navigation ne doivent pas passer sous le header sticky. */
+const anchor = "scroll-mt-20";
 
 function Logo() {
   return (
@@ -141,7 +143,7 @@ export function ExampleWeek() {
   const x = landingExample;
   const fr = (n: number) => String(n).replace(".", ",");
   return (
-    <section id={e.id} aria-labelledby="ex-t" className="border-b-[length:var(--bw)] border-line">
+    <section id={e.id} aria-labelledby="ex-t" className={`${anchor} border-b-[length:var(--bw)] border-line`}>
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="01" id="ex-t" title={e.title} />
         <p className="max-w-[760px] text-lg leading-[1.45]">{e.lead}</p>
@@ -251,7 +253,7 @@ function SectionHead({ n, id, title }: { n: string; id: string; title: string })
 export function HowItWorks() {
   const tones = ["", "", "tone-session", "tone-cta"];
   return (
-    <section id="comment" aria-labelledby="cm-t">
+    <section id="comment" aria-labelledby="cm-t" className={anchor}>
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="02" id="cm-t" title={t.how.title} />
         <p className="max-w-[760px] text-lg leading-[1.45]">{t.how.lead}</p>
@@ -327,7 +329,7 @@ export function Features() {
     <section
       id="fonctions"
       aria-labelledby="fn-t"
-      className="border-t-[length:var(--bw)] border-line bg-surface"
+      className={`${anchor} border-t-[length:var(--bw)] border-line bg-surface`}
     >
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="03" id="fn-t" title={t.features.title} />
@@ -347,7 +349,7 @@ export function Features() {
 
 export function Households() {
   return (
-    <section id="foyers" aria-labelledby="fy-t" className="border-t-[length:var(--bw)] border-line">
+    <section id="foyers" aria-labelledby="fy-t" className={`${anchor} border-t-[length:var(--bw)] border-line`}>
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="04" id="fy-t" title={t.households.title} />
         <div className="grid gap-4 min-[900px]:grid-cols-4 min-[900px]:gap-6">
@@ -372,7 +374,7 @@ export function Pricing() {
     <section
       id="tarifs"
       aria-labelledby="px-t"
-      className="border-t-[length:var(--bw)] border-line bg-surface"
+      className={`${anchor} border-t-[length:var(--bw)] border-line bg-surface`}
     >
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="05" id="px-t" title={p.title} />
