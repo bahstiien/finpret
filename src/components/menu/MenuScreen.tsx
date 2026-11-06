@@ -332,6 +332,11 @@ export function MenuScreen({
                   {r.name}
                 </b>
                 <span className="t-small mono">{r.portions}</span>
+                {r.cost && (
+                  <span className="t-small mono muted" data-testid="recipe-cost">
+                    {r.cost}
+                  </span>
+                )}
                 <span
                   className="diff"
                   role="img"

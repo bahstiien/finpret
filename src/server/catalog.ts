@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import type { Cake, Ingredient, Main, Pack, Simple, Soup } from "@/engine/catalog/schema";
+import { unitPrice } from "@/engine/cost";
 import type { Library } from "@/engine/types";
 import type { Db } from "@/server/db";
 import { withSession } from "@/server/session";
@@ -41,6 +42,7 @@ export const loadLibrary = cache(
         .select(["key", "label", "unit", "aisle", "forms", "half", "seasonal"])
         .execute(),
       packs: await db.selectFrom("packs").select(["ingredient_key", "sizes", "label", "tolerance"]).execute(),
+      prices: await db.selectFrom("ingredient_prices").select(["ingredient_key", "price", "per"]).execute(),
       recipes: await db
         .selectFrom("recipes")
         .select(["id", "kind", "data", "household_id", "status", "source_url", "source_name", "is_active"])
@@ -58,7 +60,7 @@ export const loadLibrary = cache(
         .where("household_id", "=", householdId)
         .execute(),
     });
-    const { aisles, ingredients, packs, recipes, own } = client
+    const { aisles, ingredients, packs, prices, recipes, own } = client
       ? await read(client)
       : await withSession(read);
 
@@ -101,6 +103,7 @@ export const loadLibrary = cache(
       notSeasonal,
       aisles: aisles.filter((a) => a.key !== "base").map((a) => [a.key, a.label]),
       retired: [],
+      prices: Object.fromEntries(prices.map((p) => [p.ingredient_key, unitPrice(Number(p.price), p.per)])),
     };
     const bonus: Record<string, number> = {};
     const imported: Record<string, ImportedMeta> = {};

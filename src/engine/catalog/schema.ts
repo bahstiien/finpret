@@ -143,7 +143,38 @@ export const breakfastSchema = z
   })
   .strict();
 
+/** Prix de référence d'un ingrédient : euros par `per` (kg pour un ingrédient en g, l pour ml, sinon son unité). */
+export const priceSchema = z
+  .object({
+    p: z.number().positive(),
+    per: z.enum(["kg", "l", "pc", "boite", "cs", "cc"]),
+    product: z.string().min(1),
+    pack: z.string().min(1),
+    packPrice: z.number().positive(),
+    note: z.string().min(1).optional(),
+    /** Estimation hors drive de référence : URL de la source (affichée seulement dans les CGV). */
+    source: z.string().url().optional(),
+  })
+  .strict();
+
+export const pricesSchema = z
+  .object({
+    _meta: z
+      .object({
+        store: z.string().min(1),
+        storeId: z.string().min(1),
+        observedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        policy: z.string().min(1),
+        units: z.string().min(1),
+      })
+      .strict(),
+    prices: z.record(z.string(), priceSchema),
+  })
+  .strict();
+
 export type Ingredient = z.infer<typeof ingredientSchema>;
+export type Price = z.infer<typeof priceSchema>;
+export type Prices = z.infer<typeof pricesSchema>;
 export type Pack = z.infer<typeof packSchema>;
 export type Main = z.infer<typeof mainSchema>;
 export type Soup = z.infer<typeof soupSchema>;
@@ -161,6 +192,7 @@ export const seedSchema = z.object({
   simples: z.array(simpleSchema),
   cakes: z.array(cakeSchema),
   breakfasts: z.array(breakfastSchema),
+  prices: pricesSchema,
 });
 
 export type Seed = z.infer<typeof seedSchema>;

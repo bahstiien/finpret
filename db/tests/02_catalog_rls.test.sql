@@ -1,13 +1,15 @@
 -- M2 : catalogue global en lecture seule, recettes privées par foyer (SPEC §9 RLS).
 -- Indépendant du seed : les lignes de test sont créées ici puis annulées par le rollback.
 begin;
-select plan(13);
+select plan(16);
 
 -- Catalogue de test (en superutilisateur, comme `pnpm seed`)
 insert into public.aisles (key, label, position) values ('test_rayon', 'Rayon de test', 900);
 insert into public.ingredients (key, label, unit, aisle, allergens)
 values ('test_ingredient', 'Ingrédient de test', 'g', 'test_rayon', '{gluten}');
 insert into public.packs (ingredient_key, sizes, label) values ('test_ingredient', '{500}', 'paquet');
+insert into public.ingredient_prices (ingredient_key, price, per, product, store, observed_at)
+values ('test_ingredient', 2.5, 'kg', 'Produit de test', 'Drive de test', '2026-11-06');
 insert into public.recipes (id, kind, data, protein, diet_tags, allergens)
 values ('test_global', 'main', '{"n": "Plat de test"}', 'veg', '{vegetarien}', '{gluten}');
 
@@ -30,6 +32,10 @@ select is((select label from public.ingredients where key = 'test_ingredient'), 
   'un compte connecté lit les ingrédients');
 select is((select count(*)::int from public.packs where ingredient_key = 'test_ingredient'), 1,
   'et les contenants');
+select is((select price from public.ingredient_prices where ingredient_key = 'test_ingredient'), 2.5::numeric,
+  'et les prix de référence');
+select throws_ok($$ update public.ingredient_prices set price = 0.01 where ingredient_key = 'test_ingredient' $$,
+  '42501', null, 'un compte ne modifie pas les prix');
 select is((select name from public.recipes where id = 'test_global'), 'Plat de test',
   'et les recettes du catalogue global (nom extrait des données)');
 select throws_ok($$ insert into public.ingredients (key, label, unit, aisle) values ('pirate', 'X', 'g', 'test_rayon') $$,
@@ -44,6 +50,8 @@ select is((select name from public.recipes where id = 'test_global'), 'Plat de t
 select tests.login_as_anon();
 select throws_ok($$ select count(*) from public.recipes $$, '42501', null,
   'un visiteur non connecté ne lit pas le catalogue');
+select throws_ok($$ select count(*) from public.ingredient_prices $$, '42501', null,
+  'ni les prix de référence');
 
 -- Recettes privées ------------------------------------------------------------------
 select tests.login_as(current_setting('t.alice')::uuid);

@@ -1,0 +1,1152 @@
+{
+ "_meta": {
+  "store": "E.Leclerc Drive Bois d'Arcy (78390)",
+  "storeId": "127811",
+  "observedAt": "2026-11-06",
+  "policy": "Marque distributeur (Marque Repère et marques Leclerc) en priorité, sinon marque nationale ou vrac ; prix hors promotion. Introuvable au drive : estimation web, avec `source`",
+  "units": "p = prix en euros par `per` : kg (ingrédients en g), l (ml), pc, boite, cs, cc"
+ },
+ "prices": {
+  "poulet": {
+   "p": 12.63,
+   "per": "kg",
+   "product": "Filets poulet blanc Volandrie",
+   "pack": "300g",
+   "packPrice": 3.79
+  },
+  "boeuf": {
+   "p": 17.48,
+   "per": "kg",
+   "product": "Steak haché Férial 5%MG x4",
+   "pack": "400g",
+   "packPrice": 6.99,
+   "note": "haché vrac MDD absent"
+  },
+  "dinde": {
+   "p": 14.54,
+   "per": "kg",
+   "product": "Escalopes de dinde Volandrie x2",
+   "pack": "240g",
+   "packPrice": 3.49,
+   "note": "haché de dinde absent : prix des escalopes"
+  },
+  "jambon": {
+   "p": 0.4,
+   "per": "pc",
+   "product": "Jambon supérieur 4T Tradilège",
+   "pack": "140g (4 tr)",
+   "packPrice": 1.59
+  },
+  "oeufs": {
+   "p": 0.25,
+   "per": "pc",
+   "product": "Oeufs De Nos Régions plein air x6",
+   "pack": "x6",
+   "packPrice": 1.51
+  },
+  "feta": {
+   "p": 12.27,
+   "per": "kg",
+   "product": "Feta AOP Les Croisés",
+   "pack": "150g",
+   "packPrice": 1.84
+  },
+  "emmental": {
+   "p": 8.25,
+   "per": "kg",
+   "product": "Emmental râpé Les Croisés",
+   "pack": "200g",
+   "packPrice": 1.65
+  },
+  "parmesan": {
+   "p": 19.83,
+   "per": "kg",
+   "product": "Parmigiano Reggiano râpé Les Croisés",
+   "pack": "60g",
+   "packPrice": 1.19
+  },
+  "skyr": {
+   "p": 3.06,
+   "per": "kg",
+   "product": "Skyr nature Délisse",
+   "pack": "850g",
+   "packPrice": 2.6
+  },
+  "fromageblanc": {
+   "p": 1.98,
+   "per": "kg",
+   "product": "Fromage blanc nature 3.1% Délisse",
+   "pack": "1kg",
+   "packPrice": 1.98
+  },
+  "yaourt": {
+   "p": 0.15,
+   "per": "pc",
+   "product": "Yaourts nature Délisse 12x125g",
+   "pack": "12x125g",
+   "packPrice": 1.85
+  },
+  "cottage": {
+   "p": 9.8,
+   "per": "kg",
+   "product": "Cottage cheese Danone",
+   "pack": "400g",
+   "packPrice": 3.92,
+   "note": "pas de MDD"
+  },
+  "mozzarella": {
+   "p": 7.44,
+   "per": "kg",
+   "product": "Mozzarella Les Croisés",
+   "pack": "125g",
+   "packPrice": 0.93,
+   "note": "pas de version light MDD"
+  },
+  "ricotta": {
+   "p": 5.16,
+   "per": "kg",
+   "product": "Ricotta Les Croisés",
+   "pack": "250g",
+   "packPrice": 1.29
+  },
+  "patesfraiches": {
+   "p": 4.97,
+   "per": "kg",
+   "product": "Tortellini ricotta épinards iTurini",
+   "pack": "300g",
+   "packPrice": 1.49,
+   "note": "équivalent MDD du Lustucru (10.32/kg)"
+  },
+  "galette": {
+   "p": 0.32,
+   "per": "pc",
+   "product": "Galettes sarrasin NRT x6",
+   "pack": "300g",
+   "packPrice": 1.89
+  },
+  "pain": {
+   "p": 0.09,
+   "per": "pc",
+   "product": "Pain de mie complet Epi d'Or grandes tranches",
+   "pack": "550g",
+   "packPrice": 1.25,
+   "note": "~40 g/tranche"
+  },
+  "painmie": {
+   "p": 0.09,
+   "per": "pc",
+   "product": "Pain de mie complet Epi d'Or grandes tranches",
+   "pack": "550g",
+   "packPrice": 1.25,
+   "note": "~40 g/tranche"
+  },
+  "salade": {
+   "p": 1.19,
+   "per": "pc",
+   "product": "Salade laitue verte (vrac)",
+   "pack": "1 pc",
+   "packPrice": 1.19
+  },
+  "tortilla": {
+   "p": 0.21,
+   "per": "pc",
+   "product": "Tortillas blé Tables du Monde x8",
+   "pack": "320g",
+   "packPrice": 1.69
+  },
+  "haricotsblancs": {
+   "p": 0.84,
+   "per": "boite",
+   "product": "Haricots blancs Notre Jardin",
+   "pack": "250g égoutté",
+   "packPrice": 0.84
+  },
+  "bouillon": {
+   "p": 0.05,
+   "per": "pc",
+   "product": "Bouillon légumes Rustica 12 cubes",
+   "pack": "12x10g",
+   "packPrice": 0.57
+  },
+  "patebrisee": {
+   "p": 0.65,
+   "per": "pc",
+   "product": "Pâte brisée Tablier Blanc à dérouler",
+   "pack": "230g",
+   "packPrice": 0.65
+  },
+  "gnocchis": {
+   "p": 2.86,
+   "per": "kg",
+   "product": "Gnocchi Turini",
+   "pack": "800g",
+   "packPrice": 2.29
+  },
+  "courgette": {
+   "p": 0.85,
+   "per": "pc",
+   "product": "Courgette (vrac)",
+   "pack": "1 pc",
+   "packPrice": 0.85
+  },
+  "banane": {
+   "p": 0.34,
+   "per": "pc",
+   "product": "Bananes Panier du Primeur x5",
+   "pack": "x5",
+   "packPrice": 1.69
+  },
+  "citron": {
+   "p": 0.5,
+   "per": "pc",
+   "product": "Citrons non traités Panier du Primeur x4",
+   "pack": "x4",
+   "packPrice": 1.99
+  },
+  "poivron": {
+   "p": 0.95,
+   "per": "pc",
+   "product": "Poivron rouge (vrac)",
+   "pack": "1 pc",
+   "packPrice": 0.95
+  },
+  "carotte": {
+   "p": 0.18,
+   "per": "pc",
+   "product": "Carottes Panier du Primeur 1kg",
+   "pack": "1kg",
+   "packPrice": 1.49,
+   "note": "~120 g/pc"
+  },
+  "epinards": {
+   "p": 14,
+   "per": "kg",
+   "product": "Jeunes pousses épinard Notre Jardin",
+   "pack": "100g",
+   "packPrice": 1.4
+  },
+  "pommedeterre": {
+   "p": 1.6,
+   "per": "kg",
+   "product": "Pommes de terre Panier du Primeur",
+   "pack": "2kg",
+   "packPrice": 3.19
+  },
+  "butternut": {
+   "p": 2.08,
+   "per": "kg",
+   "product": "Courge butternut bio Bio Village",
+   "pack": "1 pc ~1.2kg",
+   "packPrice": 2.49,
+   "note": "estimé 1.2 kg/pc"
+  },
+  "choufleur": {
+   "p": 1.99,
+   "per": "kg",
+   "product": "Chou-fleur (vrac)",
+   "pack": "1 pc ~1kg",
+   "packPrice": 1.99,
+   "note": "estimé 1 kg/pc"
+  },
+  "brocoli": {
+   "p": 3.98,
+   "per": "kg",
+   "product": "Brocoli Panier du Primeur",
+   "pack": "1 pc ~400g",
+   "packPrice": 1.59,
+   "note": "estimé 400 g/pc"
+  },
+  "champignons": {
+   "p": 5.98,
+   "per": "kg",
+   "product": "Champignons Paris blancs Panier du Primeur",
+   "pack": "400g",
+   "packPrice": 2.39
+  },
+  "poireau": {
+   "p": 0.5,
+   "per": "pc",
+   "product": "Poireaux botte (vrac)",
+   "pack": "1kg",
+   "packPrice": 1.49,
+   "note": "~3 pc/botte"
+  },
+  "persil": {
+   "p": 1.19,
+   "per": "pc",
+   "product": "Persil plat la botte",
+   "pack": "1 botte",
+   "packPrice": 1.19
+  },
+  "gingembre": {
+   "p": 0.32,
+   "per": "pc",
+   "product": "Gingembre barquette",
+   "pack": "250g",
+   "packPrice": 3.95,
+   "note": "~20 g/morceau"
+  },
+  "edamame": {
+   "p": 5.31,
+   "per": "kg",
+   "product": "Fèves de soja surgelées Notre Jardin",
+   "pack": "450g",
+   "packPrice": 2.39
+  },
+  "lentillescorail": {
+   "p": 3.44,
+   "per": "kg",
+   "product": "Lentilles corail Notre Jardin",
+   "pack": "500g",
+   "packPrice": 1.72
+  },
+  "lentillesvertes": {
+   "p": 3.18,
+   "per": "kg",
+   "product": "Lentilles vertes Notre Jardin",
+   "pack": "500g",
+   "packPrice": 1.59
+  },
+  "poischiches": {
+   "p": 0.75,
+   "per": "boite",
+   "product": "Pois chiches Notre Jardin",
+   "pack": "265g égoutté",
+   "packPrice": 0.75
+  },
+  "haricotsrouges": {
+   "p": 0.75,
+   "per": "boite",
+   "product": "Haricots rouges Notre Jardin",
+   "pack": "250g égoutté",
+   "packPrice": 0.75
+  },
+  "tomates": {
+   "p": 0.65,
+   "per": "boite",
+   "product": "Pulpe de tomate en dés Notre Jardin 3x383g",
+   "pack": "383g",
+   "packPrice": 1.95
+  },
+  "thon": {
+   "p": 2.44,
+   "per": "boite",
+   "product": "Thon entier naturel Pêche Océan",
+   "pack": "186g (140g égoutté)",
+   "packPrice": 2.44
+  },
+  "passata": {
+   "p": 3.28,
+   "per": "kg",
+   "product": "Coulis de tomate de Provence NRT",
+   "pack": "400g",
+   "packPrice": 1.31
+  },
+  "laitcoco": {
+   "p": 3.73,
+   "per": "l",
+   "product": "Lait de coco Tables du Monde",
+   "pack": "400ml",
+   "packPrice": 1.49,
+   "note": "pas de light MDD"
+  },
+  "quinoa": {
+   "p": 6.9,
+   "per": "kg",
+   "product": "Quinoa Bio Village",
+   "pack": "500g",
+   "packPrice": 3.45
+  },
+  "boulgour": {
+   "p": 4.38,
+   "per": "kg",
+   "product": "Boulgour Tipiak",
+   "pack": "450g",
+   "packPrice": 1.97,
+   "note": "pas de MDD"
+  },
+  "semoule": {
+   "p": 1.78,
+   "per": "kg",
+   "product": "Semoule fine Comptoir du Grain",
+   "pack": "500g",
+   "packPrice": 0.89
+  },
+  "beurrecacahuete": {
+   "p": 0.16,
+   "per": "cs",
+   "product": "Beurre de cacahuète Andros Be Nut's",
+   "pack": "525g",
+   "packPrice": 5.13,
+   "note": "pas de MDD, 16 g/cs"
+  },
+  "amande": {
+   "p": 15.92,
+   "per": "kg",
+   "product": "Poudre d'amande Couleurs Vives",
+   "pack": "125g",
+   "packPrice": 1.99
+  },
+  "pateslasagnes": {
+   "p": 2.58,
+   "per": "kg",
+   "product": "Lasagnes Turini",
+   "pack": "500g",
+   "packPrice": 1.29,
+   "note": "pas de version complète MDD"
+  },
+  "patescompletes": {
+   "p": 1.98,
+   "per": "kg",
+   "product": "Penne complètes Turini",
+   "pack": "500g",
+   "packPrice": 0.99
+  },
+  "riz": {
+   "p": 2.48,
+   "per": "kg",
+   "product": "Riz basmati Comptoir du Grain",
+   "pack": "1kg",
+   "packPrice": 2.48
+  },
+  "oignon": {
+   "p": 0.3,
+   "per": "pc",
+   "product": "Oignons jaunes Panier du Primeur",
+   "pack": "1kg",
+   "packPrice": 1.99,
+   "note": "~150 g/pc"
+  },
+  "ail": {
+   "p": 0.1,
+   "per": "pc",
+   "product": "Ail blanc Panier du Primeur x3 têtes",
+   "pack": "x3",
+   "packPrice": 2.99,
+   "note": "~10 gousses/tête, unité = gousse"
+  },
+  "farine": {
+   "p": 0.65,
+   "per": "kg",
+   "product": "Farine T45 Tablier Blanc",
+   "pack": "1kg",
+   "packPrice": 0.65
+  },
+  "sucre": {
+   "p": 1.53,
+   "per": "kg",
+   "product": "Sucre en poudre Tablier Blanc",
+   "pack": "1kg",
+   "packPrice": 1.53
+  },
+  "levure": {
+   "p": 0.04,
+   "per": "pc",
+   "product": "Levure chimique Tablier Blanc x6",
+   "pack": "x6",
+   "packPrice": 0.26
+  },
+  "chapelure": {
+   "p": 2.13,
+   "per": "kg",
+   "product": "Chapelure Tablier Blanc",
+   "pack": "400g",
+   "packPrice": 0.85
+  },
+  "lait": {
+   "p": 0.99,
+   "per": "l",
+   "product": "Lait demi-écrémé UHT Délisse brique",
+   "pack": "6x1L",
+   "packPrice": 5.94
+  },
+  "huile": {
+   "p": 0.11,
+   "per": "cs",
+   "product": "Huile d'olive vierge extra Rustica",
+   "pack": "1L",
+   "packPrice": 7.49,
+   "note": "15 ml/cs"
+  },
+  "huileneutre": {
+   "p": 2.16,
+   "per": "kg",
+   "product": "Huile de tournesol Rustica",
+   "pack": "1L",
+   "packPrice": 1.99,
+   "note": "densité 0.92"
+  },
+  "soja": {
+   "p": 0.1,
+   "per": "cs",
+   "product": "Sauce soja Tables du Monde",
+   "pack": "125ml",
+   "packPrice": 0.83,
+   "note": "15 ml/cs"
+  },
+  "curry": {
+   "p": 0.08,
+   "per": "cs",
+   "product": "Curry moulu Rustica",
+   "pack": "45g",
+   "packPrice": 0.57,
+   "note": "6 g/cs"
+  },
+  "cumin": {
+   "p": 0.05,
+   "per": "cc",
+   "product": "Cumin moulu",
+   "pack": "50g",
+   "packPrice": 1.29,
+   "note": "2 g/cc"
+  },
+  "paprika": {
+   "p": 0.03,
+   "per": "cc",
+   "product": "Paprika Rustica",
+   "pack": "50g",
+   "packPrice": 0.59,
+   "note": "2.3 g/cc"
+  },
+  "cannelle": {
+   "p": 0.06,
+   "per": "cc",
+   "product": "Cannelle moulue Rustica",
+   "pack": "45g",
+   "packPrice": 1,
+   "note": "2.6 g/cc"
+  },
+  "herbes": {
+   "p": 0.02,
+   "per": "cc",
+   "product": "Herbes de Provence Rustica",
+   "pack": "40g",
+   "packPrice": 0.82,
+   "note": "1 g/cc"
+  },
+  "origan": {
+   "p": 0.04,
+   "per": "cc",
+   "product": "Origan Rustica",
+   "pack": "12g",
+   "packPrice": 0.49,
+   "note": "1 g/cc"
+  },
+  "aubergine": {
+   "p": 1.29,
+   "per": "pc",
+   "product": "Aubergine (vrac)",
+   "pack": "1 pc",
+   "packPrice": 1.29
+  },
+  "tomatefraiche": {
+   "p": 0.24,
+   "per": "pc",
+   "product": "Tomates rondes Eco+ filet 1kg",
+   "pack": "1kg",
+   "packPrice": 1.99,
+   "note": "pas de MDD en vrac, ~120 g/pc"
+  },
+  "haricotsverts": {
+   "p": 1.85,
+   "per": "kg",
+   "product": "Haricots verts extra fins surgelés Notre Jardin",
+   "pack": "1kg",
+   "packPrice": 1.85
+  },
+  "asperges": {
+   "p": 11.62,
+   "per": "kg",
+   "product": "Asperges vertes Notre Jardin (conserve)",
+   "pack": "185g",
+   "packPrice": 2.15,
+   "note": "fraîches hors saison"
+  },
+  "potimarron": {
+   "p": 2.08,
+   "per": "kg",
+   "product": "Potimarron bio Bio Village",
+   "pack": "1 pc ~1.2kg",
+   "packPrice": 2.49,
+   "note": "estimé 1.2 kg/pc"
+  },
+  "endive": {
+   "p": 0.6,
+   "per": "pc",
+   "product": "Endives Panier du Primeur x5",
+   "pack": "x5",
+   "packPrice": 2.99
+  },
+  "concombre": {
+   "p": 1.49,
+   "per": "pc",
+   "product": "Concombre (vrac)",
+   "pack": "1 pc",
+   "packPrice": 1.49
+  },
+  "petitspois": {
+   "p": 1.89,
+   "per": "kg",
+   "product": "Petits pois extra fins Notre Jardin",
+   "pack": "1kg",
+   "packPrice": 1.89
+  },
+  "lardons": {
+   "p": 7.85,
+   "per": "kg",
+   "product": "Allumettes fumées Tradilège",
+   "pack": "2x100g",
+   "packPrice": 1.57
+  },
+  "saumon": {
+   "p": 19.96,
+   "per": "kg",
+   "product": "Pavés de saumon Pêche Océan ASC",
+   "pack": "2x125g",
+   "packPrice": 4.99
+  },
+  "saucisse": {
+   "p": 1.06,
+   "per": "pc",
+   "product": "Saucisses fumées Tradilège x3",
+   "pack": "375g",
+   "packPrice": 3.18
+  },
+  "paleron": {
+   "p": 14.99,
+   "per": "kg",
+   "product": "Paleron de bœuf à mijoter (E.Leclerc)",
+   "pack": "1kg",
+   "packPrice": 14.99,
+   "note": "estimation web : prix promo Leclerc mars 2026 (Intermarché 12.49, Carrefour 18.99)",
+   "source": "https://www.promocatalogues.fr/offres/paleron"
+  },
+  "poiscasses": {
+   "p": 2.08,
+   "per": "kg",
+   "product": "Pois cassés Notre Jardin",
+   "pack": "500g",
+   "packPrice": 1.04
+  },
+  "chevre": {
+   "p": 10.28,
+   "per": "kg",
+   "product": "Bûche de chèvre Les Croisés",
+   "pack": "180g",
+   "packPrice": 1.85
+  },
+  "saumonfume": {
+   "p": 39.5,
+   "per": "kg",
+   "product": "Saumon fumé Ronde des Mers x4T",
+   "pack": "140g",
+   "packPrice": 5.53
+  },
+  "pizza": {
+   "p": 0.99,
+   "per": "pc",
+   "product": "Pâte à pizza Tablier Blanc",
+   "pack": "260g",
+   "packPrice": 0.99
+  },
+  "houmous": {
+   "p": 15.63,
+   "per": "kg",
+   "product": "Houmous Bio Village",
+   "pack": "160g",
+   "packPrice": 2.5
+  },
+  "pesto": {
+   "p": 1.29,
+   "per": "pc",
+   "product": "Pesto verde Turini",
+   "pack": "190g",
+   "packPrice": 1.29
+  },
+  "moutarde": {
+   "p": 0.04,
+   "per": "cs",
+   "product": "Moutarde de Dijon Rustica",
+   "pack": "440g",
+   "packPrice": 1.14,
+   "note": "15 g/cs"
+  },
+  "miel": {
+   "p": 0.13,
+   "per": "cs",
+   "product": "Miel Nid d'Abeille",
+   "pack": "500g",
+   "packPrice": 3.19,
+   "note": "20 g/cs"
+  },
+  "raselhanout": {
+   "p": 0.19,
+   "per": "cc",
+   "product": "Ras el hanout Ethiquable bio",
+   "pack": "40g",
+   "packPrice": 3.72,
+   "note": "pas de MDD, 2 g/cc"
+  },
+  "reblochon": {
+   "p": 6.38,
+   "per": "pc",
+   "product": "Reblochon de Savoie AOP NRT",
+   "pack": "450g",
+   "packPrice": 6.38
+  },
+  "creme": {
+   "p": 3.25,
+   "per": "l",
+   "product": "Crème légère 15% Délisse",
+   "pack": "20cl",
+   "packPrice": 0.65
+  },
+  "cheddar": {
+   "p": 11.95,
+   "per": "kg",
+   "product": "Cheddar râpé Les Croisés",
+   "pack": "200g",
+   "packPrice": 2.39
+  },
+  "raclette": {
+   "p": 15.13,
+   "per": "kg",
+   "product": "Raclette de Savoie IGP NRT",
+   "pack": "400g",
+   "packPrice": 6.05,
+   "note": "Eco+ tranché à 8.31/kg"
+  },
+  "beurre": {
+   "p": 9.4,
+   "per": "kg",
+   "product": "Beurre extra fin doux Les Croisés",
+   "pack": "250g",
+   "packPrice": 2.35
+  },
+  "biere": {
+   "p": 3.48,
+   "per": "l",
+   "product": "Bière brune Pelforth 6x25cl",
+   "pack": "1.5L",
+   "packPrice": 5.22,
+   "note": "pas de MDD"
+  },
+  "steak": {
+   "p": 1.75,
+   "per": "pc",
+   "product": "Steak haché Férial 5%MG x4",
+   "pack": "400g",
+   "packPrice": 6.99
+  },
+  "cabillaud": {
+   "p": 22.98,
+   "per": "kg",
+   "product": "Filets de cabillaud surgelés Pêche Océan MSC x4",
+   "pack": "400g",
+   "packPrice": 9.19,
+   "note": "pas de dos frais MDD"
+  },
+  "painburger": {
+   "p": 0.22,
+   "per": "pc",
+   "product": "Pain burger géant nature Epi d'Or x4",
+   "pack": "330g",
+   "packPrice": 0.86
+  },
+  "chou": {
+   "p": 2.99,
+   "per": "pc",
+   "product": "Chou blanc (vrac)",
+   "pack": "1 pc",
+   "packPrice": 2.99
+  },
+  "garammasala": {
+   "p": 0.11,
+   "per": "cc",
+   "product": "Garam masala Ducros",
+   "pack": "40g",
+   "packPrice": 2.13,
+   "note": "pas de MDD, 2 g/cc"
+  },
+  "cacahuetes": {
+   "p": 3.65,
+   "per": "kg",
+   "product": "Cacahuètes grillées à sec Tokapi",
+   "pack": "200g",
+   "packPrice": 0.73
+  },
+  "nouillesriz": {
+   "p": 5.76,
+   "per": "kg",
+   "product": "Nouilles de riz Tables du Monde",
+   "pack": "250g",
+   "packPrice": 1.44
+  },
+  "nouillesramen": {
+   "p": 6,
+   "per": "kg",
+   "product": "Nouilles chinoises Suzi Wan",
+   "pack": "250g",
+   "packPrice": 1.5,
+   "note": "pas de MDD"
+  },
+  "painpita": {
+   "p": 0.5,
+   "per": "pc",
+   "product": "Pains pita La Boulangère x4",
+   "pack": "320g",
+   "packPrice": 1.99,
+   "note": "pas de MDD"
+  },
+  "patefeuilletee": {
+   "p": 0.75,
+   "per": "pc",
+   "product": "Pâte feuilletée Tablier Blanc à dérouler",
+   "pack": "230g",
+   "packPrice": 0.75
+  },
+  "epinardssurg": {
+   "p": 1.34,
+   "per": "kg",
+   "product": "Épinards hachés surgelés Notre Jardin",
+   "pack": "1kg",
+   "packPrice": 1.34
+  },
+  "mais": {
+   "p": 0.91,
+   "per": "boite",
+   "product": "Maïs tendre Notre Jardin",
+   "pack": "285g",
+   "packPrice": 0.91
+  },
+  "cuisse": {
+   "p": 1.43,
+   "per": "pc",
+   "product": "Cuisses de poulet blanc Volandrie x2",
+   "pack": "500g",
+   "packPrice": 2.85
+  },
+  "echine": {
+   "p": 7.56,
+   "per": "kg",
+   "product": "Côtes de porc échine L'Atelier Boucherie x4",
+   "pack": "680g",
+   "packPrice": 5.14
+  },
+  "rizrond": {
+   "p": 2.96,
+   "per": "kg",
+   "product": "Riz risotto Comptoir du Grain",
+   "pack": "500g",
+   "packPrice": 1.48
+  },
+  "agneau": {
+   "p": 20.9,
+   "per": "kg",
+   "product": "Épaule d'agneau sans os (E.Leclerc)",
+   "pack": "1kg",
+   "packPrice": 20.9,
+   "note": "estimation web : prix promo Leclerc juillet 2026",
+   "source": "https://www.promocatalogues.fr/offres/d-agneau/e-leclerc"
+  },
+  "feves": {
+   "p": 11.08,
+   "per": "kg",
+   "product": "Fèves pelées surgelées Picard",
+   "pack": "450g",
+   "packPrice": 4.99,
+   "note": "estimation web : Picard",
+   "source": "https://www.picard.fr/produits/450g-feves-pelees-000000000000010371.html"
+  },
+  "radis": {
+   "p": 1.29,
+   "per": "pc",
+   "product": "Radis rose botte",
+   "pack": "1 botte",
+   "packPrice": 1.29,
+   "note": "unité = botte"
+  },
+  "haricotsnoirs": {
+   "p": 1.49,
+   "per": "boite",
+   "product": "Haricots noirs Notre Jardin",
+   "pack": "250g",
+   "packPrice": 1.49
+  },
+  "tahini": {
+   "p": 0.21,
+   "per": "cs",
+   "product": "Purée de sésame blanc bio",
+   "pack": "350g",
+   "packPrice": 4.99,
+   "note": "estimation web : 14.26 €/kg Greenweez, 15 g/cs",
+   "source": "https://www.greenweez.com/produit/puree-de-sesame-tahin-700g/1SENF0031"
+  },
+  "abricotssecs": {
+   "p": 12.36,
+   "per": "kg",
+   "product": "Abricots secs Couleurs Vives",
+   "pack": "250g",
+   "packPrice": 3.09
+  },
+  "chocolat": {
+   "p": 8.95,
+   "per": "kg",
+   "product": "Chocolat pâtissier noir Tablette d'Or",
+   "pack": "200g",
+   "packPrice": 1.79
+  },
+  "pomme": {
+   "p": 0.42,
+   "per": "pc",
+   "product": "Pommes bicolores Panier du Primeur x6",
+   "pack": "x6",
+   "packPrice": 2.49
+  },
+  "poire": {
+   "p": 0.82,
+   "per": "pc",
+   "product": "Poires Panier du Primeur x4",
+   "pack": "x4",
+   "packPrice": 3.29
+  },
+  "fruitsrouges": {
+   "p": 7.68,
+   "per": "kg",
+   "product": "Fruits rouges surgelés Fruistar",
+   "pack": "650g",
+   "packPrice": 4.99
+  },
+  "flocons": {
+   "p": 2.94,
+   "per": "kg",
+   "product": "Flocons d'avoine Quaker",
+   "pack": "800g",
+   "packPrice": 2.35,
+   "note": "pas de MDD"
+  },
+  "cacao": {
+   "p": 0.1,
+   "per": "cs",
+   "product": "Cacao non sucré Equador",
+   "pack": "250g",
+   "packPrice": 3.45,
+   "note": "7 g/cs"
+  },
+  "levureboul": {
+   "p": 0.12,
+   "per": "pc",
+   "product": "Levure boulangère Tablier Blanc x6",
+   "pack": "30g",
+   "packPrice": 0.69,
+   "note": "unité = sachet 5 g"
+  },
+  "raisinssecs": {
+   "p": 7.2,
+   "per": "kg",
+   "product": "Raisins secs golden Domino",
+   "pack": "500g",
+   "packPrice": 3.6,
+   "note": "pas de MDD"
+  },
+  "pruneaux": {
+   "p": 8.3,
+   "per": "kg",
+   "product": "Pruneaux d'Agen Couleurs Vives",
+   "pack": "500g",
+   "packPrice": 4.15
+  },
+  "coco": {
+   "p": 12.24,
+   "per": "kg",
+   "product": "Noix de coco râpée Tablier Blanc",
+   "pack": "125g",
+   "packPrice": 1.53
+  },
+  "rhubarbe": {
+   "p": 5.39,
+   "per": "kg",
+   "product": "Rhubarbe botte 1 kg (Carrefour)",
+   "pack": "1kg",
+   "packPrice": 5.39,
+   "note": "estimation web : Carrefour",
+   "source": "https://www.carrefour.fr/p/rhubarbe-3000052023238"
+  },
+  "fraises": {
+   "p": 6.5,
+   "per": "kg",
+   "product": "Fraises",
+   "pack": "1kg",
+   "packPrice": 6.5,
+   "note": "estimation web : 6 à 7 €/kg, note RNM Lyon 2026",
+   "source": "https://draaf.auvergne-rhone-alpes.agriculture.gouv.fr/IMG/pdf/2026-23_note_fruits_et_legumes_rnm_lyon.pdf"
+  },
+  "orange": {
+   "p": 0.57,
+   "per": "pc",
+   "product": "Oranges non traitées Panier du Primeur x4",
+   "pack": "x4",
+   "packPrice": 2.29
+  },
+  "abricots": {
+   "p": 3.6,
+   "per": "kg",
+   "product": "Abricots vrac",
+   "pack": "1kg",
+   "packPrice": 3.6,
+   "note": "estimation web : 3.56 à 3.64 €/kg au détail, note RNM Lyon semaine 31/2026",
+   "source": "https://draaf.auvergne-rhone-alpes.agriculture.gouv.fr/IMG/pdf/2026-31_note_fruits_et_legumes_rnm_lyon.pdf"
+  },
+  "tofu": {
+   "p": 10,
+   "per": "kg",
+   "product": "Tofu nature Céréal Bio",
+   "pack": "250g",
+   "packPrice": 2.5,
+   "note": "pas de MDD"
+  },
+  "panais": {
+   "p": 4.29,
+   "per": "kg",
+   "product": "Panais vrac (Carrefour)",
+   "pack": "1kg",
+   "packPrice": 4.29,
+   "note": "estimation web : Carrefour",
+   "source": "https://www.carrefour.fr/p/panais-vrac-3276556888295"
+  },
+  "navet": {
+   "p": 5.18,
+   "per": "kg",
+   "product": "Navets bio filet",
+   "pack": "500g",
+   "packPrice": 2.59
+  },
+  "topinambour": {
+   "p": 2.99,
+   "per": "kg",
+   "product": "Topinambours (Mon Marché)",
+   "pack": "600g",
+   "packPrice": 1.79,
+   "note": "estimation web : Mon Marché",
+   "source": "https://www.mon-marche.fr/produit/le-topinambour"
+  },
+  "celerirave": {
+   "p": 3.69,
+   "per": "kg",
+   "product": "Céleri-rave (vrac)",
+   "pack": "1 pc ~800g",
+   "packPrice": 2.95,
+   "note": "estimé 800 g/pc"
+  },
+  "fenouil": {
+   "p": 1.19,
+   "per": "pc",
+   "product": "Fenouil (vrac)",
+   "pack": "1 pc",
+   "packPrice": 1.19
+  },
+  "noix": {
+   "p": 15.92,
+   "per": "kg",
+   "product": "Cerneaux de noix Couleurs Vives",
+   "pack": "125g",
+   "packPrice": 1.91
+  },
+  "polenta": {
+   "p": 2.42,
+   "per": "kg",
+   "product": "Polenta Turini",
+   "pack": "500g",
+   "packPrice": 1.21
+  },
+  "artichaut": {
+   "p": 2.49,
+   "per": "pc",
+   "product": "Artichaut (Match Drive)",
+   "pack": "1 pc",
+   "packPrice": 2.49,
+   "note": "estimation web : Match, fin octobre 2026",
+   "source": "https://www.supermarchesmatch.fr/fr/p/0016738/votre-primeur-artichaut"
+  },
+  "blette": {
+   "p": 2.79,
+   "per": "kg",
+   "product": "Blette (vrac)",
+   "pack": "1 pc ~1kg",
+   "packPrice": 2.79,
+   "note": "estimé 1 kg/pc"
+  },
+  "olives": {
+   "p": 6.67,
+   "per": "kg",
+   "product": "Olives noires dénoyautées Rustica",
+   "pack": "180g",
+   "packPrice": 1.2
+  },
+  "sesame": {
+   "p": 0.18,
+   "per": "cs",
+   "product": "Graines de sésame",
+   "pack": "100g",
+   "packPrice": 2,
+   "note": "estimation web : 1.25 à 2.37 € les 100 g, 9 g/cs",
+   "source": "https://www.pankaj-boutique.com/fr/epices-indiennes/45-sesame-blanc-graines-indien.html"
+  },
+  "melon": {
+   "p": 3,
+   "per": "pc",
+   "product": "Melon charentais (Carrefour)",
+   "pack": "1 pc",
+   "packPrice": 3,
+   "note": "estimation web : prix d'été 2026, hors saison en novembre",
+   "source": "https://www.promocatalogues.fr/offres/melon-charentais"
+  },
+  "peche": {
+   "p": 0.56,
+   "per": "pc",
+   "product": "Pêche jaune vrac",
+   "pack": "~150 g",
+   "packPrice": 0.56,
+   "note": "estimation web : 3.73 €/kg RNM semaine 34/2026, ~150 g/pc",
+   "source": "https://rnm.franceagrimer.fr/prix?MESSAGE=1779"
+  },
+  "basilic": {
+   "p": 1.69,
+   "per": "pc",
+   "product": "Basilic coupé surgelé Rustica",
+   "pack": "50g",
+   "packPrice": 1.69,
+   "note": "pas de frais au drive"
+  },
+  "menthe": {
+   "p": 0.99,
+   "per": "pc",
+   "product": "Menthe fraîche la botte (Carrefour)",
+   "pack": "1 botte",
+   "packPrice": 0.99,
+   "note": "estimation web : Carrefour",
+   "source": "https://www.carrefour.fr/p/menthe-fraiche-3276552684327"
+  },
+  "betterave": {
+   "p": 1.5,
+   "per": "kg",
+   "product": "Betterave cuite Notre Jardin",
+   "pack": "500g",
+   "packPrice": 0.75
+  },
+  "patatedouce": {
+   "p": 1.39,
+   "per": "kg",
+   "product": "Patate douce Panier du Primeur",
+   "pack": "1kg",
+   "packPrice": 1.39
+  },
+  "chataigne": {
+   "p": 12.45,
+   "per": "kg",
+   "product": "Châtaignes entières Notre Jardin",
+   "pack": "420g",
+   "packPrice": 5.23
+  }
+ }
+}

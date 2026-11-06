@@ -7,7 +7,8 @@ import ingredients from "../../../seed/ingredients.json";
 import mains from "../../../seed/mains.json";
 import notSeasonal from "../../../seed/notSeasonal.json";
 import packs from "../../../seed/packs.json";
+import prices from "../../../seed/prices.json";
 import simples from "../../../seed/simples.json";
 import soups from "../../../seed/soups.json";
 
-export const rawSeed = { ingredients, aisles, packs, notSeasonal, mains, soups, simples, cakes, breakfasts };
+export const rawSeed = { ingredients, aisles, packs, notSeasonal, mains, soups, simples, cakes, breakfasts, prices };

@@ -1,4 +1,5 @@
 import "server-only";
+import { portionCost } from "@/engine/cost";
 import type { Env } from "@/engine/env";
 import { fill, fmtP, fmtQ } from "@/engine/format";
 import { originOf } from "@/engine/origins";
@@ -59,6 +60,8 @@ export type RecipeDetail = {
   flag: Flag;
   photo: RecipePhoto | null;
   portions: string;
+  /** Coût indicatif d'une portion, null si non calculable. */
+  cost: string | null;
   description: string | null;
   ingredients: string[];
   steps: string[];
@@ -313,6 +316,10 @@ export function buildMenuView(
   const recipes: RecipeDetail[] = [];
   const ingLines = (ing: Record<string, number>, sc: number) =>
     Object.keys(ing).map((k) => `${lib.ingredients[k]?.l ?? k} : ${fmtQ(lib, k, ing[k]! * sc)}`);
+  const costOf = (ing: Record<string, number>) => {
+    const c = portionCost(lib, ing);
+    return c ? t.cost(c.eur, c.missing.length > 0) : null;
+  };
   for (const x of mains) {
     if (!x.P) continue;
     const r = x.r;
@@ -322,6 +329,7 @@ export function buildMenuView(
       photo: recipePhoto(r.id, r.n),
       flag: flagOf(r.o),
       portions: t.portions(fmtP(x.cookP), x.doubled),
+      cost: costOf(r.ing),
       description: r.d,
       ingredients: ingLines(r.ing, x.cookP / 4),
       steps: [...r.prep, ...r.blocks.flatMap((b) => b.a)].map((s) => fill(lib, s, r.ing, x.cookP / 4)),
@@ -337,6 +345,7 @@ export function buildMenuView(
       photo: recipePhoto(r.id, r.n),
       flag: flagOf(r.o),
       portions: t.portions(fmtP(so.P), false),
+      cost: costOf(r.ing),
       description: r.d,
       ingredients: ingLines(r.ing, so.P / 4),
       steps: [...r.prep, ...r.blocks.flatMap((b) => b.a)].map((s) => fill(lib, s, r.ing, so.P / 4)),
@@ -352,6 +361,7 @@ export function buildMenuView(
       photo: recipePhoto(s.r.id, s.r.n),
       flag: flagOf(s.r.o),
       portions: `${fr.days[s.day - 1]} soir`,
+      cost: costOf(s.r.ing),
       description: t.simpleLead,
       ingredients: ingLines(s.r.ing, sc),
       steps: s.r.steps.map((x) => fill(lib, x, s.r.ing, sc)),
