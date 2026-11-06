@@ -29,6 +29,12 @@ export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
 export type Numeric = ColumnType<number, number | string, number | string>;
 
+export interface AccountTags {
+  created_at: Generated<string>;
+  tag: string;
+  user_id: string;
+}
+
 export interface Achievements {
   achieved_at: Generated<string>;
   household_id: string;
@@ -85,6 +91,23 @@ export interface Admins {
   user_id: string;
 }
 
+export interface AdminTasks {
+  category: "dev" | "marketing" | "social";
+  contact_message_id: number | null;
+  created_at: Generated<string>;
+  created_by: string | null;
+  details: string | null;
+  done_at: string | null;
+  due_on: string | null;
+  id: Generated<number>;
+  notion_page_id: string | null;
+  notion_url: string | null;
+  priority: Generated<"low" | "normal" | "high">;
+  status: Generated<"todo" | "doing" | "done">;
+  synced_at: string | null;
+  title: string;
+}
+
 export interface Aisles {
   key: string;
   label: string;
@@ -118,7 +141,10 @@ export interface AssociationLeads {
   families_estimate: number | null;
   id: Generated<string>;
   name: string;
+  note: string | null;
   school: string | null;
+  stage: Generated<"to_contact" | "contacted" | "presented" | "kit_sent" | "partner" | "lost">;
+  stage_changed_at: string | null;
 }
 
 export interface AssociationMembers {
@@ -225,6 +251,22 @@ export interface CanteenNotifications {
   iso_week: string;
   school_id: string;
   sent_at: Generated<string>;
+}
+
+export interface ContactMessages {
+  association: string | null;
+  audience: "famille" | "asso";
+  created_at: Generated<string>;
+  email: string;
+  handled_at: string | null;
+  handled_by: string | null;
+  id: Generated<number>;
+  message: string;
+  name: string;
+  note: string | null;
+  school: string | null;
+  status: Generated<"new" | "in_progress" | "done" | "spam">;
+  subject: string;
 }
 
 export interface CoverageConfirmations {
@@ -599,11 +641,13 @@ export interface Weeks {
 }
 
 export interface DB {
+  account_tags: AccountTags;
   achievements: Achievements;
   adaptation_events: AdaptationEvents;
   adaptation_previews: AdaptationPreviews;
   admin_audit: AdminAudit;
   admin_notes: AdminNotes;
+  admin_tasks: AdminTasks;
   admins: Admins;
   aisles: Aisles;
   association_invitations: AssociationInvitations;
@@ -619,6 +663,7 @@ export interface DB {
   "auth.verifications": AuthVerifications;
   canteen_menus: CanteenMenus;
   canteen_notifications: CanteenNotifications;
+  contact_messages: ContactMessages;
   coverage_confirmations: CoverageConfirmations;
   events: Events;
   freezer: Freezer;

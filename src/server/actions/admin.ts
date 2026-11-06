@@ -215,25 +215,6 @@ export async function markPayoutPaid(formData: FormData): Promise<ActionResult> 
   return ok("/admin/reversements");
 }
 
-export async function markLeadContacted(formData: FormData): Promise<ActionResult> {
-  const { user } = await requireOwner();
-  const id = uuid.safeParse(formData.get("id"));
-  if (!id.success) return fail();
-  try {
-    await withAdmin((db) =>
-      db
-        .updateTable("association_leads")
-        .set({ contacted_at: new Date().toISOString() })
-        .where("id", "=", id.data)
-        .execute(),
-    );
-  } catch {
-    return fail();
-  }
-  await audit(user.id, "lead.contacted", id.data);
-  return ok("/admin/prospects");
-}
-
 /** Support : prolonge l'essai d'un foyer de 14 jours (geste commercial). */
 export async function extendTrial(formData: FormData): Promise<ActionResult> {
   const { user } = await requireOwner();
