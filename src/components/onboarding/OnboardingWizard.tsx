@@ -1,506 +1,495 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { IngredientPicker, type IngredientOption } from "@/components/settings/IngredientPicker";
-import { Button } from "@/components/ui/Button";
-import { ChipToggle, SlotGrid, Stepper, Toggle } from "@/components/ui/Controls";
-import { FormMessage, SelectField, TextField } from "@/components/ui/Field";
-import { ALLERGENS } from "@/engine/catalog/allergens";
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
+import type { IngredientOption } from "@/components/settings/IngredientPicker";
+import { Button, IconButton } from "@/components/ui/Button";
+import { Logo, MealFrieze } from "@/components/ui/Card";
+import { FormMessage } from "@/components/ui/Field";
+import { Icon } from "@/components/ui/Icon";
+import { ProgressBar } from "@/components/ui/Layout";
 import { dur } from "@/engine/format";
+import { previewKey } from "@/engine/onboarding";
 import { fr } from "@/i18n/fr";
-import { FEATURES } from "@/lib/features";
-import type { OnboardingInput } from "@/lib/onboarding";
-import { DIETS } from "@/lib/settings";
-import { completeOnboarding } from "@/server/actions/onboarding";
-import { Card } from "@/components/ui/Card";
+import { absencesFrom, type OnboardingInput, plannedMeals, skipFromAnswers } from "@/lib/onboarding";
+import { completeOnboarding, retryFirstWeek } from "@/server/actions/onboarding";
+import type { OnboardingDishes } from "@/server/onboarding-data";
+import { DishPhoto } from "./DishPhoto";
+import {
+  EnviesStep,
+  type HouseholdErrors,
+  HouseholdStep,
+  RestrictionsStep,
+  type RhythmAnswers,
+  RhythmStep,
+  type SchoolOption,
+  type Update,
+  WelcomeStep,
+} from "./OnboardingSteps";
 
-const t = fr.onboarding;
-type Step = "household" | "diet" | "rhythm" | "equipment" | "habits";
-// SPEC_JANVIER : 4 étapes ; « habitudes » reste disponible derrière le drapeau (valeurs par défaut sinon).
-const STEPS: readonly Step[] = FEATURES.onboardingHabits
-  ? ["household", "diet", "rhythm", "equipment", "habits"]
-  : ["household", "diet", "rhythm", "equipment"];
-type Update = (fn: (draft: OnboardingInput) => OnboardingInput) => void;
+export type { SchoolOption } from "./OnboardingSteps";
 
-export type SchoolOption = { id: string; name: string; city: string };
+const t = fr.onboarding.flow;
+const STEPS = ["household", "envies", "restrictions", "rhythm"] as const;
+type Step = (typeof STEPS)[number];
+type Screen = "welcome" | Step | "generating" | "failure";
 
+const DEFAULT_ANSWERS: RhythmAnswers = {
+  lunch: "oui",
+  lunchDays: [1, 2, 3, 4, 5],
+  dinner: "oui",
+  dinnerDays: [1, 2, 3, 4, 5],
+  away: [],
+  moment: "dimanche",
+  precise: false,
+};
+
+/** Champs manquants de l'étape Foyer (seule étape obligatoire), null si tout est rempli. */
+function householdErrors(data: OnboardingInput): HouseholdErrors | null {
+  const h = t.household;
+  const members = data.household.members.map((m) => ({
+    name: m.name.trim() ? undefined : h.nameMissing,
+    birthdate: m.kind === "child" && !m.birthdate ? h.birthMissing : undefined,
+  }));
+  const name = data.household.name.trim() ? undefined : h.householdMissing;
+  const missing = (name ? 1 : 0) + members.reduce((n, m) => n + (m.name ? 1 : 0) + (m.birthdate ? 1 : 0), 0);
+  return missing ? { name, members } : null;
+}
+
+const countErrors = (e: HouseholdErrors) =>
+  (e.name ? 1 : 0) + e.members.reduce((n, m) => n + (m.name ? 1 : 0) + (m.birthdate ? 1 : 0), 0);
+
+/**
+ * Onboarding (§5, refonte) : bienvenue, foyer (obligatoire), envies, restrictions, rythme, puis génération de la
+ * première semaine. L'équipement garde la cuisine standard, ajustable depuis le récapitulatif.
+ */
 export function OnboardingWizard({
   initial,
   ingredients,
   schools = [],
   associationName = null,
+  dishes,
+  fromAccount,
 }: {
   initial: OnboardingInput;
   ingredients: IngredientOption[];
   /** Écoles de l'association du code d'inscription (vide sans code valide). */
   schools?: SchoolOption[];
   associationName?: string | null;
+  dishes: OnboardingDishes;
+  /** Le prénom du premier adulte vient du compte. */
+  fromAccount: boolean;
 }) {
   const [data, setData] = useState(initial);
-  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState(DEFAULT_ANSWERS);
+  const [screen, setScreen] = useState<Screen>("welcome");
+  const [tried, setTried] = useState(false);
+  const [nameTouched, setNameTouched] = useState(!!initial.household.name);
   const [error, setError] = useState<string>();
   const [pending, startTransition] = useTransition();
-  const update: Update = (fn) => setData((d) => fn(structuredClone(d)));
-  const current: Step = STEPS[step]!;
 
-  const stepError = (): string | undefined => {
-    if (current !== "household") return undefined;
-    if (!data.household.name.trim()) return fr.household.nameInvalid;
-    if (data.household.members.some((m) => !m.name.trim())) return t.steps.household.memberName;
-    if (data.household.members.some((m) => m.kind === "child" && !m.birthdate))
-      return t.steps.household.birthdateMissing;
-    return undefined;
+  // Le nom du foyer suit le prénom du premier adulte (« Chez Camille ») tant qu'on ne l'a pas modifié.
+  const update: Update = (fn) =>
+    setData((d) => {
+      const next = structuredClone(d);
+      fn(next);
+      if (!nameTouched)
+        next.household.name = t.household.defaultName(next.household.members[0]?.name.trim() ?? "");
+      return next;
+    });
+  useEffect(() => {
+    if (!nameTouched) update(() => {});
+    // Une seule fois, pour proposer le nom à partir du prénom repris du compte.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Steppers Adultes / Enfants : ajoute ou retire des membres en fin de groupe, absences comprises. */
+  const setCount = (kind: "adult" | "child", n: number) => {
+    const rows = data.household.members.map((m, i) => ({
+      m,
+      away: answers.away[i] ?? { lunch: false, dinner: false },
+    }));
+    const adults = rows.filter((r) => r.m.kind === "adult");
+    const children = rows.filter((r) => r.m.kind === "child");
+    const group = kind === "adult" ? adults : children;
+    while (group.length < n)
+      group.push({
+        m: { name: "", kind, birthdate: null, schoolId: null, canteenDays: [1, 2, 4, 5] },
+        away: { lunch: false, dinner: false },
+      });
+    group.length = n;
+    const next = [...adults, ...children];
+    update((d) => {
+      d.household.members = next.map((r) => r.m);
+    });
+    setAnswers((a) => ({ ...a, away: next.map((r) => r.away) }));
   };
 
-  const finish = () =>
-    startTransition(async () => {
-      const res = await completeOnboarding(data);
-      // En cas de succès, l'action redirige vers le récapitulatif.
-      if (res && !res.ok) setError(res.error);
-    });
+  const skip = skipFromAnswers(answers);
+  const meals = plannedMeals(skip, data.rhythm.weekend);
+  const errors = householdErrors(data);
+  const people = data.household.members.length;
+  const preview = dishes.previews[previewKey(data.diet.diet, data.diet.goals)] ?? [];
 
-  const next = (skip = false) => {
-    if (!skip) {
-      const problem = stepError();
-      if (problem) return setError(problem);
-    }
+  const go = (s: Screen) => {
+    setScreen(s);
     setError(undefined);
-    if (step < STEPS.length - 1) setStep(step + 1);
+    window.scrollTo({ top: 0 });
+  };
+  const next = () => {
+    if (screen === "household" && errors) {
+      setTried(true);
+      return;
+    }
+    const i = STEPS.indexOf(screen as Step);
+    if (i < STEPS.length - 1) go(STEPS[i + 1]!);
     else finish();
   };
+  const back = () => {
+    const i = STEPS.indexOf(screen as Step);
+    go(i > 0 ? STEPS[i - 1]! : "welcome");
+  };
 
+  const run = (action: () => Promise<{ ok: false; error: string; retry?: true } | void>) => {
+    setScreen("generating");
+    window.scrollTo({ top: 0 });
+    startTransition(async () => {
+      const res = await action();
+      // En cas de succès, l'action redirige vers le récapitulatif.
+      if (!res) return;
+      setError(res.error);
+      setScreen(res.retry ? "failure" : "household");
+    });
+  };
+  const finish = () =>
+    run(() =>
+      completeOnboarding({
+        ...data,
+        rhythm: { ...data.rhythm, skip, absences: absencesFrom(answers.away.slice(0, people)) },
+      }),
+    );
+
+  if (screen === "generating") return <Generating dishes={dishes} />;
+  if (screen === "failure")
+    return (
+      <Failure
+        people={people}
+        diet={t.envies.diets[data.diet.diet].name}
+        restricted={data.diet.allergens.length + data.diet.refused.length > 0}
+        meals={meals}
+        duration={dur(data.rhythm.session.maxMinutes)}
+        pending={pending}
+        onRetry={() => run(retryFirstWeek)}
+        onReview={() => go("rhythm")}
+      />
+    );
+
+  const step = STEPS.indexOf(screen as Step);
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-6 px-4 py-6">
-      <div className="flex flex-col gap-2">
-        <p className="t-kicker mono">{t.progress(step + 1, STEPS.length)}</p>
-        <div
-          role="progressbar"
-          aria-valuemin={1}
-          aria-valuemax={STEPS.length}
-          aria-valuenow={step + 1}
-          aria-label={t.progress(step + 1, STEPS.length)}
-          className="bar"
-        >
-          <div
-            className="bar-fill"
-            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col bg-bg">
+      {screen === "welcome" ? (
+        <header className="flex min-h-11 items-center px-4 py-3">
+          <Logo className="size-10 text-xl" />
+        </header>
+      ) : (
+        <header className="flex min-h-11 items-center gap-3 px-4 py-3">
+          <IconButton type="button" icon="arrowBack" label={fr.onboarding.back} onClick={back} />
+          <div className="min-w-0 flex-1">
+            <ProgressBar
+              value={((step + 1) / STEPS.length) * 100}
+              label={t.progress(step + 1, STEPS.length)}
+            />
+          </div>
+          <span className="t-kicker">
+            {step + 1} / {STEPS.length}
+          </span>
+          {screen !== "household" && (
+            <button
+              type="button"
+              className="lnk min-h-11 px-1"
+              onClick={() => (screen === "rhythm" ? finish() : next())}
+            >
+              {t.skip}
+            </button>
+          )}
+        </header>
+      )}
+
+      <main className="flex flex-1 flex-col gap-8 px-4 pt-2 pb-6">
+        {screen === "welcome" && (
+          <WelcomeStep
+            dishes={dishes}
+            firstName={fromAccount ? (initial.household.members[0]?.name ?? "") : ""}
+            associationName={associationName}
           />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <h1 className="t-1">{t.steps[current].title}</h1>
-        <p className="muted">{t.steps[current].lead}</p>
-      </div>
-
-      <Card padding="cozy" className="flex flex-col gap-4">
-        {current === "household" && (
-          <HouseholdStep data={data} update={update} schools={schools} associationName={associationName} />
         )}
-        {current === "diet" && <DietStep data={data} update={update} ingredients={ingredients} />}
-        {current === "rhythm" && <RhythmStep data={data} update={update} />}
-        {current === "equipment" && <EquipmentStep data={data} update={update} />}
-        {current === "habits" && <HabitsStep data={data} update={update} />}
-      </Card>
+        {screen === "household" && (
+          <HouseholdStep
+            data={data}
+            update={(fn) => {
+              const before = data.household.name;
+              setData((d) => {
+                const nextData = structuredClone(d);
+                fn(nextData);
+                if (nextData.household.name !== before) setNameTouched(true);
+                else if (!nameTouched)
+                  nextData.household.name = t.household.defaultName(
+                    nextData.household.members[0]?.name.trim() ?? "",
+                  );
+                return nextData;
+              });
+            }}
+            setCount={setCount}
+            errors={tried ? errors : null}
+            schools={schools}
+            associationName={associationName}
+            fromAccount={fromAccount}
+          />
+        )}
+        {screen === "envies" && <EnviesStep data={data} update={update} dishes={dishes} />}
+        {screen === "restrictions" && (
+          <RestrictionsStep data={data} update={update} ingredients={ingredients} />
+        )}
+        {screen === "rhythm" && (
+          <RhythmStep data={data} update={update} answers={answers} setAnswers={setAnswers} />
+        )}
+      </main>
 
-      {error && <FormMessage tone="error">{error}</FormMessage>}
-      {pending && <FormMessage tone="success">{t.working}</FormMessage>}
-
-      <div className="mt-auto flex flex-wrap items-center gap-3">
-        {step > 0 && (
-          <Button type="button" variant="outline" onClick={() => setStep(step - 1)} disabled={pending}>
-            {t.back}
+      <footer className="sticky bottom-0 flex flex-col gap-3 border-t-[length:var(--bw)] border-line bg-surface px-4 pt-3 pb-4">
+        {error && <FormMessage tone="error">{error}</FormMessage>}
+        {screen === "household" && tried && errors && (
+          <p role="alert" className="t-small m-0 flex items-center gap-2 font-bold">
+            <Icon name="warning" className="size-5" />
+            {t.household.missing(countErrors(errors))}
+          </p>
+        )}
+        {(screen === "household" || screen === "rhythm") && (
+          <div className="flex items-center gap-3">
+            <MealFrieze count={Math.max(1, meals)} size={10} />
+            <p className="t-small m-0" aria-live="polite">
+              {screen === "household"
+                ? t.household.preview(people, meals)
+                : t.rhythm.preview(
+                    meals,
+                    dur(data.rhythm.session.maxMinutes),
+                    answers.precise ? "" : t.rhythm.moments[answers.moment].short,
+                  )}
+            </p>
+          </div>
+        )}
+        {screen === "envies" && (
+          <div className="flex items-center gap-3">
+            <div aria-hidden="true" className="flex shrink-0 gap-1">
+              {preview.map((d) => (
+                <DishPhoto
+                  key={d.id}
+                  dish={d}
+                  format="carre"
+                  sizes="52px"
+                  className="nb-sm w-13 overflow-hidden"
+                />
+              ))}
+            </div>
+            <p className="t-small m-0 min-w-0" aria-live="polite">
+              {t.envies.preview} <strong>{preview.map((d) => d.name.toLowerCase()).join(", ")}</strong>
+            </p>
+          </div>
+        )}
+        {screen === "restrictions" && (
+          <p className="t-small m-0 flex items-center gap-2" aria-live="polite">
+            <Icon name="prohibit" className="size-5" />
+            <strong>
+              {data.diet.allergens.length + data.diet.refused.length
+                ? t.restrictions.summary(data.diet.allergens.length, data.diet.refused.length)
+                : t.restrictions.none}
+            </strong>
+          </p>
+        )}
+        {screen === "welcome" ? (
+          <>
+            <Button
+              type="button"
+              variant="primary"
+              size="lg"
+              className="btn--block"
+              onClick={() => go("household")}
+            >
+              {t.welcome.start}
+              <Icon name="arrowRight" className="size-5" />
+            </Button>
+            <p className="t-small muted m-0 text-center">{t.welcome.later}</p>
+          </>
+        ) : (
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            className="btn--block"
+            onClick={next}
+            disabled={pending}
+          >
+            {screen === "rhythm" ? t.finish : t.continue}
+            <Icon name="arrowRight" className="size-5" />
           </Button>
         )}
-        <Button type="button" variant="primary" size="lg" className="flex-1" onClick={() => next()} disabled={pending}>
-          {step === STEPS.length - 1 ? t.finish : t.next}
-        </Button>
-        {current !== "household" && (
-          <Button type="button" variant="ghost" className="btn--block" onClick={() => next(true)} disabled={pending}>
-            {t.skip}
-          </Button>
-        )}
-      </div>
+      </footer>
     </div>
   );
 }
 
-function HouseholdStep({
-  data,
-  update,
-  schools,
-  associationName,
-}: {
-  data: OnboardingInput;
-  update: Update;
-  schools: SchoolOption[];
-  associationName: string | null;
-}) {
-  const s = t.steps.household;
-  const e = fr.ecole;
-  const members = data.household.members;
+/** Attente de la génération : des plats qui défilent et les étapes qui se cochent. */
+function Generating({ dishes }: { dishes: OnboardingDishes }) {
+  const g = t.generation;
+  const [tick, setTick] = useState(0);
+  const [reduced, setReduced] = useState(true);
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const id = window.setInterval(() => setTick((x) => x + 1), 1400);
+    return () => window.clearInterval(id);
+  }, []);
+  const list = dishes.showcase;
+  const at = (k: number) => list[((((reduced ? 0 : tick) + k) % list.length) + list.length) % list.length]!;
+  const done = Math.min(2, tick);
+  const rows = [
+    { label: g.dishes, icon: "menu" as const },
+    { label: g.session, icon: "timer" as const },
+    { label: g.shopping, icon: "basket" as const },
+  ];
   return (
-    <>
-      <TextField
-        id="household-name"
-        label={s.name}
-        placeholder={s.namePlaceholder}
-        value={data.household.name}
-        maxLength={60}
-        onChange={(e) => update((d) => ((d.household.name = e.target.value), d))}
-      />
-      <fieldset className="flex flex-col gap-3">
-        <legend className="t-label mb-2">{s.members}</legend>
-        {members.map((m, i) => (
-          <div key={i} className="nb-sm tone-bg flex flex-wrap items-end gap-2 p-3">
-            <TextField
-              id={`member-${i}`}
-              label={`${s.memberName} (${m.kind === "adult" ? s.adult : s.child})`}
-              value={m.name}
-              maxLength={40}
-              className="min-w-40 flex-1"
-              onChange={(e) => update((d) => ((d.household.members[i]!.name = e.target.value), d))}
+    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col bg-bg" aria-busy="true">
+      <header className="flex min-h-11 items-center px-4 py-3">
+        <Logo className="size-10 text-xl" />
+      </header>
+      <main className="flex flex-1 flex-col justify-center gap-6 px-4 pb-8">
+        <div aria-hidden="true" className="-mx-4 flex items-center justify-center gap-3 overflow-hidden py-4">
+          <DishPhoto
+            dish={at(-1)}
+            format="portrait"
+            sizes="120px"
+            className="nb-sm w-[118px] shrink-0 overflow-hidden"
+          />
+          <div className="card w-44 shrink-0 -rotate-2 p-2">
+            <DishPhoto
+              key={at(0).id}
+              dish={at(0)}
+              format="portrait"
+              sizes="176px"
+              caption
+              className="ob-pop"
             />
-            {m.kind === "child" && (
-              <TextField
-                id={`member-${i}-birth`}
-                type="date"
-                label={s.birthdate}
-                value={m.birthdate ?? ""}
-                className="min-w-40"
-                onChange={(e) =>
-                  update((d) => ((d.household.members[i]!.birthdate = e.target.value || null), d))
-                }
-              />
-            )}
-            {m.kind === "child" && schools.length > 0 && (
-              <div className="flex w-full flex-col gap-2">
-                <SelectField
-                  id={`member-${i}-school`}
-                  label={`${e.school}${associationName ? ` (${associationName})` : ""}`}
-                  value={m.schoolId ?? ""}
-                  onChange={(ev) =>
-                    update((d) => ((d.household.members[i]!.schoolId = ev.target.value || null), d))
-                  }
-                >
-                  <option value="">{e.noSchool}</option>
-                  {schools.map((sc) => (
-                    <option key={sc.id} value={sc.id}>
-                      {sc.name} ({sc.city})
-                    </option>
-                  ))}
-                </SelectField>
-                <p className="t-small muted">{e.schoolHint}</p>
-                {m.schoolId && (
-                  <div role="group" aria-label={e.canteenDays} className="flex flex-wrap gap-2">
-                    {[1, 2, 3, 4, 5].map((day) => (
-                      <ChipToggle
-                        key={day}
-                        pressed={m.canteenDays.includes(day)}
-                        onToggle={() =>
-                          update((d) => {
-                            const list = d.household.members[i]!.canteenDays;
-                            d.household.members[i]!.canteenDays = list.includes(day)
-                              ? list.filter((x) => x !== day)
-                              : [...list, day].sort();
-                            return d;
-                          })
-                        }
-                      >
-                        {fr.days[day - 1]}
-                      </ChipToggle>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-            {members.length > 1 && (
-              <button
-                type="button"
-                aria-label={s.remove(m.name)}
-                className="iconbtn text-lg"
-                onClick={() =>
-                  update((d) => ((d.household.members = d.household.members.filter((_, j) => j !== i)), d))
-                }
-              >
-                ×
-              </button>
-            )}
           </div>
-        ))}
-        <div className="flex flex-wrap gap-2">
-          {(["adult", "child"] as const).map((kind) => (
-            <Button
-              key={kind}
-              type="button"
-              variant="outline"
-              disabled={members.length >= 10}
-              onClick={() =>
-                update(
-                  (d) => (
-                    d.household.members.push({
-                      name: "",
-                      kind,
-                      birthdate: null,
-                      schoolId: null,
-                      canteenDays: [1, 2, 4, 5],
-                    }),
-                    d
-                  ),
-                )
-              }
-            >
-              {kind === "adult" ? s.addAdult : s.addChild}
-            </Button>
-          ))}
-        </div>
-      </fieldset>
-      {FEATURES.alternatingCustody && (
-        <Toggle
-          label={s.alternating}
-          hint={s.alternatingHint}
-          checked={data.household.alternating.enabled}
-          onChange={(v) => update((d) => ((d.household.alternating.enabled = v), d))}
-        />
-      )}
-      {FEATURES.alternatingCustody && data.household.alternating.enabled && (
-        <TextField
-          id="alternating-from"
-          type="date"
-          label={s.alternatingFrom}
-          value={data.household.alternating.from ?? ""}
-          onChange={(e) => update((d) => ((d.household.alternating.from = e.target.value || null), d))}
-        />
-      )}
-    </>
-  );
-}
-
-function DietStep({
-  data,
-  update,
-  ingredients,
-}: {
-  data: OnboardingInput;
-  update: Update;
-  ingredients: IngredientOption[];
-}) {
-  const s = t.steps.diet;
-  return (
-    <>
-      <SelectField
-        id="diet"
-        label={s.diet}
-        value={data.diet.diet}
-        onChange={(e) =>
-          update((d) => ((d.diet.diet = e.target.value as OnboardingInput["diet"]["diet"]), d))
-        }
-      >
-        {DIETS.map((k) => (
-          <option key={k} value={k}>
-            {fr.diets[k]}
-          </option>
-        ))}
-      </SelectField>
-      <fieldset className="flex flex-col gap-2">
-        <legend className="t-label mb-2">{s.allergens}</legend>
-        <div className="flex flex-wrap gap-2">
-          {(Object.entries(ALLERGENS) as [keyof typeof ALLERGENS, string][]).map(([key, label]) => (
-            <ChipToggle
-              key={key}
-              pressed={data.diet.allergens.includes(key)}
-              onToggle={() =>
-                update((d) => {
-                  d.diet.allergens = d.diet.allergens.includes(key)
-                    ? d.diet.allergens.filter((a) => a !== key)
-                    : [...d.diet.allergens, key];
-                  return d;
-                })
-              }
-            >
-              {label}
-            </ChipToggle>
-          ))}
-        </div>
-      </fieldset>
-      <IngredientPicker
-        label={s.refused}
-        options={ingredients}
-        selected={data.diet.refused}
-        onChange={(keys) => update((d) => ((d.diet.refused = keys), d))}
-      />
-    </>
-  );
-}
-
-function RhythmStep({ data, update }: { data: OnboardingInput; update: Update }) {
-  const s = t.steps.rhythm;
-  const slot = (day: number, meal: "lunch" | "dinner") => `${day}-${meal}`;
-  const slotLabel = (day: number, meal: "lunch" | "dinner", on: boolean) =>
-    `${fr.days[day - 1]} ${fr.meals[meal].toLowerCase()} : ${on ? "prévu" : "rien de prévu"}`;
-  const weekdays = [1, 2, 3, 4, 5];
-  return (
-    <>
-      <div className="flex flex-col gap-2">
-        <h2 className="t-3">{s.grid}</h2>
-        <SlotGrid
-          days={weekdays}
-          dayLabels={fr.daysShort}
-          mealLabels={fr.meals}
-          isOn={(d, m) => !data.rhythm.skip.includes(slot(d, m))}
-          onToggle={(d, m) =>
-            update((x) => {
-              const k = slot(d, m);
-              x.rhythm.skip = x.rhythm.skip.includes(k)
-                ? x.rhythm.skip.filter((y) => y !== k)
-                : [...x.rhythm.skip, k];
-              return x;
-            })
-          }
-          label={slotLabel}
-        />
-        <Toggle
-          label={s.weekend}
-          checked={data.rhythm.weekend}
-          onChange={(v) => update((x) => ((x.rhythm.weekend = v), x))}
-        />
-      </div>
-      {data.household.members.length > 1 && (
-        <div className="flex flex-col gap-3">
-          <h2 className="t-3">{s.presence}</h2>
-          <p className="t-small muted">{s.presenceHint}</p>
-          {data.household.members.map((m, i) => (
-            <details key={i} className="nb-sm tone-bg p-3">
-              <summary className="t-ui min-h-11 cursor-pointer content-center">
-                {m.name || `#${i + 1}`}
-              </summary>
-              <SlotGrid
-                days={weekdays}
-                dayLabels={fr.daysShort}
-                mealLabels={fr.meals}
-                isOn={(d, meal) =>
-                  !data.rhythm.absences.some((a) => a.member === i && a.slot === slot(d, meal))
-                }
-                onToggle={(d, meal) =>
-                  update((x) => {
-                    const k = slot(d, meal);
-                    const has = x.rhythm.absences.some((a) => a.member === i && a.slot === k);
-                    x.rhythm.absences = has
-                      ? x.rhythm.absences.filter((a) => !(a.member === i && a.slot === k))
-                      : [...x.rhythm.absences, { member: i, slot: k }];
-                    return x;
-                  })
-                }
-                label={(d, meal, on) => `${m.name} — ${slotLabel(d, meal, on)}`}
-              />
-            </details>
-          ))}
-        </div>
-      )}
-      <div className="flex flex-col gap-3">
-        <h2 className="t-3">{s.session}</h2>
-        <div className="flex flex-wrap gap-3">
-          <SelectField
-            id="session-day"
-            label={s.sessionDay}
-            className="flex-1"
-            value={data.rhythm.session.day}
-            onChange={(e) => update((x) => ((x.rhythm.session.day = Number(e.target.value)), x))}
-          >
-            {[0, 1, 2, 3, 4, 5, 6].map((d) => (
-              <option key={d} value={d}>
-                {fr.days[(d + 6) % 7]}
-              </option>
-            ))}
-          </SelectField>
-          <TextField
-            id="session-time"
-            type="time"
-            label={s.sessionTime}
-            className="flex-1"
-            value={data.rhythm.session.time}
-            onChange={(e) => update((x) => ((x.rhythm.session.time = e.target.value), x))}
+          <DishPhoto
+            dish={at(1)}
+            format="portrait"
+            sizes="120px"
+            className="nb-sm w-[118px] shrink-0 overflow-hidden"
           />
         </div>
-        <Stepper
-          label={s.sessionMax}
-          value={data.rhythm.session.maxMinutes}
-          min={60}
-          max={360}
-          step={30}
-          format={dur}
-          onChange={(v) => update((x) => ((x.rhythm.session.maxMinutes = v), x))}
-        />
-      </div>
-    </>
+        <div className="flex flex-col gap-2">
+          <p className="t-kicker m-0">{g.kicker}</p>
+          <h1 className="t-1 m-0">{g.title}</h1>
+          <p className="t-body m-0" aria-live="polite">
+            {g.lead}
+          </p>
+        </div>
+        <ul className="m-0 flex list-none flex-col gap-2 p-0">
+          {rows.map((r, i) => (
+            <li key={r.label} className="flex min-h-11 items-center gap-3">
+              <span
+                className={`flex size-8 shrink-0 items-center justify-center border-[length:var(--bw)] border-line ${i < done ? "tone-success" : i === done ? "tone-session" : "border-dashed bg-surface text-muted"}`}
+              >
+                <Icon name={i < done ? "check" : r.icon} className="size-[18px]" />
+              </span>
+              <span className={`t-ui flex-1 ${i > done ? "muted" : ""}`}>{r.label}</span>
+              {i === done && <span className="t-kicker">{g.ongoing}</span>}
+            </li>
+          ))}
+        </ul>
+        <ProgressBar value={Math.min(90, 25 + tick * 20)} label={g.progress} />
+      </main>
+    </div>
   );
 }
 
-function EquipmentStep({ data, update }: { data: OnboardingInput; update: Update }) {
-  const e = data.equipment;
-  const set = <K extends keyof typeof e>(k: K, v: (typeof e)[K]) => update((d) => ((d.equipment[k] = v), d));
+/** Échec de la génération : rien n'est perdu, on réessaie ou on revoit le rythme. */
+function Failure({
+  people,
+  diet,
+  restricted,
+  meals,
+  duration,
+  pending,
+  onRetry,
+  onReview,
+}: {
+  people: number;
+  diet: string;
+  restricted: boolean;
+  meals: number;
+  duration: string;
+  pending: boolean;
+  onRetry: () => void;
+  onReview: () => void;
+}) {
+  const f = t.failure;
+  const rows = [
+    { icon: "household" as const, label: f.people(people) },
+    { icon: "scales" as const, label: f.diet(diet, restricted) },
+    { icon: "sunHorizon" as const, label: f.rhythm(meals, duration) },
+  ];
   return (
-    <>
-      <Stepper
-        label={fr.equipment.ovenRacks}
-        value={e.ovenRacks}
-        min={0}
-        max={4}
-        onChange={(v) => set("ovenRacks", v)}
-      />
-      <Stepper
-        label={fr.equipment.burners}
-        value={e.burners}
-        min={1}
-        max={6}
-        onChange={(v) => set("burners", v)}
-      />
-      {(
-        ["airfryer", "microwave", "standMixer", "blender", "mixer", "pressureCooker", "freezer"] as const
-      ).map((k) => (
-        <Toggle key={k} label={fr.equipment[k]} checked={e[k]} onChange={(v) => set(k, v)} />
-      ))}
-    </>
-  );
-}
-
-function HabitsStep({ data, update }: { data: OnboardingInput; update: Update }) {
-  const s = t.steps.habits;
-  return (
-    <>
-      <SelectField
-        id="shopping-day"
-        label={s.shoppingDay}
-        value={data.habits.shoppingDay}
-        onChange={(e) => update((d) => ((d.habits.shoppingDay = Number(e.target.value)), d))}
-      >
-        {fr.days.map((label, i) => (
-          <option key={label} value={i + 1}>
-            {label}
-          </option>
-        ))}
-      </SelectField>
-      <TextField
-        id="dinner-time"
-        type="time"
-        label={s.dinnerTime}
-        value={data.habits.dinnerTime}
-        onChange={(e) => update((d) => ((d.habits.dinnerTime = e.target.value), d))}
-      />
-      <TextField
-        id="thaw-time"
-        type="time"
-        label={s.thawTime}
-        value={data.habits.thawTime}
-        onChange={(e) => update((d) => ((d.habits.thawTime = e.target.value), d))}
-      />
-      <TextField
-        id="store"
-        label={s.store}
-        value={data.habits.store}
-        maxLength={60}
-        onChange={(e) => update((d) => ((d.habits.store = e.target.value), d))}
-      />
-    </>
+    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col bg-bg">
+      <header className="flex min-h-11 items-center px-4 py-3">
+        <Logo className="size-10 text-xl" />
+      </header>
+      <main className="flex flex-1 flex-col justify-center gap-6 px-4 pb-8">
+        <div role="alert" className="nb tone-alerte flex flex-col gap-3 p-5">
+          <Icon name="warning" className="size-8" />
+          <h1 className="t-2 m-0">{f.title}</h1>
+          <p className="t-body m-0">{f.lead}</p>
+        </div>
+        <div className="nb-flat flex flex-col bg-surface">
+          <p className="t-kicker tone-chip m-0 border-b-[length:var(--bw)] border-line px-4 py-2">
+            {f.answers}
+          </p>
+          {rows.map((r) => (
+            <div key={r.label} className="flex min-h-11 items-center gap-3 px-4 py-2">
+              <Icon name={r.icon} className="size-5" />
+              <p className="t-ui m-0">{r.label}</p>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-3">
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            className="btn--block"
+            onClick={onRetry}
+            disabled={pending}
+          >
+            <Icon name="retry" className="size-5" />
+            {f.retry}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="btn--block"
+            onClick={onReview}
+            disabled={pending}
+          >
+            <Icon name="arrowBack" className="size-5" />
+            {f.review}
+          </Button>
+        </div>
+        <p className="t-small muted m-0 text-center">
+          {f.contact}{" "}
+          <Link href="/contact" className="lnk">
+            {f.contactLink}
+          </Link>
+          .
+        </p>
+      </main>
+    </div>
   );
 }

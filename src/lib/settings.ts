@@ -16,7 +16,7 @@ export const ALLERGEN_KEYS = Object.keys(ALLERGENS) as [
   keyof typeof ALLERGENS,
   ...(keyof typeof ALLERGENS)[],
 ];
-export const DIETS = ["omnivore", "flexitarien", "vegetarien", "pescetarien"] as const;
+export const DIETS = ["omnivore", "flexitarien", "vegetarien", "pescetarien", "carnivore"] as const;
 export const slotKeySchema = z.string().regex(/^[1-7]-(lunch|dinner)$/);
 
 export const dietSchema = z.object({
@@ -26,6 +26,8 @@ export const dietSchema = z.object({
   /** Objectifs (§6 Alimentation). */
   minVeg: int(0, 5).default(0),
   minProtein: int(0, 60).default(0),
+  /** Objectif « économique » : les plats les moins chers par portion passent en priorité. */
+  economical: z.boolean().default(false),
 });
 
 export const menuSchema = z.object({
@@ -196,6 +198,7 @@ export function toDietRules(s: HouseholdSettings): DietRules {
     allergens: s.diet.allergens,
     refused: s.diet.refused,
     minProtein: s.diet.minProtein,
+    economical: s.diet.economical,
   };
 }
 

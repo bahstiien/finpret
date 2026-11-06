@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { FEATURES } from "../../src/lib/features";
+import { fillHousehold, finishOnboarding } from "./helpers/onboarding";
 import { dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 
 // §6 « Exclusion d'un allergène » et §8.2 Découvrir.
@@ -12,18 +12,12 @@ test("un allergène coché masque ses recettes dans Découvrir, sauf avec « Aff
   test.setTimeout(90_000);
   await page.goto("/login");
   await signInFromLoginPage(page, uniqueEmail("allergene"));
-  await page.getByLabel("Nom du foyer").fill("Arachides");
-  const names = page.getByLabel(/^Prénom/);
-  await names.first().fill("Camille");
-  await names.nth(1).fill("Julien");
-  await page.getByRole("button", { name: "Continuer" }).click();
+  await fillHousehold(page, "Arachides");
+  // Foyer, Envies, puis l'allergène à l'étape Restrictions.
+  for (let i = 0; i < 2; i++) await page.getByRole("button", { name: "Continuer" }).click();
   await page.getByRole("button", { name: "Arachides", exact: true }).click();
-  for (let i = 0; i < (FEATURES.onboardingHabits ? 3 : 2); i++)
-    await page.getByRole("button", { name: "Continuer" }).click();
-  await page.getByRole("button", { name: "Préparer ma semaine" }).click();
-  await expect(page.getByRole("heading", { name: "Ta semaine est prête !" })).toBeVisible({
-    timeout: 30_000,
-  });
+  await page.getByRole("button", { name: "Continuer" }).click();
+  await finishOnboarding(page);
 
   await page.goto("/app/discover");
   const search = page.getByRole("searchbox");
