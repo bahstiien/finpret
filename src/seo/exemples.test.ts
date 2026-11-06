@@ -59,10 +59,10 @@ describe("exemples de semaine", () => {
     }
   });
   it("annonce sur l'accueil les volumes réels du catalogue", () => {
-    const n = (label: string) => Number(landingV2.catalogue.items.find((i) => i.label === label)!.n);
+    const n = (label: string) => Number(landingV2.catalogue.items.find((i) => i.label === label)!.n.replace("+", ""));
     const kinds = (...k: string[]) => RECIPES.filter((r) => k.includes(r.kind)).length;
-    expect(n("recettes de repas")).toBe(kinds("plat", "soupe", "simple"));
-    expect(n("goûters")).toBe(kinds("gouter"));
+    expect(n("recettes de repas")).toBeLessThanOrEqual(kinds("plat", "soupe", "simple"));
+    expect(n("goûters")).toBeLessThanOrEqual(kinds("gouter"));
   });
   it("entre au sitemap avec son URL canonique", () => {
     const paths = seoPaths().map((p) => p.path);

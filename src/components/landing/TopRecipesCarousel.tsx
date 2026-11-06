@@ -31,7 +31,6 @@ const DELAY = 6000;
 export function TopRecipesCarousel({ slides, total }: { slides: TopSlide[]; total: number }) {
   const n = slides.length;
   const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(false);
   const [visible, setVisible] = useState(false);
   const [reduced, setReduced] = useState(true);
@@ -56,7 +55,7 @@ export function TopRecipesCarousel({ slides, total }: { slides: TopSlide[]; tota
     return () => io.disconnect();
   }, []);
 
-  const running = !paused && !hold && visible && !reduced;
+  const running = !hold && visible && !reduced;
   useEffect(() => {
     if (!running) return;
     const id = window.setTimeout(() => go(i + 1), DELAY);
@@ -132,17 +131,6 @@ export function TopRecipesCarousel({ slides, total }: { slides: TopSlide[]; tota
                 <button type="button" className="iconbtn" aria-label={t.next} onClick={() => go(i + 1)}>
                   <Icon name="arrowRight" />
                 </button>
-                {!reduced && (
-                  <button
-                    type="button"
-                    className="iconbtn"
-                    aria-label={paused ? t.play : t.pause}
-                    aria-pressed={paused}
-                    onClick={() => setPaused(!paused)}
-                  >
-                    {paused ? <PlayGlyph /> : <Icon name="pause" />}
-                  </button>
-                )}
               </span>
             </div>
           </div>
@@ -215,14 +203,5 @@ export function TopRecipesCarousel({ slides, total }: { slides: TopSlide[]; tota
         </div>
       </div>
     </section>
-  );
-}
-
-/** Triangle « lecture » : l'icône n'existe pas dans le jeu Phosphor de l'interface. */
-function PlayGlyph() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
-      <path d="M7 4.5v15l12.5-7.5z" fill="currentColor" />
-    </svg>
   );
 }

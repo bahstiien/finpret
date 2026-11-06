@@ -47,7 +47,7 @@ export const hubTitle = (h: HubView) => fitTitle(h.h1);
 
 export function hubDescription(h: HubView): string {
   return clamp(
-    `${h.label} : ${h.recipeCount} recettes, ${h.menus.length} menus de la semaine, conseils et réponses aux questions fréquentes.`,
+    `${h.label} : ${h.recipeCount} recettes${h.menus.length ? `, ${h.menus.length} menus de la semaine` : ""}, conseils et réponses aux questions fréquentes.`,
     DESCRIPTION_MAX,
   );
 }

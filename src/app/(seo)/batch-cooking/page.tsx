@@ -24,7 +24,7 @@ export default function BatchCookingIndex() {
     <PageFrame>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <Breadcrumbs crumbs={crumbs} />
-      <header className="flex flex-col gap-4">
+      <header className="flex flex-col items-center gap-4 text-center">
         <h1 className="t-hero" style={{ fontSize: "clamp(40px, 7vw, 88px)" }}>
           Batch cooking : guides, menus et recettes
         </h1>

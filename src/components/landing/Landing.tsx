@@ -28,7 +28,7 @@ function Logo() {
 
 export function SiteHeader() {
   return (
-    <header className="border-b-[length:var(--bw)] border-line bg-surface">
+    <header className="sticky top-0 z-40 border-b-[length:var(--bw)] border-line bg-surface">
       <div className={`${wrap} flex items-center justify-between gap-4 !py-3`}>
         <Logo />
         <nav aria-label={t.nav.label} className="hidden gap-1 min-[900px]:flex">
@@ -107,7 +107,6 @@ export function Hero() {
         <div className="grid items-center gap-8 min-[900px]:grid-cols-2 min-[900px]:gap-6">
           <div className="flex flex-col gap-6">
             <p className="max-w-[620px] text-xl leading-[1.45]">{h.lead}</p>
-            <p className="t-body max-w-[620px]">{h.method}</p>
             <div className="flex flex-wrap gap-3.5">
               <Link href="/login" className="btn btn--primary btn--lg">
                 {h.cta}
@@ -205,58 +204,6 @@ export function ExampleWeek() {
             );
           })}
         </ul>
-
-        <div className="grid items-start gap-6 min-[900px]:grid-cols-2">
-          <div className="card tone-courses flex flex-col gap-3">
-            <h3 className="t-2">{e.shoppingTitle}</h3>
-            <details className="faq">
-              <summary>
-                {e.shoppingSummary}
-                <Icon name="chevron" className="ic" />
-              </summary>
-              <div className="faq-body flex flex-col gap-3">
-                {x.shopping.map((g) => (
-                  <div key={g.aisle}>
-                    <p className="t-kicker">{g.aisle}</p>
-                    <ul className="t-small">
-                      {g.items.map((i) => (
-                        <li key={i}>{i}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </details>
-            <p className="t-small">{e.shoppingNote}</p>
-          </div>
-
-          <div className="card tone-session flex flex-col gap-3">
-            <h3 className="t-2">{e.sessionTitle}</h3>
-            <p className="t-body font-bold">{e.sessionLead}</p>
-            <ol className="t-small flex flex-col gap-1.5">
-              {x.sessionSteps.map((s) => (
-                <li key={s.at} className="grid grid-cols-[4.5rem_1fr] gap-2">
-                  <span className="mono font-bold">
-                    {s.at} {e.sessionUnit}
-                  </span>
-                  <span>{s.text}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        <details className="faq">
-          <summary>
-            {e.methodTitle}
-            <Icon name="chevron" className="ic" />
-          </summary>
-          <div className="faq-body flex flex-col gap-3">
-            {e.method.map((m) => (
-              <p key={m}>{m}</p>
-            ))}
-          </div>
-        </details>
 
         <Link href="/login" className="btn btn--primary btn--lg self-start">
           {e.cta}
@@ -430,7 +377,7 @@ export function Pricing() {
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="05" id="px-t" title={p.title} />
         <p className="max-w-[680px] text-lg leading-[1.45]">{p.lead}</p>
-        <div className="grid max-w-[960px] items-stretch gap-4 min-[900px]:grid-cols-2 min-[900px]:gap-6">
+        <div className="mx-auto grid w-full max-w-[960px] items-stretch gap-4 min-[900px]:grid-cols-2 min-[900px]:gap-6">
           <article className="card flex flex-col gap-4" aria-labelledby="px-m">
             <h3 id="px-m" className="t-label">
               {p.monthly.label}
@@ -465,7 +412,7 @@ export function Pricing() {
             </Link>
           </article>
         </div>
-        <div className="nb tone-menu flex max-w-[960px] flex-wrap items-center justify-between gap-4 p-5">
+        <div className="nb tone-menu mx-auto flex w-full max-w-[960px] flex-wrap items-center justify-between gap-4 p-5">
           <div className="flex max-w-[560px] flex-col gap-1.5">
             <p className="t-kicker">{p.asso.kicker}</p>
             <p className="t-ui text-lg">{p.asso.text}</p>

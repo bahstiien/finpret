@@ -60,16 +60,18 @@ export default async function HubPage({ params }: { params: Promise<{ theme: str
           </div>
         </header>
 
-        <section aria-labelledby="menus" className="flex flex-col gap-3.5">
-          <SectionHead id="menus" title="Menus de la semaine" />
-          <ul className="grid gap-4 min-[900px]:grid-cols-3">
-            {menus.map((m) => (
-              <li key={m.slug} className="flex">
-                <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
-              </li>
-            ))}
-          </ul>
-        </section>
+        {menus.length > 0 && (
+          <section aria-labelledby="menus" className="flex flex-col gap-3.5">
+            <SectionHead id="menus" title="Menus de la semaine" />
+            <ul className="grid gap-4 min-[900px]:grid-cols-3">
+              {menus.map((m) => (
+                <li key={m.slug} className="flex">
+                  <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <section aria-labelledby="recettes" className="flex flex-col gap-3.5">
           <SectionHead id="recettes" title="Recettes pour commencer" />

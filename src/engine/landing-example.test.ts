@@ -74,13 +74,15 @@ const plain = (s: string) => s.replace(/[  ]/g, " ");
 const example = weekFor(landingExample.weekStart, 1);
 
 describe("landing : catalogue", () => {
-  it("annonce les vrais effectifs du catalogue", () => {
+  it("annonce les vrais effectifs du catalogue, en comptes ronds", () => {
     const [recipes, snacks, breakfasts] = landingV2.catalogue.items;
+    // Compte rond par défaut : à la centaine au-delà de 100, sinon à la dizaine (521 → « 500+ »).
+    const round = (n: number) => `${n - (n % (n >= 100 ? 100 : 10))}+`;
     // Recettes distinctes par nom (le seed contient un doublon exact), comme le catalogue public.
     const kinds = (...k: string[]) => RECIPES.filter((r) => k.includes(r.kind)).length;
-    expect(Number(recipes.n)).toBe(kinds("plat", "soupe", "simple"));
-    expect(Number(snacks.n)).toBe(kinds("gouter"));
-    expect(Number(breakfasts.n)).toBe(seed!.breakfasts.length);
+    expect(recipes.n).toBe(round(kinds("plat", "soupe", "simple")));
+    expect(snacks.n).toBe(round(kinds("gouter")));
+    expect(breakfasts.n).toBe(round(seed!.breakfasts.length));
   });
 });
 

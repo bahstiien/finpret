@@ -154,9 +154,7 @@ export const landingV2 = {
     sticker: "Application de batch cooking pour les familles",
     titlePlain: "Des soirées libérées,",
     titleMark: "moins de décisions autour des repas.",
-    lead: "Fin Prêt organise les repas autour de la vraie semaine de ta famille : qui est à table à chaque repas, les repas à ne pas prévoir, le régime, l'équipement.",
-    method:
-      "La méthode, c'est le batch cooking : tu prépares plusieurs repas en une session, par exemple le dimanche. Ensuite, il reste à réchauffer, à assembler ou à décongeler.",
+    lead: "Le menu, les courses et le déroulé de ta session de batch cooking, préparés pour ta famille. En semaine, il ne reste qu'à réchauffer.",
     cta: "Préparer ma semaine",
     secondary: "Voir un exemple de semaine",
     menuCard: {
@@ -196,9 +194,9 @@ export const landingV2 = {
         hint: "4 plats et 1 soupe : une recette couvre en général 2 repas",
       },
       {
-        n: "26,25",
-        label: "portions",
-        hint: "1 portion = 1 adulte ; un enfant de 7 ans compte 0,75, de 4 ans 0,5",
+        n: hm(ex.sessionMinutes),
+        label: "de préparation",
+        hint: "une seule session dans la semaine, durée estimée par l'application",
       },
       {
         n: String(shoppingCount),
@@ -213,20 +211,6 @@ export const landingV2 = {
     mealsLabel: "Repas couverts",
     gesturesLabel: "Le jour J",
     soupTag: "Soupe",
-    shoppingTitle: "La liste de courses",
-    shoppingSummary: `Voir les ${shoppingCount} articles par rayon`,
-    shoppingNote:
-      "Comprend aussi le goûter de la semaine (des biscuits au miel et aux noix), qui ne fait pas partie des 10 repas.",
-    sessionTitle: "Aperçu de la session de préparation",
-    sessionUnit: "min",
-    sessionLead: `Dans cet exemple, l'application estime la session à ${hm(ex.sessionMinutes)} (${hm(ex.beginnerMinutes)} au niveau débutant).`,
-    methodTitle: "Comment lire cet exemple",
-    method: [
-      "« 10 repas » désigne les occasions de repas du foyer : 5 déjeuners et 5 dîners, du lundi au vendredi. Ce ne sont pas 10 recettes ni 10 portions.",
-      "Les portions comptent les personnes présentes à chaque repas : ici, les enfants ne mangent pas à la maison le midi.",
-      `La durée est une estimation calculée à partir des durées indiquées dans les recettes, de ton équipement et de ton niveau : 5 min de mise en place, 25 min de refroidissement, 15 min de portionnage et 10 min de rangement, durées fixes. La vaisselle est proposée pendant le refroidissement ; le rangement de la cuisine après la session n'est pas compté.`,
-      `Ce n'est pas une durée mesurée en cuisine. Sur 24 semaines générées pour ce foyer, l'estimation va de ${hm(ex.rangeMinutes[0])} à ${hm(ex.rangeMinutes[1])}. Le jour de la session se choisit dans les réglages : le dimanche n'est qu'un exemple.`,
-    ],
     cta: "Préparer ma semaine",
   },
   top: {
@@ -242,8 +226,6 @@ export const landingV2 = {
     see: "Voir la recette",
     prev: "Recette précédente",
     next: "Recette suivante",
-    pause: "Mettre le défilement en pause",
-    play: "Relancer le défilement",
     active: (n: number) => `${n} min de travail le dimanche`,
     fridge: (d: number) => `${d} jours au frigo`,
     freeze: "Se congèle",
@@ -252,9 +234,9 @@ export const landingV2 = {
   catalogue: {
     label: "Le catalogue",
     items: [
-      { n: "521", label: "recettes de repas" },
-      { n: "47", label: "goûters" },
-      { n: "35", label: "petits-déjeuners" },
+      { n: "500+", label: "recettes de repas" },
+      { n: "40+", label: "goûters" },
+      { n: "30+", label: "petits-déjeuners" },
     ],
     season: "De saison, toute l'année",
   },

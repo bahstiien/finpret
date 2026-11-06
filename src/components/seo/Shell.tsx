@@ -208,7 +208,7 @@ export function LinkCard({
   children?: ReactNode;
 }) {
   return (
-    <Link href={href} className={`card ${tone} flex min-h-11 flex-col gap-2 no-underline`}>
+    <Link href={href} className={`card ${tone} flex min-h-11 w-full flex-col gap-2 no-underline`}>
       {kicker ? <span className="t-kicker">{kicker}</span> : null}
       <span className="t-3">{title}</span>
       {children}
