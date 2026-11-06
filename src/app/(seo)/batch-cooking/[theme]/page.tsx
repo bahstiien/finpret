@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/associations/JsonLd";
 import { Breadcrumbs, Faq, LinkCard, PageFrame, RecipeTile, SectionHead } from "@/components/seo/Shell";
 import { displayName } from "@/seo/catalog";
+import { EXAMPLES } from "@/seo/exemples";
 import { getHub, HUBS } from "@/seo/hubs";
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, type Crumb } from "@/seo/jsonld";
 import { hubDescription, hubTitle, pageMetadata } from "@/seo/meta";
@@ -60,18 +61,25 @@ export default async function HubPage({ params }: { params: Promise<{ theme: str
           </div>
         </header>
 
-        {menus.length > 0 && (
-          <section aria-labelledby="menus" className="flex flex-col gap-3.5">
-            <SectionHead id="menus" title="Menus de la semaine" />
-            <ul className="grid gap-4 min-[900px]:grid-cols-3">
-              {menus.map((m) => (
-                <li key={m.slug} className="flex">
-                  <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <section aria-labelledby="menus" className="flex flex-col gap-3.5">
+          <SectionHead id="menus" title={menus.length ? "Menus de la semaine" : "Exemples de semaine"} />
+          <ul className="grid gap-4 min-[900px]:grid-cols-3">
+            {menus.length
+              ? menus.map((m) => (
+                  <li key={m.slug} className="flex">
+                    <LinkCard href={`/menus/${m.slug}`} kicker="Menu de la semaine" tone="tone-menu" title={m.h1} />
+                  </li>
+                ))
+              : EXAMPLES.map((e) => (
+                  // Les menus générés sont en noindex : la page renvoie alors vers les exemples de semaine indexables.
+                  <li key={e.slug} className="flex">
+                    <LinkCard href={e.path} kicker="Exemple de semaine" tone="tone-menu" title={e.label}>
+                      <span className="t-small">{e.teaser}</span>
+                    </LinkCard>
+                  </li>
+                ))}
+          </ul>
+        </section>
 
         <section aria-labelledby="recettes" className="flex flex-col gap-3.5">
           <SectionHead id="recettes" title="Recettes pour commencer" />

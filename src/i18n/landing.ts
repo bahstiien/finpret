@@ -7,6 +7,8 @@
  */
 
 const hm = (minutes: number) => `${Math.floor(minutes / 60)} h ${String(minutes % 60).padStart(2, "0")}`;
+/** Personnes à table à un repas de l'exemple : 4 le soir (3,25 portions), 2 le midi (les enfants sont à la cantine). */
+export const atTable = (portions: number) => (portions > 2 ? 4 : 2);
 
 /** Exemple de semaine : sortie du moteur (graine 1, semaine du 1er mars 2027, réglages et équipement par défaut). */
 export const landingExample = {
@@ -161,7 +163,7 @@ export const landingV2 = {
       kicker: "Menu · mercredi soir",
       title: "Bolognaise dinde-lentilles",
       note: "Réchauffer au micro-ondes",
-      portions: "3,25 portions",
+      people: `${atTable(ex.recipesList[1]!.meals[0]![1])} à table`,
     },
     sessionCard: {
       kicker: "Cette semaine d'exemple",
@@ -207,11 +209,11 @@ export const landingV2 = {
     recipesTitle: "Les repas, recette par recette",
     recipesLead:
       "Chaque boîte porte le jour et le repas. Au moment de manger, il reste un geste court, selon la recette.",
-    portionsLabel: "portions",
+    mealsCount: (n: number) => `${n} repas`,
+    atTable: (n: number) => `${n} à table`,
     mealsLabel: "Repas couverts",
     gesturesLabel: "Le jour J",
     soupTag: "Soupe",
-    cta: "Préparer ma semaine",
   },
   top: {
     sticker: "Notre top 5 gourmand",

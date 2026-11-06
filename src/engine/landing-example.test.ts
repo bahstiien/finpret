@@ -6,7 +6,7 @@ import { rawSeed } from "@/engine/catalog/seed-files";
 import { validateSeed } from "@/engine/catalog/validate";
 import { generateWeek } from "./compose";
 import { createEnv } from "./env";
-import { householdPortions, mealPd } from "./portions";
+import { householdPortions, mealPd, portionForAge } from "./portions";
 import { totals } from "./quantities";
 import { seededRandom } from "./random";
 import { buildSession } from "./session";
@@ -121,6 +121,10 @@ describe("landing : exemple de semaine", () => {
     expect(rows).toEqual(landingExample.recipesList.map((r) => ({ name: r.name, meals: r.meals })));
     const portions = rows.flatMap((r) => r.meals).reduce((sum, [, p]) => sum + (p as number), 0);
     expect(portions).toBe(landingExample.portions);
+    // La landing affiche des personnes à table, pas des portions : 4 le soir (2 adultes + 0,75 + 0,5), 2 le midi.
+    const pd = (ages: number[]) => 2 + ages.reduce((sum, a) => sum + portionForAge(a), 0);
+    for (const [, p] of rows.flatMap((r) => r.meals)) expect([pd([]), pd([7, 4])]).toContain(p);
+    expect(landingV2.hero.menuCard.people).toMatch(/^4\sà table$/); // mercredi soir : toute la famille
   });
 
   it("gestes du jour J : décongélation et plats décrits par les recettes", () => {

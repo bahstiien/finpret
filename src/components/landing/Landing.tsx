@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Pill } from "@/components/ui/Pill";
 import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
-import { landingExample, landingV2 as t } from "@/i18n/landing";
+import { atTable, landingExample, landingV2 as t } from "@/i18n/landing";
 import { FEATURES } from "@/lib/features";
 import { displayName, getRecipe, RECIPES, slugOf } from "@/seo/catalog";
 import { EXAMPLES } from "@/seo/exemples";
@@ -68,7 +68,7 @@ function HeroCollage() {
         <p className="t-3">{h.menuCard.title}</p>
         <div className="flex items-center gap-2">
           <span className="t-small font-bold">{h.menuCard.note}</span>
-          <span className="pill mono">{h.menuCard.portions}</span>
+          <span className="pill mono">{h.menuCard.people}</span>
         </div>
       </div>
       <div className="card tone-session tilt-2 absolute top-[118px] right-0 flex w-[230px] flex-col items-center gap-1 text-center">
@@ -120,6 +120,17 @@ export function Hero() {
             </div>
           </div>
           <HeroCollage />
+          {/* Mobile : le collage est masqué, une seule carte résume la semaine d'exemple. */}
+          <div
+            aria-hidden="true"
+            className="card tone-session tilt-l flex items-center gap-4 self-start min-[900px]:hidden"
+          >
+            <p className="mono text-[56px] leading-none font-bold">{h.sessionCard.big}</p>
+            <div className="flex flex-col gap-1">
+              <p className="t-kicker">{h.sessionCard.kicker}</p>
+              <p className="t-small font-bold">{h.sessionCard.caption}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -141,7 +152,6 @@ export function TopRecipes() {
 export function ExampleWeek() {
   const e = t.example;
   const x = landingExample;
-  const fr = (n: number) => String(n).replace(".", ",");
   return (
     <section id={e.id} aria-labelledby="ex-t" className={`${anchor} border-b-[length:var(--bw)] border-line`}>
       <div className={`${wrap} ${sectionPad}`}>
@@ -163,7 +173,6 @@ export function ExampleWeek() {
         <p className="t-body max-w-[760px]">{e.recipesLead}</p>
         <ul className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))] min-[900px]:gap-6">
           {x.recipesList.map((r, i) => {
-            const portions = r.meals.reduce((sum, [, p]) => sum + p, 0);
             const photo = recipePhoto(r.id, r.name);
             return (
               <li key={r.name} className="card recipe-zoom flex flex-col gap-3">
@@ -180,14 +189,14 @@ export function ExampleWeek() {
                   {i === x.recipesList.length - 1 && <span className="pill">{e.soupTag}</span>}
                 </div>
                 <p className="mono t-small font-bold">
-                  {fr(portions)} {e.portionsLabel}
+                  {e.mealsCount(r.meals.length)}
                 </p>
                 <div>
                   <p className="t-kicker">{e.mealsLabel}</p>
                   <ul className="t-small">
                     {r.meals.map(([label, p]) => (
                       <li key={label}>
-                        {label} <span className="mono">({fr(p)})</span>
+                        {label} <span className="muted">· {e.atTable(atTable(p))}</span>
                       </li>
                     ))}
                   </ul>
@@ -206,11 +215,6 @@ export function ExampleWeek() {
             );
           })}
         </ul>
-
-        <Link href="/login" className="btn btn--primary btn--lg self-start">
-          {e.cta}
-          <Icon name="arrow" className="ic" />
-        </Link>
       </div>
     </section>
   );
@@ -251,7 +255,7 @@ function SectionHead({ n, id, title }: { n: string; id: string; title: string })
 }
 
 export function HowItWorks() {
-  const tones = ["", "", "tone-session", "tone-cta"];
+  const tones = ["tone-menu", "tone-courses", "tone-session", "tone-cta"];
   return (
     <section id="comment" aria-labelledby="cm-t" className={anchor}>
       <div className={`${wrap} ${sectionPad}`}>
