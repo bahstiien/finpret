@@ -91,6 +91,8 @@ export function computeStreak(
   history: StreakWeek[],
   current: { weekStart: string; sessionDone: boolean; hasBatch: boolean; plannedPause: boolean },
   alreadyCelebrated: number[],
+  /** Pauses planifiées après la semaine active : leur jeton est déjà pris (§3.2), comme dans `planPause`. */
+  upcoming: StreakWeek[] = [],
 ): StreakState {
   let run = 0;
   let best = 0;
@@ -114,6 +116,10 @@ export function computeStreak(
 
   let used = pausesUsedInQuarter(history, current.weekStart);
   if (current.plannedPause && !current.sessionDone && current.hasBatch) used += 1;
+  used += pausesUsedInQuarter(
+    upcoming.filter((w) => w.weekStart > current.weekStart),
+    current.weekStart,
+  );
 
   return {
     current: run,
