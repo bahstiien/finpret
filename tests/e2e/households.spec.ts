@@ -25,8 +25,8 @@ test("premier menu après l'onboarding (§5)", async ({ page }) => {
   // 4 plats de batch (dîner + déjeuner du lendemain) et une soupe sur 2 soirs : 10 repas.
   const recap = page.getByTestId("onboarding-recap");
   await expect(recap).toContainText("10");
-  await expect(recap).toContainText("repas prévus");
-  await page.getByRole("link", { name: "Voir mon menu" }).click();
+  await expect(recap).toContainText("prévus cette semaine");
+  await page.getByRole("link", { name: "Ouvrir ma semaine" }).click();
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.getByTestId("week-title")).toContainText("Semaine du");
   await expect(page.getByTestId("summary-meals")).toHaveText("10");

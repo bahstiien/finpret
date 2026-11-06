@@ -1,5 +1,6 @@
 import type { Cake, Main, Protein, Simple, Soup } from "./catalog/schema";
 import { allIngredientKeys, dietTags, recipeAllergens } from "./catalog/derive";
+import { economyBonus } from "./cost";
 import type { DietRules, Feedback, Library, Pantry, Ratings } from "./types";
 
 /**
@@ -71,6 +72,12 @@ export function createEnv(options: {
     ),
   };
   // Recettes supprimées par le foyer : retirées du tirage, mais encore lisibles par les semaines qui les contiennent.
+  // Objectif économique : les plats les moins chers par portion passent plus souvent au tirage.
+  const bonus = { ...options.bonus };
+  if (options.diet?.economical) {
+    const cheap = economyBonus(options.lib, [...filtered.mains, ...filtered.soups, ...filtered.simples]);
+    for (const [id, b] of Object.entries(cheap)) bonus[id] = (bonus[id] ?? 0) + b;
+  }
   const retired = new Set(options.lib.retired ?? []);
   const active = <R extends { id: string }>(list: R[]) =>
     retired.size ? list.filter((r) => !retired.has(r.id)) : list;
@@ -90,7 +97,7 @@ export function createEnv(options: {
     random: options.random,
     ignoreDislike: false,
     diet: options.diet ?? null,
-    bonus: options.bonus ?? {},
+    bonus,
     mainById: new Map(filtered.mains.map((r) => [r.id, r])),
     soupById: new Map(filtered.soups.map((r) => [r.id, r])),
     simpleById: new Map(filtered.simples.map((r) => [r.id, r])),

@@ -78,7 +78,7 @@ export const DEFAULT_MENU_SETTINGS: MenuSettings = {
   minVeg: 0,
 };
 
-export type Diet = "omnivore" | "flexitarien" | "vegetarien" | "pescetarien";
+export type Diet = "omnivore" | "flexitarien" | "vegetarien" | "pescetarien" | "carnivore";
 
 /** Filtre dur, appliqué avant tout le reste et jamais relâché (§7.3, point 7). */
 export type DietRules = {
@@ -89,6 +89,8 @@ export type DietRules = {
   refused: string[];
   /** Objectif « protéines minimales par repas » (g par portion adulte), pour les repas. */
   minProtein?: number;
+  /** Objectif « économique » : les recettes les moins chères par portion sont favorisées au tirage. */
+  economical?: boolean;
 };
 
 export const NO_DIET_RULES: DietRules = { diet: "omnivore", allergens: [], refused: [] };
