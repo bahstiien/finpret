@@ -30,3 +30,7 @@ La couche `src/seo` publie **déjà** `/recettes/{slug}` pour toutes les recette
 - Menus générés : réduits à 6 (2/4/6 personnes × classique/végétarien, batch), en `noindex`, hors sitemap ; les menus « pas cher », « enfants », « rapide » et « quotidien » (critères inférés, non issus du seed) sont supprimés. Les pages indexables de menu sont les 3 exemples.
 - Hubs : « en 2 heures » supprimé (durée de session non fiable) ; textes des autres hubs limités à des faits du catalogue ; ils restent `noindex` tant qu'aucun menu n'est indexable.
 - Contenus retirés : durée de session estimée, « décongèle-le la veille », « se réchauffent en quelques minutes », 20 min de travail actif des dîners express (désormais `null`), CTA « gratuitement ». Le texte « le jour du repas » des recettes n'affiche plus de `{placeholder}`.
+
+## Corrigé le 6 novembre 2026
+
+- Hubs : les exemples de semaine (indexables) comptent comme menus pour l'indexation d'un hub. Tant qu'aucun menu généré n'est indexable, la section « Menus de la semaine » d'un hub affiche les exemples ; `/batch-cooking` et les trois hubs passent en `index` et entrent au sitemap.

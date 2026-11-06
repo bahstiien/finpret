@@ -5,6 +5,7 @@ import { HUBS } from "./hubs";
 import { breadcrumbJsonLd, faqJsonLd, isoDuration, itemListJsonLd, recipeJsonLd } from "./jsonld";
 import { MENUS } from "./menus";
 import { clamp, DESCRIPTION_MAX, hubDescription, hubTitle, menuDescription, menuTitle, recipeDescription, recipeTitle, TITLE_MAX } from "./meta";
+import { seoPaths } from "./paths";
 
 describe("catalogue public", () => {
   it("a des slugs uniques", () => {
@@ -60,7 +61,12 @@ describe("hubs", () => {
     for (const h of HUBS) {
       expect(h.recipes.length, h.slug).toBeGreaterThanOrEqual(5);
       expect(h.faq.length, h.slug).toBeGreaterThan(0);
+      // Sans menu généré indexable, les exemples de semaine comptent comme menus.
+      expect(h.indexable, h.slug).toBe(true);
     }
+    expect(seoPaths().map((p) => p.path)).toEqual(
+      expect.arrayContaining(["/batch-cooking", ...HUBS.map((h) => `/batch-cooking/${h.slug}`)]),
+    );
   });
 });
 

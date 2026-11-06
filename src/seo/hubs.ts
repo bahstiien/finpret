@@ -1,6 +1,7 @@
 import type { RecipeView } from "./catalog";
 import { RECIPES } from "./catalog";
 import { MIN_MENUS_PER_HUB, MIN_RECIPES_PER_HUB } from "./config";
+import { EXAMPLES } from "./exemples";
 import { INDEXABLE_MENUS, pick, type Faq, type MenuView } from "./menus";
 
 /** Pages hub thématiques : /batch-cooking/{theme}. Chaque hub filtre des menus et des recettes réels du catalogue. */
@@ -99,12 +100,14 @@ export type HubView = HubDef & {
 function build(def: HubDef): HubView {
   const all = RECIPES.filter(def.recipe);
   const menus = INDEXABLE_MENUS.filter(def.menu);
+  // Les menus générés sont en noindex : la page renvoie alors vers les exemples de semaine, qui sont indexables.
+  const weeks = menus.length || EXAMPLES.length;
   return {
     ...def,
     recipes: pick(all, `hub-${def.slug}`, 12),
     menus,
     recipeCount: all.length,
-    indexable: all.length >= MIN_RECIPES_PER_HUB && menus.length >= MIN_MENUS_PER_HUB,
+    indexable: all.length >= MIN_RECIPES_PER_HUB && weeks >= MIN_MENUS_PER_HUB,
   };
 }
 

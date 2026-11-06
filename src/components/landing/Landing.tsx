@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Pill } from "@/components/ui/Pill";
 import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
-import { landingExample, landingV2 as t } from "@/i18n/landing";
+import { atTable, landingExample, landingV2 as t } from "@/i18n/landing";
 import { FEATURES } from "@/lib/features";
 import { displayName, getRecipe, RECIPES, slugOf } from "@/seo/catalog";
 import { EXAMPLES } from "@/seo/exemples";
@@ -14,6 +14,8 @@ import { TopRecipesCarousel, type TopSlide } from "./TopRecipesCarousel";
 
 const wrap = "mx-auto w-full max-w-[1240px] px-4 min-[900px]:px-10";
 const sectionPad = "flex flex-col gap-7 py-14";
+/** Les ancres de la navigation ne doivent pas passer sous le header sticky. */
+const anchor = "scroll-mt-20";
 
 function Logo() {
   return (
@@ -28,7 +30,7 @@ function Logo() {
 
 export function SiteHeader() {
   return (
-    <header className="border-b-[length:var(--bw)] border-line bg-surface">
+    <header className="sticky top-0 z-40 border-b-[length:var(--bw)] border-line bg-surface">
       <div className={`${wrap} flex items-center justify-between gap-4 !py-3`}>
         <Logo />
         <nav aria-label={t.nav.label} className="hidden gap-1 min-[900px]:flex">
@@ -66,7 +68,7 @@ function HeroCollage() {
         <p className="t-3">{h.menuCard.title}</p>
         <div className="flex items-center gap-2">
           <span className="t-small font-bold">{h.menuCard.note}</span>
-          <span className="pill mono">{h.menuCard.portions}</span>
+          <span className="pill mono">{h.menuCard.people}</span>
         </div>
       </div>
       <div className="card tone-session tilt-2 absolute top-[118px] right-0 flex w-[230px] flex-col items-center gap-1 text-center">
@@ -107,7 +109,6 @@ export function Hero() {
         <div className="grid items-center gap-8 min-[900px]:grid-cols-2 min-[900px]:gap-6">
           <div className="flex flex-col gap-6">
             <p className="max-w-[620px] text-xl leading-[1.45]">{h.lead}</p>
-            <p className="t-body max-w-[620px]">{h.method}</p>
             <div className="flex flex-wrap gap-3.5">
               <Link href="/login" className="btn btn--primary btn--lg">
                 {h.cta}
@@ -119,6 +120,17 @@ export function Hero() {
             </div>
           </div>
           <HeroCollage />
+          {/* Mobile : le collage est masqué, une seule carte résume la semaine d'exemple. */}
+          <div
+            aria-hidden="true"
+            className="card tone-session tilt-l flex items-center gap-4 self-start min-[900px]:hidden"
+          >
+            <p className="mono text-[56px] leading-none font-bold">{h.sessionCard.big}</p>
+            <div className="flex flex-col gap-1">
+              <p className="t-kicker">{h.sessionCard.kicker}</p>
+              <p className="t-small font-bold">{h.sessionCard.caption}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -140,9 +152,8 @@ export function TopRecipes() {
 export function ExampleWeek() {
   const e = t.example;
   const x = landingExample;
-  const fr = (n: number) => String(n).replace(".", ",");
   return (
-    <section id={e.id} aria-labelledby="ex-t" className="border-b-[length:var(--bw)] border-line">
+    <section id={e.id} aria-labelledby="ex-t" className={`${anchor} border-b-[length:var(--bw)] border-line`}>
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="01" id="ex-t" title={e.title} />
         <p className="max-w-[760px] text-lg leading-[1.45]">{e.lead}</p>
@@ -162,7 +173,6 @@ export function ExampleWeek() {
         <p className="t-body max-w-[760px]">{e.recipesLead}</p>
         <ul className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))] min-[900px]:gap-6">
           {x.recipesList.map((r, i) => {
-            const portions = r.meals.reduce((sum, [, p]) => sum + p, 0);
             const photo = recipePhoto(r.id, r.name);
             return (
               <li key={r.name} className="card recipe-zoom flex flex-col gap-3">
@@ -179,14 +189,14 @@ export function ExampleWeek() {
                   {i === x.recipesList.length - 1 && <span className="pill">{e.soupTag}</span>}
                 </div>
                 <p className="mono t-small font-bold">
-                  {fr(portions)} {e.portionsLabel}
+                  {e.mealsCount(r.meals.length)}
                 </p>
                 <div>
                   <p className="t-kicker">{e.mealsLabel}</p>
                   <ul className="t-small">
                     {r.meals.map(([label, p]) => (
                       <li key={label}>
-                        {label} <span className="mono">({fr(p)})</span>
+                        {label} <span className="muted">· {e.atTable(atTable(p))}</span>
                       </li>
                     ))}
                   </ul>
@@ -205,63 +215,6 @@ export function ExampleWeek() {
             );
           })}
         </ul>
-
-        <div className="grid items-start gap-6 min-[900px]:grid-cols-2">
-          <div className="card tone-courses flex flex-col gap-3">
-            <h3 className="t-2">{e.shoppingTitle}</h3>
-            <details className="faq">
-              <summary>
-                {e.shoppingSummary}
-                <Icon name="chevron" className="ic" />
-              </summary>
-              <div className="faq-body flex flex-col gap-3">
-                {x.shopping.map((g) => (
-                  <div key={g.aisle}>
-                    <p className="t-kicker">{g.aisle}</p>
-                    <ul className="t-small">
-                      {g.items.map((i) => (
-                        <li key={i}>{i}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </details>
-            <p className="t-small">{e.shoppingNote}</p>
-          </div>
-
-          <div className="card tone-session flex flex-col gap-3">
-            <h3 className="t-2">{e.sessionTitle}</h3>
-            <p className="t-body font-bold">{e.sessionLead}</p>
-            <ol className="t-small flex flex-col gap-1.5">
-              {x.sessionSteps.map((s) => (
-                <li key={s.at} className="grid grid-cols-[4.5rem_1fr] gap-2">
-                  <span className="mono font-bold">
-                    {s.at} {e.sessionUnit}
-                  </span>
-                  <span>{s.text}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        <details className="faq">
-          <summary>
-            {e.methodTitle}
-            <Icon name="chevron" className="ic" />
-          </summary>
-          <div className="faq-body flex flex-col gap-3">
-            {e.method.map((m) => (
-              <p key={m}>{m}</p>
-            ))}
-          </div>
-        </details>
-
-        <Link href="/login" className="btn btn--primary btn--lg self-start">
-          {e.cta}
-          <Icon name="arrow" className="ic" />
-        </Link>
       </div>
     </section>
   );
@@ -302,9 +255,9 @@ function SectionHead({ n, id, title }: { n: string; id: string; title: string })
 }
 
 export function HowItWorks() {
-  const tones = ["", "", "tone-session", "tone-cta"];
+  const tones = ["tone-menu", "tone-courses", "tone-session", "tone-cta"];
   return (
-    <section id="comment" aria-labelledby="cm-t">
+    <section id="comment" aria-labelledby="cm-t" className={anchor}>
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="02" id="cm-t" title={t.how.title} />
         <p className="max-w-[760px] text-lg leading-[1.45]">{t.how.lead}</p>
@@ -380,7 +333,7 @@ export function Features() {
     <section
       id="fonctions"
       aria-labelledby="fn-t"
-      className="border-t-[length:var(--bw)] border-line bg-surface"
+      className={`${anchor} border-t-[length:var(--bw)] border-line bg-surface`}
     >
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="03" id="fn-t" title={t.features.title} />
@@ -400,7 +353,7 @@ export function Features() {
 
 export function Households() {
   return (
-    <section id="foyers" aria-labelledby="fy-t" className="border-t-[length:var(--bw)] border-line">
+    <section id="foyers" aria-labelledby="fy-t" className={`${anchor} border-t-[length:var(--bw)] border-line`}>
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="04" id="fy-t" title={t.households.title} />
         <div className="grid gap-4 min-[900px]:grid-cols-4 min-[900px]:gap-6">
@@ -425,12 +378,12 @@ export function Pricing() {
     <section
       id="tarifs"
       aria-labelledby="px-t"
-      className="border-t-[length:var(--bw)] border-line bg-surface"
+      className={`${anchor} border-t-[length:var(--bw)] border-line bg-surface`}
     >
       <div className={`${wrap} ${sectionPad}`}>
         <SectionHead n="05" id="px-t" title={p.title} />
         <p className="max-w-[680px] text-lg leading-[1.45]">{p.lead}</p>
-        <div className="grid max-w-[960px] items-stretch gap-4 min-[900px]:grid-cols-2 min-[900px]:gap-6">
+        <div className="mx-auto grid w-full max-w-[960px] items-stretch gap-4 min-[900px]:grid-cols-2 min-[900px]:gap-6">
           <article className="card flex flex-col gap-4" aria-labelledby="px-m">
             <h3 id="px-m" className="t-label">
               {p.monthly.label}
@@ -465,7 +418,7 @@ export function Pricing() {
             </Link>
           </article>
         </div>
-        <div className="nb tone-menu flex max-w-[960px] flex-wrap items-center justify-between gap-4 p-5">
+        <div className="nb tone-menu mx-auto flex w-full max-w-[960px] flex-wrap items-center justify-between gap-4 p-5">
           <div className="flex max-w-[560px] flex-col gap-1.5">
             <p className="t-kicker">{p.asso.kicker}</p>
             <p className="t-ui text-lg">{p.asso.text}</p>
