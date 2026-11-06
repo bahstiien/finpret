@@ -25,11 +25,13 @@ docker login ghcr.io -u <utilisateur GitHub>   # mot de passe : jeton « read:pa
 ```
 
 Au premier `docker compose up -d`, Postgres crée la base `finpret` et les rôles (`db-init/01-roles.sh`), puis `migrate` applique toutes les migrations.
-La base n'écoute que sur `127.0.0.1` du VPS. Pour y accéder depuis un poste (import du catalogue, consultation), un tunnel SSH :
+Chaque déploiement importe ensuite le catalogue (`seed/*.json`, dont les prix) : `docker compose run --rm --no-deps migrate node scripts/seed.mjs`, la même commande pour le relancer à la main sur le VPS.
+
+La base n'écoute que sur `127.0.0.1` du VPS. Pour y accéder depuis un poste (consultation, import d'un catalogue local), un tunnel SSH :
 
 ```bash
 ssh -N -L 54330:127.0.0.1:5432 deploy@<IP du VPS>
-# dans un autre terminal, depuis le dépôt : import une fois du catalogue (ingrédients, recettes)
+# dans un autre terminal, depuis le dépôt : import du catalogue du poste (ingrédients, prix, recettes)
 DATABASE_URL="postgresql://postgres:<POSTGRES_PASSWORD>@localhost:54330/finpret?sslmode=disable" pnpm seed
 ```
 

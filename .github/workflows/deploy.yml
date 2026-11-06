@@ -127,6 +127,10 @@ jobs:
             echo "état de l'app : $STATUS"
             if [ "$STATUS" = "healthy" ]; then
               docker image prune -f >/dev/null
+              # Catalogue global (ingrédients, prix, recettes) aligné sur seed/*.json de cette version, en une
+              # transaction ; les recettes des foyers ne sont jamais touchées. Un échec laisse l'ancien catalogue
+              # et l'app en place, mais fait échouer le déploiement pour qu'il se voie.
+              docker compose run --rm --no-deps migrate node scripts/seed.mjs || { echo "Import du catalogue en échec."; exit 1; }
               echo "Déploiement de $NEW réussi."
               exit 0
             fi

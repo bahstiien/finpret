@@ -20,6 +20,8 @@ ENV NEXT_PUBLIC_VAPID_PUBLIC_KEY=$NEXT_PUBLIC_VAPID_PUBLIC_KEY \
     NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN \
     NODE_OPTIONS=--max-old-space-size=4096
 RUN pnpm build
+# Import du catalogue (seed/*.json, dont les prix) empaqueté en un fichier, joué par le Deploy après les migrations.
+RUN node scripts/build-seed.mjs
 
 FROM node:24-bookworm-slim AS runner
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
@@ -33,6 +35,7 @@ COPY --from=build --chown=node:node /app/public ./public
 COPY --from=build --chown=node:node /app/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=build --chown=node:node /app/scripts/lib/env.mjs ./scripts/lib/env.mjs
 COPY --from=build --chown=node:node /app/db/migrations ./db/migrations
+COPY --from=build --chown=node:node /app/.next-build/scripts/seed.mjs ./scripts/seed.mjs
 # Fichiers privés (volume `files`) : le dossier appartient à `node` pour qu'un volume neuf hérite de ces droits.
 RUN mkdir -p /data/files && chown node:node /data/files
 USER node
