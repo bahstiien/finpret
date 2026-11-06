@@ -7,6 +7,8 @@ import {
   CalendarCheck,
   CaretDown,
   CaretRight,
+  Trophy,
+  LockSimple,
   Cake,
   Check,
   Clock,
@@ -102,6 +104,8 @@ const GLYPHS = {
   streak: CalendarCheck,
   pause: PauseCircle,
   passport: Stamp,
+  trophy: Trophy,
+  lock: LockSimple,
   // Anti-gaspi (écran Progrès).
   leaf: Leaf,
   chevronRight: CaretRight,

@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { buildCountries, buildFrise, buildSeasons } from "./progress-view";
+import {
+  badgeCrossed,
+  badgeLadder,
+  buildCountries,
+  buildFrise,
+  buildSeasons,
+  nextQuarterStart,
+  quarterTokens,
+  seasonCards,
+  seasonEnd,
+} from "./progress-view";
 
 const catalog = [
   { id: "a", name: "Ramen", origin: "jp", kind: "main" },
@@ -68,5 +78,57 @@ describe("buildFrise", () => {
     expect(f.at(-2)?.state).toBe("paused");
     expect(f.at(-3)?.state).toBe("done");
     expect(f[0]?.state).toBe("none");
+  });
+});
+
+describe("jetons de pause du trimestre", () => {
+  it("prend les pauses du trimestre de la semaine active, posées à l'avance comprises", () => {
+    const h = [
+      { weekStart: "2026-09-28", outcome: "paused" },
+      { weekStart: "2026-10-12", outcome: "paused" },
+      { weekStart: "2026-10-19", outcome: "done" },
+      { weekStart: "2026-12-21", outcome: "paused" },
+    ];
+    expect(quarterTokens(h, "2026-11-09")).toEqual([
+      { weekStart: "2026-10-12", upcoming: false },
+      { weekStart: "2026-12-21", upcoming: true },
+    ]);
+  });
+  it("trimestre suivant", () => {
+    expect(nextQuarterStart("2026-11-09")).toBe("2027-01-01");
+    expect(nextQuarterStart("2026-02-10")).toBe("2026-04-01");
+  });
+});
+
+describe("badges", () => {
+  it("obtenus, en cours puis à venir ; le dernier couvre tout le passeport", () => {
+    const l = badgeLadder(9, 19);
+    expect(l.map((b) => [b.key, b.at, b.state])).toEqual([
+      ["curious", 3, "earned"],
+      ["traveler", 6, "earned"],
+      ["globetrotter", 12, "current"],
+      ["explorer", 18, "locked"],
+      ["world", 19, "locked"],
+    ]);
+    expect(l[2]?.progress).toBe(0.75);
+  });
+  it("badge franchi par une session", () => {
+    expect(badgeCrossed(5, 6, 19)?.key).toBe("traveler");
+    expect(badgeCrossed(6, 7, 19)).toBeNull();
+    expect(badgeCrossed(2, 7, 19)?.key).toBe("traveler");
+  });
+});
+
+describe("saisons du passeport", () => {
+  it("en cours, deux précédentes, la suivante", () => {
+    const c = seasonCards("2026-11-06", new Map([["2026-summer", 6], ["2026-spring", 4], ["2026-autumn", 4]]), new Set());
+    expect(c.current).toMatchObject({ key: "2026-autumn", state: "current", count: 4 });
+    expect(c.others.map((s) => [s.key, s.state])).toEqual([
+      ["2026-spring", "missed"],
+      ["2026-summer", "earned"],
+      ["2027-winter", "upcoming"],
+    ]);
+    expect(seasonEnd("2026-autumn")).toBe("2026-11-30");
+    expect(seasonEnd("2028-winter")).toBe("2028-02-29");
   });
 });
