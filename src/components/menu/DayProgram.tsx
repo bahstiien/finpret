@@ -67,6 +67,14 @@ export function DayProgram({
           )}
         </ol>
       )}
+      {day.thaw.length > 0 && (
+        <p className="nb-sm tone-yellow t-small flex items-center gap-2 px-3 py-2" data-testid="thaw-reminder">
+          <Icon name="snow" className="size-5 shrink-0" />
+          <span>
+            <b>{isToday ? t.thawTonight : t.thawEve}</b> {t.thaw(day.thaw)}
+          </span>
+        </p>
+      )}
     </Card>
   );
 }

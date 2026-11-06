@@ -202,7 +202,11 @@ export function MenuScreen({
         </div>
       ))}
 
-      <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4">
+      <Card
+        tone="peach"
+        className="flex flex-wrap items-center justify-between gap-4"
+        data-testid="week-summary"
+      >
         <div className="flex flex-col gap-1.5">
           <p className="t-kicker">{t.sessionBanner.kicker}</p>
           <p className="t-2">{t.sessionBanner.title(view.plannedMeals, dur(sessionMinutes))}</p>
@@ -222,12 +226,14 @@ export function MenuScreen({
             </button>
           ))}
         </div>
-        <p className="t-kicker muted">{t.board.meals(view.plannedMeals)}</p>
+        <p className="t-kicker muted">
+          <span data-testid="summary-meals">{view.plannedMeals}</span> {t.board.mealsUnit}
+        </p>
       </div>
 
       <WeekBoard view={view} filter={filter} selected={selected} onSelect={setSelected} />
 
-      <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+      <div className="grid items-start gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <div className="flex flex-col gap-4">
           <DayProgram
             day={day}
@@ -243,58 +249,21 @@ export function MenuScreen({
           {(canteen[day.iso] ?? []).map((c) => (
             <CanteenBlock key={c.name} entry={c} />
           ))}
-          <Tiles
-            day={day}
-            isToday={selected === view.todayIndex}
-            sessionMinutes={sessionMinutes}
-            planned={view.plannedMeals}
-          />
         </div>
 
-        <div className="flex flex-col gap-4">
-          <PlanGrid
-            view={view}
-            canEdit={canEdit}
-            pending={pending}
-            onToggle={(d, m) => run(() => toggleGridSlot(view.weekId, d, m))}
-            onWeekend={(key) => setSheet({ kind: "weekend", key })}
-            cakeLine={
-              view.cake ? (
-                <CakeLine cake={view.cake} canEdit={canEdit} onChange={() => setSheet({ kind: "cake" })} />
-              ) : null
-            }
-          />
-          <Card tone="violet" className="flex flex-col gap-4">
-            <span className="sticker tone-banane self-start">{t.weekend.eyebrow}</span>
-            <h2 className="t-2">{t.weekend.title}</h2>
-            <p>{t.weekend.lead}</p>
-            {view.weekend.length > 0 && (
-              <ul className="flex flex-col gap-1.5">
-                {view.weekend.map((w) => (
-                  <li key={w.key} className="t-ui">
-                    <b>
-                      {fr.days[w.day - 1]} {fr.meals[w.meal].toLowerCase()}
-                    </b>{" "}
-                    : <Flag flag={w.flag} />
-                    {w.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {canEdit && (
-              <Button
-                type="button"
-                variant="primary"
-                disabled={pending}
-                onClick={() => run(() => suggestWeekendAction(view.weekId))}
-                className="self-start"
-              >
-                <Icon name="sparkle" className="size-5" />
-                {t.weekend.suggest}
-              </Button>
-            )}
-          </Card>
-        </div>
+        <PlanGrid
+          view={view}
+          canEdit={canEdit}
+          pending={pending}
+          onToggle={(d, m) => run(() => toggleGridSlot(view.weekId, d, m))}
+          onWeekend={(key) => setSheet({ kind: "weekend", key })}
+          onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
+          cakeLine={
+            view.cake ? (
+              <CakeLine cake={view.cake} canEdit={canEdit} onChange={() => setSheet({ kind: "cake" })} />
+            ) : null
+          }
+        />
       </div>
 
       <section className="flex flex-col gap-4">
@@ -302,14 +271,12 @@ export function MenuScreen({
           title={t.dishes}
           aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>}
         />
-        <ul
-          className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pt-1 pb-4 min-[900px]:mx-0 min-[900px]:px-0"
-          data-testid="dishes"
-        >
+        <ul className="flex flex-col gap-3" data-testid="dishes">
           {view.dishes.map((d) => (
-            <DishCardView
+            <DishRow
               key={`${d.kind}-${d.index}`}
               dish={d}
+              recipe={view.recipes.find((r) => r.recipeId === d.recipeId) ?? null}
               canEdit={canEdit}
               pending={pending}
               onFeedback={(a) => run(() => feedbackAction(view.weekId, d.recipeId, a))}
@@ -318,66 +285,6 @@ export function MenuScreen({
             />
           ))}
         </ul>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <SectionHeader title={t.recipes} />
-        {view.recipes.map((r, i) => (
-          <details key={i} className="faq">
-            <summary>
-              <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span className="t-kicker">{r.title}</span>
-                <b className="t-3">
-                  <Flag flag={r.flag} />
-                  {r.name}
-                </b>
-                <span className="t-small mono">{r.portions}</span>
-                {r.cost && (
-                  <span className="t-small mono muted" data-testid="recipe-cost">
-                    {r.cost}
-                  </span>
-                )}
-                <span
-                  className="diff"
-                  role="img"
-                  aria-label={`${tv.difficulty.label(r.difficulty)} : ${tv.difficulty.levels[r.difficulty - 1]}`}
-                >
-                  {[1, 2, 3, 4].map((n) => (
-                    <span key={n} aria-hidden="true" className={n <= r.difficulty ? "on" : ""} />
-                  ))}
-                </span>
-              </span>
-              <Icon name="chevronDown" />
-            </summary>
-            <div className="faq-body flex flex-col gap-3">
-              {r.photo && (
-                <RecipeImage
-                  photo={r.photo}
-                  sizes="(min-width: 900px) 480px, 100vw"
-                  className="nb-flat w-full max-w-[480px]"
-                />
-              )}
-              {r.description && <p className="muted">{r.description}</p>}
-              <h3 className="t-3">{t.ingredients}</h3>
-              <ul className="list-disc pl-4">
-                {r.ingredients.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ul>
-              <h3 className="t-3">{t.steps}</h3>
-              <ol className="list-decimal pl-4">
-                {r.steps.map((x, j) => (
-                  <li key={j}>{x}</li>
-                ))}
-              </ol>
-              {r.notes.map((n) => (
-                <p key={n} className="t-small muted">
-                  {n}
-                </p>
-              ))}
-            </div>
-          </details>
-        ))}
       </section>
 
       {canEdit && (
@@ -446,59 +353,13 @@ export function MenuScreen({
   );
 }
 
-function Tiles({
-  day,
-  isToday,
-  sessionMinutes,
-  planned,
-}: {
-  day: MenuView["days"][number];
-  isToday: boolean;
-  sessionMinutes: number;
-  planned: number;
-}) {
-  return (
-    <div className="grid grid-cols-2 gap-3" data-testid="week-summary">
-      {day.tonight && (
-        <Card as="div" tone="dark" padding="cozy" className="flex flex-col gap-2">
-          <span className="nb-sm tone-banane grid size-10 place-items-center">
-            <Icon name="pot" />
-          </span>
-          <span className="t-label">
-            {isToday ? t.tiles.tonight : t.tiles.dayEvening(fr.days[day.day - 1]!)}
-          </span>
-          <b className="t-3">{day.tonight}</b>
-        </Card>
-      )}
-      {day.thaw.length > 0 && (
-        <Card as="div" tone="yellow" padding="cozy" className="flex flex-col gap-2">
-          <span className="nb-sm tone-surface grid size-10 place-items-center">
-            <Icon name="snow" />
-          </span>
-          <span className="t-label">{isToday ? t.tiles.beforeBed : t.tiles.eveBefore}</span>
-          <b className="t-3">{t.tiles.thaw(day.thaw)}</b>
-        </Card>
-      )}
-      <Card as="div" tone="blue" padding="cozy" className="flex flex-col gap-1">
-        <span className="t-label">{t.tiles.session}</span>
-        <b className="num-l">{dur(sessionMinutes)}</b>
-      </Card>
-      <Card as="div" padding="cozy" className="flex flex-col gap-1">
-        <span className="t-label">{t.tiles.planned}</span>
-        <b className="num-l" data-testid="summary-meals">
-          {planned}
-        </b>
-      </Card>
-    </div>
-  );
-}
-
 function PlanGrid({
   view,
   canEdit,
   pending,
   onToggle,
   onWeekend,
+  onSuggest,
   cakeLine,
 }: {
   view: MenuView;
@@ -506,9 +367,11 @@ function PlanGrid({
   pending: boolean;
   onToggle: (d: number, m: "lunch" | "dinner") => void;
   onWeekend: (key: string) => void;
+  onSuggest: () => void;
   cakeLine: React.ReactNode;
 }) {
   const cell = (d: number, m: "lunch" | "dinner") => view.grid.find((c) => c.day === d && c.meal === m)!;
+  const weekendGaps = view.grid.some((c) => c.day > 5 && c.state !== "set");
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -594,6 +457,15 @@ function PlanGrid({
           ))}
         </tbody>
       </table>
+      {canEdit && weekendGaps && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="t-small muted flex-1">{t.weekend.lead}</p>
+          <Button type="button" variant="outline" size="sm" disabled={pending} onClick={onSuggest}>
+            <Icon name="sparkle" className="size-5" />
+            {t.weekend.suggest}
+          </Button>
+        </div>
+      )}
       {cakeLine}
     </Card>
   );
@@ -623,8 +495,10 @@ function CakeLine({
   );
 }
 
-function DishCardView({
+/** Un plat de la semaine : la ligne s'ouvre sur sa recette, les retours et « Changer » restent visibles. */
+function DishRow({
   dish,
+  recipe,
   canEdit,
   pending,
   onFeedback,
@@ -632,24 +506,81 @@ function DishCardView({
   onSwap,
 }: {
   dish: DishCard;
+  recipe: MenuView["recipes"][number] | null;
   canEdit: boolean;
   pending: boolean;
   onFeedback: (a: FeedbackAction) => void;
   onDouble: () => void;
   onSwap: () => void;
 }) {
-  return (
-    <Card as="li" padding="cozy" className="recipe-zoom flex w-72 shrink-0 snap-start flex-col gap-3">
-      {dish.photo && <RecipeImage photo={dish.photo} sizes="288px" decorative className="card-photo" />}
-      <div>
+  const head = (
+    <>
+      {dish.photo && (
+        <RecipeImage photo={dish.photo} sizes="96px" decorative className="nb-flat w-24 shrink-0" />
+      )}
+      <span className="flex min-w-0 flex-1 flex-col gap-1">
+        {recipe && <span className="t-kicker">{recipe.title}</span>}
         <b className="t-3">
           <Flag flag={dish.flag} />
           {dish.name}
         </b>
-        <p className="t-small muted">{dish.detail}</p>
-      </div>
+        <span className="t-small flex flex-wrap items-center gap-x-3 gap-y-1 font-normal">
+          <span className="mono">{dish.detail}</span>
+          {recipe?.cost && (
+            <span className="mono muted" data-testid="recipe-cost">
+              {recipe.cost}
+            </span>
+          )}
+          {recipe && (
+            <span
+              className="diff"
+              role="img"
+              aria-label={`${tv.difficulty.label(recipe.difficulty)} : ${tv.difficulty.levels[recipe.difficulty - 1]}`}
+            >
+              {[1, 2, 3, 4].map((n) => (
+                <span key={n} aria-hidden="true" className={n <= recipe.difficulty ? "on" : ""} />
+              ))}
+            </span>
+          )}
+        </span>
+      </span>
+    </>
+  );
+  return (
+    <li className="faq recipe-zoom">
+      {recipe ? (
+        <details>
+          <summary>
+            {head}
+            <Icon name="chevronDown" />
+          </summary>
+          <div className="faq-body flex flex-col gap-3">
+            <p className="t-3">{recipe.name}</p>
+            {recipe.description && <p className="muted">{recipe.description}</p>}
+            <h3 className="t-3">{t.ingredients}</h3>
+            <ul className="list-disc pl-4">
+              {recipe.ingredients.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+            <h3 className="t-3">{t.steps}</h3>
+            <ol className="list-decimal pl-4">
+              {recipe.steps.map((x, j) => (
+                <li key={j}>{x}</li>
+              ))}
+            </ol>
+            {recipe.notes.map((n) => (
+              <p key={n} className="t-small muted">
+                {n}
+              </p>
+            ))}
+          </div>
+        </details>
+      ) : (
+        <div className="flex items-center gap-4 px-4 py-3">{head}</div>
+      )}
       {canEdit && (
-        <div className="mt-auto flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-2 border-t-[length:var(--bw)] border-line px-4 py-3">
           <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t.feedbackHint}>
             <button
               type="button"
@@ -693,7 +624,7 @@ function DishCardView({
               <Icon name="thumbDown" className="size-5" />
             </button>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="ml-auto flex flex-wrap items-center gap-2">
             {dish.canDouble && (
               <button
                 type="button"
@@ -712,13 +643,12 @@ function DishCardView({
               disabled={pending}
               onClick={onSwap}
               aria-label={`${t.change} ${dish.name}`}
-              className="flex-1"
             >
               {t.change}
             </Button>
           </div>
         </div>
       )}
-    </Card>
+    </li>
   );
 }

@@ -273,7 +273,7 @@ a:hover .recipe-img img,a:focus-visible .recipe-img img,.recipe-zoom:hover .reci
 .faq{border:var(--bw) solid var(--line);border-radius:var(--r1);background:var(--surface);box-shadow:var(--sh-sm)}
 .faq summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:var(--touch-main);padding:12px 16px;font-weight:700;font-size:16px;list-style:none;cursor:pointer}
 .faq summary::-webkit-details-marker{display:none}
-.faq[open] summary{background:var(--banane);color:var(--on-banane);border-bottom:var(--bw) solid var(--line)}
+.faq[open] summary,.faq details[open]>summary{background:var(--banane);color:var(--on-banane);border-bottom:var(--bw) solid var(--line)}
 .faq-body{padding:16px;line-height:1.55}
 
 /* Carrousel « top 5 » de l'accueil (TopRecipesCarousel) : la bande prend la couleur du fond de la photo active.
