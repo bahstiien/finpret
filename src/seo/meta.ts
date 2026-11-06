@@ -3,6 +3,7 @@ import { BRAND } from "./config";
 import { displayName, KIND_LABEL, type RecipeView } from "./catalog";
 import type { HubView } from "./hubs";
 import type { MenuView } from "./menus";
+import { EXAMPLES } from "./exemples";
 
 /** Gabarits de title (< 60 caractères) et de meta description (< 155), spécifiques à chaque page. */
 
@@ -47,7 +48,7 @@ export const hubTitle = (h: HubView) => fitTitle(h.h1);
 
 export function hubDescription(h: HubView): string {
   return clamp(
-    `${h.label} : ${h.recipeCount} recettes${h.menus.length ? `, ${h.menus.length} menus de la semaine` : ""}, conseils et réponses aux questions fréquentes.`,
+    `${h.label} : ${h.recipeCount} recettes${h.menus.length ? `, ${h.menus.length} menus de la semaine` : `, ${EXAMPLES.length} exemples de semaine`}, conseils et réponses aux questions fréquentes.`,
     DESCRIPTION_MAX,
   );
 }
