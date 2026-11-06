@@ -122,6 +122,7 @@ export async function loadProgressView(
       plannedPause: currentRow?.outcome === "paused" && currentRow.source === "planned",
     },
     achievements.filter((a) => a.kind === "streak").map((a) => Number(a.key)),
+    history.filter((w) => w.weekStart > active),
   );
 
   const thisMonday = mondayOf(today);

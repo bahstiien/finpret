@@ -74,6 +74,12 @@ describe("streak", () => {
     ).toBe("done");
   });
 
+  it("une pause planifiée à venir dans le trimestre prend son jeton dès qu'elle est posée", () => {
+    const upcoming = [week("2027-03-22", "paused"), week("2027-04-05", "paused")];
+    expect(computeStreak([], cur({ weekStart: "2027-03-15" }), [], upcoming).pausesLeftThisQuarter).toBe(1);
+    expect(computeStreak([], cur({ weekStart: "2027-03-15" }), [], []).pausesLeftThisQuarter).toBe(2);
+  });
+
   it("une semaine sans plat à préparer est neutre", () => {
     expect(
       closeWeek({ sessionDoneInWindow: false, hasBatch: false, plannedPause: false, pausesUsedInQuarter: 0 })
