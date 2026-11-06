@@ -18,6 +18,15 @@ Exportées depuis le prototype (`reference/menu-legacy.html`), utilisé en condi
 ## packs.json — contenants standard du commerce
 `{ [ingrédient]: { s: [tailles], l: "barquette", tol?: 0.2 } }`. Voir SPEC §7.4.
 
+## prices.json — prix de référence des ingrédients
+`{ _meta: { store, storeId, observedAt, policy, units }, prices: { [ingrédient]: Price | null } }`, relevé sur un drive Leclerc.
+| Champ | Sens |
+|---|---|
+| `p`, `per` | Prix en euros par `per` : `kg` (ingrédient en `g`), `l` (en `ml`), sinon l'unité de l'ingrédient (`pc`, `boite`, `cs`, `cc`) |
+| `product`, `pack`, `packPrice` | Produit retenu, contenance et prix du paquet, pour vérification |
+| `note` | Hypothèse de conversion (poids d'une pièce, grammes par cuillère) ou écart à la marque distributeur |
+| `source` | Présent seulement si l'ingrédient était introuvable au drive : URL de l'estimation web (autre enseigne, cotation RNM) |
+
 ## notSeasonal.json
 Ingrédients du rayon légumes **non soumis** à la saisonnalité (citron, banane, pomme…).
 

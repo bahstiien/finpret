@@ -1,3 +1,4 @@
+import { unitPrice } from "../cost";
 import type { Library } from "../types";
 import type { Seed } from "./schema";
 
@@ -12,5 +13,8 @@ export function libraryFromSeed(seed: Seed): Library {
     packs: seed.packs,
     notSeasonal: seed.notSeasonal,
     aisles: seed.aisles,
+    prices: Object.fromEntries(
+      Object.entries(seed.prices.prices).map(([key, p]) => [key, unitPrice(p.p, p.per)]),
+    ),
   };
 }

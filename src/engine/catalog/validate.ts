@@ -1,5 +1,6 @@
 import { INGREDIENT_ALLERGENS } from "./allergens";
 import { ANIMAL_PROTEIN, allIngredientKeys, breakfastId, orphanPlaceholders } from "./derive";
+import { pricePer } from "../cost";
 import { PANTRY_AISLE } from "./rows";
 import { type Seed, seedSchema } from "./schema";
 
@@ -41,6 +42,14 @@ export function validateSeed(raw: unknown): { seed: Seed | null; issues: string[
   }
   for (const key of seed.notSeasonal) {
     if (!known(key)) issues.push(`notSeasonal : ingrédient inconnu ${key}`);
+  }
+  for (const [key, price] of Object.entries(seed.prices.prices)) {
+    if (!known(key)) issues.push(`prix : ingrédient inconnu ${key}`);
+    else if (price.per !== pricePer(seed.ingredients[key]!.u))
+      issues.push(`prix ${key} : par « ${price.per} » (${pricePer(seed.ingredients[key]!.u)} attendu)`);
+  }
+  for (const key of Object.keys(seed.ingredients)) {
+    if (!(key in seed.prices.prices)) warnings.push(`ingrédient ${key} : sans prix de référence`);
   }
 
   const recipes = [

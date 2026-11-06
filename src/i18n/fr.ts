@@ -608,6 +608,9 @@ export const fr = {
         `${a} adulte${a > 1 ? "s" : ""}${c ? ` et ${c} enfant${c > 1 ? "s" : ""}` : ""}`,
     },
     portions: (p: string, doubled: boolean) => `${p} portions${doubled ? " · doublé ❄" : ""}`,
+    /** Coût indicatif d'une portion ; `partial` : des ingrédients du foyer n'ont pas de prix. */
+    cost: (eur: number, partial: boolean) =>
+      `≈ ${eur.toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} la portion${partial ? " (hors ingrédients sans prix)" : ""}`,
     soup: "Soupe du soir, sur 2 soirs",
     simpleOn: (day: string) => `Soir simple, ${day}`,
     bankOn: (slot: string) => `Du congélateur, ${slot}`,

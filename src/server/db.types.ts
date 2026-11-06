@@ -329,6 +329,19 @@ export interface HouseholdSettings {
   version: Generated<number>;
 }
 
+export interface IngredientPrices {
+  ingredient_key: string;
+  note: string | null;
+  observed_at: string;
+  pack: string | null;
+  pack_price: Numeric | null;
+  per: "kg" | "l" | "pc" | "boite" | "cs" | "cc";
+  price: Numeric;
+  product: string;
+  source: string | null;
+  store: string;
+}
+
 export interface Ingredients {
   aisle: string;
   allergens: Generated<string[]>;
@@ -670,6 +683,7 @@ export interface DB {
   household_ingredients: HouseholdIngredients;
   household_settings: HouseholdSettings;
   households: Households;
+  ingredient_prices: IngredientPrices;
   ingredient_synonyms: IngredientSynonyms;
   ingredients: Ingredients;
   invitations: Invitations;

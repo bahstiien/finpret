@@ -21,6 +21,7 @@ const summary = Object.entries({
   rayons: rows.aisles.length,
   ingrédients: rows.ingredients.length,
   contenants: rows.packs.length,
+  prix: rows.prices.length,
   recettes: rows.recipes.length,
 })
   .map(([k, v]) => `${v} ${k}`)
@@ -66,6 +67,22 @@ try {
   );
   await client.query(`delete from public.packs where not (ingredient_key = any($1::text[]))`, [
     rows.packs.map((p) => p.ingredient_key),
+  ]);
+
+  await client.query(
+    `insert into public.ingredient_prices
+       (ingredient_key, price, per, product, pack, pack_price, note, source, store, observed_at)
+     select ingredient_key, price, per, product, pack, pack_price, note, source, store, observed_at
+     from jsonb_to_recordset($1::jsonb)
+       as x(ingredient_key text, price numeric, per text, product text, pack text, pack_price numeric,
+            note text, source text, store text, observed_at date)
+     on conflict (ingredient_key) do update set price = excluded.price, per = excluded.per,
+       product = excluded.product, pack = excluded.pack, pack_price = excluded.pack_price, note = excluded.note,
+       source = excluded.source, store = excluded.store, observed_at = excluded.observed_at`,
+    [JSON.stringify(rows.prices)],
+  );
+  await client.query(`delete from public.ingredient_prices where not (ingredient_key = any($1::text[]))`, [
+    rows.prices.map((p) => p.ingredient_key),
   ]);
 
   // Une recette privée portant le même identifiant ne doit jamais être écrasée.

@@ -23,6 +23,18 @@ export type IngredientRow = {
   seasonal: boolean;
 };
 export type PackRow = { ingredient_key: string; sizes: number[]; label: string; tolerance: number };
+export type PriceRow = {
+  ingredient_key: string;
+  price: number;
+  per: string;
+  product: string;
+  pack: string;
+  pack_price: number;
+  note: string | null;
+  source: string | null;
+  store: string;
+  observed_at: string;
+};
 export type RecipeKind = "main" | "soup" | "simple" | "cake" | "breakfast";
 export type RecipeRow = {
   id: string;
@@ -40,6 +52,7 @@ export type CatalogRows = {
   aisles: AisleRow[];
   ingredients: IngredientRow[];
   packs: PackRow[];
+  prices: PriceRow[];
   recipes: RecipeRow[];
 };
 
@@ -70,6 +83,20 @@ export function buildCatalogRows(seed: Seed): CatalogRows {
     sizes: p.s,
     label: p.l,
     tolerance: p.tol ?? DEFAULT_PACK_TOLERANCE,
+  }));
+
+  const { _meta, prices: priceMap } = seed.prices;
+  const prices: PriceRow[] = Object.entries(priceMap).map(([key, p]) => ({
+    ingredient_key: key,
+    price: p.p,
+    per: p.per,
+    product: p.product,
+    pack: p.pack,
+    pack_price: p.packPrice,
+    note: p.note ?? null,
+    source: p.source ?? null,
+    store: _meta.store,
+    observed_at: _meta.observedAt,
   }));
 
   const recipe = (
@@ -116,5 +143,5 @@ export function buildCatalogRows(seed: Seed): CatalogRows {
     })),
   ];
 
-  return { aisles, ingredients, packs, recipes };
+  return { aisles, ingredients, packs, prices, recipes };
 }

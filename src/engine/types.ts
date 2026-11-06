@@ -26,6 +26,8 @@ export type Library = {
   aisles: [string, string][];
   /** Recettes du foyer supprimées : hors tirage, encore affichables dans les semaines passées ou en cours. */
   retired?: string[];
+  /** Prix de référence en euros par unité de recette (par g, ml, pièce…) ; absent = coût non calculé. */
+  prices?: Record<string, number>;
 };
 
 /** Garde-manger : quantité en stock, ou null pour « assez ». Un ingrédient absent n'est pas en stock. */
