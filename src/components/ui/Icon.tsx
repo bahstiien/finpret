@@ -9,7 +9,6 @@ import {
   CaretRight,
   Trophy,
   LockSimple,
-  CalendarBlank,
   Cake,
   Check,
   Clock,
@@ -107,7 +106,6 @@ const GLYPHS = {
   passport: Stamp,
   trophy: Trophy,
   lock: LockSimple,
-  calendar: CalendarBlank,
   // Anti-gaspi (écran Progrès).
   leaf: Leaf,
   chevronRight: CaretRight,
