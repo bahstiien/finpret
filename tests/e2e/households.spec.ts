@@ -30,7 +30,7 @@ test("premier menu après l'onboarding (§5)", async ({ page }) => {
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.getByTestId("week-title")).toContainText("Semaine du");
   await expect(page.getByTestId("summary-meals")).toHaveText("10");
-  await expect(page.getByTestId("week-summary")).toContainText("Session");
+  await expect(page.getByTestId("week-summary")).toContainText("repas en");
   await expect(page.getByRole("button", { name: /^Changer / }).first()).toBeVisible();
   await expect(page.getByTestId("dishes").getByRole("listitem")).toHaveCount(5); // 4 plats et la soupe
 });

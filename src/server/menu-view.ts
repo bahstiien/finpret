@@ -55,6 +55,7 @@ export type DishCard = {
 };
 
 export type RecipeDetail = {
+  recipeId: string;
   title: string;
   name: string;
   flag: Flag;
@@ -324,6 +325,7 @@ export function buildMenuView(
     if (!x.P) continue;
     const r = x.r;
     recipes.push({
+      recipeId: r.id,
       title: t.recipeKinds.main,
       name: r.n,
       photo: recipePhoto(r.id, r.n),
@@ -340,6 +342,7 @@ export function buildMenuView(
   if (so && so.P) {
     const r = so.r;
     recipes.push({
+      recipeId: r.id,
       title: t.recipeKinds.soup,
       name: r.n,
       photo: recipePhoto(r.id, r.n),
@@ -356,6 +359,7 @@ export function buildMenuView(
   for (const s of activeSimples(env, w).filter((x) => x.on)) {
     const sc = mealPd(w, pm, s.day, "dinner") / 4;
     recipes.push({
+      recipeId: s.r.id,
       title: t.recipeKinds.simple,
       name: s.r.n,
       photo: recipePhoto(s.r.id, s.r.n),
