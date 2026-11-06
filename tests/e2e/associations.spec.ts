@@ -8,6 +8,7 @@ import {
   uniqueEmail,
   userIdOf,
 } from "./helpers/auth";
+import { fillHousehold, finishOnboarding } from "./helpers/onboarding";
 
 // SPEC_JANVIER §5 : inscription par code, code non validé, confidentialité, publication des menus.
 test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env.example)");
@@ -58,21 +59,14 @@ async function cleanup(associationId: string, schoolId: string) {
 
 /** Onboarding avec un enfant relié à l'école de l'association, puis les quatre étapes par défaut. */
 async function onboardWithChild(page: Page) {
-  await expect(page).toHaveURL(/\/onboarding$/);
-  await page.getByLabel("Nom du foyer").fill("Famille Code");
-  const names = page.getByLabel(/^Prénom/);
-  await names.first().fill("Camille");
-  await names.nth(1).fill("Julien");
-  await page.getByRole("button", { name: "Ajouter un enfant" }).click();
-  await page.getByLabel(/^Prénom \(enfant\)/i).fill("Léa");
-  await page.getByLabel("Date de naissance").fill("2018-03-01");
-  // Une seule école proposée (celle de l'association) après « Pas d'école ».
+  await fillHousehold(page, "Famille Code");
+  await page.getByRole("button", { name: "Enfants : plus" }).click();
+  await page.getByLabel("Prénom (Enfant 1)").fill("Léa");
+  await page.getByLabel("Naissance (Enfant 1)").fill("2018-03-01");
+  // Une seule école proposée (celle de l'association) après « Pas dans cette liste ».
   await page.getByLabel(/^École/).selectOption({ index: 1 });
   for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Continuer" }).click();
-  await page.getByRole("button", { name: "Préparer ma semaine" }).click();
-  await expect(page.getByRole("heading", { name: "Ta semaine est prête !" })).toBeVisible({
-    timeout: 30_000,
-  });
+  await finishOnboarding(page);
 }
 
 test("inscription par code : foyer rattaché, essai de 30 jours, enfant relié, menu publié visible", async ({

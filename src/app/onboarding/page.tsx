@@ -6,26 +6,33 @@ import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { onboardingDefaults } from "@/lib/onboarding";
 import { cookies } from "next/headers";
 import { approvedAssociation } from "@/server/associations";
+import { onboardingDishes } from "@/server/onboarding-data";
 import { getActiveHousehold, getProfile, requireUser, withSession } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.onboarding.title };
 
-/** Assistant en 5 étapes (§5) : pour un nouveau compte, ou un foyer créé mais pas encore paramétré. */
+/** Bienvenue puis 4 étapes (§5) : pour un nouveau compte, ou un foyer créé mais pas encore paramétré. */
 export default async function OnboardingPage() {
   const user = await requireUser("/onboarding");
   const household = await getActiveHousehold();
   if (household) {
-    const data = await withSession((db) =>
-      db
+    const { data, week } = await withSession(async (db) => ({
+      data: await db
         .selectFrom("households")
         .select(["onboarded_at", "name"])
         .where("id", "=", household.id)
         .executeTakeFirst(),
-    );
-    if (data?.onboarded_at || household.role !== "admin") redirect("/app");
+      week: await db
+        .selectFrom("weeks")
+        .select("id")
+        .where("household_id", "=", household.id)
+        .executeTakeFirst(),
+    }));
+    // Paramétré sans semaine (génération échouée) : on reste ici pour réessayer ou revoir les réponses.
+    if ((data?.onboarded_at && week) || household.role !== "admin") redirect("/app");
   }
   const association = await approvedAssociation((await cookies()).get(ASSOCIATION_COOKIE)?.value);
-  const [profile, ingredients] = await Promise.all([
+  const [profile, ingredients, dishes] = await Promise.all([
     getProfile(),
     withSession((db) =>
       db
@@ -35,6 +42,7 @@ export default async function OnboardingPage() {
         .orderBy("label")
         .execute(),
     ),
+    onboardingDishes(),
   ]);
   // Le nom par défaut du profil est la partie locale de l'e-mail : on ne le propose pas comme prénom.
   const displayName = profile?.display_name ?? "";
@@ -44,13 +52,13 @@ export default async function OnboardingPage() {
   if (household) initial.household.name = household.name;
 
   return (
-    <main>
-      <OnboardingWizard
-        initial={initial}
-        ingredients={ingredients}
-        schools={association?.schools ?? []}
-        associationName={association?.name ?? null}
-      />
-    </main>
+    <OnboardingWizard
+      initial={initial}
+      ingredients={ingredients}
+      schools={association?.schools ?? []}
+      associationName={association?.name ?? null}
+      dishes={dishes}
+      fromAccount={!fromEmail && !!displayName}
+    />
   );
 }

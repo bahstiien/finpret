@@ -34,3 +34,21 @@ export function portionCost(lib: Library, ing: Record<string, number>): PortionC
   if (missing.length === Object.keys(ing).length) return null;
   return { eur: total / 4, missing };
 }
+
+/** Bonus maximal de tirage de la recette la moins chère (objectif économique) ; nul à partir du coût médian. */
+export const ECONOMY_BONUS = 0.6;
+
+/**
+ * Bonus de tirage des recettes les moins chères par portion : de ECONOMY_BONUS pour la moins chère à 0 au coût
+ * médian, rien au-delà ni pour les recettes sans prix. Un tirage plus probable, jamais un filtre.
+ */
+export function economyBonus(lib: Library, recipes: readonly { id: string; ing: Record<string, number> }[]) {
+  const costs = recipes
+    .map((r) => ({ id: r.id, eur: portionCost(lib, r.ing)?.eur }))
+    .filter((x): x is { id: string; eur: number } => x.eur !== undefined)
+    .sort((a, b) => a.eur - b.eur);
+  const half = Math.floor(costs.length / 2);
+  const bonus: Record<string, number> = {};
+  for (let i = 0; i < half; i++) bonus[costs[i]!.id] = (ECONOMY_BONUS * (half - i)) / half;
+  return bonus;
+}

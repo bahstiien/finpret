@@ -268,3 +268,19 @@ h2,
 h3 {
   font-weight: 400 !important;
 }
+
+/* Onboarding : le plat mis en avant pendant la génération arrive en tournant. */
+@keyframes ob-pop {
+  from {
+    opacity: 0;
+    transform: rotate(-6deg) scale(0.92);
+  }
+}
+.ob-pop {
+  animation: ob-pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ob-pop {
+    animation: none;
+  }
+}

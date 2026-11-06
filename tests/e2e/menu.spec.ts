@@ -13,7 +13,7 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
   await page.goto("/login");
   await signInFromLoginPage(page, uniqueEmail("menu"));
   await completeOnboarding(page, "Menu");
-  await page.getByRole("link", { name: "Voir mon menu" }).click();
+  await page.getByRole("link", { name: "Ouvrir ma semaine" }).click();
   await expect(page.getByTestId("summary-meals")).toHaveText("10");
 
   // Générer un nouveau menu.
@@ -86,7 +86,7 @@ test.describe("mobile", () => {
     await page.goto("/login");
     await signInFromLoginPage(page, uniqueEmail("mobile-un-nom-de-compte-tres-long-sans-espace"));
     await completeOnboarding(page, "Mobile");
-    await page.getByRole("link", { name: "Voir mon menu" }).click();
+    await page.getByRole("link", { name: "Ouvrir ma semaine" }).click();
     await page.getByTestId("week-title").waitFor();
     await page.getByTestId("menu-greeting").filter({ hasText: "Camille" }).waitFor();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

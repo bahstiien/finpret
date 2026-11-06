@@ -108,6 +108,12 @@ export function DietForm({
           format={t.diet.grams}
           onChange={(minProtein) => update((d) => ({ ...d, minProtein }))}
         />
+        <Toggle
+          label={t.diet.economical}
+          hint={t.diet.economicalHint}
+          checked={v.economical}
+          onChange={(economical) => update((d) => ({ ...d, economical }))}
+        />
       </Panel>
       {pendingWeek && <ApplyPrompt start={pendingWeek} onDone={dismissPending} />}
       <SaveStatus status={status} />

@@ -4,19 +4,29 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { mondayOf, nextMonday, todayIn } from "@/lib/dates";
+import { dietPreset, sportifMinProtein } from "@/engine/onboarding";
 import { type OnboardingInput, onboardingSchema } from "@/lib/onboarding";
 import { defaultSettings, notificationsSchema, SETTINGS_VERSION } from "@/lib/settings";
 import { json, rpc } from "@/server/db";
 import { toUserMessage } from "@/server/errors";
-import { ACTIVE_HOUSEHOLD_COOKIE, getActiveHousehold, requireUser, withSession } from "@/server/session";
+import {
+  ACTIVE_HOUSEHOLD_COOKIE,
+  getActiveHousehold,
+  requireHousehold,
+  requireUser,
+  withSession,
+} from "@/server/session";
 import { approvedAssociation, attachHousehold } from "@/server/associations";
 import { sendWelcome } from "@/server/emails";
 import { trackEvent } from "@/server/events";
 import { generateAndStore } from "@/server/weeks";
 import { fr } from "@/i18n/fr";
 
-/** En cas de succès, l'action redirige vers le récapitulatif ; elle ne renvoie que les erreurs. */
-export type OnboardingResult = { ok: false; error: string };
+/**
+ * En cas de succès, l'action redirige vers le récapitulatif ; elle ne renvoie que les erreurs. `retry` : le foyer est
+ * enregistré mais la semaine n'a pas pu se composer, on la relance avec `retryFirstWeek` sans rien ressaisir.
+ */
+export type OnboardingResult = { ok: false; error: string; retry?: true };
 
 /**
  * Fin de l'onboarding (§5) : foyer (créé ou complété), membres, présence, réglages, puis génération
@@ -38,7 +48,13 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
         .select("onboarded_at")
         .where("id", "=", active.id)
         .executeTakeFirst();
-      if (data?.onboarded_at) return true;
+      // Paramétré mais sans semaine (génération échouée, « Revoir mes réponses ») : on peut corriger les réponses.
+      const week = await db
+        .selectFrom("weeks")
+        .select("id")
+        .where("household_id", "=", active.id)
+        .executeTakeFirst();
+      if (data?.onboarded_at && week) return true;
       await db
         .updateTable("households")
         .set({ name: input.household.name })
@@ -123,11 +139,24 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     }
   }
 
-  // Réglages.
+  // Réglages : les envies (alimentation, objectifs) deviennent des réglages ordinaires, modifiables ensuite.
   const defaults = defaultSettings();
+  const { goals, ...diet } = input.diet;
+  const preset = dietPreset(diet.diet);
   const settings = {
-    diet: { ...defaults.diet, ...input.diet },
-    menu: { ...defaults.menu, skip: input.rhythm.skip, weekend: input.rhythm.weekend },
+    diet: {
+      ...defaults.diet,
+      ...diet,
+      minVeg: preset.minVeg,
+      minProtein: goals.includes("sportif") ? sportifMinProtein(diet.diet) : 0,
+      economical: goals.includes("economique"),
+    },
+    menu: {
+      ...defaults.menu,
+      proteinCaps: preset.proteinCaps,
+      skip: input.rhythm.skip,
+      weekend: input.rhythm.weekend,
+    },
     session: { ...defaults.session, ...input.rhythm.session },
     shopping: { ...defaults.shopping, shoppingDay: input.habits.shoppingDay, store: input.habits.store },
     equipment: input.equipment,
@@ -173,7 +202,7 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
   });
   const today = todayIn(household?.timezone ?? "Europe/Paris");
 
-  await trackEvent("onboarding_done", { userId: user.id, householdId });
+  await trackEvent("onboarding_done", { userId: user.id, householdId, props: { diet: diet.diet, goals } });
   await trackEvent("trial_started", { userId: user.id, householdId });
   if (user.email)
     await sendWelcome(user.email, user.id, input.household.members[0]?.name ?? "").catch(() => null);
@@ -197,6 +226,18 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
   // Première semaine.
   const start = nextMonday(today);
   const generated = await generateAndStore(householdId, start);
-  if (!generated.ok) return { ok: false, error: fr.onboarding.generationFailed };
+  if (!generated.ok) return { ok: false, error: fr.onboarding.generationFailed, retry: true };
+  redirect(`/onboarding/recap?week=${start}`);
+}
+
+/** Relance la génération de la première semaine après un échec (foyer déjà enregistré). */
+export async function retryFirstWeek(): Promise<OnboardingResult | void> {
+  const { household } = await requireHousehold("/onboarding");
+  const row = await withSession((db) =>
+    db.selectFrom("households").select("timezone").where("id", "=", household.id).executeTakeFirst(),
+  );
+  const start = nextMonday(todayIn(row?.timezone ?? "Europe/Paris"));
+  const generated = await generateAndStore(household.id, start);
+  if (!generated.ok) return { ok: false, error: fr.onboarding.generationFailed, retry: true };
   redirect(`/onboarding/recap?week=${start}`);
 }
