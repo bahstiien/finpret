@@ -7,7 +7,14 @@ import {
   buildCountries,
   buildFrise,
   buildSeasons,
+  badgeCrossed,
+  nextQuarterStart,
+  type BadgeKey,
+  quarterTokens,
+  seasonCards,
   type CountryEntry,
+  type PauseToken,
+  type SeasonCard,
   type FriseWeek,
   type SeasonEntry,
 } from "@/engine/progress-view";
@@ -24,6 +31,7 @@ import { notificationsSchema } from "@/lib/settings";
 import { milestoneMeals } from "@/server/progress-share";
 import { loadHouseholdContext } from "@/server/household-context";
 import { withSession } from "@/server/session";
+import { summarize } from "@/server/weeks";
 
 export type PauseOption = { weekStart: string; planned: boolean; disabled: boolean };
 export type PendingAchievement = { kind: "streak" | "country" | "season"; key: string; label: string };
@@ -44,6 +52,12 @@ export type ProgressView = {
   streak: StreakState & { frise: FriseWeek[]; pauseOptions: PauseOption[]; hasHistory: boolean };
   countries: CountryEntry[];
   seasons: SeasonEntry[];
+  /** Saison en cours, les deux précédentes et la suivante (maquette Progrès). */
+  seasonCards: { current: SeasonCard; others: SeasonCard[] };
+  /** Jetons pris sur le trimestre de la semaine active, et date des prochains. */
+  tokens: { used: PauseToken[]; renewOn: string };
+  /** Semaine active : lundi, jour de sa session et durée prévue (minutes) si le menu existe. */
+  week: { start: string; sessionOn: string; sessionMinutes: number | null };
   /** Tampons et paliers inscrits mais jamais célébrés. */
   pending: PendingAchievement[];
 };
@@ -151,6 +165,18 @@ export async function loadProgressView(
     .map((r) => ({ recipeId: r.recipeId, cookedOn: r.cookedOn }));
   const earnedSeasons = new Set(achievements.filter((a) => a.kind === "season").map((a) => a.key));
 
+  const counts = seasonCounts(records);
+  const sessionDay = ctx.settings.session.day;
+  const sessionOn = addDays(active, sessionDay === 0 ? -1 : sessionDay - 8);
+  let sessionMinutes: number | null = null;
+  if (plan && state.currentWeek === "todo") {
+    try {
+      sessionMinutes = (await summarize(ctx, plan as unknown as WeekPlan)).sessionMinutes;
+    } catch {
+      sessionMinutes = null; // durée facultative : la page s'affiche sans
+    }
+  }
+
   const pending = achievements
     .filter((a) => !a.seen_at)
     .map((a): PendingAchievement => ({
@@ -177,7 +203,10 @@ export async function loadProgressView(
       })),
       globalCooks,
     ),
-    seasons: buildSeasons(today, seasonCounts(records), earnedSeasons),
+    seasons: buildSeasons(today, counts, earnedSeasons),
+    seasonCards: seasonCards(today, counts, earnedSeasons),
+    tokens: { used: quarterTokens(history, active), renewOn: nextQuarterStart(active) },
+    week: { start: active, sessionOn, sessionMinutes },
     pending,
   };
 }
@@ -185,30 +214,50 @@ export async function loadProgressView(
 export type Celebrations = {
   stamps: { kind: "country" | "season"; key: string; label: string }[];
   milestone: { weeks: number; meals: number } | null;
+  /** Badge de passeport franchi par les nouveaux tampons pays (montré une fois, avec eux). */
+  badge: { key: BadgeKey; at: number; countries: number; total: number } | null;
 };
 
 /** Tampons et palier jamais célébrés (une seule feuille par tampon, `achievements.seen_at`). Rien si masqué. */
 export async function loadCelebrations(householdId: string, userId: string): Promise<Celebrations | null> {
-  const [settings, pending] = await withSession((db) =>
+  const [settings, rows, origins] = await withSession((db) =>
     Promise.all([
       db.selectFrom("user_settings").select("notifications").where("user_id", "=", userId).executeTakeFirst(),
       db
         .selectFrom("achievements")
-        .select(["kind", "key"])
+        .select(["kind", "key", "seen_at"])
         .where("household_id", "=", householdId)
-        .where("seen_at", "is", null)
+        .execute(),
+      db
+        .selectFrom("recipes")
+        .select("origin")
+        .distinct()
+        .where("household_id", "is", null)
+        .where("is_active", "=", true)
+        .where("origin", "is not", null)
+        .where("kind", "in", ["main", "soup", "simple"])
         .execute(),
     ]),
   );
+  const all = rows;
+  const pending = all.filter((a) => !a.seen_at);
   if (!notificationsSchema.parse(settings?.notifications ?? {}).progress_visible) return null;
   if (pending.length === 0) return null;
   const milestones = pending.filter((a) => a.kind === "streak").map((a) => Number(a.key));
+  const total = origins.length;
+  const after = all.filter((a) => a.kind === "country").length;
+  const before = after - pending.filter((a) => a.kind === "country").length;
+  const badge = badgeCrossed(before, after, total);
   const top = milestones.length ? Math.max(...milestones) : null;
   return {
     stamps: pending
-      .filter((a): a is { kind: "country" | "season"; key: string } => a.kind !== "streak")
-      .map((a) => ({ ...a, label: achievementLabel(a.kind, a.key) })),
+      .filter((a) => a.kind !== "streak")
+      .map((a) => {
+        const kind = a.kind as "country" | "season";
+        return { kind, key: a.key, label: achievementLabel(kind, a.key) };
+      }),
     milestone: top ? { weeks: top, meals: await milestoneMeals(householdId, top) } : null,
+    badge: badge ? { key: badge.key, at: badge.at, countries: after, total } : null,
   };
 }
 

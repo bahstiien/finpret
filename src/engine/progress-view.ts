@@ -108,3 +108,111 @@ export function buildFrise(
     return { weekStart, current, state: current ? currentState : (byStart.get(weekStart) ?? "none") };
   });
 }
+
+/** Premier jour (ISO) du trimestre civil qui suit celui de `iso`. */
+export function nextQuarterStart(iso: string): string {
+  const [y = 0, m = 1] = iso.split("-").map(Number);
+  const q = Math.floor((m - 1) / 3);
+  return q === 3 ? `${y + 1}-01-01` : `${y}-${String(q * 3 + 4).padStart(2, "0")}-01`;
+}
+
+export type PauseToken = { weekStart: string; upcoming: boolean };
+
+/**
+ * Jetons de pause pris sur le trimestre de la semaine `activeWeek` (passés, en cours ou posés à l'avance),
+ * du plus ancien au plus récent. `upcoming` : semaine postérieure à la semaine active (pause posée, annulable).
+ */
+export function quarterTokens(
+  history: { weekStart: string; outcome: string }[],
+  activeWeek: string,
+): PauseToken[] {
+  const quarter = (iso: string) => iso.slice(0, 4) + Math.floor((Number(iso.slice(5, 7)) - 1) / 3);
+  const q = quarter(activeWeek);
+  return history
+    .filter((w) => w.outcome === "paused" && quarter(w.weekStart) === q)
+    .map((w) => ({ weekStart: w.weekStart, upcoming: w.weekStart > activeWeek }))
+    .sort((a, b) => a.weekStart.localeCompare(b.weekStart));
+}
+
+/** Badges de progression du passeport : un par palier de pays tamponnés, le dernier = tout le passeport. */
+export const BADGE_STEPS = [
+  { at: 3, key: "curious" },
+  { at: 6, key: "traveler" },
+  { at: 12, key: "globetrotter" },
+  { at: 18, key: "explorer" },
+] as const;
+
+export type BadgeKey = (typeof BADGE_STEPS)[number]["key"] | "world";
+export type Badge = { key: BadgeKey; at: number; state: "earned" | "current" | "locked"; progress: number };
+
+/** Échelle des badges pour `earned` pays tamponnés sur `total` : obtenus, celui en cours (part remplie), à venir. */
+export function badgeLadder(earned: number, total: number): Badge[] {
+  const steps: { at: number; key: BadgeKey }[] = [
+    ...BADGE_STEPS.filter((s) => s.at < total),
+    ...(total > 0 ? [{ at: total, key: "world" as const }] : []),
+  ];
+  let currentFound = false;
+  return steps.map((s) => {
+    if (earned >= s.at) return { ...s, state: "earned", progress: 1 };
+    if (!currentFound) {
+      currentFound = true;
+      return { ...s, state: "current", progress: earned / s.at };
+    }
+    return { ...s, state: "locked", progress: 0 };
+  });
+}
+
+/** Badge franchi en passant de `before` à `after` pays (le plus haut s'il y en a plusieurs), sinon null. */
+export function badgeCrossed(before: number, after: number, total: number): Badge | null {
+  const crossed = badgeLadder(after, total).filter((b) => b.at > before && b.at <= after);
+  return crossed[crossed.length - 1] ?? null;
+}
+
+/** Dernier jour (ISO) d'une saison (`2026-autumn` → 2026-11-30 ; l'hiver 2027 → 2027-02-28/29). */
+export function seasonEnd(key: string): string {
+  const [ys, season] = key.split("-");
+  const y = Number(ys);
+  if (season === "winter") return addDays(`${y}-03-01`, -1);
+  const end = { spring: "05-31", summer: "08-31", autumn: "11-30" }[season as "spring" | "summer" | "autumn"];
+  return `${y}-${end}`;
+}
+
+/** Premier jour (ISO) d'une saison (`2027-winter` → 2026-12-01). */
+export function seasonStart(key: string): string {
+  const [ys, season] = key.split("-");
+  const y = Number(ys);
+  if (season === "winter") return `${y - 1}-12-01`;
+  const start = { spring: "03-01", summer: "06-01", autumn: "09-01" }[season as "spring" | "summer" | "autumn"];
+  return `${y}-${start}`;
+}
+
+export type SeasonCard = SeasonEntry & { state: "earned" | "current" | "missed" | "upcoming" };
+
+/**
+ * Saisons du passeport autour d'aujourd'hui : la saison en cours, les deux précédentes et la suivante.
+ * Une saison passée sans ses 6 recettes est « manquée » (jamais rouge, voir la planche d'états).
+ */
+export function seasonCards(today: string, counts: Map<string, number>, earnedKeys: Set<string>) {
+  const { key } = seasonOf(today);
+  const prev = (k: string) => seasonOf(addDays(seasonStart(k), -1)).key;
+  const next = seasonOf(addDays(seasonEnd(key), 1)).key;
+  const card = (k: string, state: SeasonCard["state"]): SeasonCard => {
+    const [y, season] = k.split("-");
+    const count = counts.get(k) ?? 0;
+    const earned = earnedKeys.has(k) || count >= SEASON_STAMP_THRESHOLD;
+    return {
+      key: k,
+      season: season as Season,
+      year: Number(y),
+      count,
+      earned,
+      state: earned ? "earned" : state,
+    };
+  };
+  const p1 = prev(key);
+  const p2 = prev(p1);
+  return {
+    current: card(key, "current"),
+    others: [card(p2, "missed"), card(p1, "missed"), card(next, "upcoming")],
+  };
+}

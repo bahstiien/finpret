@@ -83,15 +83,14 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
   await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
   await page.getByTestId("plan-pause").click();
   const dialog = page.getByRole("dialog", { name: "Planifier une pause" });
-  await dialog
-    .getByRole("button", { name: /Planifier une pause$/ })
-    .first()
-    .click();
+  // Deux gestes : choisir la semaine, puis poser la pause.
+  await dialog.getByRole("radio").first().check();
+  await dialog.getByTestId("confirm-pause").click();
   await expect(page.getByTestId("toast")).toContainText("Pause posée");
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("pauses-left")).toContainText("1 pause disponible");
   await page.getByTestId("plan-pause").click();
-  await dialog.locator('[data-planned="true"]').click();
+  await dialog.locator('[data-planned="true"]').getByRole("button", { name: /^Annuler la pause/ }).click();
   await expect(page.getByTestId("toast")).toContainText("Pause annulée");
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
@@ -100,7 +99,7 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
 test("un tampon vide mène à Découvrir filtré par pays, avec « Mettre au menu »", async ({ page }) => {
   await signUp(page, "progres-stamp");
   await page.goto("/app/progress");
-  const empty = page.locator('[data-testid="country-stamps"] [data-state="empty"]').first();
+  const empty = page.locator('[data-testid="countries-to-earn"] [data-state="empty"]').first();
   await empty.click();
   await expect(page).toHaveURL(/\/app\/discover\?origin=[a-z]{2}$/);
   await expect(page.getByTestId("origin-chip")).toBeVisible();

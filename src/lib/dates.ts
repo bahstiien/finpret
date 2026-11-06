@@ -58,3 +58,19 @@ export function isoWeekKey(iso: string): string {
   const week = Math.floor(dayIndex(mondayOf(jan4), mondayOf(thursday)) / 7) + 1;
   return `${year}-W${String(week).padStart(2, "0")}`;
 }
+
+const abbrDate = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "UTC" });
+const dayDate = new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" });
+/** « 12 oct. », « 1er nov. » */
+export const formatAbbr = (iso: string) => abbrDate.format(new Date(`${iso}T12:00:00Z`)).replace(/^1 /, "1er ");
+/** « Dimanche 8 nov. » */
+export const formatDayAbbr = (iso: string) => {
+  const s = dayDate.format(new Date(`${iso}T12:00:00Z`)).replace(/ 1 /, " 1er ");
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+/** « 2 h 30 », « 45 min » */
+export const formatMinutes = (min: number) => {
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  return h ? `${h} h${m ? ` ${String(m).padStart(2, "0")}` : ""}` : `${m} min`;
+};
