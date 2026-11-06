@@ -1,11 +1,12 @@
 import { expect, test } from "@playwright/test";
+import { landingV2 } from "../../src/i18n/landing";
 import { FEATURES } from "../../src/lib/features";
 
 test("la page d'accueil s'affiche en français", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/^Fin Prêt/);
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("moins de décisions autour des repas.");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(landingV2.hero.titleMark);
   // « Connexion » n'apparaît qu'à partir de 900 px ; sur mobile, « Commencer » mène aussi à /login.
   await expect(page.getByRole("banner").locator('a[href="/login"]:visible').first()).toBeVisible();
 });

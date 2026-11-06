@@ -2,9 +2,11 @@ import Link from "next/link";
 import { formatShort } from "@/lib/dates";
 import { requireAdmin } from "@/server/admin";
 import { listAccounts, PAGE_SIZE } from "@/server/crm";
+import { allTags, tagsFor } from "@/server/admin-board";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
 import { Pill } from "@/components/ui/Pill";
+import { Pagination } from "@/components/ui/Pagination";
 
 const PLANS = [
   ["", "Toutes les offres"],
@@ -17,23 +19,27 @@ const PLANS = [
 
 const PLAN_LABEL: Record<string, string> = { trial: "Essai", monthly: "Mensuel", yearly: "Annuel", free: "Gratuit" };
 
-/** CRM : tous les comptes créés, avec recherche, filtre par offre et pagination. */
+/** CRM : tous les comptes créés, avec recherche, filtres par offre et par étiquette, pagination. */
 export default async function AdminAccountsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; plan?: string; page?: string }>;
+  searchParams: Promise<{ q?: string; plan?: string; tag?: string; page?: string }>;
 }) {
   await requireAdmin();
   const sp = await searchParams;
   const q = (sp.q ?? "").trim().slice(0, 100);
   const plan = PLANS.some(([v]) => v === sp.plan) ? (sp.plan ?? "") : "";
   const page = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
-  const { rows, total } = await listAccounts({ q: q || undefined, plan: plan || undefined, page });
+  const tags = await allTags();
+  const tag = tags.some((t) => t.tag === sp.tag) ? (sp.tag ?? "") : "";
+  const { rows, total } = await listAccounts({ q: q || undefined, plan: plan || undefined, tag: tag || undefined, page });
+  const rowTags = await tagsFor(rows.map((a) => a.id));
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const href = (p: number) => {
     const u = new URLSearchParams();
     if (q) u.set("q", q);
     if (plan) u.set("plan", plan);
+    if (tag) u.set("tag", tag);
     if (p > 1) u.set("page", String(p));
     const s = u.toString();
     return `/admin/comptes${s ? `?${s}` : ""}`;
@@ -56,6 +62,19 @@ export default async function AdminAccountsPage({
             ))}
           </select>
         </label>
+        {tags.length > 0 && (
+          <label className="field-label flex flex-col gap-1">
+            Étiquette
+            <select name="tag" defaultValue={tag} className="input">
+              <option value="">Toutes</option>
+              {tags.map((t) => (
+                <option key={t.tag} value={t.tag}>
+                  {t.tag} ({t.n})
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <button type="submit" className="btn btn--outline">
           Filtrer
         </button>
@@ -77,6 +96,11 @@ export default async function AdminAccountsPage({
               {!a.email_verified && " · e-mail non vérifié"}
             </span>
             <span className="flex flex-wrap items-center gap-2">
+              {(rowTags.get(a.id) ?? []).map((t) => (
+                <Pill key={t} tone="violet">
+                  {t}
+                </Pill>
+              ))}
               {a.plan ? <Pill tone={a.plan === "trial" ? "yellow" : "green"}>{PLAN_LABEL[a.plan] ?? a.plan}</Pill> : <Pill>Sans foyer</Pill>}
               <span className="mono muted">
                 {a.households} foyer{a.households > 1 ? "s" : ""} · inscrit le {formatShort(a.created_at.slice(0, 10))}
@@ -87,23 +111,7 @@ export default async function AdminAccountsPage({
         ))}
         {!rows.length && <li className="muted">Aucun compte.</li>}
       </Card>
-      {pages > 1 && (
-        <nav aria-label="Pagination" className="flex items-center gap-3 t-small">
-          {page > 1 && (
-            <Link href={href(page - 1)} className="btn btn--outline btn--sm">
-              Précédent
-            </Link>
-          )}
-          <span className="mono muted">
-            Page {page} / {pages}
-          </span>
-          {page < pages && (
-            <Link href={href(page + 1)} className="btn btn--outline btn--sm">
-              Suivant
-            </Link>
-          )}
-        </nav>
-      )}
+      <Pagination page={page} hasNext={page < pages} href={href} prevLabel="Précédents" nextLabel="Suivants" />
     </>
   );
 }

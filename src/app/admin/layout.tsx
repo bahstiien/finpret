@@ -1,51 +1,22 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { AdminNav } from "@/components/admin/AdminNav";
 import { requireAdminIdentity } from "@/server/admin";
+import { navBadges } from "@/server/admin-board";
 
 export const metadata: Metadata = { title: "Back-office", robots: { index: false, follow: false } };
 
-const LINKS = [
-  ["/admin/comptes", "Comptes"],
-  ["/admin/associations", "Associations"],
-  ["/admin/ecoles", "Écoles"],
-  ["/admin/menus", "Menus"],
-  ["/admin/abonnements", "Abonnements"],
-  ["/admin/codes-promo", "Codes promo"],
-  ["/admin/reversements", "Reversements"],
-  ["/admin/prospects", "Prospects"],
-  ["/admin/support", "Support"],
-  ["/admin/journal", "Journal"],
-  ["/admin/admins", "Admins"],
-] as const;
-
 /** Back-office : réservé aux comptes de la table `admins` (les autres obtiennent une page introuvable). */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  await requireAdminIdentity();
+  const { mfaVerified } = await requireAdminIdentity();
+  // Les compteurs du menu attendent le second facteur, comme toutes les données du back-office.
+  const badges = mfaVerified ? await navBadges() : { inbox: 0, tasks: 0 };
   // Back-office : bordures de 2 px partout (le jeton --bw est figé sur toute la zone), ombres retirées des tableaux.
   return (
-    <div className="min-h-dvh [--bw:2px]">
-      <header className="topbar">
-        <Link href="/admin" className="inline-flex items-center gap-3">
-          <span className="logo-mark" aria-hidden="true">
-            M
-          </span>
-          <span className="t-kicker">Fin Prêt · Back-office</span>
-        </Link>
-      </header>
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 min-[900px]:px-10">
-        <nav aria-label="Back-office">
-          <ul className="flex flex-wrap gap-2">
-            {LINKS.map(([href, label]) => (
-              <li key={href}>
-                <Link href={href} className="btn btn--outline btn--sm">
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <main className="flex flex-col gap-4">{children}</main>
-      </div>
+    <div className="min-h-dvh [--bw:2px] min-[1000px]:flex">
+      <AdminNav badges={badges} />
+      <main className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-4 px-4 py-8 min-[900px]:px-10">
+        {children}
+      </main>
     </div>
   );
 }

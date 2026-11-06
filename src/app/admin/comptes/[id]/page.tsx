@@ -14,6 +14,10 @@ import {
 import { extendTrial } from "@/server/actions/admin";
 import { requireAdmin } from "@/server/admin";
 import { accountDetail } from "@/server/crm";
+import { allTags, contactMessagesFor, tagsFor } from "@/server/admin-board";
+import { CONTACT_STATUS_LABEL, SUGGESTED_TAGS } from "@/lib/admin-board";
+import { addAccountTag, removeAccountTag } from "@/server/actions/admin-board";
+import { TagEditor } from "@/components/admin/BoardForms";
 import { ActionForm } from "@/components/ui/ActionForm";
 import { AdminForm } from "@/components/admin/AdminForm";
 import { PageHeader } from "@/components/ui/Layout";
@@ -31,6 +35,11 @@ export default async function AdminAccountPage({ params }: { params: Promise<{ i
   const d = await accountDetail(id.data);
   if (!d) notFound();
   const { user } = d;
+  const [contacts, tags, usedTags] = await Promise.all([
+    user.email ? contactMessagesFor(user.email) : [],
+    tagsFor([user.id]).then((m) => m.get(user.id) ?? []),
+    allTags(),
+  ]);
   const back = `/admin/comptes/${user.id}`;
   return (
     <>
@@ -44,6 +53,11 @@ export default async function AdminAccountPage({ params }: { params: Promise<{ i
         description={user.display_name ?? user.name ?? undefined}
         actions={
           <span className="flex gap-2">
+            {user.email && (
+              <Link href={`/admin/fiche?email=${encodeURIComponent(user.email)}`} className="btn btn--outline btn--sm">
+                Fiche contact
+              </Link>
+            )}
             {d.adminRole && <Pill tone="violet">Admin · {d.adminRole}</Pill>}
             {user.banned_at && <Pill tone="pink">Suspendu</Pill>}
           </span>
@@ -90,7 +104,11 @@ export default async function AdminAccountPage({ params }: { params: Promise<{ i
             {canWrite && h.role === "admin" && (
               <div className="flex flex-wrap items-end gap-3">
                 {(h.plan === "trial" || h.plan === "free") && (
-                  <ActionForm action={extendTrial} fields={{ householdId: h.id }} label="Prolonger l'essai de 14 jours" />
+                  <ActionForm
+                    action={extendTrial}
+                    fields={{ householdId: h.id }}
+                    label="Prolonger l'essai de 14 jours"
+                  />
                 )}
                 {(h.plan === "monthly" || h.plan === "yearly") && (
                   <>
@@ -133,6 +151,21 @@ export default async function AdminAccountPage({ params }: { params: Promise<{ i
         {!d.households.length && <li className="muted">Aucun foyer.</li>}
       </Card>
 
+      <h2 className="t-label">Étiquettes</h2>
+      <Card className="!shadow-none">
+        {canWrite ? (
+          <TagEditor
+            userId={user.id}
+            tags={tags}
+            suggestions={[...new Set([...SUGGESTED_TAGS, ...usedTags.map((t) => t.tag)])]}
+            add={addAccountTag}
+            remove={removeAccountTag}
+          />
+        ) : (
+          <p className="t-small">{tags.length ? tags.join(" · ") : "Aucune étiquette."}</p>
+        )}
+      </Card>
+
       <h2 className="t-label">Notes de suivi</h2>
       {canWrite && (
         <Card>
@@ -158,11 +191,30 @@ export default async function AdminAccountPage({ params }: { params: Promise<{ i
         {!d.notes.length && <li className="muted">Aucune note.</li>}
       </Card>
 
+      <h2 className="t-label">Demandes de contact</h2>
+      <Card as="ul" className="t-small !shadow-none">
+        {contacts.map((c) => (
+          <li key={c.id} className="row justify-between gap-2">
+            <Link
+              href={`/admin/demandes?q=${encodeURIComponent(user.email ?? "")}#demande-${c.id}`}
+              className="underline"
+            >
+              {c.subject}
+            </Link>
+            <span className="mono muted">
+              {formatShort(c.created_at.slice(0, 10))} · {CONTACT_STATUS_LABEL[c.status]}
+            </span>
+          </li>
+        ))}
+        {!contacts.length && <li className="muted">Aucune demande envoyée avec cette adresse.</li>}
+      </Card>
+
       <h2 className="t-label">Dernières sessions</h2>
       <Card as="ul" className="t-small !shadow-none">
         {d.sessions.map((s, i) => (
           <li key={i} className="row mono muted">
-            {new Date(s.updated_at).toLocaleString("fr-FR")} · {s.ip_address ?? "?"} · {s.user_agent?.slice(0, 60) ?? "?"}
+            {new Date(s.updated_at).toLocaleString("fr-FR")} · {s.ip_address ?? "?"} ·{" "}
+            {s.user_agent?.slice(0, 60) ?? "?"}
           </li>
         ))}
         {!d.sessions.length && <li className="muted">Aucune session active.</li>}
@@ -188,7 +240,14 @@ export default async function AdminAccountPage({ params }: { params: Promise<{ i
             <AdminForm
               action={deleteAccount}
               hidden={{ userId: user.id }}
-              inputs={[{ name: "confirm", label: "Supprimer définitivement : saisis l'e-mail du compte", type: "email", required: true }]}
+              inputs={[
+                {
+                  name: "confirm",
+                  label: "Supprimer définitivement : saisis l'e-mail du compte",
+                  type: "email",
+                  required: true,
+                },
+              ]}
               submit="Supprimer le compte (RGPD)"
               variant="dark"
               confirm="Suppression définitive du compte, de ses données et de son abonnement. Continuer ?"

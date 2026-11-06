@@ -1,8 +1,10 @@
 import { JsonLd } from "@/components/associations/JsonLd";
-import { Breadcrumbs, PageFrame, RecipeTile, SectionHead } from "@/components/seo/Shell";
-import { displayName, RECIPES, type RecipeKind } from "@/seo/catalog";
+import { RecipeBrowser } from "@/components/seo/RecipeBrowser";
+import { Breadcrumbs, PageFrame } from "@/components/seo/Shell";
+import { displayName, RECIPES } from "@/seo/catalog";
 import { breadcrumbJsonLd, type Crumb } from "@/seo/jsonld";
 import { pageMetadata } from "@/seo/meta";
+import { toCard } from "@/seo/recipe-filter";
 
 const DESCRIPTION = `${RECIPES.length} recettes familiales : batch cooking, soupes, dîners express et goûters, avec conservation et congélation.`;
 
@@ -15,13 +17,7 @@ export const metadata = pageMetadata({
   imageAlt: "Recettes Fin Prêt",
 });
 
-const KINDS: RecipeKind[] = ["plat", "soupe", "simple", "gouter"];
-const PLURAL: Record<RecipeKind, string> = {
-  plat: "Plats de batch cooking",
-  soupe: "Soupes",
-  simple: "Dîners express",
-  gouter: "Goûters",
-};
+const CARDS = RECIPES.map((r) => toCard(r, displayName(r)));
 
 export default function RecipesIndex() {
   const crumbs: Crumb[] = [
@@ -40,21 +36,7 @@ export default function RecipesIndex() {
           {DESCRIPTION} Chaque recette indique ses quantités pour 4 personnes, sa conservation et ce qui se congèle.
         </p>
       </header>
-      {KINDS.map((k) => {
-        const list = RECIPES.filter((r) => r.kind === k);
-        return (
-          <section key={k} aria-labelledby={`k-${k}`} className="flex flex-col gap-3.5">
-            <SectionHead id={`k-${k}`} title={PLURAL[k]} tag={`(${list.length})`} />
-            <ul className="grid grid-cols-2 gap-3 sm:gap-5 min-[900px]:grid-cols-3 min-[1100px]:grid-cols-4">
-              {list.map((r) => (
-                <li key={r.id} className="flex">
-                  <RecipeTile href={`/recettes/${r.slug}`} name={displayName(r)} photo={r.photo} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        );
-      })}
+      <RecipeBrowser recipes={CARDS} />
     </PageFrame>
   );
 }
