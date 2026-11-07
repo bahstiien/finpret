@@ -13,6 +13,8 @@ import { auth } from "@/server/auth";
 import { approvedAssociation } from "@/server/associations";
 import { json, withAdmin } from "@/server/db";
 import { allow, clientIp } from "@/server/rate-limit";
+import { requireUser } from "@/server/session";
+import { hasAcceptedTerms, recordTermsAcceptance } from "@/server/terms";
 
 export type LoginState =
   { status: "idle" } | { status: "sent"; email: string } | { status: "error"; message: string };
@@ -78,6 +80,7 @@ const signupSchema = z.object({
   password: passwordField,
   code: z.string().optional(),
   news: z.string().optional(),
+  terms: z.literal("on"),
   next: z.string().optional(),
 });
 
@@ -88,7 +91,9 @@ export async function signUpWithPassword(_prev: PasswordState, formData: FormDat
     const fields = new Set(parsed.error.issues.map((i) => i.path[0]));
     return {
       status: "error",
-      message: fields.has("name")
+      message: fields.has("terms")
+        ? fr.login.termsRequired
+        : fields.has("name")
         ? fr.login.invalidName
         : fields.has("email")
           ? fr.login.invalidEmail
@@ -111,6 +116,7 @@ export async function signUpWithPassword(_prev: PasswordState, formData: FormDat
       body: { name, email, password, callbackURL: next },
       headers: await headers(),
     });
+    if (res.user?.id) await recordTermsAcceptance(res.user.id);
     // La case est cochée par défaut dans les préférences : décochée, on enregistre le refus.
     if (news !== "on" && res.user?.id) await disableMarketingEmails(res.user.id);
   } catch {
@@ -235,4 +241,14 @@ export async function signInWithProvider(formData: FormData) {
 export async function signOut() {
   await auth().api.signOut({ headers: await headers() });
   redirect("/");
+}
+
+/**
+ * Écran d'accord de l'onboarding : les comptes ouverts par lien magique ou Google n'ont pas vu la case de
+ * l'inscription par mot de passe ; ils acceptent les CGU ici avant de paramétrer leur foyer.
+ */
+export async function acceptTerms(formData: FormData) {
+  const user = await requireUser("/onboarding");
+  if (formData.get("terms") === "on" && !(await hasAcceptedTerms(user.id))) await recordTermsAcceptance(user.id);
+  redirect("/onboarding");
 }

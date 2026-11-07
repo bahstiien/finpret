@@ -183,6 +183,24 @@ describe("webhook Stripe", () => {
     });
   });
 
+  it("résiliation programmée : mémorisée (pas de rappel de reconduction), puis levée à la reprise", async () => {
+    const w = await world();
+    const sub = (cancel: boolean) =>
+      event("customer.subscription.updated", {
+        id: "sub_2",
+        customer: w.customer,
+        status: "active",
+        metadata: { household_id: w.householdId },
+        items: { data: [{ price: { id: "price_y" } }] },
+        current_period_end: 1_800_000_000,
+        cancel_at_period_end: cancel,
+      });
+    await handle(sub(true));
+    expect(await subscription(w.householdId)).toMatchObject({ plan: "yearly", cancel_at_period_end: true });
+    await handle(sub(false));
+    expect(await subscription(w.householdId)).toMatchObject({ cancel_at_period_end: false });
+  });
+
   it("échec de paiement : l'abonnement passe en impayé", async () => {
     const w = await world();
     await handle(event("invoice.payment_failed", { id: "in_7", customer: w.customer }));

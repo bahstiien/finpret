@@ -136,6 +136,8 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
           plan: active && plan ? plan : active ? (before?.plan ?? "free") : "free",
           status,
           current_period_end: periodEnd,
+          // Résiliation programmée (Réglages ou portail) : pas de rappel de reconduction (L215-1).
+          cancel_at_period_end: obj.cancel_at_period_end === true || obj.cancel_at != null,
           updated_at: new Date().toISOString(),
         })
         .where("household_id", "=", householdId)
@@ -163,6 +165,7 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
           plan: "free",
           status: "canceled",
           current_period_end: null,
+          cancel_at_period_end: false,
           updated_at: new Date().toISOString(),
         })
         .where("household_id", "=", householdId)
