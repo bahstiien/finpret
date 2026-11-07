@@ -470,10 +470,15 @@ export function ShoppingScreen({
             >
               <div
                 className="bar-fill"
-                style={{ width: `${visible.length ? (done / visible.length) * 100 : 0}%`, background: "var(--nav)" }}
+                style={{
+                  width: `${visible.length ? (done / visible.length) * 100 : 0}%`,
+                  background: "var(--nav)",
+                }}
               />
             </div>
-            {purchases && <p className="t-small font-bold">{t.pointsSummary(toConfirmCount, flaggedCount)}</p>}
+            {purchases && (
+              <p className="t-small font-bold">{t.pointsSummary(toConfirmCount, flaggedCount)}</p>
+            )}
             {purchases && (
               <Button
                 type="button"
@@ -623,22 +628,34 @@ export function ShoppingScreen({
                       ]
                         .filter(Boolean)
                         .join(" · ");
+                      // Petits écrans : la quantité passe sous le nom (une quantité longue chevauchait le nom).
+                      const qtyOnly =
+                        !line?.issue &&
+                        line?.status !== "to_verify" &&
+                        !(line?.status === "partial" && line.deficit);
                       const summary = (
                         <>
-                          <span className={`flex min-w-0 flex-1 flex-col ${i.checked ? "muted line-through" : ""}`}>
+                          <span
+                            className={`flex min-w-0 flex-1 flex-col [overflow-wrap:anywhere] ${i.checked ? "muted line-through" : ""}`}
+                          >
                             <span className="t-ui font-semibold">{name}</span>
+                            {qtyOnly && i.qty_text && (
+                              <span className="mono t-small font-bold sm:hidden">{i.qty_text}</span>
+                            )}
                             {sub && <span className="t-small muted">{sub}</span>}
                           </span>
                           {line?.issue ? (
-                            <span className="pill tone-alerte">{tp.notFound}</span>
+                            <span className="pill tone-alerte shrink-0">{tp.notFound}</span>
                           ) : line?.status === "to_verify" ? (
-                            <span className="pill tone-warning">{tp.toConfirm}</span>
+                            <span className="pill tone-warning shrink-0">{tp.toConfirm}</span>
                           ) : line?.status === "partial" && line.deficit ? (
-                            <span className="mono nb-flat tone-warning px-1.5 py-0.5 font-bold">
+                            <span className="mono nb-flat tone-warning max-w-[45%] shrink-0 px-1.5 py-0.5 text-right font-bold">
                               {tp.remaining(line.deficit)}
                             </span>
                           ) : i.qty_text ? (
-                            <span className="mono font-bold">{i.qty_text}</span>
+                            <span className="mono hidden max-w-[45%] shrink-0 text-right font-bold sm:inline">
+                              {i.qty_text}
+                            </span>
                           ) : null}
                         </>
                       );
@@ -663,10 +680,15 @@ export function ShoppingScreen({
                                 className="flex min-h-12 min-w-0 flex-1 cursor-pointer items-center gap-2.5 border-0 bg-transparent p-0 text-left"
                               >
                                 {summary}
-                                <Icon name="chevronDown" className={`size-4 shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+                                <Icon
+                                  name="chevronDown"
+                                  className={`size-4 shrink-0 ${isOpen ? "rotate-180" : ""}`}
+                                />
                               </button>
                             ) : (
-                              <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5">{summary}</div>
+                              <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5">
+                                {summary}
+                              </div>
                             )}
                             {i.source === "manual" && (
                               <button
@@ -824,9 +846,10 @@ function PurchaseBlock({
         : line.status === "covered" || line.status === "surplus"
           ? tp.covered
           : null;
-  const extra = [line.surplus && tp.surplus(line.surplus), line.suggestion && tp.toBuy(line.suggestion)].filter(
-    Boolean,
-  );
+  const extra = [
+    line.surplus && tp.surplus(line.surplus),
+    line.suggestion && tp.toBuy(line.suggestion),
+  ].filter(Boolean);
   return (
     <div className="flex w-full flex-col gap-3 text-sm" data-testid="purchase-line">
       <p className="t-ui">
@@ -909,7 +932,9 @@ function ReviewPanel({
   nameOfKey: (key: string) => string;
   canAdapt: boolean;
 }) {
-  const r = reviewSummary(Object.entries(lines).map(([key, l]) => ({ key, status: l.status, issue: l.issue })));
+  const r = reviewSummary(
+    Object.entries(lines).map(([key, l]) => ({ key, status: l.status, issue: l.issue })),
+  );
   const points = [
     ...r.toConfirm.map((key) => ({ key, note: tp.toConfirm, missing: false })),
     ...r.missing.map((key) => ({
