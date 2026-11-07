@@ -57,7 +57,6 @@ export const onboardingSchema = z.object({
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;
-export type OnboardingMember = z.infer<typeof onboardingMemberSchema>;
 
 /** Valeurs de départ : 1 adulte (le compte), équilibré, tout couvert, dimanche 14 h pendant 3 h, cuisine standard. */
 export function onboardingDefaults(displayName: string): OnboardingInput {

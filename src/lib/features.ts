@@ -33,5 +33,3 @@ export const FEATURES = {
   /** Cantine saisie par enfant ou par lien (M10) : remplacée par les menus d'école publiés par l'association. */
   householdCanteen: true,
 } as const;
-
-export type FeatureFlag = keyof typeof FEATURES;

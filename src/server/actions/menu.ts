@@ -414,11 +414,6 @@ export async function feedbackAction(weekId: string | null, recipeId: string, ac
     : { ok: true as const, data: { message: t.dislikedNoReplacement } };
 }
 
-/** Ancien point d'entrée 👍 / 👎, gardé pour les onglets restés ouverts pendant un déploiement. */
-export async function rateAction(weekId: string | null, recipeId: string, value: 1 | -1) {
-  return feedbackAction(weekId, recipeId, value === 1 ? "redo" : "refuse");
-}
-
 /** « Préparer la semaine suivante » (dès le jeudi) ou « Générer un nouveau menu ». */
 export async function prepareWeekAction(start: string) {
   const { household } = await requireHousehold("/app");

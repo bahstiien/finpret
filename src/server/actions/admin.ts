@@ -122,31 +122,6 @@ export async function createSchool(formData: FormData): Promise<ActionResult> {
   return ok("/admin/ecoles");
 }
 
-export async function updateSchool(formData: FormData): Promise<ActionResult> {
-  const { user } = await requireOwner();
-  const id = uuid.safeParse(formData.get("id"));
-  const uai = String(formData.get("uai") ?? "").trim();
-  const parsed = schoolSchema.safeParse({
-    name: formData.get("name"),
-    city: formData.get("city"),
-    ...(uai ? { uai } : {}),
-  });
-  if (!id.success || !parsed.success) return fail();
-  try {
-    await withAdmin((db) =>
-      db
-        .updateTable("schools")
-        .set({ ...parsed.data, uai: parsed.data.uai ?? null })
-        .where("id", "=", id.data)
-        .execute(),
-    );
-  } catch {
-    return fail();
-  }
-  await audit(user.id, "school.update", id.data, parsed.data);
-  return ok("/admin/ecoles");
-}
-
 /** Dépublie un menu (retour en brouillon) : il disparaît du programme des familles. */
 export async function unpublishMenu(formData: FormData): Promise<ActionResult> {
   const { user } = await requireOwner();

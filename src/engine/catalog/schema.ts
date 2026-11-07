@@ -174,13 +174,11 @@ export const pricesSchema = z
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
 export type Price = z.infer<typeof priceSchema>;
-export type Prices = z.infer<typeof pricesSchema>;
 export type Pack = z.infer<typeof packSchema>;
 export type Main = z.infer<typeof mainSchema>;
 export type Soup = z.infer<typeof soupSchema>;
 export type Simple = z.infer<typeof simpleSchema>;
 export type Cake = z.infer<typeof cakeSchema>;
-export type Breakfast = z.infer<typeof breakfastSchema>;
 
 export const seedSchema = z.object({
   ingredients: z.record(z.string(), ingredientSchema),

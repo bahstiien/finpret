@@ -1,5 +1,5 @@
 import "server-only";
-import { decidePayout, previousQuarter, quarterBounds } from "@/engine/payouts";
+import { decidePayout, quarterBounds } from "@/engine/payouts";
 import type { Db } from "@/server/db";
 
 export type ClosingDeps = {
@@ -114,6 +114,3 @@ export async function closeQuarter(db: Db, quarter: string, deps: ClosingDeps): 
   }
   return summary;
 }
-
-/** Trimestre à clôturer à la date `now` : celui qui vient de s'achever. */
-export const quarterToClose = (nowIso: string) => previousQuarter(nowIso);
