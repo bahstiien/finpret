@@ -1,32 +1,11 @@
 /** Textes de l'interface (CLAUDE.md, règle 5) : tutoiement, ton chaleureux et direct. */
 import { assoFr, subscriptionFr } from "./asso";
-import { engineFr } from "./engine";
 
 export const fr = {
   app: {
     name: "Fin Prêt",
     shortName: "Fin Prêt",
     description: "Tes repas de la semaine, la liste de courses et la session de batch cooking du dimanche.",
-  },
-  /** Page 404 de marque. */
-  notFoundPage: {
-    title: "Page introuvable",
-    lead: "Cette adresse n'existe pas ou a changé de place. Reviens à l'accueil pour repartir de là.",
-    home: "Retour à l'accueil",
-  },
-  home: {
-    eyebrow: "Batch cooking en famille",
-    title: "Une session le dimanche, une semaine sans y penser.",
-    lead: "Chaque semaine, on compose tes midis et tes soirs, on fait la liste de courses en vrais contenants et on te guide pendant la session.",
-    features: [
-      {
-        title: "Le menu de la semaine",
-        text: "Tes midis et tes soirs du lundi au vendredi, de saison.",
-      },
-      { title: "Des courses partagées", text: "Une liste par rayon, cochée à plusieurs, en temps réel." },
-      { title: "Une session guidée", text: "Un planning étape par étape, avec les minuteurs." },
-    ],
-    login: "Se connecter",
   },
   /** Page d'accueil publique (finpret.app). Textes passés par `nb()` au rendu pour la typographie française. */
   /** Page publique d'une association (/ecole/[code]). */
@@ -227,14 +206,6 @@ export const fr = {
     delay: "On te répond par e-mail dès que possible.",
   },
   household: {
-    createTitle: "Crée ton foyer",
-    createLead: "Le foyer, c'est la maison : on y partage le menu, les courses et le stock.",
-    nameLabel: "Nom du foyer",
-    namePlaceholder: "La maison",
-    nameInvalid: "Donne un nom de 1 à 60 caractères.",
-    create: "Créer le foyer",
-    joinHint: "Tu as reçu une invitation ? Ouvre simplement le lien qu'on t'a envoyé.",
-    switchLabel: "Foyer actif",
     switch: "Changer",
   },
   roles: {
@@ -263,7 +234,6 @@ export const fr = {
     role: "Rôle",
     remove: "Retirer",
     removeConfirm: (name: string) => `Retirer ${name} du foyer ?`,
-    leave: "Quitter ce foyer",
     leaveConfirm: "Quitter ce foyer ? Tu n'auras plus accès à son menu ni à ses courses.",
     invitations: "Invitations",
     inviteLead: "Crée un lien d'invitation valable 7 jours, utilisable une seule fois.",
@@ -279,32 +249,8 @@ export const fr = {
     expiresOn: (date: string) => `expire le ${date}`,
     revoke: "Révoquer",
     noPending: "Aucune invitation en attente.",
-    adminOnly: "Seul un administrateur peut gérer les comptes et les invitations.",
-  },
-  settingsAccount: {
-    title: "Mon compte",
-    back: "Retour au menu",
-    nav: "Réglages",
-    sections: { profile: "Profil", household: "Foyer" },
-    you: "Mes informations",
-    displayName: "Ton prénom",
-    displayNameInvalid: "Le prénom doit faire entre 1 et 60 caractères.",
-    email: "Adresse e-mail",
-    emailHint: "C'est l'adresse avec laquelle tu te connectes.",
-    save: "Enregistrer",
-    saved: "Enregistré",
-    activeHousehold: "Foyer actif sur cet appareil",
-    session: "Session",
-    householdName: "Nom du foyer",
-    householdDetails: "Le foyer",
-    householdNameInvalid: "Le nom du foyer doit faire entre 1 et 60 caractères.",
-    adminOnlyName: "Seul un administrateur peut renommer le foyer.",
   },
   appShell: {
-    hello: (name: string) => `Salut, ${name}`,
-    placeholder: "Le menu de la semaine arrive bientôt ici.",
-    account: "Mon compte",
-    settings: "Réglages du foyer",
     signOut: "Se déconnecter",
   },
   errors: {
@@ -335,8 +281,6 @@ export const fr = {
     body: "Essaie gratuitement ou abonne-toi pour la débloquer.",
     cta: "Voir l'abonnement",
   },
-  /** Textes produits par le moteur (session, rangement). */
-  engine: engineFr,
   asso: assoFr,
   subscription: subscriptionFr,
   days: ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"],
@@ -607,8 +551,6 @@ export const fr = {
   common: {
     close: "Fermer",
     loading: "Chargement",
-    cancel: "Annuler",
-    soon: "Cet onglet arrive bientôt.",
     comingSoon: "Prochainement",
   },
   nav: {
@@ -676,7 +618,6 @@ export const fr = {
     print: "Imprimer la semaine",
     nextWeek: "Semaine prochaine",
     currentWeek: "Semaine en cours",
-    days: "Jours de la semaine",
     today: "aujourd'hui",
     programToday: "Le programme du jour",
     programOf: (day: string) => `Le programme de ${day}`,
@@ -791,7 +732,6 @@ export const fr = {
       "Le week-end, la recette est cuisinée le jour même. En semaine, elle remplace un plat déjà prévu.",
     replaceTitle: "Ou remplacer un plat de la semaine",
     replaceNone: "Aucun plat du même type n'est prévu en semaine.",
-    replaceKinds: { main: "plat", soup: "soupe", simple: "soir simple" },
     confirmPlan: "Mettre au menu",
     asCake: "En faire le goûter de la semaine",
     breakfastTypes: { sucre: "Sucré", sale: "Salé" },
@@ -1085,7 +1025,6 @@ export const fr = {
     copyFailed: "La copie n'a pas fonctionné sur cet appareil.",
     kicker: "Triée par rayon",
     whereIAm: "Où j'en suis",
-    settled: (n: number) => `${n} réglé${n > 1 ? "s" : ""}`,
     pointsSummary: (confirm: number, flagged: number) =>
       `${confirm} à confirmer · ${flagged} signalé${flagged > 1 ? "s" : ""}`,
     viewLabel: "Afficher",
@@ -1098,7 +1037,6 @@ export const fr = {
     need: "Besoin",
     bought: "Acheté",
     rest: "Reste",
-    problem: "Un souci avec cet article ?",
   },
   stock: {
     freezer: "Congélateur",
@@ -1235,47 +1173,23 @@ export const fr = {
     noWeek: "Aucune semaine n'est encore prévue.",
     prepare: "Préparer ma semaine",
     regenerate: "Générer un nouveau menu",
-    finishSetup: "Termine la configuration de ton foyer pour composer ta première semaine.",
-    finishSetupCta: "Configurer mon foyer",
-    meals: "Repas prévus",
-    session: "Session",
-    shopping: "Articles à acheter",
     nothing: "Rien de prévu",
   },
   onboarding: {
     title: "Bienvenue !",
-    progress: (step: number, total: number) => `Étape ${step} sur ${total}`,
     back: "Retour",
-    next: "Continuer",
-    skip: "Passer cette étape",
-    finish: "Préparer ma semaine",
-    working: "On compose ta semaine…",
     invalid: "Il manque une information : vérifie les étapes.",
     alreadyDone: "Ce foyer est déjà configuré.",
     generationFailed:
       "Ton foyer est prêt, mais on n'a pas pu composer la semaine avec ces réglages. Assouplis-les dans les réglages du menu.",
     steps: {
       household: {
-        title: "Ton foyer",
-        lead: "Qui mange à la maison ? Les portions en dépendent.",
-        name: "Nom du foyer",
-        namePlaceholder: "La maison",
-        members: "Qui est à table",
         memberName: "Prénom",
         adult: "Adulte",
         child: "Enfant",
         birthdate: "Date de naissance",
-        birthdateMissing: "Indique la date de naissance de l'enfant.",
-        addAdult: "Ajouter un adulte",
-        addChild: "Ajouter un enfant",
-        remove: (name: string) => `Retirer ${name || "cette personne"}`,
-        alternating: "Garde alternée",
-        alternatingHint: "Les enfants sont là une semaine sur deux.",
-        alternatingFrom: "Une semaine où les enfants sont là (semaine A)",
       },
       diet: {
-        title: "Ce que mange ton foyer",
-        lead: "On n'oublie rien : ces choix excluent les recettes concernées, sans exception.",
         diet: "Régime du foyer",
         allergens: "Allergènes à exclure",
         refused: "Ingrédients à éviter à la maison",
@@ -1284,28 +1198,12 @@ export const fr = {
         removeRefused: (label: string) => `Retirer ${label}`,
       },
       rhythm: {
-        title: "Le rythme de la maison",
-        lead: "Quels repas prévoir ? Décoche ceux pris ailleurs (cantine, travail…).",
-        grid: "Repas à prévoir",
-        weekend: "Proposer aussi des idées pour le week-end",
-        presence: "Qui est là ?",
-        presenceHint: "Décoche les repas où une personne n'est pas là (cantine, travail…).",
-        session: "La session de batch cooking",
         sessionDay: "Jour",
         sessionTime: "Heure",
         sessionMax: "Durée maximale",
-        hours: (h: number) => `${h} h`,
-      },
-      equipment: {
-        title: "Ton équipement",
-        lead: "La session s'organise selon ta cuisine.",
       },
       habits: {
-        title: "Tes habitudes",
-        lead: "Pour te rappeler les bonnes choses au bon moment.",
         shoppingDay: "Jour des courses",
-        dinnerTime: "Rappel du plat du soir",
-        thawTime: "Rappel « avant de dormir »",
         store: "Magasin habituel (facultatif)",
       },
     },
@@ -1493,7 +1391,6 @@ export const fr = {
     streak: {
       label: "Série",
       weeks: (n: number) => (n <= 1 ? `${n} semaine fin prête` : `${n} semaines fin prêtes`),
-      best: (n: number) => `Meilleure série : ${n} semaines`,
       next: (n: number) => `Prochain palier : ${n} semaines`,
       currentTodo: "Cette semaine : session à venir",
       currentDone: "Cette semaine : fin prête",
@@ -1501,12 +1398,6 @@ export const fr = {
       currentNeutral: "Cette semaine : rien à préparer",
       sessionDone: (n: number) =>
         n <= 1 ? "Ta première semaine fin prête. Bien joué." : `${n} semaines fin prêtes d’affilée.`,
-      pausesLeft: (n: number) =>
-        n === 0
-          ? "Plus de pause ce trimestre"
-          : n === 1
-            ? "1 pause disponible ce trimestre"
-            : `${n} pauses disponibles ce trimestre`,
       planPause: "Planifier une pause",
       pauseTokens: "Jetons de pause",
       shareUnlocked: "Palier débloqué",
@@ -1514,15 +1405,11 @@ export const fr = {
       planPauseHelp: "Vacances, déplacement, semaine chargée : ta série t’attend.",
       cancelPause: "Annuler la pause",
       pauseWeek: (label: string) => `Semaine du ${label}`,
-      pausePlanned: "Pause posée",
-      noPauseLeft: "Plus de jeton ce trimestre",
       autoPausedPush: "Pas de session la semaine dernière : on a mis ta série en pause. Elle t’attend.",
-      reset: "Nouvelle série. Ta meilleure reste enregistrée.",
       milestoneTitle: (n: number) => `${n} semaines fin prêtes`,
       milestoneBody: (meals: number) => `${meals} repas préparés le dimanche. Ça mérite d’être partagé.`,
       share: "Partager",
       shareTitle: "Mes semaines fin prêtes",
-      frise: "Les 12 dernières semaines",
       weekState: {
         done: "fin prête",
         paused: "en pause",
@@ -1530,10 +1417,8 @@ export const fr = {
         missed: "sans session",
         todo: "à venir",
       },
-      tile: (n: number) => (n <= 1 ? "1 semaine" : `${n} semaines`),
       pauseHelp: "Vacances, déplacement ? Une pause garde ta série intacte.",
       resumeNote: "Une semaine sans session ne remet rien en cause : la série reprend dès la suivante.",
-      sessionEndTitle: "Semaine fin prête",
       sessionEndKicker: "Session terminée",
       friseEnd: "Les dernières semaines",
       unit: (n: number) => (n > 1 ? ["semaines", "fin prêtes"] : ["semaine", "fin prête"]),
@@ -1592,7 +1477,6 @@ export const fr = {
     },
     passport: {
       originsCooked: "Origines cuisinées",
-      originsTitle: (n: number) => (n <= 1 ? "1 origine" : `${n} origines`),
       newStampKicker: "Nouveau tampon",
       seeProgress: "Voir mes progrès",
       discoverOrigin: "Chercher une nouvelle origine",
@@ -1601,23 +1485,16 @@ export const fr = {
       count: (n: number, total: number) => `${n} sur ${total}`,
       newStamp: (label: string) => `Nouveau tampon : ${label}`,
       newStamps: "Nouveaux tampons",
-      emptyHint: (label: string) => `Découvre une recette : ${label}`,
-      seasonRule: "6 recettes de saison différentes dans la saison",
       seasons: { winter: "Hiver", spring: "Printemps", summer: "Été", autumn: "Automne" },
       seasonLabel: (season: string, year: number) => `${season} ${year}`,
       cooked: "Déjà cuisinées",
       remaining: "À découvrir",
       none: "Aucune pour l’instant",
-      earnedLabel: (label: string, n: number, total: number) =>
-        `${label}, tampon obtenu, ${n} recette${n > 1 ? "s" : ""} sur ${total}`,
-      emptyLabel: (label: string, total: number) =>
-        `${label}, tampon à gagner, ${total} recette${total > 1 ? "s" : ""}`,
       seasonEarnedLabel: (label: string) => `${label}, tampon obtenu`,
       seasonProgressLabel: (label: string, n: number) =>
         `${label}, ${n} recette${n > 1 ? "s" : ""} de saison sur 6`,
       seasonProgress: (n: number) => `${n} sur 6`,
       discover: "Voir les recettes",
-      seeAll: "Tout le passeport",
       countriesKicker: "Pays",
       map: {
         alt: "Mappemonde du passeport.",
@@ -1686,7 +1563,6 @@ export const fr = {
       streakPaused: "Me prévenir quand ma série est mise en pause",
     },
     close: "Fermer",
-    empty: "Ta série démarre à ta première session terminée.",
     errors: {
       pausePast: "Choisis une semaine à venir.",
       pauseTooFar: "Tu peux poser une pause jusqu’à 8 semaines à l’avance.",
@@ -1697,5 +1573,3 @@ export const fr = {
     toasts: { paused: "Pause posée. Ta série t’attend.", cancelled: "Pause annulée." },
   },
 } as const;
-
-export type Messages = typeof fr;

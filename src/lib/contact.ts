@@ -24,5 +24,3 @@ export const contactSchema = z
     website: z.string().max(0).optional(),
   })
   .refine((v) => contactSubjects(v.audience).includes(v.subject));
-
-export type ContactInput = z.infer<typeof contactSchema>;

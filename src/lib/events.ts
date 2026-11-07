@@ -44,7 +44,3 @@ export type EventName = (typeof EVENT_NAMES)[number];
 
 /** Événements enregistrés une seule fois par compte (les autres le sont à chaque occurrence ou par semaine). */
 export const ONCE_PER_USER: readonly EventName[] = ["signup", "onboarding_done", "trial_started"];
-
-export function isEventName(value: unknown): value is EventName {
-  return typeof value === "string" && (EVENT_NAMES as readonly string[]).includes(value);
-}

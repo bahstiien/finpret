@@ -4,12 +4,7 @@ import type { Cake, Ingredient, Main, Pack, Protein, Simple, Soup } from "./cata
 
 export type Meal = "lunch" | "dinner";
 export type Slot = { day: number; meal: Meal };
-/** Clé d'un créneau : « 3-dinner » (1 = lundi … 7 = dimanche). */
-export type SlotKey = `${number}-${Meal}`;
-export const slotKey = (day: number, meal: Meal): SlotKey => `${day}-${meal}`;
 
-export type Recipe = Main | Soup | Simple;
-export type AnyRecipe = Main | Soup | Simple;
 /** Recette après fusion de sa variante de saison (`resolve`). */
 export type Resolved<R> = R & { svl?: string };
 
@@ -92,8 +87,6 @@ export type DietRules = {
   /** Objectif « économique » : les recettes les moins chères par portion sont favorisées au tirage. */
   economical?: boolean;
 };
-
-export const NO_DIET_RULES: DietRules = { diet: "omnivore", allergens: [], refused: [] };
 
 export type Guests = { a: number; c: number };
 
