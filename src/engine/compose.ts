@@ -1,6 +1,8 @@
 import type { Main } from "./catalog/schema";
+import { portionCost, weekCost } from "./cost";
 import { allowed, anyRecipe, bankRecipe, effectiveSettings, type Env, isWorld } from "./env";
 import { isLiked } from "./feedback";
+import type { PortionModel } from "./portions";
 import { shuffle } from "./random";
 import { eligible, wshuffle } from "./season";
 import { assignGroups, buildSlots, gMax, type WeekSlots } from "./slots";
@@ -230,7 +232,24 @@ export type ComposeInput = {
   start: string;
   previous: WeekPlan | null;
   bank: readonly BankEntry[];
+  /** Portions par créneau : nécessaires pour estimer le coût de la semaine (budget). */
+  portions?: PortionModel;
 };
+
+/**
+ * Une recette dont la portion coûte plus de PRICEY fois la cible du budget par portion passe après toutes
+ * les autres au tirage (sans être exclue : les règles de composition peuvent encore l'exiger).
+ */
+export const PRICEY = 1.6;
+
+/** Budget actif : réglé, avec les portions du foyer et les prix du catalogue pour l'estimer. */
+export function budgetOf(input: ComposeInput): { max: number; portions: PortionModel } | null {
+  const max = input.settings.budget ?? 0;
+  return max > 0 && input.portions && input.env.lib.prices ? { max, portions: input.portions } : null;
+}
+
+/** Semaine la moins chère rejetée pour dépassement du budget, gardée en repli. */
+export type OverBudget = { week: WeekPlan | null; cost: number };
 
 /** Une tentative de composition (`compose` du prototype). */
 export function compose(
@@ -238,6 +257,7 @@ export function compose(
   exclude: readonly string[],
   target?: number,
   world?: number,
+  over?: OverBudget,
 ): WeekPlan | null {
   const { env, start, previous, bank } = input;
   const s = effectiveSettings(env, input.settings);
@@ -251,6 +271,26 @@ export function compose(
   T = Math.min(T, groups.length + simpleDays.length);
   W = Math.min(W, groups.length + (soupDays.length ? 1 : 0) + simpleDays.length);
 
+  // Budget : les recettes nettement trop chères pour la cible par portion de la semaine passent en dernier
+  // au tirage (bonus -1 : le tirage aléatoire vaut moins de 1), le temps de cette composition.
+  const budget = budgetOf(input);
+  const pricey = new Set<string>();
+  if (budget) {
+    const base = (day: number) => budget.portions.base(day, "dinner");
+    const planned =
+      groups.reduce((n, g) => n + g.reduce((m, x) => m + budget.portions.base(x.day, x.meal), 0), 0) +
+      soupDays.reduce((n, d) => n + base(d), 0) +
+      simpleDays.reduce((n, d) => n + base(d), 0);
+    const cap = planned > 0 ? (budget.max / planned) * PRICEY : Infinity;
+    for (const r of [...env.lib.mains, ...env.lib.soups, ...env.lib.simples]) {
+      if ((portionCost(env.lib, r.ing)?.eur ?? 0) > cap) pricey.add(r.id);
+    }
+  }
+  const bonus = env.bonus;
+  if (pricey.size) {
+    env.bonus = { ...bonus };
+    for (const id of pricey) env.bonus[id] = (env.bonus[id] ?? 0) - 1;
+  }
   const st: ComposeState = { needCm: 0, pastaNeed: null };
   const soupsOk = (strict: boolean) =>
     env.lib.soups.filter(
@@ -302,9 +342,19 @@ export function compose(
       };
       const fixed = fixPasta(env, cand);
       if (!fixed) continue;
-      return { ...fixed, pastaNeed: st.pastaNeed };
+      const week = { ...fixed, pastaNeed: st.pastaNeed };
+      if (budget) {
+        const cost = weekCost(env, week, budget.portions);
+        if (cost > budget.max) {
+          if (over && cost < over.cost) Object.assign(over, { week, cost });
+          continue;
+        }
+      }
+      env.bonus = bonus;
+      return week;
     }
   }
+  env.bonus = bonus;
   return null;
 }
 
@@ -315,12 +365,23 @@ export const weekRecipeIds = (w: WeekPlan) =>
   );
 
 export type GenerateResult =
-  | { ok: true; week: WeekPlan; dislikesIgnored: boolean; relaxed: "none" | "history" | "world" | "dislikes" }
+  | {
+      ok: true;
+      week: WeekPlan;
+      dislikesIgnored: boolean;
+      relaxed: "none" | "history" | "world" | "dislikes";
+      /** Coût estimé de la semaine (portions et prix connus), sinon null. */
+      cost: number | null;
+      /** Aucune semaine ne tenait dans le budget : la moins chère trouvée est proposée. */
+      overBudget: boolean;
+    }
   | { ok: false; reason: "impossible" };
 
 /**
  * Génère une semaine avec repli (§7.3, points 5 et 6) : anti-répétition complète, puis semaine
  * précédente seule, puis aucune, puis sans l'objectif des recettes du monde, puis en ignorant les refus.
+ * Avec un budget, toute semaine trop chère est écartée ; si aucune ne tient après l'objectif du monde,
+ * la moins chère trouvée est proposée (hors budget) plutôt que d'ignorer les refus.
  * @param history identifiants des semaines précédentes, la plus récente d'abord
  */
 export function generateWeek(
@@ -340,24 +401,32 @@ export function generateWeek(
   ];
   const T = comfortTarget(s, previous);
   const W = s.world;
+  const over: OverBudget = { week: null, cost: Infinity };
   let relaxed: "none" | "history" | "world" | "dislikes" = "none";
-  let w = compose(input, recent, T, W);
+  let w = compose(input, recent, T, W, over);
   if (!w) {
     relaxed = "history";
-    w = compose(input, current, T, W) ?? compose(input, [], T, W);
+    w = compose(input, current, T, W, over) ?? compose(input, [], T, W, over);
   }
   if (!w) {
     relaxed = "world";
-    w = compose(input, [], T, 0);
+    w = compose(input, [], T, 0, over);
+  }
+  let overBudget = false;
+  if (!w && over.week) {
+    w = over.week;
+    overBudget = true;
   }
   let dislikesIgnored = false;
   if (!w) {
     relaxed = "dislikes";
     env.ignoreDislike = true;
-    w = compose(input, [], T, 0);
+    w = compose(input, [], T, 0, over) ?? over.week;
     env.ignoreDislike = false;
     dislikesIgnored = !!w;
+    overBudget = !!w && w === over.week;
   }
   if (!w) return { ok: false, reason: "impossible" };
-  return { ok: true, week: w, dislikesIgnored, relaxed };
+  const cost = input.portions && env.lib.prices ? weekCost(env, w, input.portions) : null;
+  return { ok: true, week: w, dislikesIgnored, relaxed, cost, overBudget };
 }

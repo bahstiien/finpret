@@ -62,6 +62,8 @@ export type MenuSettings = {
   cake: boolean;
   /** Objectif « minimum de repas végétariens » parmi les plats de batch (0 = règle du prototype : 1 dès 4 plats). */
   minVeg: number;
+  /** Budget maximal de la semaine générée, en euros (coût estimé des plats, soupes et soirs simples) ; 0 ou absent = sans limite. */
+  budget?: number;
 };
 
 export const DEFAULT_MENU_SETTINGS: MenuSettings = {

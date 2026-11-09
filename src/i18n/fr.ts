@@ -445,6 +445,11 @@ export const fr = {
       bankUse: "Repas tirés du congélateur",
       noRepeat: "Période sans répétition",
       weeks: (n: number) => `${n} semaines`,
+      budgetTitle: "Budget",
+      budgetHint:
+        "Coût estimé des plats, soupes et soirs simples de la semaine, aux portions du foyer (prix de référence, hors repas du congélateur). Si aucun menu ne tient dedans, tu reçois le moins cher trouvé.",
+      budget: "Budget max par semaine",
+      budgetValue: (eur: number) => (eur === 0 ? "Sans limite" : `${eur} €`),
       grid: "Repas à prévoir",
       gridHint: "Décoche les repas pris ailleurs : rien n'est cuisiné ni acheté pour eux.",
       weekend: "Proposer des idées pour le week-end",
@@ -1227,6 +1232,8 @@ export const fr = {
     generated: "Nouveau menu prêt. Courses et session mises à jour.",
     generatedWithDislikes:
       "Trop de recettes refusées pour respecter tous tes réglages : ce menu peut en contenir une.",
+    generatedOverBudget:
+      "Nouveau menu prêt, mais aucun menu ne tenait dans ton budget : voici le moins cher trouvé.",
   },
   menu: {
     impossible:

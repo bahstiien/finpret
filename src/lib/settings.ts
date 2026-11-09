@@ -47,6 +47,8 @@ export const menuSchema = z.object({
   comfort: z.union([z.literal(0), z.literal(0.5), z.literal(1), z.literal(2)]).default(1),
   bankUse: int(0, 4).default(2),
   noRepeatWeeks: int(2, 6).default(3),
+  /** Budget maximal par semaine pour la génération du menu, en euros ; 0 = sans limite. */
+  budget: int(0, 2000).default(0),
   /** Créneaux décochés de la grille « Repas à prévoir », mémorisés pour les semaines suivantes. */
   skip: z.array(slotKeySchema).default([]),
   /** Week-end proposé dans la grille (option de l'onboarding). */
@@ -189,6 +191,7 @@ export function toMenuSettings(s: HouseholdSettings): MenuSettings {
     skip: s.menu.skip,
     cake: s.menu.cake.enabled,
     minVeg: s.diet.minVeg,
+    budget: s.menu.budget,
   };
 }
 

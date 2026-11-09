@@ -181,7 +181,15 @@ async function commitWeek(ctx: HouseholdContext, env: Env, row: WeekRow) {
 }
 
 export type GenerateOutcome =
-  | { ok: true; week: WeekPlan; weekId: string; summary: WeekSummary; dislikesIgnored: boolean }
+  | {
+      ok: true;
+      week: WeekPlan;
+      weekId: string;
+      summary: WeekSummary;
+      dislikesIgnored: boolean;
+      /** Le budget de la semaine ne pouvait pas être tenu : la semaine la moins chère trouvée. */
+      overBudget: boolean;
+    }
   | { ok: false; reason: "impossible" | "forbidden" | "locked" };
 
 /**
@@ -220,6 +228,7 @@ export async function generateAndStore(householdId: string, start: string): Prom
     previous: previousRow?.plan ?? null,
     bank: ctx.bank,
     history,
+    portions: portionModelFor(ctx, start),
   });
   if (!res.ok) return { ok: false, reason: "impossible" };
 
@@ -264,7 +273,14 @@ export async function generateAndStore(householdId: string, start: string): Prom
     householdId,
     props: { week: start, regenerated: Boolean(existing) },
   });
-  return { ok: true, week: plan, weekId: data.id, summary, dislikesIgnored: res.dislikesIgnored };
+  return {
+    ok: true,
+    week: plan,
+    weekId: data.id,
+    summary,
+    dislikesIgnored: res.dislikesIgnored,
+    overBudget: res.overBudget,
+  };
 }
 
 /** Relit le garde-manger et le congélateur après une clôture de semaine. */
