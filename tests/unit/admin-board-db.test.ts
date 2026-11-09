@@ -62,7 +62,7 @@ afterAll(() => testDb.close());
 
 describe("données du back-office", () => {
   it("compte les demandes nouvelles et les actions ouvertes pour le menu", async () => {
-    expect(await navBadges()).toEqual({ inbox: 1, tasks: 1 });
+    expect(await navBadges()).toEqual({ inbox: 1, tasks: 1, recipes: 0 });
   });
 
   it("liste les demandes sans les indésirables, avec les compteurs par état", async () => {

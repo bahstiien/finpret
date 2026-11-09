@@ -812,6 +812,30 @@ export const fr = {
     removed: "Recette supprimée.",
     unverifiedAllergens: "Allergènes à vérifier : certains ingrédients ont été créés à l'import.",
   },
+  suggest: {
+    editButton: "Suggérer une modification",
+    newButton: "Proposer une recette",
+    editTitle: (name: string) => `Améliorer « ${name} »`,
+    editIntro:
+      "Une quantité qui cloche, une étape pas claire, une astuce de ta famille ? Dis-nous ce que tu changerais, on relit et on corrige la recette pour tout le monde.",
+    editLabel: "Ce que tu changerais",
+    editPlaceholder: "Ex. : 200 g de riz suffisent pour 4, et il faut le rincer avant cuisson.",
+    newTitle: "Proposer une recette",
+    newIntro:
+      "Une recette qui marche chez toi ? Envoie-la, on l'adapte au batch cooking et on l'ajoute à la bibliothèque.",
+    kindLabel: "Type de recette",
+    kinds: { main: "Plat à préparer en session", soup: "Soupe", simple: "Soir simple", cake: "Goûter" },
+    nameLabel: "Nom de la recette",
+    recipeLabel: "Ingrédients et étapes",
+    recipePlaceholder:
+      "Ingrédients pour 4 (avec les quantités), puis les étapes. Précise si ça se congèle et combien de temps ça se garde.",
+    sourceLabel: "Lien vers la recette (facultatif)",
+    send: "Envoyer",
+    sent: "Merci ! Ta suggestion est arrivée, on la relit vite.",
+    invalid: "Écris quelques mots de plus pour qu'on comprenne ta suggestion.",
+    tooMany: "Tu as déjà envoyé beaucoup de suggestions aujourd'hui. Réessaie demain.",
+    unknownRecipe: "Cette recette n'est plus dans la bibliothèque.",
+  },
   recipeImport: {
     title: "Importer une recette",
     lead: "Colle le lien d'une recette (Marmiton, 750g, un blog…). On récupère les ingrédients, tu vérifies, et elle rejoint tes menus.",

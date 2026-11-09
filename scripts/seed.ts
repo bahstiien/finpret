@@ -101,13 +101,26 @@ try {
      on conflict (id) do update set kind = excluded.kind, data = excluded.data, origin = excluded.origin,
        protein = excluded.protein, months = excluded.months, diet_tags = excluded.diet_tags,
        allergens = excluded.allergens, is_active = true
-     where public.recipes.household_id is null`,
+     where public.recipes.household_id is null and public.recipes.edited_in_admin_at is null`,
     [JSON.stringify(rows.recipes)],
+  );
+  // Recette modifiée depuis le back-office (suggestions) : conservée telle quelle. Elle redevient gérée par le seed
+  // dès que seed/*.json contient exactement la même version.
+  const { rows: kept } = await client.query<{ id: string }>(
+    `with seeded as (select id, data from jsonb_to_recordset($1::jsonb) as x(id text, data jsonb))
+     update public.recipes r set edited_in_admin_at = null
+     from seeded where r.id = seeded.id and r.household_id is null and r.edited_in_admin_at is not null
+       and r.data = seeded.data
+     returning r.id`,
+    [JSON.stringify(rows.recipes)],
+  );
+  const { rows: adminOnly } = await client.query<{ id: string }>(
+    `select id from public.recipes where household_id is null and edited_in_admin_at is not null`,
   );
   // Retirée du seed : désactivée plutôt que supprimée (elle peut figurer dans l'historique des semaines).
   const { rowCount: retired } = await client.query(
     `update public.recipes set is_active = false
-     where household_id is null and is_active and not (id = any($1::text[]))`,
+     where household_id is null and is_active and edited_in_admin_at is null and not (id = any($1::text[]))`,
     [rows.recipes.map((r) => r.id)],
   );
 
@@ -115,6 +128,12 @@ try {
   console.log(
     `Catalogue importé : ${summary}.${retired ? ` ${retired} recette(s) retirée(s) du seed désactivée(s).` : ""}`,
   );
+  if (kept.length)
+    console.log(`Reportées dans le seed, de nouveau gérées par lui : ${kept.map((r) => r.id)}.`);
+  if (adminOnly.length)
+    console.log(
+      `Modifiées dans le back-office, conservées (à reporter dans seed/*.json) : ${adminOnly.map((r) => r.id)}.`,
+    );
 } catch (error) {
   await client.query("rollback").catch(() => {});
   console.error(`Import annulé : ${(error as Error).message}`);
