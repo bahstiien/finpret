@@ -47,7 +47,7 @@ export default function HomePage() {
         {t.skip}
       </a>
       <SiteHeader />
-      <main id="contenu">
+      <main id="contenu" className="lp-defer">
         <Hero />
         <TopRecipes />
         <ExampleWeek />

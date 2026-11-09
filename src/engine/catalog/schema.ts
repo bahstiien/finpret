@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { CAKE_TYPES } from "./cake-types";
 
 /** Schémas des fichiers `seed/*.json` (format décrit dans seed/README.md). Stricts : un champ inconnu est une erreur. */
 
 export const UNITS = ["g", "ml", "pc", "boite", "cs", "cc"] as const;
 export const PROTEINS = ["volaille", "boeuf", "porc", "poisson", "veg"] as const;
 export const COOK_MODES = ["feu", "four", "airfryer", "micro", "blender", "mixeur", "robot", "plan"] as const;
-export const CAKE_TYPES = ["gateau", "brioche", "biscuit", "crepe"] as const;
+export { CAKE_TYPES };
 
 export type Unit = (typeof UNITS)[number];
 export type Protein = (typeof PROTEINS)[number];

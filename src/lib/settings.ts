@@ -1,12 +1,15 @@
 import { z } from "zod";
 import { ALLERGENS } from "@/engine/catalog/allergens";
 import { CAKE_TYPES } from "@/engine/catalog/schema";
+import { DIETS, SESSION_LEVELS } from "./settings-options";
 import { DEFAULT_MENU_SETTINGS, type DietRules, type Equipment, type MenuSettings } from "@/engine/types";
 
 /**
  * Réglages du foyer (§5, §6) : schémas Zod des colonnes JSON de household_settings, avec les défauts
  * de l'onboarding. Partagés par les formulaires, les actions serveur et la génération.
  */
+
+export { DIETS, SESSION_LEVELS };
 
 export const SETTINGS_VERSION = 1;
 
@@ -16,7 +19,6 @@ export const ALLERGEN_KEYS = Object.keys(ALLERGENS) as [
   keyof typeof ALLERGENS,
   ...(keyof typeof ALLERGENS)[],
 ];
-export const DIETS = ["omnivore", "flexitarien", "vegetarien", "pescetarien", "carnivore"] as const;
 export const slotKeySchema = z.string().regex(/^[1-7]-(lunch|dinner)$/);
 
 export const dietSchema = z.object({
@@ -60,7 +62,6 @@ export const menuSchema = z.object({
     .default({ enabled: true, day: 3, types: [...CAKE_TYPES] }),
 });
 
-export const SESSION_LEVELS = ["beginner", "confident"] as const;
 export const sessionSchema = z.object({
   /** 0 = dimanche … 6 = samedi (jour de la session, la veille du lundi par défaut). */
   day: int(0, 6).default(0),
