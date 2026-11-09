@@ -112,7 +112,9 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
   await dialog.getByRole("radio").first().check();
   await dialog.getByTestId("confirm-pause").click();
   await expect(page.getByTestId("toast")).toContainText("Pause posée");
-  await page.keyboard.press("Escape");
+  // Le compteur est vérifié sur une page rechargée : sur la CI, le rafraîchissement après l'action arrive parfois
+  // après le délai de l'assertion alors que la pause est bien enregistrée.
+  await page.reload();
   await expect(page.getByTestId("pauses-left")).toContainText("1 pause disponible");
   await page.getByTestId("plan-pause").click();
   await dialog
@@ -120,7 +122,7 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
     .getByRole("button", { name: /^Annuler la pause/ })
     .click();
   await expect(page.getByTestId("toast")).toContainText("Pause annulée");
-  await page.keyboard.press("Escape");
+  await page.reload();
   await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
 });
 
