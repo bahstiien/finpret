@@ -19,7 +19,8 @@ import { RecipeTile } from "./Shell";
 
 /**
  * Recherche et liste paginée de /recettes. Le rendu serveur contient toutes les recettes (liens indexables), celles
- * hors de la page courante en `hidden` ; la recherche s'applique ensuite dans le navigateur et se reflète dans l'URL.
+ * hors de la page courante réduites à un lien en `hidden` ; la recherche s'applique ensuite dans le navigateur et se
+ * reflète dans l'URL.
  */
 
 const plural = (n: number) => `${n} recette${n > 1 ? "s" : ""}`;
@@ -94,17 +95,25 @@ export function RecipeBrowser({ recipes }: { recipes: readonly RecipeCard[] }) {
             aria-label={`Recettes, page ${page}`}
             className="grid scroll-mt-6 grid-cols-2 gap-3 sm:gap-5 min-[1100px]:grid-cols-5"
           >
-            {shown.map((r, i) => (
-              <li key={r.slug} className="flex" hidden={i < first || i >= first + PAGE_SIZE}>
-                <RecipeTile
-                  href={`/recettes/${r.slug}`}
-                  name={r.name}
-                  photo={r.photo}
-                  kicker={KIND_SHORT[r.kind]}
-                  sizes="(min-width: 1100px) 220px, 50vw"
-                />
-              </li>
-            ))}
+            {shown.map((r, i) => {
+              const onPage = i >= first && i < first + PAGE_SIZE;
+              // Hors de la page : un simple lien masqué (indexable), sans photo ni carte à hydrater.
+              return (
+                <li key={r.slug} className="flex" hidden={!onPage}>
+                  {onPage ? (
+                    <RecipeTile
+                      href={`/recettes/${r.slug}`}
+                      name={r.name}
+                      photo={r.photo}
+                      kicker={KIND_SHORT[r.kind]}
+                      sizes="(min-width: 1100px) 220px, 50vw"
+                    />
+                  ) : (
+                    <a href={`/recettes/${r.slug}`}>{r.name}</a>
+                  )}
+                </li>
+              );
+            })}
           </ul>
           <Pagination page={page} hasNext={page < pages} onPage={goTo} label="Pages de recettes" />
         </>

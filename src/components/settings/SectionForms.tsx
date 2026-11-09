@@ -6,18 +6,17 @@ import { Button } from "@/components/ui/Button";
 import { ChipToggle, SlotGrid, Stepper, Toggle } from "@/components/ui/Controls";
 import { SelectField, TextField } from "@/components/ui/Field";
 import { ALLERGENS } from "@/engine/catalog/allergens";
-import { CAKE_TYPES } from "@/engine/catalog/schema";
+import { CAKE_TYPES } from "@/engine/catalog/cake-types";
 import { dur } from "@/engine/format";
 import { fr } from "@/i18n/fr";
-import {
-  DIETS,
-  type DietSettings,
-  type EquipmentSettings,
-  type MenuSettingsForm,
-  SESSION_LEVELS,
-  type SessionSettings,
-  type ShoppingSettings,
+import type {
+  DietSettings,
+  EquipmentSettings,
+  MenuSettingsForm,
+  SessionSettings,
+  ShoppingSettings,
 } from "@/lib/settings";
+import { DIETS, SESSION_LEVELS } from "@/lib/settings-options";
 import { saveSettings } from "@/server/actions/settings";
 import { ApplyPrompt, SaveStatus, useAutosave } from "./Autosave";
 import { Card } from "@/components/ui/Card";

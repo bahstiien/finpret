@@ -7,6 +7,10 @@ import { completeOnboarding } from "./helpers/onboarding";
 test.skip(({ isMobile }) => isMobile, "audit joué sur le projet desktop");
 
 async function audit(page: Page, name: string) {
+  // L'accueil diffère le rendu de ses sections basses (`content-visibility: auto`) : axe ne peut pas calculer les
+  // couleurs d'un contenu non rendu et signalerait de faux contrastes. Tout est rendu avant l'audit ; la propriété ne
+  // change ni l'arbre d'accessibilité ni les couleurs.
+  await page.addStyleTag({ content: "* { content-visibility: visible !important; }" });
   const { violations } = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     .analyze();
