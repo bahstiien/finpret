@@ -517,6 +517,44 @@ export function TrialEndingEmail({
   );
 }
 
+/**
+ * Information de reconduction de l'abonnement annuel (art. L215-1 du Code de la consommation) : date de
+ * reconduction, prix, faculté de ne pas reconduire et lien vers la résiliation. E-mail transactionnel, toujours envoyé.
+ */
+export function RenewalNoticeEmail({
+  renewalDate,
+  price,
+  url,
+}: {
+  /** Date de reconduction en toutes lettres (« 4 janvier 2028 »). */
+  renewalDate: string;
+  /** Prix de la prochaine année (« 49,99 € »). */
+  price: string;
+  url: string;
+}) {
+  return (
+    <Layout
+      preview={`Ton abonnement annuel sera reconduit le ${renewalDate}`}
+      badge="ABONNEMENT ANNUEL"
+      title="Ton abonnement se renouvelle bientôt"
+    >
+      <Text style={p}>
+        Ton abonnement annuel Fin Prêt sera reconduit automatiquement le <strong>{renewalDate}</strong>, pour un an,
+        au prix de <strong>{price}</strong> (TVA non applicable, art. 293 B du CGI).
+      </Text>
+      <Note title="Tu peux ne pas le reconduire">
+        Il suffit de résilier avant le {renewalDate} depuis Réglages › Abonnement. Ton accès complet reste ouvert
+        jusqu&apos;à cette date, puis ton foyer repasse à l&apos;accès gratuit, sans perdre ses données.
+      </Note>
+      <Cta href={url}>Gérer mon abonnement</Cta>
+      <Text style={{ ...p, margin: "24px 0 0" }}>
+        Tu reçois cet e-mail parce que la loi nous demande de te prévenir avant chaque reconduction (article L215-1 du
+        Code de la consommation).
+      </Text>
+    </Layout>
+  );
+}
+
 export function PaymentFailedEmail({ url }: { url: string }) {
   return (
     <Layout preview="Ton paiement n'a pas abouti" badge="PAIEMENT" title="Ton paiement n'a pas abouti">

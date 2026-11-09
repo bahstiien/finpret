@@ -10,6 +10,7 @@ Détail des services et commandes : `deploy/README.md` ; sauvegarde et restaurat
 | Google Cloud | ID client OAuth « Application Web », URI de redirection `https://finpret.app/api/auth/callback/google` → `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
 | Brevo | domaine `finpret.app` authentifié (SPF, DKIM, DMARC), expéditeur de `EMAIL_FROM` validé → clé API v3 `BREVO_API_KEY`, `EMAIL_FROM` (les liens de connexion partent par Brevo) |
 | Stripe | `pnpm stripe:setup` en mode réel, webhook `https://finpret.app/api/stripe/webhook` (événements listés dans `src/server/stripe-webhook.ts`) → `STRIPE_*` |
+| Stripe (légal) | Tableau de bord : **Paramètres › Informations publiques** : URL des conditions = `https://finpret.app/cgv` (exigée par la case de Checkout). **Paramètres › Checkout** : texte de la case « J'accepte les CGV et je demande que mon abonnement commence immédiatement. Si je me rétracte dans les 14 jours, je paierai la part de la période déjà écoulée. » **Paramètres › Factures** : pied de page par défaut « TVA non applicable, art. 293 B du CGI » (franchise en base). **Portail client** : résiliation activée, en fin de période. |
 | Surveillance | un contrôle « sauvegarde » (ex. healthchecks.io) → `BACKUP_PING_URL` ; un stockage hors du VPS pour `rclone` → `BACKUP_REMOTE` |
 | GitHub | secrets `VPS_*` et variables `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `NEXT_PUBLIC_SENTRY_DSN` (`deploy/README.md`) ; plus aucun secret Supabase |
 

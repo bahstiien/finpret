@@ -645,6 +645,7 @@ export interface StripeEvents {
 }
 
 export interface Subscriptions {
+  cancel_at_period_end: Generated<boolean>;
   current_period_end: string | null;
   household_id: string;
   plan: Generated<"trial" | "monthly" | "yearly" | "free">;
@@ -657,6 +658,8 @@ export interface Subscriptions {
 
 export interface UserSettings {
   notifications: Generated<Json>;
+  terms_accepted_at: string | null;
+  terms_version: string | null;
   user_id: string;
 }
 

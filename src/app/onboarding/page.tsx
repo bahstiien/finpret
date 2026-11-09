@@ -6,7 +6,9 @@ import { ASSOCIATION_COOKIE } from "@/lib/association-code";
 import { onboardingDefaults } from "@/lib/onboarding";
 import { cookies } from "next/headers";
 import { approvedAssociation } from "@/server/associations";
+import { TermsGate } from "@/components/onboarding/TermsGate";
 import { onboardingDishes } from "@/server/onboarding-data";
+import { hasAcceptedTerms } from "@/server/terms";
 import { getActiveHousehold, getProfile, requireUser, withSession } from "@/server/session";
 
 export const metadata: Metadata = { title: fr.onboarding.title };
@@ -31,6 +33,8 @@ export default async function OnboardingPage() {
     // Paramétré sans semaine (génération échouée) : on reste ici pour réessayer ou revoir les réponses.
     if ((data?.onboarded_at && week) || household.role !== "admin") redirect("/app");
   }
+  // Compte ouvert par lien magique ou Google : accord sur les CGU avant tout paramétrage.
+  if (!(await hasAcceptedTerms(user.id))) return <TermsGate />;
   const association = await approvedAssociation((await cookies()).get(ASSOCIATION_COOKIE)?.value);
   const [profile, ingredients, dishes] = await Promise.all([
     getProfile(),

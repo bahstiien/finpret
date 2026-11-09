@@ -11,6 +11,7 @@ import {
   MagicLinkEmail,
   PasswordResetEmail,
   PaymentFailedEmail,
+  RenewalNoticeEmail,
   StatementEmail,
   TrialEndingEmail,
   VerifyEmail,
@@ -123,6 +124,21 @@ export async function sendTrialEnding(to: string, userId: string, days: number):
         : `Ton essai Fin Prêt se termine dans ${days} jours`,
       createElement(TrialEndingEmail, { days, url: `${appUrl()}/app/abonnement`, unsubscribeUrl: unsub }),
       { unsubscribeUrl: unsub },
+    ),
+  );
+}
+
+/** Reconduction de l'abonnement annuel (L215-1) : transactionnel, sans lien de désinscription. */
+export async function sendRenewalNotice(to: string, renewalDate: string, priceCents: number): Promise<SendResult> {
+  return sendEmail(
+    await build(
+      to,
+      `Ton abonnement Fin Prêt sera reconduit le ${renewalDate}`,
+      createElement(RenewalNoticeEmail, {
+        renewalDate,
+        price: euros(priceCents),
+        url: `${appUrl()}/settings/subscription`,
+      }),
     ),
   );
 }

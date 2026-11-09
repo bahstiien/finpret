@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { runNotifications } from "@/server/notify";
 import { createNotifyDeps } from "@/server/notify-deps";
 import { runStreakPausedNotifications } from "@/server/streak-notify";
+import { runRenewalNotices } from "@/server/renewal-notice";
 import { runTrialEnding } from "@/server/trial-ending";
 
 export const dynamic = "force-dynamic";
@@ -22,7 +23,8 @@ export async function GET(request: NextRequest) {
   const summary = await runNotifications(createNotifyDeps(request.nextUrl.origin), now);
   const trial = await runTrialEnding(request.nextUrl.origin, now);
   const streakPaused = await runStreakPausedNotifications(request.nextUrl.origin, now);
-  return NextResponse.json({ ...summary, trialEnding: trial, streakPaused });
+  const renewal = await runRenewalNotices(request.nextUrl.origin, now);
+  return NextResponse.json({ ...summary, trialEnding: trial, streakPaused, renewalNotice: renewal });
 }
 
 export const POST = GET;
