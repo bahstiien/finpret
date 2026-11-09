@@ -1099,6 +1099,28 @@ export const fr = {
     bought: "Acheté",
     rest: "Reste",
     problem: "Un souci avec cet article ?",
+    extras: {
+      title: "Ajouter à la liste",
+      hint: "Yaourts, fruits, couches… tout ce qui n'est pas dans le menu. On le range dans le bon rayon.",
+      placeholder: "Ex. 6 yaourts, lessive, couches…",
+      suggestions: "Propositions",
+      freeEntry: (label: string) => `Ajouter « ${label} »`,
+      freeHint: "Rayon deviné : tu pourras le changer sur la liste.",
+      habit: "Tu en prends souvent",
+      alreadyOnList: "Déjà sur la liste",
+      fromMenu: "Déjà sur la liste pour le menu",
+      added: (label: string, aisle: string) => `${label} : ajouté au rayon ${aisle}.`,
+      usual: "Tes habituels",
+      popular: "En un geste",
+      addChip: (label: string, aisle: string) => `Ajouter ${label} (${aisle})`,
+      removeChip: (label: string) => `Retirer ${label} de la liste`,
+      browse: "Parcourir par rayon",
+      browseClose: "Masquer les rayons",
+      browseAisles: "Rayons",
+    },
+    editItem: (name: string) => `Modifier ${name}`,
+    aisleLabel: "Rayon",
+    moved: (name: string, aisle: string) => `${name} : rangé au rayon ${aisle}.`,
   },
   stock: {
     freezer: "Congélateur",
@@ -1543,7 +1565,13 @@ export const fr = {
       friseThisWeek: "Cette semaine",
       friseCell: (date: string, state: string, current: boolean) =>
         `${current ? "Cette semaine, du" : "Semaine du"} ${date}${state ? ` : ${state}` : ""}`,
-      legend: { done: "Fin prête", paused: "En pause", missed: "Sans session", neutral: "Rien à préparer", todo: "À venir" },
+      legend: {
+        done: "Fin prête",
+        paused: "En pause",
+        missed: "Sans session",
+        neutral: "Rien à préparer",
+        todo: "À venir",
+      },
       statusMeta: {
         todo: (day: string, duration: string | null) =>
           duration ? `${day}, ${duration} prévues.` : day.endsWith(".") ? day : `${day}.`,

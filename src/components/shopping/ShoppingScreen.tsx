@@ -7,7 +7,8 @@ import { Segmented } from "@/components/ui/Segmented";
 import { ChipToggle } from "@/components/ui/Controls";
 import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/ui/Toast";
-import { baseAisle, guessAisle, shoppingText } from "@/engine/shopping";
+import { baseAisle, shoppingText } from "@/engine/shopping";
+import { classify, type Habit, normalize } from "@/engine/extras";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { enqueue, loadQueue, type NewItem, type QueuedOp, saveQueue } from "@/lib/offline-queue";
@@ -26,6 +27,7 @@ import {
 import { reviewSummary } from "@/engine/purchases";
 import type { PurchaseLine } from "@/server/purchases-view";
 import { AdaptationPanel, type AdaptationHistoryItem } from "./AdaptationPanel";
+import { AddExtras, type OnList } from "./AddExtras";
 import { type PreparationItem, type TransferChoice, WeekOpsPanel } from "./WeekOpsPanel";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
@@ -59,7 +61,7 @@ export function ShoppingScreen({
   aisles,
   names,
   baseUsed,
-  frequent,
+  habits,
   exportFormat,
   purchases,
   canWrite,
@@ -83,15 +85,14 @@ export function ShoppingScreen({
   aisles: { key: string; label: string }[];
   names: Record<string, string>;
   baseUsed: { key: string; label: string; qty: string }[];
-  frequent: string[];
+  /** Articles déjà ajoutés à la main par le foyer, les plus fréquents d'abord, avec leur dernier rayon. */
+  habits: Habit[];
   exportFormat: "text" | "checklist";
 }) {
   const toast = useToast();
   const [items, setItems] = useState<Map<string, Item>>(() => new Map(initialItems.map((i) => [i.id, i])));
   const [online, setOnline] = useState(true);
   const [pending, setPending] = useState(0);
-  const [label, setLabel] = useState("");
-  const [qty, setQty] = useState("");
   const router = useRouter();
   const hasPurchases = purchases !== null;
   const [editing, setEditing] = useState<string | null>(null);
@@ -115,7 +116,10 @@ export function ShoppingScreen({
           const it = next.get(op.id);
           if (it) next.set(op.id, { ...it, checked: op.checked });
         } else if (op.op === "delete") next.delete(op.id);
-        else
+        else if (op.op === "edit") {
+          const it = next.get(op.id);
+          if (it) next.set(op.id, { ...it, ...op.patch });
+        } else
           next.set(op.item.id, {
             ...op.item,
             checked: false,
@@ -179,6 +183,7 @@ export function ShoppingScreen({
         if (op.op === "check" && next.has(op.id))
           next.set(op.id, { ...next.get(op.id)!, checked: op.checked });
         if (op.op === "delete") next.delete(op.id);
+        if (op.op === "edit" && next.has(op.id)) next.set(op.id, { ...next.get(op.id)!, ...op.patch });
         if (op.op === "add" && !next.has(op.item.id)) {
           next.set(op.item.id, { ...op.item, checked: false, added_by: userId, updated_at: "" });
         }
@@ -325,14 +330,17 @@ export function ShoppingScreen({
     router.refresh();
   };
 
-  const add = (name: string, quantity = "") => {
+  /** Ajoute un article hors menu ; s'il est déjà sur la liste, le remet à prendre (et met à jour sa quantité). */
+  const add = (name: string, quantity = "", aisle?: string) => {
     const clean = name.trim();
     if (!clean) return;
-    const existing = list.find(
-      (i) => i.source === "manual" && (i.label ?? "").toLowerCase() === clean.toLowerCase(),
-    );
+    // Déjà prévu pour le menu : pas de doublon ajouté à la main.
+    if (list.some((i) => i.source !== "manual" && normalize(nameOf(i)) === normalize(clean))) return;
+    const existing = list.find((i) => i.source === "manual" && normalize(i.label ?? "") === normalize(clean));
     if (existing) {
       if (existing.checked) run({ op: "check", id: existing.id, checked: false });
+      if (quantity.trim() && quantity.trim() !== existing.qty_text)
+        run({ op: "edit", id: existing.id, patch: { qty_text: quantity.trim() } });
       return;
     }
     const item: NewItem = {
@@ -343,7 +351,7 @@ export function ShoppingScreen({
       ingredient_key: null,
       label: clean.charAt(0).toUpperCase() + clean.slice(1),
       qty_text: quantity.trim() || null,
-      aisle: guessAisle(clean),
+      aisle: aisle ?? classify(clean, habits),
     };
     run({ op: "add", item });
   };
@@ -407,6 +415,17 @@ export function ShoppingScreen({
   const toConfirmCount = lineList.filter((l) => l.status === "to_verify").length;
   const flaggedCount = lineList.filter((l) => l.issue).length;
   const readOnly = !online && !FEATURES.offlineWrites;
+  // Ce qui est déjà sur la liste, menu compris (« Œufs » du menu n'est pas proposé une seconde fois).
+  const onList = new Map<string, OnList>();
+  for (const i of [...list].sort((a, b) => Number(a.source === "manual") - Number(b.source === "manual")))
+    if (nameOf(i))
+      onList.set(normalize(nameOf(i)), { id: i.id, checked: i.checked, manual: i.source === "manual" });
+  const aisleName = (k: string) => aisles.find((a) => a.key === k)?.label ?? t.other;
+  const moveItem = (i: Item, aisle: string) => {
+    if (aisle === i.aisle) return;
+    run({ op: "edit", id: i.id, patch: { aisle } });
+    toast(t.moved(nameOf(i), aisleName(aisle)));
+  };
   const toggleRow = (id: string) =>
     setOpenRows((prev) => {
       const next = new Set(prev);
@@ -529,52 +548,14 @@ export function ShoppingScreen({
             />
           </div>
 
-          <form
-            className="card flex flex-wrap items-end gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              add(label, qty);
-              setLabel("");
-              setQty("");
-            }}
-          >
-            <label htmlFor="item-label" className="sr-only">
-              {t.addLabel}
-            </label>
-            <input
-              id="item-label"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
-              placeholder={t.addPlaceholder}
-              maxLength={80}
-              disabled={readOnly}
-              className="input w-full min-w-0 sm:w-auto sm:flex-[3]"
-            />
-            <label htmlFor="item-qty" className="sr-only">
-              {t.qtyLabel}
-            </label>
-            <input
-              id="item-qty"
-              value={qty}
-              onChange={(e) => setQty(e.target.value)}
-              placeholder={t.qtyPlaceholder}
-              maxLength={30}
-              disabled={readOnly}
-              className="input mono w-24 min-w-0 flex-1"
-            />
-            <Button type="submit" disabled={readOnly}>
-              {t.add}
-            </Button>
-            {frequent.length > 0 && (
-              <div className="flex w-full flex-wrap gap-2 pt-1">
-                {frequent.map((f) => (
-                  <button key={f} type="button" onClick={() => add(f)} disabled={readOnly} className="chiptg">
-                    + {f}
-                  </button>
-                ))}
-              </div>
-            )}
-          </form>
+          <AddExtras
+            aisles={aisles}
+            habits={habits}
+            onList={onList}
+            readOnly={readOnly}
+            onAdd={add}
+            onRemove={(id) => run({ op: "delete", id })}
+          />
 
           {baseUsed.length > 0 && (
             <Card padding="sm" className="flex flex-col gap-2">
@@ -614,7 +595,10 @@ export function ShoppingScreen({
                       const key = i.ingredient_key;
                       const line = purchases && key ? purchases.lines[key] : undefined;
                       const name = nameOf(i);
-                      const isOpen = !!line && (openRows.has(i.id) || editing === key || issueFor === key);
+                      const manual = i.source === "manual";
+                      const isOpen = line
+                        ? openRows.has(i.id) || editing === key || issueFor === key
+                        : manual && openRows.has(i.id);
                       const sub = [
                         i.source === "manual"
                           ? i.added_by === userId
@@ -670,12 +654,12 @@ export function ShoppingScreen({
                               onChange={(e) => void onCheck(i, e.target.checked)}
                               className="cb"
                             />
-                            {line ? (
+                            {line || manual ? (
                               <button
                                 type="button"
                                 aria-expanded={isOpen}
                                 aria-controls={`pb-${i.id}`}
-                                aria-label={t.toggleLine(name)}
+                                aria-label={line ? t.toggleLine(name) : t.editItem(name)}
                                 onClick={() => toggleRow(i.id)}
                                 className="flex min-h-12 min-w-0 flex-1 cursor-pointer items-center gap-2.5 border-0 bg-transparent p-0 text-left"
                               >
@@ -702,6 +686,44 @@ export function ShoppingScreen({
                               </button>
                             )}
                           </div>
+                          {isOpen && manual && (
+                            <div id={`pb-${i.id}`} className="flex flex-wrap items-end gap-3 pb-4 pl-10">
+                              <label className="flex min-w-40 flex-[2] flex-col gap-1">
+                                <span className="t-small font-bold">{t.aisleLabel}</span>
+                                <select
+                                  value={i.aisle}
+                                  disabled={readOnly}
+                                  onChange={(e) => moveItem(i, e.target.value)}
+                                  className="input"
+                                >
+                                  {aisles.map((a) => (
+                                    <option key={a.key} value={a.key}>
+                                      {a.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
+                              <label className="flex min-w-24 flex-1 flex-col gap-1">
+                                <span className="t-small font-bold">{t.qtyLabel}</span>
+                                <input
+                                  key={i.qty_text ?? ""}
+                                  defaultValue={i.qty_text ?? ""}
+                                  placeholder={t.qtyPlaceholder}
+                                  maxLength={30}
+                                  disabled={readOnly}
+                                  onBlur={(e) => {
+                                    const v = e.target.value.trim() || null;
+                                    if (v !== i.qty_text)
+                                      run({ op: "edit", id: i.id, patch: { qty_text: v } });
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") e.currentTarget.blur();
+                                  }}
+                                  className="input mono"
+                                />
+                              </label>
+                            </div>
+                          )}
                           {isOpen && line && key && (
                             <div id={`pb-${i.id}`} className="flex flex-col gap-3 pb-4 pl-10">
                               <PurchaseBlock

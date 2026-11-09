@@ -15,6 +15,16 @@ const opSchema = z.discriminatedUnion("op", [
   z.object({ op: z.literal("check"), id: uuid, checked: z.boolean() }),
   z.object({ op: z.literal("delete"), id: uuid }),
   z.object({
+    op: z.literal("edit"),
+    id: uuid,
+    patch: z
+      .object({
+        aisle: z.string().min(1).max(80).optional(),
+        qty_text: z.string().max(80).nullable().optional(),
+      })
+      .refine((p) => p.aisle !== undefined || p.qty_text !== undefined),
+  }),
+  z.object({
     op: z.literal("add"),
     item: z.object({
       id: uuid,
@@ -63,6 +73,14 @@ export async function applyShoppingOp(input: QueuedOp): Promise<"sent" | "droppe
       if (op.op === "check")
         await db.updateTable("shopping_items").set({ checked: op.checked }).where("id", "=", op.id).execute();
       else if (op.op === "delete") await db.deleteFrom("shopping_items").where("id", "=", op.id).execute();
+      // Seuls les articles ajoutés à la main changent de rayon ou de quantité : ceux du menu suivent le menu.
+      else if (op.op === "edit")
+        await db
+          .updateTable("shopping_items")
+          .set(op.patch)
+          .where("id", "=", op.id)
+          .where("source", "=", "manual")
+          .execute();
       else
         await db
           .insertInto("shopping_items")
