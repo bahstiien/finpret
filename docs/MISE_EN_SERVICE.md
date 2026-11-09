@@ -28,7 +28,7 @@ Détail des services et commandes : `deploy/README.md` ; sauvegarde et restaurat
 1. Pousser un tag (`git tag v1.0.0 && git push origin v1.0.0`) : le workflow construit l'image et lance `docker compose up -d`.
    Au premier démarrage, Postgres crée la base et les rôles, `migrate` applique toutes les migrations, puis l'app démarre.
 2. Vérifier : `docker compose ps` (quatre services, `app` *healthy*), `docker compose logs migrate` (« migration … » puis fin sans erreur).
-3. Importer le catalogue (ingrédients, recettes, contenants) depuis un poste, par le tunnel SSH de `deploy/README.md` : `pnpm seed`.
+3. Le catalogue (ingrédients, prix, recettes, contenants) s'importe tout seul : une fois l'app *healthy*, chaque déploiement joue `scripts/seed.mjs` (le `pnpm seed` empaqueté dans l'image), qui aligne le catalogue global sur `seed/*.json` de la version déployée. Vérifier la ligne « Catalogue importé : … » dans le journal du workflow Deploy.
 
 ## 4. Planificateur et sauvegardes
 
