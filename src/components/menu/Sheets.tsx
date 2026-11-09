@@ -32,6 +32,7 @@ export function GuestsSheet({
   meal,
   initial,
   custom,
+  onRemove,
   shortcuts,
   childFactor,
   onClose,
@@ -41,6 +42,8 @@ export function GuestsSheet({
   meal: "lunch" | "dinner";
   initial: { a: number; c: number };
   custom: boolean;
+  /** Depuis la grille « Repas à prévoir » : retire le repas du créneau. */
+  onRemove?: () => void;
   shortcuts: { family: { a: number; c: number }; adults: { a: number; c: number } };
   childFactor: number;
   onClose: () => void;
@@ -104,6 +107,11 @@ export function GuestsSheet({
       >
         {t.guests.confirm(fmtP(parts))}
       </Button>
+      {onRemove && (
+        <Button type="button" variant="outline" disabled={pending} onClick={onRemove}>
+          {t.guests.removeSlot}
+        </Button>
+      )}
     </Sheet>
   );
 }

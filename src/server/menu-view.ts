@@ -76,6 +76,9 @@ export type GridCell = {
   meal: Meal;
   state: "on" | "off" | "removed" | "empty" | "set";
   name: string | null;
+  /** Convives du créneau (« Qui est à table ? ») ; custom si modifiés pour cette semaine. */
+  counts: { a: number; c: number };
+  custom: boolean;
 };
 
 export type MenuView = {
@@ -235,14 +238,18 @@ export function buildMenuView(
       if (day > 5) {
         const id = w.weekend?.[key];
         const r = id ? (env.mainById.get(id) ?? env.soupById.get(id) ?? env.simpleById.get(id)) : null;
-        grid.push({ day, meal, state: r ? "set" : "empty", name: r?.s ?? null });
+        const g = guestsText(ctx, pm, w, day, meal);
+        grid.push({ day, meal, state: r ? "set" : "empty", name: r?.s ?? null, counts: g.counts, custom: g.custom });
       } else {
         const s = map[key];
+        const g = guestsText(ctx, pm, w, day, meal);
         grid.push({
           day,
           meal,
           state: !s ? "off" : isRemoved(w, day, meal) ? "removed" : "on",
           name: s?.r.s ?? null,
+          counts: g.counts,
+          custom: g.custom,
         });
       }
     }
