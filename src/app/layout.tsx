@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-dvh">
         {children}
-        <NewVersionGuard />
+        <NewVersionGuard text={fr.errors.newVersion.text} reload={fr.errors.newVersion.reload} />
       </body>
     </html>
   );
