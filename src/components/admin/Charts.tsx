@@ -194,3 +194,40 @@ export function Kpi({
     </div>
   );
 }
+
+/** Classement en barres horizontales (top recettes, origines, ingrédients…), proportionnelles au premier. */
+export function BarList({
+  items,
+  label,
+  color = "violet",
+  empty = "Rien sur la période.",
+}: {
+  items: { label: React.ReactNode; n: number; hint?: React.ReactNode; key?: string }[];
+  label: string;
+  color?: ChartColor;
+  empty?: string;
+}) {
+  const max = Math.max(1, ...items.map((i) => i.n));
+  if (!items.length) return <p className="muted t-small">{empty}</p>;
+  return (
+    <ol className="flex flex-col gap-2" aria-label={label}>
+      {items.map((item, i) => (
+        <li key={item.key ?? i} className="flex flex-col gap-1">
+          <div className="t-small flex items-baseline justify-between gap-2">
+            <span className="min-w-0">
+              <b>{item.label}</b>
+              {item.hint && <span className="muted"> · {item.hint}</span>}
+            </span>
+            <b className="mono shrink-0">{item.n}</b>
+          </div>
+          <span className="block h-3 border-[length:var(--bw)] border-line bg-chip" aria-hidden="true">
+            <span
+              className="block h-full border-r-[length:var(--bw)] border-line"
+              style={{ width: `${(item.n / max) * 100}%`, background: FILL[color] }}
+            />
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}

@@ -5,9 +5,11 @@ import { fr } from "@/i18n/fr";
 import "./globals.css";
 
 // Archivo Black (titres, capitales), Space Grotesk (texte), Space Mono (chiffres, métadonnées).
-const archivo = Archivo_Black({ subsets: ["latin", "latin-ext"], weight: "400", variable: "--font-archivo", display: "swap" });
-const grotesk = Space_Grotesk({ subsets: ["latin", "latin-ext"], weight: ["400", "500", "700"], variable: "--font-grotesk", display: "swap" });
-const spaceMono = Space_Mono({ subsets: ["latin", "latin-ext"], weight: ["400", "700"], variable: "--font-space-mono", display: "swap" });
+// Sous-ensemble « latin » seul : il couvre le français (accents, œ, €, guillemets, espaces fines) ; « latin-ext »
+// ajoutait 4 fichiers préchargés sur chaque page sans servir à aucun texte de l'application.
+const archivo = Archivo_Black({ subsets: ["latin"], weight: "400", variable: "--font-archivo", display: "swap" });
+const grotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-grotesk", display: "swap" });
+const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-space-mono", display: "swap" });
 
 export const metadata: Metadata = {
   // Base des URL absolues (image de partage, canonical) : finpret.app en production.
@@ -41,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-dvh">
         {children}
-        <NewVersionGuard />
+        <NewVersionGuard text={fr.errors.newVersion.text} reload={fr.errors.newVersion.reload} />
       </body>
     </html>
   );

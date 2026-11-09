@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon, type IconName } from "@/components/ui/Icon";
 
-type Item = { href: string; label: string; icon: IconName; badge?: "inbox" | "tasks" };
+type Item = { href: string; label: string; icon: IconName; badge?: "inbox" | "tasks" | "recipes" };
 
 const GROUPS: { title: string; items: Item[] }[] = [
   {
     title: "Pilotage",
     items: [
       { href: "/admin", label: "Tableau de bord", icon: "dashboard" },
+      { href: "/admin/usage", label: "Usage et communauté", icon: "pot" },
       { href: "/admin/actions", label: "Actions à mener", icon: "todo", badge: "tasks" },
     ],
   },
@@ -24,6 +25,13 @@ const GROUPS: { title: string; items: Item[] }[] = [
       { href: "/admin/segments", label: "Segments", icon: "chart" },
       { href: "/admin/prospects", label: "Pipeline associations", icon: "handshake" },
       { href: "/admin/support", label: "Support", icon: "lifebuoy" },
+    ],
+  },
+  {
+    title: "Catalogue",
+    items: [
+      { href: "/admin/recettes", label: "Suggestions de recettes", icon: "chefHat", badge: "recipes" },
+      { href: "/admin/bibliotheque", label: "Bibliothèque", icon: "pot" },
     ],
   },
   {
@@ -55,7 +63,7 @@ const isActive = (pathname: string, href: string) =>
   href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(`${href}/`);
 
 /** Menu latéral du back-office : fixe à gauche sur grand écran, tiroir sous la barre du haut sur mobile. */
-export function AdminNav({ badges }: { badges: { inbox: number; tasks: number } }) {
+export function AdminNav({ badges }: { badges: { inbox: number; tasks: number; recipes: number } }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   // Le tiroir mobile se referme à chaque changement de page.
@@ -86,7 +94,7 @@ export function AdminNav({ badges }: { badges: { inbox: number; tasks: number } 
                     {count > 0 && (
                       <span
                         className={`mono min-w-6 rounded-full border-[length:var(--bw)] px-1.5 text-center text-xs ${
-                          item.badge === "inbox"
+                          item.badge === "inbox" || item.badge === "recipes"
                             ? "border-[var(--ink-fixed)] bg-[var(--pink)] text-[var(--on-fill)]"
                             : "border-current"
                         }`}

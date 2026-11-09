@@ -21,6 +21,7 @@ import type { Flag as FlagData } from "@/server/menu-view";
 import { buttonClass } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
+import { SuggestSheet } from "./SuggestSheet";
 
 const t = fr.discover;
 
@@ -121,6 +122,9 @@ export function DiscoverScreen({
     openPlan && week ? (recipes.find((r) => r.id === openId && !r.excluded) ?? null) : null,
   );
 
+  // Suggestion à l'équipe : `null` = nouvelle recette, une recette = correction de celle-ci.
+  const [suggest, setSuggest] = useState<{ id: string; name: string } | null | undefined>(undefined);
+
   useEffect(() => {
     if (openId)
       document.querySelector(`[data-testid="recipe-${openId}"]`)?.scrollIntoView({ block: "center" });
@@ -156,11 +160,16 @@ export function DiscoverScreen({
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <PageHeader title={fr.nav.discover} />
-        {canEdit && FEATURES.recipeImport && (
-          <Link href="/app/discover/import" className={buttonClass()}>
-            {t.importCta}
-          </Link>
-        )}
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" onClick={() => setSuggest(null)}>
+            {fr.suggest.newButton}
+          </Button>
+          {canEdit && FEATURES.recipeImport && (
+            <Link href="/app/discover/import" className={buttonClass()}>
+              {t.importCta}
+            </Link>
+          )}
+        </div>
       </div>
       <div role="tablist" aria-label={t.segments} className="seg self-start">
         {(["recipes", "breakfasts"] as const).map((s) => (
@@ -271,6 +280,7 @@ export function DiscoverScreen({
                       canEdit={canEdit}
                       open={r.id === openId}
                       onPlan={() => setTarget(r)}
+                      onSuggest={() => setSuggest({ id: r.id, name: r.short })}
                     />
                   ))}
                 </ul>
@@ -292,6 +302,7 @@ export function DiscoverScreen({
                 canEdit={canEdit}
                 open={r.id === openId}
                 onPlan={() => setTarget(r)}
+                onSuggest={() => setSuggest({ id: r.id, name: r.short })}
               />
             ))}
           </ul>
@@ -311,6 +322,7 @@ export function DiscoverScreen({
       {target && week && (
         <PlanSheet recipe={target} week={week} dishes={dishes} onClose={() => setTarget(null)} />
       )}
+      {suggest !== undefined && <SuggestSheet recipe={suggest} onClose={() => setSuggest(undefined)} />}
     </>
   );
 }
@@ -321,12 +333,14 @@ function RecipeCard({
   canEdit,
   open,
   onPlan,
+  onSuggest,
 }: {
   recipe: DiscoverRecipe;
   canPlan: boolean;
   canEdit: boolean;
   open: boolean;
   onPlan: () => void;
+  onSuggest: () => void;
 }) {
   const router = useRouter();
   const toast = useToast();
@@ -391,6 +405,11 @@ function RecipeCard({
           {r.allergens.length > 0 && <p className="t-small muted">{t.allergens(r.allergens.join(", "))}</p>}
           {r.unverifiedAllergens && (
             <p className="callout tone-warning text-sm font-bold">{t.unverifiedAllergens}</p>
+          )}
+          {!r.imported && (
+            <Button type="button" variant="ghost" size="sm" className="self-start" onClick={onSuggest}>
+              {fr.suggest.editButton}
+            </Button>
           )}
         </div>
       </details>

@@ -156,15 +156,16 @@ export function TopRecipesCarousel({ slides, total }: { slides: TopSlide[]; tota
                 aria-hidden={k !== i}
                 className={`top-slide ${k === i ? "is-on" : k < i ? "is-before" : ""}`}
               >
+                {/* Sous le hero : pas de `priority`, la photo ne doit pas passer devant le CSS et le texte du LCP. */}
                 <RecipeImage
                   photo={x.photo}
                   sizes="(min-width: 1240px) 640px, (min-width: 900px) 55vw, 100vw"
-                  priority={k === 0}
                   className="nb-lg h-full"
                 />
               </div>
             ))}
-            {!reduced && (
+            {/* Vapeur floutée et animée en continu (repeinte à chaque image) : seulement quand le carrousel est à l'écran. */}
+            {!reduced && visible && (
               <svg key={`steam-${i}`} className="top-steam" viewBox="0 0 120 90" aria-hidden="true">
                 <path d="M30 88c-10-14 10-22 0-38s8-24 2-40" />
                 <path d="M60 88c-10-16 12-24 0-42s10-26 2-42" />

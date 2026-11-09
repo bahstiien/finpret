@@ -46,4 +46,20 @@ describe("file hors ligne des courses", () => {
     q = enqueue(q, { op: "check", id: "n", checked: true });
     expect(q.map((x) => x.op)).toEqual(["add", "check"]);
   });
+
+  it("fond un changement de rayon dans l'ajout encore en file", () => {
+    let q: QueuedOp[] = [];
+    q = enqueue(q, { op: "add", item: item("n") });
+    q = enqueue(q, { op: "edit", id: "n", patch: { aisle: "frais" } });
+    expect(q).toEqual([{ op: "add", item: { ...item("n"), aisle: "frais" } }]);
+  });
+
+  it("cumule les modifications d'un article existant et les oublie s'il est supprimé", () => {
+    let q: QueuedOp[] = [];
+    q = enqueue(q, { op: "edit", id: "x", patch: { aisle: "frais" } });
+    q = enqueue(q, { op: "edit", id: "x", patch: { qty_text: "6" } });
+    expect(q).toEqual([{ op: "edit", id: "x", patch: { aisle: "frais", qty_text: "6" } }]);
+    q = enqueue(q, { op: "delete", id: "x" });
+    expect(q).toEqual([{ op: "delete", id: "x" }]);
+  });
 });

@@ -26,8 +26,10 @@ test("garde-manger, restes après la session et congélateur", async ({ page }) 
   await page.goto("/app/stock");
   await page.getByLabel("Ajouter un ingrédient").fill(name);
   await page.getByRole("button", { name: `+ ${name}`, exact: true }).click();
-  await expect(toast).toContainText("Garde-manger mis à jour");
-  await expect(page.getByTestId("pantry")).toContainText(`${name} : Assez`);
+  // Toast et garde-manger suivent la réponse de l'action (resynchronisation de la liste, puis rendu serveur) : sur une
+  // machine chargée, l'écran rafraîchi peut arriver plusieurs secondes après.
+  await expect(toast).toContainText("Garde-manger mis à jour", { timeout: 15_000 });
+  await expect(page.getByTestId("pantry")).toContainText(`${name} : Assez`, { timeout: 15_000 });
   await page.goto("/app/shopping");
   await expect(progress).toHaveText(`0 / ${total - 1} articles`);
   await expect(page.getByTestId("shopping-item").filter({ hasText: name })).toHaveCount(0);

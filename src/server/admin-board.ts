@@ -13,7 +13,7 @@ import type {
 const count = sql<number>`count(*)`.as("n");
 const num = (row: { n: number | string } | undefined) => Number(row?.n ?? 0);
 
-/** Compteurs du menu latéral : demandes de contact nouvelles et actions ouvertes. */
+/** Compteurs du menu latéral : demandes de contact nouvelles, actions ouvertes, suggestions de recettes à traiter. */
 export async function navBadges() {
   return withAdmin(async (db) => ({
     inbox: num(
@@ -21,6 +21,9 @@ export async function navBadges() {
     ),
     tasks: num(
       await db.selectFrom("admin_tasks").select(count).where("status", "!=", "done").executeTakeFirst(),
+    ),
+    recipes: num(
+      await db.selectFrom("recipe_suggestions").select(count).where("status", "=", "new").executeTakeFirst(),
     ),
   }));
 }
