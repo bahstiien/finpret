@@ -12,6 +12,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
     title: "Pilotage",
     items: [
       { href: "/admin", label: "Tableau de bord", icon: "dashboard" },
+      { href: "/admin/usage", label: "Usage et communauté", icon: "pot" },
       { href: "/admin/actions", label: "Actions à mener", icon: "todo", badge: "tasks" },
     ],
   },
