@@ -1,5 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
-import { adminDb, dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
+import { sql } from "kysely";
+import { activeWeekStart, localDate } from "../../src/engine/streak";
+import { adminDb, dbConfigured, householdIdOf, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
 // SPEC_PROGRES §9 : série fin prête et passeport des saveurs (jalons G2 à G4).
@@ -7,6 +9,12 @@ test.skip(!dbConfigured, "Postgres n'est pas configuré (DATABASE_URL, voir .env
 test.skip(({ isMobile }) => isMobile, "parcours joué sur le projet desktop");
 
 const MONDAY_MS = 7 * 86_400_000;
+
+/**
+ * Délai pour un affichage rendu par le serveur après une action (`revalidatePath`) : le toast part dès la réponse,
+ * l'écran rafraîchi peut suivre plusieurs secondes après sur une machine chargée (CI, workers en parallèle).
+ */
+const AFTER_ACTION = { timeout: 15_000 };
 
 /** Lundi (ISO) de la semaine contenant `now`, décalé de `weeks` semaines. */
 function mondayOffset(weeks: number): string {
@@ -16,10 +24,12 @@ function mondayOffset(weeks: number): string {
   return new Date(monday + weeks * MONDAY_MS).toISOString().slice(0, 10);
 }
 
-async function signUp(page: Page, name: string) {
+async function signUp(page: Page, name: string): Promise<string> {
+  const email = uniqueEmail(name);
   await page.goto("/login");
-  await signInFromLoginPage(page, uniqueEmail(name));
+  await signInFromLoginPage(page, email);
   await completeOnboarding(page, name);
+  return email;
 }
 
 /** Foyer du compte connecté (cookie actif), lu directement en base. */
@@ -35,6 +45,24 @@ async function householdId(page: Page): Promise<string> {
     .limit(1)
     .executeTakeFirstOrThrow();
   return row.id;
+}
+
+/**
+ * L'onboarding prépare la semaine du lundi suivant, dont la fenêtre de session (SPEC_PROGRES §3.1) ne s'ouvre que le
+ * jeudi : du lundi au mercredi, une session terminée tout de suite ne compte pas pour la série. Pour que le test ne
+ * dépende pas du jour, la semaine générée est replacée sur la semaine active (celle dont la fenêtre contient aujourd'hui).
+ */
+async function moveWeekIntoSessionWindow(household: string) {
+  const active = activeWeekStart(localDate(new Date(), "Europe/Paris"));
+  await adminDb()
+    .updateTable("weeks")
+    .set({
+      start_date: active,
+      plan: sql`jsonb_set(plan, '{start}', to_jsonb(${active}::text))`,
+    })
+    .where("household_id", "=", household)
+    .where("start_date", "<>", active)
+    .execute();
 }
 
 async function seedStreak(household: string, weeks: number) {
@@ -60,7 +88,8 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
   page,
 }) => {
   test.setTimeout(240_000);
-  await signUp(page, "progres-session");
+  const email = await signUp(page, "progres-session");
+  await moveWeekIntoSessionWindow(await householdIdOf(email));
   await page.goto("/app/session");
   await page.getByRole("button", { name: "Commencer la session" }).click();
   const stepCard = page.getByTestId("session-step");
@@ -70,7 +99,10 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
     for (let j = 0; j < (await boxes.count()); j++) await boxes.nth(j).check();
     if (i < total) await page.getByRole("button", { name: /^Étape suivante/ }).click();
   }
-  await expect(page.getByTestId("session-streak")).toContainText("Ta première semaine fin prête");
+  await expect(page.getByTestId("session-streak")).toContainText(
+    "Ta première semaine fin prête",
+    AFTER_ACTION,
+  );
   await page.goto("/app/progress");
   await expect(page.getByTestId("streak-current")).toContainText("1 semaine fin prête");
   await expect(page.getByTestId("passport-count")).toContainText(/\d+ pays sur 19/);
@@ -88,12 +120,12 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
   await dialog.getByTestId("confirm-pause").click();
   await expect(page.getByTestId("toast")).toContainText("Pause posée");
   await page.keyboard.press("Escape");
-  await expect(page.getByTestId("pauses-left")).toContainText("1 pause disponible");
+  await expect(page.getByTestId("pauses-left")).toContainText("1 pause disponible", AFTER_ACTION);
   await page.getByTestId("plan-pause").click();
   await dialog.locator('[data-planned="true"]').getByRole("button", { name: /^Annuler la pause/ }).click();
   await expect(page.getByTestId("toast")).toContainText("Pause annulée");
   await page.keyboard.press("Escape");
-  await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
+  await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles", AFTER_ACTION);
 });
 
 test("un tampon vide mène à Découvrir filtré par pays, avec « Mettre au menu »", async ({ page }) => {
