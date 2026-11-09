@@ -1,4 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
+import { sql } from "kysely";
+import { activeWeekStart } from "../../src/engine/streak";
+import { todayIn } from "../../src/lib/dates";
 import { adminDb, dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
@@ -37,6 +40,26 @@ async function householdId(page: Page): Promise<string> {
   return row.id;
 }
 
+/**
+ * L'onboarding prépare toujours la semaine du lundi suivant, alors que du lundi au mercredi la série compte encore
+ * la semaine en cours (fenêtre de session jeudi → mercredi). Ces jours-là, on cale le menu sur la semaine active
+ * pour que le parcours ne dépende pas du jour où la CI tourne.
+ */
+async function alignWeekWithStreak(page: Page) {
+  const household = await householdId(page);
+  const active = activeWeekStart(todayIn("Europe/Paris"));
+  await adminDb()
+    .updateTable("weeks")
+    .set({
+      start_date: active,
+      status: "active",
+      plan: sql`jsonb_set(plan, '{start}', to_jsonb(${active}::text))`,
+    })
+    .where("household_id", "=", household)
+    .where("start_date", ">", active)
+    .execute();
+}
+
 async function seedStreak(household: string, weeks: number) {
   const rows = Array.from({ length: weeks }, (_, i) => ({
     household_id: household,
@@ -61,6 +84,7 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
 }) => {
   test.setTimeout(240_000);
   await signUp(page, "progres-session");
+  await alignWeekWithStreak(page);
   await page.goto("/app/session");
   await page.getByRole("button", { name: "Commencer la session" }).click();
   const stepCard = page.getByTestId("session-step");
@@ -79,6 +103,7 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
 
 test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page }) => {
   await signUp(page, "progres-pause");
+  await alignWeekWithStreak(page);
   await page.goto("/app/progress");
   await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
   await page.getByTestId("plan-pause").click();
@@ -90,7 +115,10 @@ test("planifier une pause diminue les jetons, l'annuler les rend", async ({ page
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("pauses-left")).toContainText("1 pause disponible");
   await page.getByTestId("plan-pause").click();
-  await dialog.locator('[data-planned="true"]').getByRole("button", { name: /^Annuler la pause/ }).click();
+  await dialog
+    .locator('[data-planned="true"]')
+    .getByRole("button", { name: /^Annuler la pause/ })
+    .click();
   await expect(page.getByTestId("toast")).toContainText("Pause annulée");
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("pauses-left")).toContainText("2 pauses disponibles");
