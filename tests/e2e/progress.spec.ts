@@ -1,4 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
+import { sql } from "kysely";
 import { adminDb, dbConfigured, signInFromLoginPage, uniqueEmail } from "./helpers/auth";
 import { completeOnboarding } from "./helpers/onboarding";
 
@@ -37,6 +38,27 @@ async function householdId(page: Page): Promise<string> {
   return row.id;
 }
 
+/**
+ * La première semaine commence le lundi qui suit l'inscription, et une session ne compte que du jeudi qui précède au
+ * mercredi (SPEC_PROGRES §3.1). Du lundi au mercredi, une session jouée juste après l'inscription tomberait hors de la
+ * fenêtre : la semaine du foyer est alors ramenée au lundi en cours. Les foyers de test sont à l'heure de Paris.
+ */
+async function weekInSessionWindow(household: string) {
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
+  const noon = new Date(`${today}T12:00:00Z`);
+  const weekday = ((noon.getUTCDay() + 6) % 7) + 1;
+  if (weekday > 3) return;
+  const monday = new Date(noon.getTime() - (weekday - 1) * 86_400_000).toISOString().slice(0, 10);
+  await adminDb()
+    .updateTable("weeks")
+    .set({
+      start_date: monday,
+      plan: sql`jsonb_set(plan, '{start}', to_jsonb(${monday}::text))`,
+    })
+    .where("household_id", "=", household)
+    .execute();
+}
+
 async function seedStreak(household: string, weeks: number) {
   const rows = Array.from({ length: weeks }, (_, i) => ({
     household_id: household,
@@ -61,6 +83,7 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
 }) => {
   test.setTimeout(240_000);
   await signUp(page, "progres-session");
+  await weekInSessionWindow(await householdId(page));
   await page.goto("/app/session");
   await page.getByRole("button", { name: "Commencer la session" }).click();
   const stepCard = page.getByTestId("session-step");
