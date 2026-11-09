@@ -61,6 +61,32 @@ export const PANTRY_AISLE: AisleRow = { key: "base", label: "Placard", position:
 
 const DEFAULT_PACK_TOLERANCE = 0.2;
 
+/** Ligne `recipes` d'une recette du catalogue (plat, soupe, soir simple, goûter) : régime et allergènes déduits. */
+export function catalogRecipeRow(
+  kind: Exclude<RecipeKind, "breakfast">,
+  r: {
+    id: string;
+    o?: string | null;
+    months?: number[];
+    ing: Record<string, number>;
+    sv?: { ing: Record<string, number> }[];
+  },
+  protein: Protein | null,
+): RecipeRow {
+  const keys = allIngredientKeys(r);
+  const { id, ...data } = r;
+  return {
+    id,
+    kind,
+    data,
+    origin: r.o ?? null,
+    protein,
+    months: r.months ?? null,
+    diet_tags: dietTags(keys),
+    allergens: recipeAllergens(keys),
+  };
+}
+
 export function buildCatalogRows(seed: Seed): CatalogRows {
   const aisles: AisleRow[] = [
     ...seed.aisles.map(([key, label], i) => ({ key, label, position: i + 1 })),
@@ -99,36 +125,11 @@ export function buildCatalogRows(seed: Seed): CatalogRows {
     observed_at: _meta.observedAt,
   }));
 
-  const recipe = (
-    kind: RecipeKind,
-    r: {
-      id: string;
-      o?: string | null;
-      months?: number[];
-      ing: Record<string, number>;
-      sv?: { ing: Record<string, number> }[];
-    },
-    protein: Protein | null,
-  ): RecipeRow => {
-    const keys = allIngredientKeys(r);
-    const { id, ...data } = r;
-    return {
-      id,
-      kind,
-      data,
-      origin: r.o ?? null,
-      protein,
-      months: r.months ?? null,
-      diet_tags: dietTags(keys),
-      allergens: recipeAllergens(keys),
-    };
-  };
-
   const recipes: RecipeRow[] = [
-    ...seed.mains.map((r) => recipe("main", r, r.p)),
-    ...seed.soups.map((r) => recipe("soup", r, r.p)),
-    ...seed.simples.map((r) => recipe("simple", r, deriveProtein(Object.keys(r.ing)))),
-    ...seed.cakes.map((r) => recipe("cake", r, null)),
+    ...seed.mains.map((r) => catalogRecipeRow("main", r, r.p)),
+    ...seed.soups.map((r) => catalogRecipeRow("soup", r, r.p)),
+    ...seed.simples.map((r) => catalogRecipeRow("simple", r, deriveProtein(Object.keys(r.ing)))),
+    ...seed.cakes.map((r) => catalogRecipeRow("cake", r, null)),
     ...seed.breakfasts.map((b): RecipeRow => ({
       id: breakfastId(b.n),
       kind: "breakfast",

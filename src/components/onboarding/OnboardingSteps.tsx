@@ -13,8 +13,9 @@ import { dur } from "@/engine/format";
 import { GOALS, type Goal } from "@/engine/onboarding";
 import type { Diet } from "@/engine/types";
 import { fr } from "@/i18n/fr";
-import { type MealAnswer, type OnboardingInput, SESSION_MOMENTS, type SessionMoment } from "@/lib/onboarding";
-import { DIETS } from "@/lib/settings";
+import type { OnboardingInput } from "@/lib/onboarding";
+import { type MealAnswer, SESSION_MOMENTS, type SessionMoment } from "@/lib/onboarding-answers";
+import { DIETS } from "@/lib/settings-options";
 import type { OnboardingDishes } from "@/server/onboarding-data";
 import { DishPhoto } from "./DishPhoto";
 

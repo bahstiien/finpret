@@ -284,3 +284,10 @@ h3 {
     animation: none;
   }
 }
+
+/* Accueil : la page mesure plus de 13 000 px sur mobile. Les sections sous le hero et le carrousel ne sont mises
+   en page et peintes qu'à l'approche de l'écran ; `auto` retient leur hauteur réelle une fois rendues. */
+.lp-defer > section:nth-of-type(n + 3) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
+}

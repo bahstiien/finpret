@@ -1,5 +1,5 @@
-import { AISLE_KEYWORDS } from "./aisle-keywords";
 import type { Env } from "./env";
+import { classify } from "./extras";
 import { shopQ } from "./format";
 import type { PortionModel } from "./portions";
 import { needs, totals } from "./quantities";
@@ -7,11 +7,12 @@ import type { Pantry, WeekPlan } from "./types";
 
 /** Liste de courses (§8.3) : articles du menu, placard à vérifier, classement et export (port du prototype). */
 
-/** Rayon d'un article ajouté à la main (`guessCat` du prototype), « divers » s'il n'est pas reconnu. */
+/**
+ * Rayon d'un article ajouté à la main (`guessCat` du prototype, enrichi de la bibliothèque des articles hors menu),
+ * « divers » s'il n'est pas reconnu.
+ */
 export function guessAisle(name: string): string {
-  const n = ` ${name.toLowerCase()} `;
-  for (const [aisle, keywords] of AISLE_KEYWORDS) if (keywords.some((k) => n.includes(k))) return aisle;
-  return "divers";
+  return classify(name);
 }
 
 /** Rayon où acheter un ingrédient du placard quand il manque (`BASE_RAYON` du prototype). */

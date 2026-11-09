@@ -526,11 +526,30 @@ export interface RecipeImports {
   url: string;
 }
 
+export interface RecipeSuggestions {
+  applied_recipe_id: string | null;
+  created_at: Generated<string>;
+  handled_at: string | null;
+  handled_by: string | null;
+  household_id: string | null;
+  id: Generated<number>;
+  kind: "edit" | "new";
+  message: string;
+  note: string | null;
+  recipe_id: string | null;
+  recipe_kind: "main" | "soup" | "simple" | "cake" | null;
+  source_url: string | null;
+  status: Generated<"new" | "accepted" | "rejected">;
+  title: string;
+  user_id: string | null;
+}
+
 export interface Recipes {
   allergens: Generated<string[] | null>;
   created_at: Generated<string>;
   data: Json;
   diet_tags: Generated<string[] | null>;
+  edited_in_admin_at: string | null;
   household_id: string | null;
   id: string;
   imported_by: string | null;
@@ -704,6 +723,7 @@ export interface DB {
   ratings: Ratings;
   recipe_cooks: RecipeCooks;
   recipe_imports: RecipeImports;
+  recipe_suggestions: RecipeSuggestions;
   recipes: Recipes;
   school_menus: SchoolMenus;
   schools: Schools;
