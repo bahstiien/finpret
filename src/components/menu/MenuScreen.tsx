@@ -84,6 +84,8 @@ type Sheet =
       meal: "lunch" | "dinner";
       counts: { a: number; c: number };
       custom: boolean;
+      /** Ouverte depuis la grille : propose aussi « Ne rien prévoir ». */
+      fromGrid?: boolean;
     }
   | { kind: "move"; from: string }
   | { kind: "weekend"; key: string }
@@ -256,6 +258,9 @@ export function MenuScreen({
           canEdit={canEdit}
           pending={pending}
           onToggle={(d, m) => run(() => toggleGridSlot(view.weekId, d, m))}
+          onGuests={(c) =>
+            setSheet({ kind: "guests", day: c.day, meal: c.meal, counts: c.counts, custom: c.custom, fromGrid: true })
+          }
           onWeekend={(key) => setSheet({ kind: "weekend", key })}
           onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
           cakeLine={
@@ -321,6 +326,11 @@ export function MenuScreen({
           meal={sheet.meal}
           initial={sheet.counts}
           custom={sheet.custom}
+          onRemove={
+            sheet.fromGrid
+              ? () => run(() => toggleGridSlot(view.weekId, sheet.day, sheet.meal), () => setSheet(null))
+              : undefined
+          }
           shortcuts={shortcuts}
           childFactor={childFactor}
           onClose={() => setSheet(null)}
@@ -358,6 +368,7 @@ function PlanGrid({
   canEdit,
   pending,
   onToggle,
+  onGuests,
   onWeekend,
   onSuggest,
   cakeLine,
@@ -366,6 +377,7 @@ function PlanGrid({
   canEdit: boolean;
   pending: boolean;
   onToggle: (d: number, m: "lunch" | "dinner") => void;
+  onGuests: (c: MenuView["grid"][number]) => void;
   onWeekend: (key: string) => void;
   onSuggest: () => void;
   cakeLine: React.ReactNode;
@@ -436,8 +448,9 @@ function PlanGrid({
                       type="button"
                       disabled={!canEdit || pending}
                       aria-pressed={on}
-                      onClick={() => onToggle(d, m)}
-                      aria-label={on ? t.grid.on(slot, c.name ?? "") : t.grid.off(slot)}
+                      aria-haspopup={on ? "dialog" : undefined}
+                      onClick={() => (on ? onGuests(c) : onToggle(d, m))}
+                      aria-label={on ? t.grid.on(slot, c.name ?? "", c.counts.a + c.counts.c) : t.grid.off(slot)}
                       className={`mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
                         on
                           ? d === view.todayIndex
@@ -448,7 +461,13 @@ function PlanGrid({
                             : "tone-chip muted"
                       }`}
                     >
-                      {on ? <Icon name="check" className="size-5" /> : "–"}
+                      {on ? (
+                        <span className={`text-base font-bold ${c.custom ? "underline decoration-2 underline-offset-4" : ""}`}>
+                          {c.counts.a + c.counts.c}
+                        </span>
+                      ) : (
+                        "–"
+                      )}
                     </button>
                   </td>
                 );

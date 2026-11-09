@@ -698,7 +698,8 @@ export const fr = {
       title: "Repas à prévoir",
       batch: "Batch",
       weekend: "Week-end",
-      on: (slot: string, name: string) => `${slot} : ${name}, prévu. Touche pour ne rien prévoir.`,
+      on: (slot: string, name: string, people: number) =>
+        `${slot} : ${name}, ${people} à table. Touche pour changer qui est à table ou ne rien prévoir.`,
       off: (slot: string) => `${slot} : rien de prévu. Touche pour le prévoir.`,
       weekendSet: (slot: string, name: string) => `${slot} : ${name}. Touche pour changer.`,
       weekendEmpty: (slot: string) => `${slot} : choisir une recette`,
@@ -735,6 +736,7 @@ export const fr = {
       family: "Toute la famille",
       adultsOnly: "Juste les adultes",
       usual: "Comme d'habitude",
+      removeSlot: "Ne rien prévoir",
       confirm: (parts: string) => `Valider · ${parts} parts`,
     },
     move: {

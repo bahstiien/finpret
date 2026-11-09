@@ -19,7 +19,14 @@ export const metadata: Metadata = {
   applicationName: fr.app.name,
   appleWebApp: { capable: true, title: fr.app.shortName, statusBarStyle: "default" },
   formatDetection: { telephone: false },
-  icons: { apple: "/icons/apple-touch-icon.png" },
+  // Déclarées ici : la clé icons masque les fichiers icon.* de src/app (favicon absent en prod).
+  icons: {
+    icon: [
+      { url: "/brand/finpret-symbole.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
