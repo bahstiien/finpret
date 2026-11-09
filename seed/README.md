@@ -60,3 +60,6 @@ Les textes contiennent des **placeholders** `{clé}` remplacés par la quantité
 `{ id, n, t (gateau | brioche | biscuit | crepe), tm (durée), parts, months?, m, kid, ing, steps }`
 ## breakfasts.json — petits-déjeuners
 `{ n, d, t (sucre | sale), m: [kcal, protéines] }` (pas d'`id` : en générer un à l'import)
+
+## Recettes modifiées depuis le back-office
+Les suggestions des utilisateurs (Découvrir → « Suggérer une modification » / « Proposer une recette ») s'appliquent au catalogue dans `/admin/recettes`. Une recette enregistrée là porte `recipes.edited_in_admin_at` : `pnpm seed` ne l'écrase pas et ne la désactive pas. Pour la reprendre dans le seed, coller la ligne JSON affichée par l'éditeur (« Reporter dans seed/… ») dans le fichier du type ; au `pnpm seed` suivant, la recette identique redevient gérée par le seed. Tant qu'elle n'y est pas, elle est absente des pages publiques (SEO), qui lisent `seed/*.json`.
