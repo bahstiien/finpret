@@ -5,6 +5,7 @@ import { formatShort } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
 import { loadHouseholdContext } from "@/server/household-context";
 import { portionModelFor } from "@/server/household-context";
+import { habitsFrom } from "@/engine/extras";
 import { listOccurrences } from "@/engine/occurrences";
 import { loadLockState, lockedFor, pantryForWeek } from "@/server/allocations";
 import { loadPurchaseView } from "@/server/purchases-view";
@@ -68,9 +69,10 @@ export default async function ShoppingPage() {
         .execute(),
       history: await db
         .selectFrom("shopping_items")
-        .select("label")
+        .select(["label", "aisle"])
         .where("household_id", "=", household.id)
         .where("source", "=", "manual")
+        .orderBy("created_at", "desc")
         .limit(500)
         .execute(),
       profiles: ids.length
@@ -87,12 +89,8 @@ export default async function ShoppingPage() {
     const member = ctx.members.find((m) => m.userId === p.user_id);
     names[p.user_id] = member?.name ?? p.display_name ?? "";
   }
-  const counts = new Map<string, number>();
-  for (const h of history) if (h.label) counts.set(h.label, (counts.get(h.label) ?? 0) + 1);
-  const frequent = [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([label]) => label);
+  // Habitudes du foyer : ses ajouts à la main, rangés là où il les a mis en dernier.
+  const habits = habitsFrom(history).slice(0, 60);
 
   const allAisles = aisles.filter((a) => a.key !== "base");
   const order = [
@@ -194,7 +192,7 @@ export default async function ShoppingPage() {
           .filter((k) => !baseUsed.some((b) => b.key === k))
           .map((k) => ({ key: k, label: env.lib.ingredients[k]?.l ?? k, qty: "", aisle: "epicerie" })),
       ]}
-      frequent={frequent}
+      habits={habits}
       exportFormat={ctx.settings.shopping.exportFormat}
     />
   );
