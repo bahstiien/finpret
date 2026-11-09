@@ -61,7 +61,9 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
         className="side hidden min-[900px]:sticky min-[900px]:top-4 min-[900px]:flex min-[900px]:h-[calc(100dvh-2rem)] min-[900px]:self-start min-[900px]:overflow-y-auto min-[900px]:!border-[length:var(--bw)] min-[900px]:border-line min-[900px]:shadow-[var(--sh)]"
       >
         <Link href="/app" className="logo px-1 pb-4" aria-label={fr.app.name}>
-          <span aria-hidden="true" className="logo-mark font-display">M</span>
+          <span aria-hidden="true" className="logo-mark">
+            <Icon name="pot" className="ic" />
+          </span>
           {fr.app.name}
         </Link>
         {TABS.map((tab) => {
