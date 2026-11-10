@@ -50,7 +50,6 @@ Corrigés depuis l'audit du 24 octobre : résiliation Stripe à la suppression, 
 | Élément | État |
 | --- | --- |
 | `RECAP_JANVIER.md`, `AUDIT_ECART_JANVIER.md` | Datés du 20 octobre, parlent encore de Supabase et d'Edge Functions : à mettre à jour ou archiver. |
-| `README.md` | Décrit une CI Docker/Mailpit et cite Apple et l'import comme actifs. |
 | `CLAUDE.md` | Compte de goûters (47) à mettre à jour si `gouters-150` est fusionnée. |
 | Processus métier non écrits | Validation d'une association (délai, motifs de refus), échec de webhook Stripe, reversements et remboursements, demandes RGPD. |
 
@@ -69,4 +68,4 @@ Gel des fonctionnalités le 18 décembre 2026, lancement le 4 janvier 2027. « Q
 | 7 | Fusionner `fix-progress-e2e-date` et `gouters-150` | Code | Branches fusionnées, CI verte |
 | 8 | Tests e2e : `/admin`, `/asso`, articles hors menu, suggestions, budget | Code | Parcours joués en CI |
 | 9 | Trancher courses réelles et cantine par enfant | Toi | Décisions notées ici |
-| 10 | Mettre à jour README, `RECAP_JANVIER.md` ; écrire les processus métier | Code et Toi | Docs à jour |
+| 10 | Mettre à jour `RECAP_JANVIER.md` ; écrire les processus métier | Code et Toi | Docs à jour |
