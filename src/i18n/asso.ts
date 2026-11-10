@@ -12,7 +12,6 @@ export const assoFr = {
   status: {
     pending:
       "Votre demande est en cours de validation. Le code de votre association sera actif dès que nous aurons vérifié votre numéro RNA ou SIREN.",
-    approved: "Association validée",
     rejected: (reason: string | null) => `Votre demande a été refusée${reason ? ` : ${reason}` : "."}`,
     suspended: "Cette association est suspendue. Écrivez-nous à bonjour@finpret.app.",
   },
@@ -151,9 +150,6 @@ export const assoFr = {
   statements: {
     title: "Relevés trimestriels",
     lead: "Un relevé est établi chaque trimestre. Le virement est déclenché dès 20 € ; en dessous, le montant est reporté.",
-    quarter: "Trimestre",
-    amount: "Montant",
-    status: "Statut",
     statuses: { ready: "À verser", paid: "Versé", carried_over: "Reporté" },
     download: "Télécharger le relevé",
     none: "Aucun relevé pour l'instant.",

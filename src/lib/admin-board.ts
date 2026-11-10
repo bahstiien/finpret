@@ -61,7 +61,6 @@ export const taskSchema = z.object({
     .optional()
     .transform((v) => v || null),
 });
-export type TaskInput = z.infer<typeof taskSchema>;
 
 /** Une action ouverte est en retard si son échéance est passée. */
 export const isOverdue = (t: { status: string; due_on: string | null }, today: string) =>

@@ -24,8 +24,6 @@ export const associationsFr = {
     how: "Comment ça marche",
     signup: "Créer le compte",
     skip: "Aller au contenu",
-    open: "Ouvrir le menu",
-    close: "Fermer le menu",
   },
   hero: {
     proofs: ["Sans stock", "Sans engagement", "Données hébergées en Europe"],
@@ -50,7 +48,6 @@ export const associationsFr = {
     ],
   },
   how: {
-    id: "comment",
     title: "Une action qui tourne toute seule",
     // L'icône voyage avec son texte : réordonner une liste ne désaccorde plus le dessin.
     steps: [

@@ -22,7 +22,5 @@ export const ORIGINS: Record<string, { name: string; flag: string; region: strin
   vn: { name: "Viêt Nam", flag: "🇻🇳", region: "Asie" },
 };
 
-export const REGIONS = [...new Set(Object.values(ORIGINS).map((o) => o.region))];
-
 /** Recette du monde : origine autre que la France. */
 export const originOf = (code: string | undefined | null) => (code ? (ORIGINS[code] ?? null) : null);

@@ -14,7 +14,6 @@ const DAY_MS = 86400000;
 /** Date du jour `i` de la semaine (1 = lundi, 0 = dimanche de la session). */
 export const dayDate = (w: Pick<WeekPlan, "start">, i: number) =>
   new Date(Date.parse(`${w.start}T12:00:00Z`) + (i - 1) * DAY_MS);
-export const dayIso = (w: Pick<WeekPlan, "start">, i: number) => dayDate(w, i).toISOString().slice(0, 10);
 const weekday = new Intl.DateTimeFormat("fr-FR", { weekday: "long", timeZone: "UTC" });
 /** « lundi » ; le jour 0 est le dimanche de la session. */
 export const dayShort = (w: Pick<WeekPlan, "start">, i: number) =>
