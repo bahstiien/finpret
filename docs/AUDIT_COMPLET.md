@@ -1,129 +1,71 @@
 # Audit complet de Fin Prêt
 
-Mis à jour le 24 octobre 2026, branche `design-system-ui` @ `4b0fc1d` (poussée sur `origin`).
-Remplace `AUDIT_ECART_JANVIER.md` (photo du 20 octobre, périmée : tous les jalons J0 à J8 sont livrés).
+Mis à jour le 10 novembre 2026, branche `main` @ `6dda926` (après la PR #43).
+Remplace l'audit du 24 octobre (avant la migration Postgres) et `AUDIT_ECART_JANVIER.md` (photo du 20 octobre, périmée).
 
-**Vérifié** : `pnpm lint`, `pnpm typecheck`, `pnpm test` (509 tests, 45 fichiers), `pnpm build` (hook pre-push), `pnpm db:push:dry` (base distante à jour, 20 migrations).
-**Non vérifié** : Playwright, pgTAP, interface dans un navigateur, Stripe en réel.
+**Méthode** : relecture du code de `main` (drapeaux de `src/lib/features.ts`, marqueurs `TODO(spec)` et `TODO(juriste)`, tests de bout en bout, CI) et des branches locales non fusionnées.
+**Non vérifié pour cet audit** : exécution des tests, interface dans un navigateur, production.
 
-## 1. Fonctionnalités non terminées ou inactives
+## 1. Fonctionnalités codées mais éteintes
 
 | Sujet | État | Reste à faire |
 | --- | --- | --- |
-| Courses réelles (`FEATURES.realPurchases = false`) | Lots L1 à L4 codés. **Nouveau** : panneau « Où j'en suis » (`WeekOpsPanel` : déjà commencé / préparé, réaffectation d'achats). `markPreparation` accepte les identifiants dérivés. | Écrans jamais vérifiés dans un navigateur. Pas d'action « retirer le repas non commencé » quand aucune adaptation n'est trouvée. L5 (temps réel de bout en bout, mesures) et L6 (pilote) non traités. Décision : pilote ou report. |
-| Série et passeport | Migrations appliquées (base à jour). **Nouveau** : lien « Nos progrès » en fin de session, donc `progress_viewed` émis (`from=session`). | Types Supabase écrits à la main : lancer `pnpm db:types` (`SUPABASE_ACCESS_TOKEN`). Parcours Playwright `progress.spec.ts` jamais joués. |
-| Fonctions REPORTÉES | 11 drapeaux à `false` dans `src/lib/features.ts`. | Code mort à maintenir ; `ANTHROPIC_API_KEY` ne sert qu'à l'import de recettes (éteint). |
-| Cantine | Cantine par enfant (`householdCanteen: true`) coexiste avec les menus d'école. | Décider du retrait (casserait `canteen.spec.ts`). |
-| Import PDF des menus d'école | Route Next, pas d'Edge Function. | Tout arrive dans « Plat » (pas de découpage entrée/plat/accompagnement sans modèle de langage). PDF source non conservé. |
-| Polices PDF | Helvetica. | Fournir ou télécharger Gabarito et Figtree. |
-| Allergènes | Table `allergens.ts` avec 5 `TODO(spec)` (saucisse, galette, chocolat, bouillon, curry). | Validation éditoriale (sécurité alimentaire). `seed/allergens.json` prévu en J2 inexistant. |
+| Paiement en ligne (`onlinePayment: false`) | Stripe Checkout, portail, webhook idempotent, reversements et clôture trimestrielle codés et couverts par des tests unitaires. Offres affichées avec « Prochainement ». | Aucun test de bout en bout de Checkout. `pnpm stripe:setup` en mode réel le 2 janvier, webhook de production. Décider de la date d'ouverture. |
+| Connexion Google (`googleSignIn: false`) | Bouton affiché avec « Prochainement ». | Identifiants OAuth de production, puis activer. |
+| Parcours associations (`associations: false`) | `/ecole/[code]`, `/asso/*` (menus, équipe, kit, relevés, IBAN), back-office des associations livrés, masqués. | C'est le cœur du modèle économique (J6, J7) : décider de l'ouverture, nom de l'école pilote à fournir (J9). |
+| Courses réelles (`realPurchases: false`) | Lots L1 à L4 codés, panneau « Où j'en suis ». | Écrans jamais vérifiés dans un navigateur ; pas d'action « retirer le repas non commencé » ; L5 (temps réel, mesures) et L6 (pilote) non traités. Décision : pilote ou report. |
+| Autres fonctions REPORTÉES | 9 drapeaux à `false` : Apple, rôle `viewer`, étape « habitudes » de l'onboarding, garde alternée, congélateur et restes, import de recettes, session partagée, écriture hors ligne, rappels courses et session. | Code à maintenir sans usage ; retirer ce qui ne reviendra pas après le lancement. |
+| Cantine | Cantine par enfant (`householdCanteen: true`) coexiste avec les menus d'école publiés (ces derniers ont la priorité). | Trancher : retrait (adapter `canteen.spec.ts`) ou maintien comme repli. |
 
-## 2. Risques et bugs probables (non corrigés)
+## 2. Contenu et conformité
 
-1. ~~**Suppression de compte sans annulation Stripe**~~ **Corrigé le 24/10** (`subscription-cleanup.ts`, résiliation immédiate avant suppression, suppression interrompue si Stripe échoue, 5 tests). Description initiale : **Suppression de compte sans annulation Stripe** (`src/server/actions/settings.ts`, `deleteAccount`) : le foyer est supprimé, la ligne `subscriptions` part en cascade, mais l'abonnement Stripe reste actif. Risque de facturation après suppression. **Priorité 1.**
-2. **Limitation de débit en mémoire** (`src/server/rate-limit.ts`) : inefficace en serverless (compteur par instance). Protège lien magique, `/ecole/[code]`, prospects, création d'association.
-3. ~~**Buckets Storage**~~ **Corrigé le 24/10** (migration `20261106000000_storage_buckets`, appliquée, buckets `asso-kits` et `asso-statements` privés vérifiés ; `canteen-pdfs` abandonné car le PDF n'est pas conservé). Description initiale : seul `asso-kits` est créé à la volée (`kit.ts`). `asso-statements` (relevés PDF) et `canteen-pdfs` ne sont créés nulle part. À vérifier sur le projet distant.
-4. **`current_quarter_cents` non masqué sous 5 foyers** : écart avec D13.
-5. **E-mail de connexion Supabase** : gabarit par défaut (anglais, hors charte), ni gabarit ni SMTP configurés.
-6. **Page `/design-system`** : protégée par `notFound` (non vérifié en production), absente de `robots.ts`.
+| Sujet | État | Reste à faire |
+| --- | --- | --- |
+| Allergènes | `src/engine/catalog/allergens.ts` : 5 `TODO(spec)` (saucisse, galette, chocolat, bouillon, curry) + entrées ajoutées avec les recettes de saison non validées. Allergènes des ingrédients ajoutés par le foyer ignorés (`derive.ts`). | Validation éditoriale (sécurité alimentaire). |
+| Petits-déjeuners | Texte libre, sans régime ni allergènes (`rows.ts`) : ils disparaissent dès qu'un filtre est actif. | Structurer leurs ingrédients ou renseigner régime et allergènes. |
+| Pages légales | Mentions légales, CGU et CGV rédigées (PR #31). **Confidentialité** et **Partenariat associations** affichent encore `TODO(juriste)`. | Textes à fournir ; la politique de confidentialité est obligatoire (RGPD) avant l'ouverture. |
+| Suppression de compte | Immédiate (`deleteAccount`, abonnement Stripe résilié d'abord) ; la spec prévoit 30 jours. | Aligner sur la spec ou documenter le choix de l'immédiat. |
+| Charte | `brand/charte-fin-pret.md` absente. | À fournir. |
+| Polices des PDF | Helvetica (`tuto-pdf.tsx`). | Embarquer les polices de la marque. |
+| Support | Délai de réponse non fixé (`fr.ts`, texte provisoire). | Fixer un engagement. |
+| Limites métier | 5 foyers par compte, 10 personnes par foyer, 30 imports par mois, alerte courses à 9 h : propositions en `TODO(spec)`. | Validation PO. |
+| Accueil | Prénom affiché (membre lié au compte ou profil) : `TODO(spec)` §16 Q2. | Décision PO. |
 
-## 3. Exploitation et tests
+## 3. Risques techniques
 
-- Aucune configuration de déploiement dans le dépôt. Trois crons à définir : `notify` (15 min), `streak-close` (horaire), `payouts` (trimestriel).
-- CI : secrets `SUPABASE_DEV_*` non créés, donc build et Playwright sautés sur GitHub.
-- Hook pre-push : lint, typecheck, tests et build (plusieurs minutes par push).
-- Pas de tests e2e pour Stripe Checkout, `/admin`, `/asso` (hors inscription), import PDF. TOTP non automatisé. `subscription.spec.ts` ajouté, non joué.
-- Premier administrateur : insertion SQL manuelle dans `public.admins` puis TOTP.
-- Test de restauration (`RESTAURATION.md`) à jouer avant le 18 décembre.
+1. **Limitation de débit en mémoire** (`src/server/rate-limit.ts`) : compteur par processus, remis à zéro à chaque déploiement. Protège le lien magique, `/ecole/[code]`, les prospects et la création d'association. Une table Postgres suffirait.
+2. **`current_quarter_cents` non masqué sous 5 foyers** (`20261028100000_associations.sql`) : écart avec D13, un montant de 8 € révèle un abonnement.
+3. **Import PDF des menus d'école** : tout arrive dans « Plat » (pas de découpage entrée / plat / accompagnement), PDF source non conservé.
+4. **Test de restauration** (`RESTAURATION.md`) jamais joué : à faire avant le 18 décembre.
 
-## 4. Documentation et processus
+Corrigés depuis l'audit du 24 octobre : résiliation Stripe à la suppression, buckets de fichiers (remplacés par le disque, `src/server/files.ts`), types de la base générés (`pnpm db:types`), e-mails en français au design Néo envoyés par Brevo, déploiement versionné (`deploy/`, crons `notify`, `streak-close`, `payouts`), CI qui joue pgTAP, build et Playwright sans secret.
+
+## 4. Tests
+
+- **Sans test de bout en bout** : `/admin` (dont TOTP), espace `/asso` hors inscription et import de menus, Stripe Checkout, articles hors menu (courses), suggestions de recettes des utilisateurs et `/admin/recettes`, `/admin/usage`, budget de la semaine.
+- **Branches locales non fusionnées** : `fix-progress-e2e-date` (1 commit, test « Nos progrès » indépendant du jour) et `gouters-150` (4 commits : 150 goûters, `main` en a 47).
+
+## 5. Documentation et processus
 
 | Élément | État |
 | --- | --- |
-| `RECAP_COURSES_REELLES.md` | Corrigé le 24 octobre (titre, migrations, panneau « Où j'en suis »). |
-| `README.md` | À corriger : décrit une CI Docker/Mailpit, cite Apple et l'import comme actifs, n'explique ni `/api/cron/payouts`, ni Stripe, ni `IBAN_ENCRYPTION_KEY`, ni le hook pre-push. |
-| `CLAUDE.md` | « Structure cible » obsolète (`supabase/functions/` vide, pas de `/asso`, `/admin`, Stripe). |
-| `SPEC_PROGRES.md` | Introuvable dans le dépôt. |
-| `brand/charte-fin-pret.md` | Toujours absente. |
-| Pages légales | Cinq gabarits `TODO(juriste)` ; bloquant pour la production. Statut de l'éditeur (`COMPANY_*`) non renseigné. |
-| Processus métier non écrits | Validation d'une association (délai, motifs), support, échec de webhook Stripe, reversements et remboursements, demandes RGPD (suppression immédiate, la spec prévoit 30 jours). |
+| `RECAP_JANVIER.md`, `AUDIT_ECART_JANVIER.md` | Datés du 20 octobre, parlent encore de Supabase et d'Edge Functions : à mettre à jour ou archiver. |
+| `CLAUDE.md` | Compte de goûters (47) à mettre à jour si `gouters-150` est fusionnée. |
+| Processus métier non écrits | Validation d'une association (délai, motifs de refus), échec de webhook Stripe, reversements et remboursements, demandes RGPD. |
 
-## 5. Ordre de priorité
+## 6. Ordre de priorité
 
-1. Annuler l'abonnement Stripe à la suppression de compte.
-2. Créer les buckets par migration ; `pnpm db:types`.
-3. Définir hébergement et crons ; magasin partagé pour la limitation de débit.
-4. Textes juridiques, charte, gabarit d'e-mail de connexion.
-5. Jouer Playwright (série, courses réelles, abonnement) ; ajouter Stripe et `/asso`.
-6. Mettre à jour README et CLAUDE.md ; versionner `SPEC_PROGRES.md`.
-7. Trancher le sort des courses réelles, de la cantine par enfant et des allergènes.
+Gel des fonctionnalités le 18 décembre 2026, lancement le 4 janvier 2027. « Qui » : **Code** = développement (Claude Code), **Toi** = décision ou action hors code.
 
-## Plan d'action
-
-Gel des fonctionnalités le 18 décembre 2026, lancement le 4 janvier 2027. Estimations en jours de travail d'une personne ; « Qui » : **Code** = développement (Claude Code), **Toi** = décision ou action hors code.
-
-### Phase 0 : cette semaine (bloquants financiers et techniques)
-
-| # | Action | Qui | Effort | Critère de terminé |
-| --- | --- | --- | --- | --- |
-| 0.1 ✅ 24/10 | Annuler l'abonnement Stripe (`subscriptions.cancel`) avant la suppression du foyer dans `deleteAccount` et `deleteHousehold` ; conserver les lignes comptables | Code | 0,5 | Test unitaire avec Stripe simulé ; aucun abonnement actif après suppression |
-| 0.2 ✅ 24/10 | Migration créant les buckets privés `asso-kits`, `asso-statements`, `canteen-pdfs` avec leurs règles d'accès ; retirer la création à la volée | Code | 0,5 | Relevé PDF et fiche tuto générés sur le projet de développement |
-| 0.3 ⏳ | `pnpm db:types` (token Supabase dans `.env.local`) ; retirer le `TODO(M1)` | Toi (token) puis Code | 0,25 | `database.types.ts` généré, typecheck vert |
-| 0.4 ⏳ | Créer les secrets GitHub `SUPABASE_DEV_*` | Toi | 0,25 | CI : build et Playwright exécutés |
-
-### Phase 1 : avant le 20 novembre (exploitation)
-
-| # | Action | Qui | Effort | Critère de terminé |
-| --- | --- | --- | --- | --- |
-| 1.1 | Choisir l'hébergement ; versionner la configuration de déploiement et des trois crons (`notify`, `streak-close`, `payouts`) | Toi (choix) puis Code | 1 | Crons déclenchés en préproduction, `CRON_SECRET` vérifié |
-| 1.2 | Remplacer la limitation de débit en mémoire par un magasin partagé (ou table Postgres) | Code | 1 | Test : la limite tient sur deux instances |
-| 1.3 | Gabarit d'e-mail de connexion en français aux couleurs de la charte ; SMTP Resend pour l'authentification | Code | 0,5 | Lien magique reçu en français, expéditeur Fin Prêt |
-| 1.4 | Masquer `current_quarter_cents` sous 5 foyers (D13) + test pgTAP | Code | 0,5 | Test pgTAP vert |
-| 1.5 | Premier administrateur et TOTP ; procédure écrite | Toi | 0,25 | Accès `/admin` avec second facteur |
-| 1.6 | Jouer Playwright complet (dont `progress.spec.ts`, `subscription.spec.ts`) et corriger | Code | 1,5 | Suite verte sur le projet de développement |
-| 1.7 | Ajouter des tests e2e : `/asso` (tableau de bord, menus, équipe), `/admin`, import PDF ; webhooks Stripe en mode test | Code | 2 | Parcours B et C de la spec rejoués automatiquement |
-
-### Phase 2 : avant le gel du 18 décembre (contenu, conformité, décisions)
-
-| # | Action | Qui | Effort | Critère de terminé |
-| --- | --- | --- | --- | --- |
-| 2.1 | Textes juridiques (mentions, CGU, CGV avec rétractation, confidentialité, partenariat) et `COMPANY_*` | Toi (juriste) | externe | Plus aucun `TODO(juriste)` |
-| 2.2 | Charte `brand/charte-fin-pret.md` (sections 8 et 9) | Toi | externe | Fichier versionné, textes alignés |
-| 2.3 | Polices Gabarito et Figtree dans les PDF | Toi (fichiers ou accord de téléchargement) puis Code | 0,5 | PDF sans Helvetica |
-| 2.4 | Valider la table d'allergènes (5 `TODO(spec)`) ; créer `seed/allergens.json` | Toi (validation) puis Code | 1 | Plus de `TODO(spec)` dans `allergens.ts` |
-| 2.5 | Décider : cantine par enfant (retrait ou maintien), courses réelles (pilote ou report) | Toi | 0 | Décisions notées dans `RECAP_JANVIER.md` |
-| 2.6 | Si courses réelles retenues : vérifier les écrans dans un navigateur, « retirer le repas non commencé », puis activer pour un foyer pilote | Code | 3 | Parcours L1 à L4 joués, drapeau activé par foyer |
-| 2.7 | Si cantine par enfant retirée : `householdCanteen = false` et adapter `canteen.spec.ts` | Code | 0,5 | Suite verte |
-| 2.8 | Test de restauration (`RESTAURATION.md`) | Toi | 0,5 | Compte rendu daté |
-| 2.9 | Audit Lighthouse et axe sur parcours A et B ; vérifier `/design-system` en production | Code | 0,5 | SEO ≥ 95, accessibilité ≥ 90 |
-
-### Phase 3 : documentation (en continu, 1 jour au total)
-
-- Réécrire `README.md` (CI sans Docker, crons, Stripe, `IBAN_ENCRYPTION_KEY`, hook pre-push).
-- Mettre à jour la « Structure cible » de `CLAUDE.md`.
-- Versionner `SPEC_PROGRES.md` dans `docs/`.
-- Écrire les processus métier : validation d'une association (délai, motifs de refus), support, échec de webhook Stripe, reversements et remboursements, demandes RGPD (aligner la suppression sur les 30 jours de la spec ou documenter l'immédiat).
-
-### Phase 4 : bêta et lancement
-
-| Date | Jalon |
-| --- | --- |
-| 18 décembre | Gel : seules des corrections ensuite |
-| Mi-décembre | Bêta fermée de 20 foyers (J9), nom de l'école pilote fourni |
-| 2 janvier 2027 | Stripe en mode réel (`pnpm stripe:setup` avec clés réelles, webhook de production) |
-| 4 janvier 2027 | Lancement |
-
-### Risques du plan
-
-- **Dépendances externes** (juriste, charte, polices, choix d'hébergement) : les lancer cette semaine, elles ne se compressent pas.
-- **Décision courses réelles** : sans verdict d'ici début décembre, la reporter après le lancement.
-- **Hook pre-push lent** : prévoir 5 à 10 minutes par push.
-
-## Journal des changements depuis l'audit initial
-
-- Panneau `WeekOpsPanel` (déjà commencé / préparé, réaffectation) branché sur l'écran Courses.
-- Correctif `markPreparation` sur semaine sans identifiants persistés.
-- `progress_viewed` émis depuis la fin de session.
-- Constat : toutes les migrations étaient déjà appliquées à la base de développement.
-- Commit `4b0fc1d` poussé (74 fichiers).
-- 24/10 : phase 0.1 et 0.2 faites. 0.3 bloquée : `SUPABASE_ACCESS_TOKEN` vide dans `.env.local`. 0.4 : secrets GitHub à créer par toi.
+| # | Action | Qui | Critère de terminé |
+| --- | --- | --- | --- |
+| 1 | Valider la table d'allergènes ; renseigner les petits-déjeuners | Toi puis Code | Plus de `TODO(spec)` dans `allergens.ts` |
+| 2 | Textes Confidentialité et Partenariat | Toi (juriste) | Plus aucun `TODO(juriste)` |
+| 3 | Décider de l'ouverture : paiement, Google, associations | Toi | Drapeaux fixés pour le lancement, décision notée ici |
+| 4 | Si paiement ouvert : Stripe en mode test de bout en bout, puis réel le 2 janvier | Code puis Toi | Abonnement payé, webhook reçu en production |
+| 5 | Test de restauration | Toi | Compte rendu daté dans `RESTAURATION.md` |
+| 6 | Limitation de débit en table Postgres ; masquer `current_quarter_cents` sous 5 foyers | Code | Tests unitaire et pgTAP verts |
+| 7 | Fusionner `fix-progress-e2e-date` et `gouters-150` | Code | Branches fusionnées, CI verte |
+| 8 | Tests e2e : `/admin`, `/asso`, articles hors menu, suggestions, budget | Code | Parcours joués en CI |
+| 9 | Trancher courses réelles et cantine par enfant | Toi | Décisions notées ici |
+| 10 | Mettre à jour `RECAP_JANVIER.md` ; écrire les processus métier | Code et Toi | Docs à jour |
