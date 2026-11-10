@@ -1,6 +1,8 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Difficulty } from "@/components/ui/Extras";
+import { Icon } from "@/components/ui/Icon";
 import { Pill } from "@/components/ui/Pill";
 import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
@@ -29,10 +31,10 @@ function DayCard({
   const label = `${fr.daysAbbr[day.day - 1]} ${Number(day.iso.slice(8))}${today ? ` · ${fr.menuScreen.today}` : ""}`;
   return (
     <article
-      className={`nb tone-surface flex flex-col ${selected ? "outline-3 outline-offset-3 outline-violet" : ""}`}
+      className={`nb tone-surface flex w-full flex-col ${selected ? "outline-3 outline-offset-3 outline-violet" : ""}`}
     >
       <header
-        className={`flex items-center justify-between px-3 py-2.5 ${today ? "tone-banane" : weekend ? "tone-menu" : "tone-dark"}`}
+        className={`flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 px-3 py-2.5 ${today ? "tone-banane" : weekend ? "tone-menu" : "tone-dark"}`}
       >
         <h3 className="t-kicker">
           <button
@@ -45,7 +47,7 @@ function DayCard({
             {label}
           </button>
         </h3>
-        <span className="t-kicker">
+        <span className="t-kicker whitespace-nowrap">
           {weekend && meals.length === 0 ? t.board.onSite : t.board.meals(meals.length)}
         </span>
       </header>
@@ -74,7 +76,8 @@ function DayCard({
             {m.favorite && <Pill tone="banane">{fr.menuScreen.badges.favorite}</Pill>}
             {m.kind === "simple" && <Pill>{fr.menuScreen.badges.simple}</Pill>}
             {m.removed && <Pill tone="pink">{t.board.removed}</Pill>}
-            <Pill className="mono">{m.guests}</Pill>
+            {/* Le libellé des convives peut être long (« 3 adultes et 1 enfant ») : il passe à la ligne dans la colonne. */}
+            <Pill className="mono max-w-full !whitespace-normal !leading-tight">{m.guests}</Pill>
             {m.difficulty >= 1 && m.difficulty <= 4 && (
               <Pill className="mono">
                 {m.difficulty}/4 <Difficulty level={m.difficulty as 1 | 2 | 3 | 4} />
@@ -87,7 +90,10 @@ function DayCard({
   );
 }
 
-/** Semaine en cartes-jours (maquette) : 5 jours en grille, week-end dessous, filtre Semaine / Midis / Soirs / Week-end. */
+/**
+ * Semaine en carrousel de cartes-jours : les sept jours défilent à l'horizontale (week-end compris), filtre
+ * Semaine / Midis / Soirs / Week-end. Le jour sélectionné (aujourd'hui par défaut) est amené au début.
+ */
 export function WeekBoard({
   view,
   filter,
@@ -99,30 +105,75 @@ export function WeekBoard({
   selected: number;
   onSelect: (day: number) => void;
 }) {
-  const week = view.days.filter((d) => d.day <= 5);
-  const weekend = view.days.filter((d) => d.day > 5);
-  const card = (d: MenuView["days"][number]) => (
-    <DayCard
-      key={d.day}
-      day={d}
-      today={d.day === view.todayIndex}
-      selected={selected === d.day}
-      filter={filter}
-      onSelect={() => onSelect(d.day)}
-    />
-  );
+  const track = useRef<HTMLDivElement>(null);
+  const days = filter === "weekend" ? view.days.filter((d) => d.day > 5) : view.days;
+  const [edges, setEdges] = useState({ start: true, end: false });
+
+  const updateEdges = useCallback(() => {
+    const el = track.current;
+    if (!el) return;
+    setEdges({ start: el.scrollLeft <= 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+  }, []);
+
+  // Amène le jour sélectionné au début de la bande s'il n'est pas entièrement visible, sans faire défiler la page.
+  useEffect(() => {
+    const el = track.current;
+    const card = el?.querySelector<HTMLElement>(`[data-day="${selected}"]`);
+    if (el && card) {
+      const hidden = card.offsetLeft < el.scrollLeft || card.offsetLeft + card.offsetWidth > el.scrollLeft + el.clientWidth;
+      if (hidden) el.scrollTo({ left: card.offsetLeft - 4, behavior: "smooth" });
+    }
+    updateEdges();
+  }, [selected, filter, updateEdges]);
+
+  // Une page à la fois : autant de jours qu'il en tient à l'écran (le magnétisme cale la bande sur une carte).
+  const step = (dir: 1 | -1) => {
+    const el = track.current;
+    const card = el?.querySelector<HTMLElement>("[data-day]");
+    if (!el || !card) return;
+    const perPage = Math.max(1, Math.floor(el.clientWidth / (card.offsetWidth + 16)));
+    el.scrollBy({ left: dir * perPage * (card.offsetWidth + 16), behavior: "smooth" });
+  };
+
   return (
-    <div className="flex flex-col gap-6" data-testid="week-board">
-      {filter !== "weekend" && (
-        <div className="grid grid-cols-1 gap-4 min-[900px]:grid-cols-5 min-[900px]:gap-6">
-          {week.map(card)}
-        </div>
-      )}
-      {(filter === "week" || filter === "weekend") && (
-        <div className="grid grid-cols-1 items-start gap-4 min-[900px]:grid-cols-3 min-[900px]:gap-6">
-          {weekend.map(card)}
-        </div>
-      )}
+    <div className="flex flex-col gap-3" data-testid="week-board">
+      <div className="hidden justify-end gap-2 min-[700px]:flex">
+        <button
+          type="button"
+          className="iconbtn"
+          aria-label={t.board.prev}
+          disabled={edges.start}
+          onClick={() => step(-1)}
+        >
+          <Icon name="arrowBack" />
+        </button>
+        <button
+          type="button"
+          className="iconbtn"
+          aria-label={t.board.next}
+          disabled={edges.end}
+          onClick={() => step(1)}
+        >
+          <Icon name="arrowRight" />
+        </button>
+      </div>
+      <div
+        ref={track}
+        onScroll={updateEdges}
+        className="relative -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-1 pt-1 pb-4"
+      >
+        {days.map((d) => (
+          <div key={d.day} data-day={d.day} className="flex w-[min(78vw,280px)] shrink-0 snap-start">
+            <DayCard
+              day={d}
+              today={d.day === view.todayIndex}
+              selected={selected === d.day}
+              filter={filter}
+              onSelect={() => onSelect(d.day)}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -670,7 +670,14 @@ export const fr = {
       title: (meals: number, time: string) => `${meals} repas en ${time}`,
       go: "C'est parti",
     },
-    board: { meals: (n: number) => `${n} repas`, mealsUnit: "repas", onSite: "Sur place", removed: "Retiré" },
+    board: {
+      meals: (n: number) => `${n} repas`,
+      mealsUnit: "repas",
+      onSite: "Sur place",
+      removed: "Retiré",
+      prev: "Jours précédents",
+      next: "Jours suivants",
+    },
     seriesBanner: {
       kicker: "Série fin prête",
       weeks: (n: number) => (n <= 1 ? "semaine d'affilée" : "semaines d'affilée"),
