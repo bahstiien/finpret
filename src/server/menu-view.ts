@@ -137,6 +137,7 @@ export function buildMenuView(
   const todayIndex = dayIndex(w.start, today);
   const fav = (id: string) => env.ratings[id] === 1;
 
+  const fresh = weekendItems(env, w);
   const days: DayView[] = [];
   for (let day = 1; day <= 7; day++) {
     const meals: MealView[] = [];
@@ -145,7 +146,8 @@ export function buildMenuView(
       const removed = isRemoved(w, day, meal);
       const g = guestsText(ctx, pm, w, day, meal);
       const sc = mealPd(w, pm, day, meal) / 4;
-      if (day <= 5) {
+      const own = fresh.find((it) => it.d === day && it.m === meal);
+      if (day <= 5 && !own) {
         const s = map[key];
         if (!s) continue;
         const r = s.r;
@@ -184,7 +186,7 @@ export function buildMenuView(
           difficulty: r.diff,
         });
       } else {
-        const x = weekendItems(env, w).find((it) => it.d === day && it.m === meal);
+        const x = own;
         if (!x) continue;
         // Recette cuisinée le jour même : étapes du soir simple, ou préparation et cuisson du plat (`freshSteps`).
         const steps =
@@ -242,12 +244,13 @@ export function buildMenuView(
         grid.push({ day, meal, state: r ? "set" : "empty", name: r?.s ?? null, counts: g.counts, custom: g.custom });
       } else {
         const s = map[key];
+        const own = fresh.find((it) => it.d === day && it.m === meal);
         const g = guestsText(ctx, pm, w, day, meal);
         grid.push({
           day,
           meal,
-          state: !s ? "off" : isRemoved(w, day, meal) ? "removed" : "on",
-          name: s?.r.s ?? null,
+          state: own ? "set" : !s ? "off" : isRemoved(w, day, meal) ? "removed" : "on",
+          name: own ? own.r.s : (s?.r.s ?? null),
           counts: g.counts,
           custom: g.custom,
         });

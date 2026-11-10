@@ -14,7 +14,7 @@ import { shuffle } from "./random";
 import { eligible, wshuffle } from "./season";
 import { assignGroups, gMax, sortMeals } from "./slots";
 import type { BankEntry, Guests, Meal, MenuSettings, WeekPlan } from "./types";
-import { isRemoved, WEEKEND_SLOTS } from "./week";
+import { batchBusy, isRemoved, WEEKEND_SLOTS } from "./week";
 
 /**
  * Modifications d'une semaine (§8.1, §8.7) : port de swap (Changer), toggleMeal (Retirer / Remettre),
@@ -347,14 +347,19 @@ export function moveTargets(env: Env, week: WeekPlan, from: string) {
   );
 }
 
-/** Recette du week-end choisie à la main (ou retirée). */
+/**
+ * Recette cuisinée le jour même, choisie à la main (ou retirée) : un créneau du week-end, ou un créneau de semaine
+ * vide ou retiré. `busy` : créneau de semaine encore occupé par le batch (rien ne change).
+ */
 export function setWeekend(env: Env, week: WeekPlan, k: string, id: string | null) {
+  const [ds, m] = k.split("-") as [string, Meal];
+  if (id && batchBusy(env, week, Number(ds), m)) return { week, pastaClash: false, busy: true };
   const w = clone(week);
   const wk = { ...(w.weekend ?? {}) };
   if (id) wk[k] = id;
   else delete wk[k];
   w.weekend = wk;
-  return { week: w, pastaClash: !!id && pastaClash(env, w) };
+  return { week: w, pastaClash: !!id && pastaClash(env, w), busy: false };
 }
 
 /** « Suggérer des idées » pour les créneaux vides du week-end (cuisinés le jour même). */

@@ -236,9 +236,9 @@ export async function suggestWeekendAction(weekId: string) {
   });
 }
 
-/** Choisir (ou retirer) la recette d'un créneau du week-end. */
+/** Choisir (ou retirer) la recette d'un créneau : week-end, ou créneau de semaine vide ou retiré. */
 export async function setWeekendAction(weekId: string, key: string, recipeId: string | null) {
-  if (!/^[67]-(lunch|dinner)$/.test(key)) return { ok: false as const, error: fr.errors.generic };
+  if (!/^[1-7]-(lunch|dinner)$/.test(key)) return { ok: false as const, error: fr.errors.generic };
   return editWeek(weekId, ({ env, plan }) => {
     if (
       recipeId &&
@@ -247,6 +247,7 @@ export async function setWeekendAction(weekId: string, key: string, recipeId: st
       return { error: t.unknownRecipe };
     }
     const res = setWeekend(env, plan, key, recipeId);
+    if (res.busy) return { error: t.slotBusy };
     const message = recipeId
       ? t.weekendSet(shortOf(env, recipeId), slotLabel(key)) + (res.pastaClash ? ` ${t.pastaWarning}` : "")
       : t.weekendCleared(slotLabel(key));

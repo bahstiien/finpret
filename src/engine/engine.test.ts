@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { LIB } from "../../tests/legacy/fixtures";
 import { recipeAllergens } from "./catalog/derive";
 import { addsPastaClash, generateWeek, pastaClash, pastaCount } from "./compose";
-import { moveSlot, moveTargets, replaceDish, setGuests, swap, toggleMeal } from "./edit";
+import { moveSlot, moveTargets, replaceDish, setGuests, setWeekend, swap, toggleMeal } from "./edit";
 import { createEnv } from "./env";
 import { fill, fmtQ, packBuy, shopQ, snapNum } from "./format";
 import { dailyAverages } from "./nutrition";
@@ -12,6 +12,7 @@ import { seededRandom } from "./random";
 import { resolve } from "./season";
 import { buildSession } from "./session";
 import { DEFAULT_EQUIPMENT, DEFAULT_MENU_SETTINGS, type MenuSettings, type WeekPlan } from "./types";
+import { slotMap, weekendItems } from "./week";
 
 const env = (seed = 1, extra: Partial<Parameters<typeof createEnv>[0]> = {}) =>
   createEnv({ lib: LIB, random: seededRandom(seed), ...extra });
@@ -325,5 +326,28 @@ describe("remplacer un plat prévu par une recette choisie (Découvrir)", () => 
     expect(replaceDish(e, week, "main", 0, used[1]!)).toEqual({ ok: false, reason: "already_planned" });
     expect(replaceDish(e, week, "main", 99, pick.id)).toEqual({ ok: false, reason: "unknown_dish" });
     expect(replaceDish(e, week, "soup", 0, pick.id).ok).toBe(false);
+  });
+});
+
+describe("recette choisie sur un créneau de semaine (cuisinée le jour même)", () => {
+  it("refuse un créneau occupé par le batch, accepte un créneau retiré, puis le batch reprend la main", () => {
+    const { e, week } = generate(3);
+    const map = slotMap(e, week);
+    const key = Object.keys(map).find((k) => Number(k.split("-")[0]) <= 5)!;
+    const [ds, meal] = key.split("-") as [string, "lunch" | "dinner"];
+    const day = Number(ds);
+    const used = new Set(Object.values(map).map((s) => s.r.id));
+    const pick = [...e.mainById.keys()].find((id) => !used.has(id))!;
+
+    expect(setWeekend(e, week, key, pick).busy).toBe(true);
+
+    const removed = toggleMeal(week, day, meal);
+    const res = setWeekend(e, removed, key, pick);
+    expect(res.busy).toBe(false);
+    expect(weekendItems(e, res.week).map((x) => [x.k, x.id])).toContainEqual([key, pick]);
+
+    // Le plat du batch remis sur ce créneau : la recette choisie n'est plus comptée (pas de double repas).
+    const restored = toggleMeal(res.week, day, meal);
+    expect(weekendItems(e, restored).some((x) => x.k === key)).toBe(false);
   });
 });
