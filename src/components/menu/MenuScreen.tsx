@@ -18,7 +18,6 @@ import {
 } from "@/server/actions/menu";
 import type { FeedbackAction } from "@/engine/feedback";
 import type { DishCard, MenuView } from "@/server/menu-view";
-import { DayProgram } from "./DayProgram";
 import type { StreakState } from "@/engine/streak";
 import { SeriesBanner } from "./SeriesBanner";
 import { WeekBoard, type BoardFilter } from "./WeekBoard";
@@ -53,9 +52,10 @@ export type CanteenEntry = {
   edited?: boolean;
 };
 
-function CanteenBlock({ entry }: { entry: CanteenEntry }) {
+/** Menu de la cantine dans la carte-jour ; `current` : jour sélectionné (repère des tests de bout en bout). */
+function CanteenBlock({ entry, current }: { entry: CanteenEntry; current: boolean }) {
   return (
-    <Card padding="cozy" className="flex flex-col gap-2" data-testid="canteen-today">
+    <div className="nb-sm flex flex-col gap-2 p-3" data-testid={current ? "canteen-today" : "canteen-day"}>
       <h3 className="t-label">{fr.canteen.today(entry.name)}</h3>
       <p className="t-ui">{entry.text}</p>
       {entry.note && <p className="t-small muted">{entry.note}</p>}
@@ -73,7 +73,7 @@ function CanteenBlock({ entry }: { entry: CanteenEntry }) {
           {fr.canteen.duplicate(entry.duplicates.join(", "))}
         </p>
       )}
-    </Card>
+    </div>
   );
 }
 
@@ -130,7 +130,6 @@ export function MenuScreen({
   const [filter, setFilter] = useState<BoardFilter>("week");
   const [sheet, setSheet] = useState<Sheet>(null);
   const { run, pending } = useMenuAction();
-  const day = view.days[selected - 1]!;
   const today = inWeek ? view.days[view.todayIndex - 1] : null;
   // Alerte doublon cantine / dîner (§13) : un bandeau par jour concerné, « Changer » sur le plat du soir.
   const alerts = view.days.flatMap((d) => {
@@ -233,26 +232,23 @@ export function MenuScreen({
         </p>
       </div>
 
-      <WeekBoard view={view} filter={filter} selected={selected} onSelect={setSelected} />
+      <WeekBoard
+        view={view}
+        filter={filter}
+        selected={selected}
+        onSelect={setSelected}
+        canEdit={canEdit}
+        weekId={view.weekId}
+        onMove={(from) => setSheet({ kind: "move", from })}
+        onGuests={(m) =>
+          setSheet({ kind: "guests", day: m.day, meal: m.meal, counts: m.counts, custom: m.guestsCustom })
+        }
+        extraFor={(d) =>
+          (canteen[d.iso] ?? []).map((c) => <CanteenBlock key={c.name} entry={c} current={d.day === selected} />)
+        }
+      />
 
-      <div className="grid items-start gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-        <div className="flex flex-col gap-4">
-          <DayProgram
-            day={day}
-            isToday={selected === view.todayIndex}
-            canEdit={canEdit}
-            cake={view.cake && view.cake.day === selected ? view.cake : null}
-            onMove={(from) => setSheet({ kind: "move", from })}
-            onGuests={(m) =>
-              setSheet({ kind: "guests", day: m.day, meal: m.meal, counts: m.counts, custom: m.guestsCustom })
-            }
-            weekId={view.weekId}
-          />
-          {(canteen[day.iso] ?? []).map((c) => (
-            <CanteenBlock key={c.name} entry={c} />
-          ))}
-        </div>
-
+      <div className="max-w-3xl">
         <PlanGrid
           view={view}
           canEdit={canEdit}

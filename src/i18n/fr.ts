@@ -689,8 +689,6 @@ export const fr = {
     currentWeek: "Semaine en cours",
     days: "Jours de la semaine",
     today: "aujourd'hui",
-    programToday: "Le programme du jour",
-    programOf: (day: string) => `Le programme de ${day}`,
     noMeal: "Aucun repas prévu.",
     weekendEmpty: "Rien de prévu. Choisis une recette dans la grille « Repas à prévoir ».",
     removedLabel: "retiré",
