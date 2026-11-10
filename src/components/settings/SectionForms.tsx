@@ -199,6 +199,17 @@ export function MenuForm({ initial }: { initial: MenuSettingsForm }) {
           onChange={(noRepeatWeeks) => update((d) => ({ ...d, noRepeatWeeks }))}
         />
       </Panel>
+      <Panel title={m.budgetTitle} hint={m.budgetHint}>
+        <Stepper
+          label={m.budget}
+          value={v.budget}
+          min={0}
+          max={500}
+          step={10}
+          format={m.budgetValue}
+          onChange={(budget) => update((d) => ({ ...d, budget }))}
+        />
+      </Panel>
       <Panel title={m.grid} hint={m.gridHint}>
         <SlotGrid
           days={[1, 2, 3, 4, 5]}

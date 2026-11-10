@@ -425,6 +425,12 @@ export async function prepareWeekAction(start: string) {
   revalidatePath("/app", "layout");
   return {
     ok: true as const,
-    data: { message: res.dislikesIgnored ? t.generatedWithDislikes : t.generated },
+    data: {
+      message: res.dislikesIgnored
+        ? t.generatedWithDislikes
+        : res.overBudget
+          ? t.generatedOverBudget
+          : t.generated,
+    },
   };
 }

@@ -1,5 +1,7 @@
 import type { Ingredient, Price } from "./catalog/schema";
-import type { Library } from "./types";
+import type { Env } from "./env";
+import { mealPd, type PortionModel } from "./portions";
+import type { Library, Meal, WeekPlan } from "./types";
 
 /** Coût des recettes à partir des prix de référence du catalogue (seed/prices.json). */
 
@@ -51,4 +53,27 @@ export function economyBonus(lib: Library, recipes: readonly { id: string; ing: 
   const bonus: Record<string, number> = {};
   for (let i = 0; i < half; i++) bonus[costs[i]!.id] = (ECONOMY_BONUS * (half - i)) / half;
   return bonus;
+}
+
+/**
+ * Coût estimé d'une semaine : plats de batch, soupe et soirs simples, aux portions de chaque créneau.
+ * Les repas du congélateur (déjà payés), le week-end et le goûter ne comptent pas ; un repas retiré non plus.
+ */
+export function weekCost(
+  env: Pick<Env, "lib" | "mainById" | "soupById" | "simpleById">,
+  w: Pick<WeekPlan, "groups" | "soup" | "simples" | "removed" | "guests">,
+  pm: PortionModel,
+): number {
+  const removed = new Set(w.removed ?? []);
+  const eur = (r: { ing: Record<string, number> } | undefined) =>
+    r ? (portionCost(env.lib, r.ing)?.eur ?? 0) : 0;
+  const portions = (meals: readonly { day: number; meal: Meal }[]) =>
+    meals.reduce((s, m) => s + (removed.has(`${m.day}-${m.meal}`) ? 0 : mealPd(w, pm, m.day, m.meal)), 0);
+  let total = 0;
+  for (const g of w.groups) total += eur(env.mainById.get(g.id)) * portions(g.meals);
+  if (w.soup)
+    total += eur(env.soupById.get(w.soup.id)) * portions(w.soup.days.map((day) => ({ day, meal: "dinner" })));
+  for (const x of w.simples)
+    total += eur(env.simpleById.get(x.id)) * portions([{ day: x.day, meal: "dinner" }]);
+  return total;
 }
