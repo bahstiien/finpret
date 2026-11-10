@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { ChipToggle } from "@/components/ui/Controls";
 import { FormMessage } from "@/components/ui/Field";
@@ -199,6 +200,7 @@ export function RecipePickerSheet({
   slot,
   options,
   current,
+  batch,
   onClose,
 }: {
   mode: "weekend" | "cake";
@@ -206,6 +208,8 @@ export function RecipePickerSheet({
   slot: string;
   options: PickerOption[];
   current: string | null;
+  /** Créneau de semaine vide ou retiré : le prévoir (ou le remettre) avec le batch au lieu d'une recette. */
+  batch?: { label: string; onPick: () => void };
   onClose: () => void;
 }) {
   const [query, setQuery] = useState("");
@@ -263,6 +267,12 @@ export function RecipePickerSheet({
       onClose={onClose}
       title={mode === "weekend" ? t.picker.weekendTitle(slotLabel(slot)) : t.picker.cakeTitle}
     >
+      {batch && (
+        <Button type="button" variant="outline" disabled={pending} onClick={batch.onPick}>
+          <Icon name="pot" className="ic" />
+          {batch.label}
+        </Button>
+      )}
       <label htmlFor="picker-search" className="sr-only">
         {t.picker.search}
       </label>

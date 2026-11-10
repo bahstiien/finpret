@@ -23,7 +23,15 @@ type DayActions = {
   onGuests: (m: MealView) => void;
 };
 
-function MealBlock({ meal: m, canEdit, weekId, onMove, onGuests }: { meal: MealView } & DayActions) {
+/** Repas d'une carte-jour ; `detailed` : carte du jour sélectionné, qui porte le programme (consigne, actions). */
+function MealBlock({
+  meal: m,
+  detailed,
+  canEdit,
+  weekId,
+  onMove,
+  onGuests,
+}: { meal: MealView; detailed: boolean } & DayActions) {
   const [open, setOpen] = useState(false);
   const { run, pending } = useMenuAction();
   const item =
@@ -45,7 +53,7 @@ function MealBlock({ meal: m, canEdit, weekId, onMove, onGuests }: { meal: MealV
         <span className="t-label">
           {m.removed ? `${m.label.split(" · ")[0]} · ${t.removedLabel}` : m.label}
         </span>
-        {canEdit && m.kind !== "weekend" && (
+        {detailed && canEdit && m.kind !== "weekend" && (
           <div className="relative -mt-1 -mr-1 shrink-0">
             <button
               type="button"
@@ -110,18 +118,22 @@ function MealBlock({ meal: m, canEdit, weekId, onMove, onGuests }: { meal: MealV
         <Flag flag={m.flag} />
         {m.name}
       </p>
-      {!m.removed && m.how && <p className="t-small muted">{m.how}</p>}
+      {detailed && !m.removed && m.how && <p className="t-small muted">{m.how}</p>}
       <div className="flex flex-wrap gap-1.5">
         {/* Le libellé des convives peut être long (« 3 adultes et 1 enfant ») : il passe à la ligne dans la carte. */}
-        <button
-          type="button"
-          disabled={!canEdit}
-          onClick={() => onGuests(m)}
-          className={`chiptg mono max-w-full !whitespace-normal text-left !leading-tight ${m.guestsCustom ? "tone-blue" : "tone-chip"}`}
-        >
-          <Icon name="users" />
-          {m.guests}
-        </button>
+        {detailed ? (
+          <button
+            type="button"
+            disabled={!canEdit}
+            onClick={() => onGuests(m)}
+            className={`chiptg mono max-w-full !whitespace-normal text-left !leading-tight ${m.guestsCustom ? "tone-blue" : "tone-chip"}`}
+          >
+            <Icon name="users" />
+            {m.guests}
+          </button>
+        ) : (
+          <Pill className="mono max-w-full !whitespace-normal !leading-tight">{m.guests}</Pill>
+        )}
         {m.favorite && <Pill tone="banane">{t.badges.favorite}</Pill>}
         {m.kind === "simple" && <Pill>{t.badges.simple}</Pill>}
         {m.kind === "bank" && <Pill tone="blue">{t.badges.freezer}</Pill>}
@@ -178,15 +190,15 @@ function DayCard({
           {weekend && meals.length === 0 ? t.board.onSite : t.board.meals(meals.length)}
         </span>
       </header>
-      {meals.length === 0 && !cake && (
+      {meals.length === 0 && !(selected && cake) && (
         <p className="t-small muted border-t-[length:var(--bw)] border-line p-3">
           {weekend ? t.weekendEmpty : t.noMeal}
         </p>
       )}
       {meals.map((m) => (
-        <MealBlock key={m.key} meal={m} {...actions} />
+        <MealBlock key={m.key} meal={m} detailed={selected} {...actions} />
       ))}
-      {cake && (
+      {selected && cake && (
         <div className="flex flex-col gap-1 border-t-[length:var(--bw)] border-line p-3">
           <span className="t-label">{t.cakeLabel}</span>
           <b className="t-3">{cake.name}</b>
@@ -195,7 +207,7 @@ function DayCard({
           </p>
         </div>
       )}
-      {(day.thaw.length > 0 || extra) && (
+      {selected && (day.thaw.length > 0 || extra) && (
         <div className="mt-auto flex flex-col gap-3 border-t-[length:var(--bw)] border-line p-3">
           {day.thaw.length > 0 && (
             <p className="nb-sm tone-yellow t-small flex items-center gap-2 px-3 py-2" data-testid="thaw-reminder">
@@ -214,7 +226,8 @@ function DayCard({
 
 /**
  * Semaine en carrousel de cartes-jours : les sept jours défilent à l'horizontale (week-end compris), filtre
- * Semaine / Midis / Soirs / Week-end. Le jour sélectionné (aujourd'hui par défaut) est amené au début.
+ * Semaine / Midis / Soirs / Week-end. Seule la carte du jour sélectionné (aujourd'hui par défaut) porte le
+ * programme : consignes, actions •••, convives modifiables, goûter, décongélation et cantine.
  */
 export function WeekBoard({
   view,

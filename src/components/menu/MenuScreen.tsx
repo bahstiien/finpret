@@ -88,7 +88,7 @@ type Sheet =
       fromGrid?: boolean;
     }
   | { kind: "move"; from: string }
-  | { kind: "weekend"; key: string }
+  | { kind: "weekend"; key: string; batch?: "add" | "restore" }
   | { kind: "cake" }
   | null;
 
@@ -253,11 +253,10 @@ export function MenuScreen({
           view={view}
           canEdit={canEdit}
           pending={pending}
-          onToggle={(d, m) => run(() => toggleGridSlot(view.weekId, d, m))}
           onGuests={(c) =>
             setSheet({ kind: "guests", day: c.day, meal: c.meal, counts: c.counts, custom: c.custom, fromGrid: true })
           }
-          onWeekend={(key) => setSheet({ kind: "weekend", key })}
+          onWeekend={(key, batch) => setSheet({ kind: "weekend", key, batch })}
           onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
           cakeLine={
             view.cake ? (
@@ -342,6 +341,17 @@ export function MenuScreen({
           slot={sheet.key}
           options={weekendOptions}
           current={view.weekend.find((w) => w.key === sheet.key)?.recipeId ?? null}
+          batch={
+            sheet.batch
+              ? {
+                  label: sheet.batch === "add" ? fr.sheets.picker.addBatch : fr.sheets.picker.restoreBatch,
+                  onPick: () => {
+                    const [d, m] = sheet.key.split("-") as [string, "lunch" | "dinner"];
+                    run(() => toggleGridSlot(view.weekId, Number(d), m), () => setSheet(null));
+                  },
+                }
+              : undefined
+          }
           onClose={() => setSheet(null)}
         />
       )}
@@ -363,7 +373,6 @@ function PlanGrid({
   view,
   canEdit,
   pending,
-  onToggle,
   onGuests,
   onWeekend,
   onSuggest,
@@ -372,9 +381,9 @@ function PlanGrid({
   view: MenuView;
   canEdit: boolean;
   pending: boolean;
-  onToggle: (d: number, m: "lunch" | "dinner") => void;
   onGuests: (c: MenuView["grid"][number]) => void;
-  onWeekend: (key: string) => void;
+  /** Choisir une recette pour un créneau ; `batch` : créneau de semaine à prévoir (ou remettre) avec le batch. */
+  onWeekend: (key: string, batch?: "add" | "restore") => void;
   onSuggest: () => void;
   cakeLine: React.ReactNode;
 }) {
@@ -438,15 +447,37 @@ function PlanGrid({
                 }
                 const on = c.state === "on";
                 const replace = c.state === "removed";
+                if (c.state === "set") {
+                  return (
+                    <td key={d}>
+                      <button
+                        type="button"
+                        disabled={!canEdit}
+                        aria-haspopup="dialog"
+                        onClick={() => onWeekend(`${d}-${m}`)}
+                        aria-label={t.grid.weekendSet(slot, c.name ?? "")}
+                        className="grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line tone-banane"
+                      >
+                        <Icon name="check" className="size-5" />
+                      </button>
+                    </td>
+                  );
+                }
                 return (
                   <td key={d}>
                     <button
                       type="button"
                       disabled={!canEdit || pending}
                       aria-pressed={on}
-                      aria-haspopup={on ? "dialog" : undefined}
-                      onClick={() => (on ? onGuests(c) : onToggle(d, m))}
-                      aria-label={on ? t.grid.on(slot, c.name ?? "", c.counts.a + c.counts.c) : t.grid.off(slot)}
+                      aria-haspopup="dialog"
+                      onClick={() => (on ? onGuests(c) : onWeekend(`${d}-${m}`, replace ? "restore" : "add"))}
+                      aria-label={
+                        on
+                          ? t.grid.on(slot, c.name ?? "", c.counts.a + c.counts.c)
+                          : replace
+                            ? t.grid.removedCell(slot)
+                            : t.grid.off(slot)
+                      }
                       className={`mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
                         on
                           ? d === view.todayIndex

@@ -87,11 +87,28 @@ export const WEEKEND_SLOTS: [number, Meal][] = [
   [7, "dinner"],
 ];
 
+/** Tous les créneaux de la semaine, du lundi midi au dimanche soir. */
+export const ALL_SLOTS: [number, Meal][] = [1, 2, 3, 4, 5, 6, 7].flatMap((d) =>
+  (["lunch", "dinner"] as const).map((m): [number, Meal] => [d, m]),
+);
+
+/**
+ * Créneau de semaine occupé par le batch (plat, soupe, soir simple, réserve) et non retiré : une recette choisie
+ * à la main ne peut pas s'y ajouter.
+ */
+export const batchBusy = (env: Env, w: WeekPlan, d: number, meal: Meal) =>
+  d <= 5 && !!slotMap(env, w)[`${d}-${meal}`] && !isRemoved(w, d, meal);
+
+/**
+ * Recettes cuisinées le jour même (`w.weekend`) : le week-end, ou un créneau de semaine vide ou retiré où la
+ * recette a été choisie à la main. Un créneau repris par le batch entre-temps ignore la recette choisie.
+ */
 export function weekendItems(env: Env, w: WeekPlan) {
   const m = monthOf(w.start);
-  return WEEKEND_SLOTS.flatMap(([d, meal]) => {
+  return ALL_SLOTS.flatMap(([d, meal]) => {
     const id = w.weekend?.[`${d}-${meal}`];
     const base = id ? anyRecipe(env, id) : null;
-    return base ? [{ d, m: meal, k: `${d}-${meal}`, id: id!, r: resolve(env, base, m) }] : [];
+    if (!base || batchBusy(env, w, d, meal)) return [];
+    return [{ d, m: meal, k: `${d}-${meal}`, id: id!, r: resolve(env, base, m) }];
   });
 }

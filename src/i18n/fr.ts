@@ -702,10 +702,12 @@ export const fr = {
     grid: {
       title: "Repas à prévoir",
       batch: "Batch",
-      weekend: "Week-end",
+      weekend: "Le jour même",
       on: (slot: string, name: string, people: number) =>
         `${slot} : ${name}, ${people} à table. Touche pour changer qui est à table ou ne rien prévoir.`,
-      off: (slot: string) => `${slot} : rien de prévu. Touche pour le prévoir.`,
+      off: (slot: string) => `${slot} : rien de prévu. Touche pour choisir une recette ou le prévoir avec le batch.`,
+      removedCell: (slot: string) =>
+        `${slot} : plat du batch retiré. Touche pour le remettre ou choisir une autre recette.`,
       weekendSet: (slot: string, name: string) => `${slot} : ${name}. Touche pour changer.`,
       weekendEmpty: (slot: string) => `${slot} : choisir une recette`,
     },
@@ -751,6 +753,8 @@ export const fr = {
     },
     picker: {
       weekendTitle: (slot: string) => `Recette pour ${slot}`,
+      addBatch: "Prévoir avec le batch",
+      restoreBatch: "Remettre le plat du batch",
       cakeTitle: "Goûter de la semaine",
       search: "Chercher une recette",
       legend: "Recettes",
@@ -1268,6 +1272,7 @@ export const fr = {
     },
     weekendSet: (name: string, slot: string) => `${name} prévu ${slot}.`,
     weekendCleared: (slot: string) => `Rien de prévu ${slot}.`,
+    slotBusy: "Ce créneau a déjà un plat du batch. Retire-le d'abord.",
     pastaWarning: "Attention : il y a déjà des pâtes ce jour-là.",
     cakeSet: (name: string) => `Goûter de la semaine : ${name}.`,
     slotOff: (slot: string) => `Rien de prévu ${slot}. Ce choix est gardé pour les semaines suivantes.`,
