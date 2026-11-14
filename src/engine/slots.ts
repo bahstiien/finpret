@@ -106,3 +106,19 @@ export function assignGroups(
   for (const r of fz) res[order[k++]!] = r.id;
   return res;
 }
+
+/**
+ * Portions à acheter d'une semaine type : plats, soupe et soirs simples aux portions par défaut de chaque créneau
+ * (`base`), hors repas du congélateur, comme l'estimation du budget à la composition. Sert à ramener un budget
+ * hebdomadaire à un prix par portion.
+ */
+export function plannedPortions(
+  base: (day: number, meal: Meal) => number,
+  menu: { light: number; bankUse: number; skip: readonly string[] },
+): number {
+  const { groups, soupDays, simpleDays } = buildSlots(menu.light, menu.bankUse, menu.skip);
+  return (
+    groups.flat().reduce((n, s) => n + base(s.day, s.meal), 0) +
+    [...soupDays, ...simpleDays].reduce((n, d) => n + base(d, "dinner"), 0)
+  );
+}

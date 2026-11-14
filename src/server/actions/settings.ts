@@ -1,14 +1,15 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { sql } from "kysely";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
 import { mondayOf, todayIn } from "@/lib/dates";
 import { notificationsSchema, SETTINGS_SCHEMAS, SETTINGS_VERSION } from "@/lib/settings";
-import { auth } from "@/server/auth";
 import { json, withAdmin } from "@/server/db";
+import type { JsonValue } from "@/server/db.types";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { loadHouseholdContext } from "@/server/household-context";
 import { ACTIVE_HOUSEHOLD_COOKIE, requireHousehold, requireUser, withSession } from "@/server/session";
@@ -48,7 +49,14 @@ export async function saveSettings(section: Section, value: unknown): Promise<Sa
     await withSession((db) =>
       db
         .updateTable("household_settings")
-        .set({ [section]: json(parsed.data), version: SETTINGS_VERSION })
+        .set({
+          [section]: json(parsed.data),
+          version: SETTINGS_VERSION,
+          // Le budget du Menu remplace l'objectif « Menus économiques » : un seul réglage fait foi.
+          ...(section === "menu" && {
+            diet: sql<JsonValue>`jsonb_set(coalesce(diet, '{}'::jsonb), '{economical}', 'false'::jsonb)`,
+          }),
+        })
         .where("household_id", "=", household.id)
         .execute(),
     );
@@ -237,17 +245,6 @@ export async function saveNotifications(value: unknown): Promise<ActionResult> {
     );
   } catch (e) {
     return { ok: false, error: toUserMessage(e) };
-  }
-  return { ok: true, data: undefined };
-}
-
-/** Déconnexion de tous les autres appareils (§4, « appareils connectés »). */
-export async function signOutOtherDevices(): Promise<ActionResult> {
-  await requireUser("/settings/profile");
-  try {
-    await auth().api.revokeOtherSessions({ headers: await headers() });
-  } catch {
-    return { ok: false, error: fr.errors.generic };
   }
   return { ok: true, data: undefined };
 }

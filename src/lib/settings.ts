@@ -28,7 +28,10 @@ export const dietSchema = z.object({
   /** Objectifs (§6 Alimentation). */
   minVeg: int(0, 5).default(0),
   minProtein: int(0, 60).default(0),
-  /** Objectif « économique » : les plats les moins chers par portion passent en priorité. */
+  /**
+   * Objectif « économique » de l'onboarding : les plats les moins chers passent en priorité. Plus de réglage dédié :
+   * le budget de la section Menu le remplace, et l'enregistrer efface ce drapeau.
+   */
   economical: z.boolean().default(false),
 });
 
@@ -202,7 +205,8 @@ export function toDietRules(s: HouseholdSettings): DietRules {
     allergens: s.diet.allergens,
     refused: s.diet.refused,
     minProtein: s.diet.minProtein,
-    economical: s.diet.economical,
+    // Un budget fixé fait aussi passer les plats les moins chers en priorité (ancien objectif « économique »).
+    economical: s.diet.economical || s.menu.budget > 0,
   };
 }
 

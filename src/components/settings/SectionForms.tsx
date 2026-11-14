@@ -8,6 +8,7 @@ import { SelectField, TextField } from "@/components/ui/Field";
 import { ALLERGENS } from "@/engine/catalog/allergens";
 import { CAKE_TYPES } from "@/engine/catalog/cake-types";
 import { dur } from "@/engine/format";
+import { plannedPortions } from "@/engine/slots";
 import { fr } from "@/i18n/fr";
 import type {
   DietSettings,
@@ -107,12 +108,6 @@ export function DietForm({
           format={t.diet.grams}
           onChange={(minProtein) => update((d) => ({ ...d, minProtein }))}
         />
-        <Toggle
-          label={t.diet.economical}
-          hint={t.diet.economicalHint}
-          checked={v.economical}
-          onChange={(economical) => update((d) => ({ ...d, economical }))}
-        />
       </Panel>
       {pendingWeek && <ApplyPrompt start={pendingWeek} onDone={dismissPending} />}
       <SaveStatus status={status} />
@@ -120,7 +115,51 @@ export function DietForm({
   );
 }
 
-export function MenuForm({ initial }: { initial: MenuSettingsForm }) {
+/**
+ * Budget moyen par semaine (curseur) et son équivalent estimé par portion, recalculé avec les repas à prévoir,
+ * les soirs légers et le congélateur. `portions` : portions par défaut de chaque créneau de la semaine (« 3-dinner »).
+ */
+function BudgetSlider({
+  value,
+  menu,
+  portions,
+  onChange,
+}: {
+  value: number;
+  menu: Pick<MenuSettingsForm, "light" | "bankUse" | "skip">;
+  portions: Record<string, number>;
+  onChange: (eur: number) => void;
+}) {
+  const m = t.menu;
+  const planned = plannedPortions((d, meal) => portions[`${d}-${meal}`] ?? 0, menu);
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="flex flex-col gap-2">
+        <span className="t-label">
+          {m.budget} : <output className="mono">{m.budgetValue(value)}</output>
+        </span>
+        <input
+          type="range"
+          min={0}
+          max={BUDGET_MAX}
+          step={5}
+          value={Math.min(value, BUDGET_MAX)}
+          onChange={(e) => onChange(Number(e.target.value))}
+          aria-valuetext={m.budgetValue(value)}
+          className="h-11 w-full accent-violet"
+        />
+      </label>
+      <p className="text-sm text-muted" aria-live="polite" data-testid="budget-portion">
+        {value > 0 && planned > 0 ? m.budgetPortion(value / planned, planned) : m.budgetOff}
+      </p>
+    </div>
+  );
+}
+
+/** Haut du curseur de budget, en euros par semaine. */
+const BUDGET_MAX = 300;
+
+export function MenuForm({ initial, portions }: { initial: MenuSettingsForm; portions: Record<string, number> }) {
   const save = useCallback((v: MenuSettingsForm) => saveSettings("menu", v), []);
   const { value: v, update, status, pendingWeek, dismissPending } = useAutosave(initial, save);
   const m = t.menu;
@@ -200,13 +239,10 @@ export function MenuForm({ initial }: { initial: MenuSettingsForm }) {
         />
       </Panel>
       <Panel title={m.budgetTitle} hint={m.budgetHint}>
-        <Stepper
-          label={m.budget}
+        <BudgetSlider
           value={v.budget}
-          min={0}
-          max={500}
-          step={10}
-          format={m.budgetValue}
+          menu={v}
+          portions={portions}
           onChange={(budget) => update((d) => ({ ...d, budget }))}
         />
       </Panel>
@@ -389,75 +425,17 @@ export function SessionForm({
 
 export function ShoppingForm({
   initial,
-  aisles,
   baseIngredients,
 }: {
   initial: ShoppingSettings;
-  aisles: { key: string; label: string }[];
   baseIngredients: IngredientOption[];
 }) {
   const save = useCallback((v: ShoppingSettings) => saveSettings("shopping", v), []);
   const { value: v, update, status } = useAutosave(initial, save);
   const [item, setItem] = useState("");
   const s = t.shopping;
-  const order = [
-    ...v.aisleOrder.filter((k) => aisles.some((a) => a.key === k)),
-    ...aisles.map((a) => a.key).filter((k) => !v.aisleOrder.includes(k)),
-  ];
-  const label = (k: string) => aisles.find((a) => a.key === k)?.label ?? k;
-  const move = (i: number, delta: number) =>
-    update((d) => {
-      const next = order.slice();
-      const [x] = next.splice(i, 1);
-      next.splice(i + delta, 0, x!);
-      return { ...d, aisleOrder: next };
-    });
   return (
     <>
-      <Panel title={s.aisles} hint={s.aislesHint}>
-        <ol className="flex flex-col gap-2">
-          {order.map((k, i) => (
-            <li
-              key={k}
-              draggable
-              onDragStart={(e) => e.dataTransfer.setData("text/plain", String(i))}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                const from = Number(e.dataTransfer.getData("text/plain"));
-                if (!Number.isNaN(from) && from !== i) move(from, i - from);
-              }}
-              className="nb-flat flex min-h-11 cursor-grab items-center justify-between gap-2 bg-chip px-4"
-            >
-              <span className="t-ui">
-                <span aria-hidden="true" className="mr-2 text-muted">
-                  ⋮⋮
-                </span>
-                {label(k)}
-              </span>
-              <span className="flex gap-1">
-                <button
-                  type="button"
-                  aria-label={s.up(label(k))}
-                  disabled={i === 0}
-                  onClick={() => move(i, -1)}
-                  className="iconbtn iconbtn--ghost"
-                >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  aria-label={s.down(label(k))}
-                  disabled={i === order.length - 1}
-                  onClick={() => move(i, 1)}
-                  className="iconbtn iconbtn--ghost"
-                >
-                  ↓
-                </button>
-              </span>
-            </li>
-          ))}
-        </ol>
-      </Panel>
       <Panel title={s.recurring} hint={s.recurringHint}>
         <form
           className="flex gap-2"
@@ -516,41 +494,6 @@ export function ShoppingForm({
             </ChipToggle>
           ))}
         </div>
-      </Panel>
-      <Panel title={t.sections.shopping}>
-        <SelectField
-          id="shopping-day"
-          label={fr.onboarding.steps.habits.shoppingDay}
-          value={v.shoppingDay}
-          onChange={(e) => update((d) => ({ ...d, shoppingDay: Number(e.target.value) }))}
-        >
-          {fr.days.map((label, i) => (
-            <option key={label} value={i + 1}>
-              {label}
-            </option>
-          ))}
-        </SelectField>
-        <TextField
-          id="store"
-          label={fr.onboarding.steps.habits.store}
-          value={v.store}
-          maxLength={60}
-          onChange={(e) => update((d) => ({ ...d, store: e.target.value }))}
-        />
-        <SelectField
-          id="export-format"
-          label={s.exportFormat}
-          value={v.exportFormat}
-          onChange={(e) =>
-            update((d) => ({ ...d, exportFormat: e.target.value as ShoppingSettings["exportFormat"] }))
-          }
-        >
-          {(["text", "checklist"] as const).map((f) => (
-            <option key={f} value={f}>
-              {s.formats[f]}
-            </option>
-          ))}
-        </SelectField>
       </Panel>
       <SaveStatus status={status} />
     </>

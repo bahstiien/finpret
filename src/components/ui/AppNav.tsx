@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { fr } from "@/i18n/fr";
+import { signOut } from "@/server/actions/auth";
 import { Icon, type IconName } from "./Icon";
 
 const TABS: { href: string; label: keyof typeof fr.nav; icon: IconName }[] = [
@@ -13,11 +14,17 @@ const TABS: { href: string; label: keyof typeof fr.nav; icon: IconName }[] = [
   { href: "/app/session", label: "session", icon: "timer" },
 ];
 
+/** Entrées de la barre latérale seulement : la barre du bas mobile garde ses cinq onglets. */
+const SIDE_ONLY: { href: string; label: string; icon: IconName }[] = [
+  { href: "/app/progress", label: fr.progress.nav, icon: "passport" },
+];
+
 /**
  * Navigation (maquette) : barre d'onglets bordée en bas sur mobile (onglet actif violet, décalé),
- * barre latérale blanche à partir de 900 px, avec le nombre d'articles de courses restants.
+ * barre latérale blanche à partir de 900 px, avec le nombre d'articles de courses restants
+ * et l'accès à « Progrès » (sur mobile, il passe par Mon compte et le bandeau de série).
  */
-export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
+export function AppNav({ shoppingLeft, userName }: { shoppingLeft: number; userName: string }) {
   const pathname = usePathname();
   const isActive = (href: string) => (href === "/app" ? pathname === "/app" : pathname.startsWith(href));
   const accountActive = pathname.startsWith("/settings");
@@ -83,6 +90,17 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
             </Link>
           );
         })}
+        {SIDE_ONLY.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            className="side-link"
+          >
+            <Icon name={item.icon} className="ic" />
+            <span className="flex-1">{item.label}</span>
+          </Link>
+        ))}
         <div className="mt-auto flex flex-col gap-3">
           <div className="card tone-banane [@media(max-height:820px)]:hidden">
             <p className="t-3">{fr.nav.sessionPromo}</p>
@@ -91,14 +109,22 @@ export function AppNav({ shoppingLeft }: { shoppingLeft: number }) {
               {fr.nav.session}
             </Link>
           </div>
-          <Link
-            href="/settings"
-            aria-current={accountActive ? "page" : undefined}
-            className="side-link"
-          >
-            <Icon name="user" className="ic" />
-            {fr.nav.account}
-          </Link>
+          <div className="flex flex-col">
+            <Link
+              href="/settings"
+              aria-label={`${fr.nav.account} (${userName})`}
+              aria-current={accountActive ? "page" : undefined}
+              className="side-link"
+            >
+              <Icon name="user" className="ic" />
+              <span className="min-w-0 flex-1 truncate">{userName}</span>
+            </Link>
+            <form action={signOut}>
+              <button type="submit" className="lnk min-h-11 pl-[2.75rem] text-sm">
+                {fr.appShell.signOut}
+              </button>
+            </form>
+          </div>
         </div>
       </nav>
     </>

@@ -325,7 +325,6 @@ export const fr = {
       canteen: "Cantine",
       subscription: "Abonnement",
       notifications: "Notifications",
-      data: "Données",
       profile: "Profil",
     },
     overview: "Tous les réglages",
@@ -333,13 +332,12 @@ export const fr = {
     hints: {
       household: "Nom, qui mange à la maison, comptes et invitations",
       subscription: "Offre, paiement et factures",
-      data: "Export, historique, suppression du foyer",
       diet: "Régime, ingrédients évités, objectifs",
       menu: "Repas à prévoir, équilibre, goûter",
-      shopping: "Rayons, articles récurrents, placard",
+      shopping: "Articles récurrents, placard",
       session: "Jour de cuisine, niveau, minuteurs, équipement",
       canteen: "Menus de la cantine des enfants",
-      profile: "Prénom, apparence, notifications, connexion",
+      profile: "Prénom, apparence, notifications, export des données",
     },
     progressHint: "Série, passeport et badges",
     danger: "Zone sensible",
@@ -373,8 +371,6 @@ export const fr = {
       minVeg: "Repas végétariens minimum par semaine",
       minProtein: "Protéines minimales par repas",
       grams: (g: number) => `${g} g`,
-      economical: "Menus économiques",
-      economicalHint: "Les plats les moins chers par portion passent en priorité.",
     },
     menu: {
       proteins: "Équilibre par protéine (plats maximum)",
@@ -394,11 +390,14 @@ export const fr = {
       bankUse: "Repas tirés du congélateur",
       noRepeat: "Période sans répétition",
       weeks: (n: number) => `${n} semaines`,
-      budgetTitle: "Budget",
+      budgetTitle: "Menus économiques",
       budgetHint:
-        "Coût estimé des plats, soupes et soirs simples de la semaine, aux portions du foyer (prix de référence, hors repas du congélateur). Si aucun menu ne tient dedans, tu reçois le moins cher trouvé.",
-      budget: "Budget max par semaine",
+        "Les plats les moins chers passent en priorité pour tenir ce budget. Il couvre les plats, soupes et soirs simples de la semaine, aux portions du foyer, hors repas du congélateur. Si aucun menu ne tient dedans, tu reçois le moins cher trouvé.",
+      budget: "Budget moyen par semaine",
       budgetValue: (eur: number) => (eur === 0 ? "Sans limite" : `${eur} €`),
+      budgetPortion: (eur: number, portions: number) =>
+        `Soit environ ${eur.toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} par portion et par personne (${Math.round(portions)} portions prévues). Estimation à partir de prix de référence en supermarché : ton ticket de caisse peut varier.`,
+      budgetOff: "Sans limite : les menus ne tiennent pas compte du prix des plats.",
       grid: "Repas à prévoir",
       gridHint: "Décoche les repas pris ailleurs : rien n'est cuisiné ni acheté pour eux.",
       weekend: "Proposer des idées pour le week-end",
@@ -417,10 +416,6 @@ export const fr = {
       equipment: "Équipement",
     },
     shopping: {
-      aisles: "Ordre des rayons",
-      aislesHint: "Dans l'ordre de ton magasin.",
-      up: (aisle: string) => `Monter ${aisle}`,
-      down: (aisle: string) => `Descendre ${aisle}`,
       recurring: "Articles récurrents",
       recurringHint: "Ajoutés à chaque liste de courses.",
       recurringAdd: "Ajouter",
@@ -428,8 +423,6 @@ export const fr = {
       remove: (label: string) => `Retirer ${label}`,
       base: "Placard de base à vérifier",
       baseHint: "Ces ingrédients du placard te sont proposés à vérifier avant les courses.",
-      exportFormat: "Format d'export",
-      formats: { text: "Texte simple", checklist: "Liste à cocher" },
     },
     canteen: {
       alert: "Alerte doublon",
@@ -464,8 +457,6 @@ export const fr = {
     data: {
       export: "Exporter toutes les données du foyer",
       exportHint: "Un fichier JSON avec les membres, réglages, semaines, stock et recettes du foyer.",
-      history: "Historique des semaines",
-      noHistory: "Aucune semaine pour l'instant.",
       deleteHousehold: "Supprimer le foyer",
       deleteHouseholdHint: (name: string) =>
         `Toutes les données du foyer seront effacées, pour tous ses comptes. Tape « ${name} » pour confirmer.`,
@@ -480,11 +471,6 @@ export const fr = {
       you: "Toi",
       displayName: "Ton prénom",
       activeHousehold: "Foyer actif sur cet appareil",
-      devices: "Appareils connectés",
-      devicesHint: "Déconnecte tous tes autres appareils (téléphone perdu, ordinateur partagé).",
-      signOutOthers: "Déconnecter les autres appareils",
-      signedOutOthers: "Les autres appareils sont déconnectés.",
-      connection: "Connexion",
       notifications: "Mes notifications",
       theme: "Apparence",
       themeHint: "Sur cet appareil.",
@@ -1456,8 +1442,8 @@ export const fr = {
   },
   // Série de semaines fin prêtes et passeport des saveurs (SPEC_PROGRES §8).
   progress: {
-    title: "Nos progrès",
-    nav: "Nos progrès",
+    title: "Progrès",
+    nav: "Progrès",
     streak: {
       label: "Série",
       weeks: (n: number) => (n <= 1 ? `${n} semaine fin prête` : `${n} semaines fin prêtes`),

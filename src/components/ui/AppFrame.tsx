@@ -6,11 +6,14 @@ import { AppNav } from "./AppNav";
  */
 export function AppFrame({
   shoppingLeft,
+  userName,
   top,
   children,
   overlay,
 }: {
   shoppingLeft: number;
+  /** Prénom (ou e-mail) affiché en bas de la barre latérale, au-dessus de « Se déconnecter ». */
+  userName: string;
   /** Éléments persistants au-dessus du contenu (minuteurs). */
   top?: React.ReactNode;
   children: React.ReactNode;
@@ -20,7 +23,7 @@ export function AppFrame({
     <div className="min-h-dvh">
       <div className="mx-auto grid min-h-dvh w-full max-w-6xl grid-cols-1 gap-4 px-4 pt-6 pb-24 min-[900px]:max-w-[1400px] min-[900px]:grid-cols-[17rem_minmax(0,1fr)] min-[900px]:gap-6 min-[900px]:p-4 print:block print:max-w-none print:p-0">
         <div className="contents print:hidden">
-          <AppNav shoppingLeft={shoppingLeft} />
+          <AppNav shoppingLeft={shoppingLeft} userName={userName} />
         </div>
         <div className="flex min-w-0 flex-col gap-4 min-[900px]:px-2 min-[900px]:py-4 min-[900px]:pr-4">
           {top && <div className="print:hidden">{top}</div>}
