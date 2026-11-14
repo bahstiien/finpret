@@ -23,6 +23,7 @@ export type Feature =
   | "session"
   | "discover"
   | "progress"
+  | "onboarding"
   | "menu.swap"
   | "menu.move"
   | "menu.guests"
@@ -57,6 +58,7 @@ const ALWAYS: readonly Feature[] = [
   "session",
   "discover",
   "progress",
+  "onboarding",
 ];
 const PAID_ONLY: readonly Feature[] = ["menu.move", "menu.guests", "pantry", "notifications.meals", "print"];
 /** D12 : cantine et alerte doublon gratuites pour les foyers rattachés à une association. */

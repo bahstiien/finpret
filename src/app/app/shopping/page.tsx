@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { TipBubble } from "@/components/getting-started/TipBubble";
+import { tipForTab } from "@/server/getting-started";
 import { ShoppingScreen } from "@/components/shopping/ShoppingScreen";
+import { LinkButton } from "@/components/ui/Button";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
@@ -26,8 +29,12 @@ export default async function ShoppingPage() {
     return (
       <>
         <PageHeader title={fr.nav.shopping} />
-        <EmptyState icon="basket" title={fr.nav.shopping}>
-          {fr.shopping.noWeek}
+        <EmptyState
+          icon="basket"
+          title={fr.gettingStarted.empty.shoppingNoWeek.title}
+          action={<LinkButton href="/app">{fr.gettingStarted.empty.shoppingNoWeek.action}</LinkButton>}
+        >
+          {fr.gettingStarted.empty.shoppingNoWeek.text}
         </EmptyState>
       </>
     );
@@ -92,6 +99,7 @@ export default async function ShoppingPage() {
   // Habitudes du foyer : ses ajouts à la main, rangés là où il les a mis en dernier.
   const habits = habitsFrom(history).slice(0, 60);
 
+  const tip = await tipForTab("shopping", { userId: user.id, householdId: household.id, timezone: ctx.timezone });
   const allAisles = aisles.filter((a) => a.key !== "base");
   const order = [
     ...ctx.settings.shopping.aisleOrder.filter((k) => allAisles.some((a) => a.key === k)),
@@ -172,6 +180,7 @@ export default async function ShoppingPage() {
 
   return (
     <ShoppingScreen
+      tip={tip && <TipBubble key="tip" tip={tip} />}
       preparations={preparations}
       transfers={transfers}
       otherWeeks={otherWeeks}

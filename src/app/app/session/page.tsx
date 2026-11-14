@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/ui/Layout";
+import { TipBubble } from "@/components/getting-started/TipBubble";
+import { firstSessionInfo, isFirstSessionFor, tipForTab, tipsSeen } from "@/server/getting-started";
+import { LinkButton } from "@/components/ui/Button";
+import { EmptyState, PageHeader } from "@/components/ui/Layout";
 import { SessionScreen } from "@/components/session/SessionScreen";
-import { Card } from "@/components/ui/Card";
+import { effectiveLevel } from "@/engine/first-session";
+import { FIRST_SESSION_TIPS } from "@/engine/getting-started";
 import { totals } from "@/engine/quantities";
 import { buildSession } from "@/engine/session";
 import { fr } from "@/i18n/fr";
@@ -16,7 +20,7 @@ export const metadata: Metadata = { title: fr.nav.session };
 
 /** Onglet Session (§8.5) : la session de la semaine préparée (ou en cours), étape par étape. */
 export default async function SessionPage() {
-  const { household } = await requireHousehold("/app/session");
+  const { user, household } = await requireHousehold("/app/session");
   const ctx = await loadHouseholdContext(household.id);
   const { current, next } = currentAndNext(ctx);
   const week = next ?? current;
@@ -24,12 +28,25 @@ export default async function SessionPage() {
     return (
       <>
         <PageHeader title={fr.nav.session} />
-        <Card>
-          <p className="text-muted">{fr.session.noWeek}</p>
-        </Card>
+        <EmptyState
+          icon="timer"
+          title={fr.gettingStarted.empty.sessionNoWeek.title}
+          action={<LinkButton href="/app">{fr.gettingStarted.empty.sessionNoWeek.action}</LinkButton>}
+        >
+          {fr.gettingStarted.empty.sessionNoWeek.text}
+        </EmptyState>
       </>
     );
   }
+  const tip = await tipForTab("session", { userId: user.id, householdId: household.id, timezone: ctx.timezone });
+  // Première session du foyer : « débutant » par défaut, modifiable (SPEC_PRISE_EN_MAIN §4.4.3).
+  const [first, seen] = await Promise.all([firstSessionInfo(household.id), tipsSeen(user.id)]);
+  const firstWeek = isFirstSessionFor(first, week.id);
+  const level = effectiveLevel({
+    firstSession: firstWeek,
+    override: first.override,
+    setting: ctx.settings.session.level,
+  });
   const env = await engineEnvFor(ctx);
   const pm = portionModelFor(ctx, week.plan.start);
   const t = totals(env, week.plan, pm, ctx.settings.menu.cake.enabled);
@@ -40,7 +57,7 @@ export default async function SessionPage() {
     pantry: ctx.pantry,
     totals: t,
     equipment: toEquipment(ctx.settings),
-    level: ctx.settings.session.level,
+    level,
   });
   // Signature des étapes : si le menu change, les coches de la session repartent de zéro.
   const sig = session.steps.map((s) => `${s.name}@${s.start}`).join("|");
@@ -52,6 +69,8 @@ export default async function SessionPage() {
 
   return (
     <SessionScreen
+      tip={tip && <TipBubble key="tip" tip={tip} />}
+      firstSession={firstWeek ? { level, seen: seen.filter((k) => (FIRST_SESSION_TIPS as readonly string[]).includes(k)) } : null}
       weekId={week.id}
       weekLabel={fr.menu.weekOf(formatShort(week.start_date))}
       steps={session.steps}

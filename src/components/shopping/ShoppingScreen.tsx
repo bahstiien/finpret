@@ -30,7 +30,7 @@ import { AdaptationPanel, type AdaptationHistoryItem } from "./AdaptationPanel";
 import { AddExtras, type OnList } from "./AddExtras";
 import { type PreparationItem, type TransferChoice, WeekOpsPanel } from "./WeekOpsPanel";
 import { Card } from "@/components/ui/Card";
-import { PageHeader } from "@/components/ui/Layout";
+import { EmptyState, PageHeader } from "@/components/ui/Layout";
 
 const t = fr.shopping;
 const tp = fr.purchases;
@@ -69,7 +69,10 @@ export function ShoppingScreen({
   preparations,
   transfers,
   otherWeeks,
+  tip,
 }: {
+  /** Bulle de la prise en main, ancrée sur la progression de la liste. */
+  tip?: React.ReactNode;
   preparations: PreparationItem[];
   transfers: TransferChoice[];
   otherWeeks: { id: string; label: string }[];
@@ -522,6 +525,7 @@ export function ShoppingScreen({
               </Button>
             )}
           </Card>
+          {tip}
           {purchases && reviewOpen && (
             <div data-testid="review">
               <ReviewPanel
@@ -573,6 +577,18 @@ export function ShoppingScreen({
                 ))}
               </div>
             </Card>
+          )}
+
+          {visible.length > 0 && done === visible.length && (
+            <EmptyState
+              icon="check"
+              title={fr.gettingStarted.empty.shoppingAllChecked.title}
+              action={
+                <LinkButton href="/app/session">{fr.gettingStarted.empty.shoppingAllChecked.action}</LinkButton>
+              }
+            >
+              {fr.gettingStarted.empty.shoppingAllChecked.text}
+            </EmptyState>
           )}
 
           {groups.length === 0 ? (

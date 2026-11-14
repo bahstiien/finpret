@@ -6,12 +6,19 @@ import { loadProgressView } from "@/server/progress-view";
 import { NoWeek } from "@/components/menu/NoWeek";
 import { eligible } from "@/engine/season";
 import { monthOf } from "@/engine/compose";
+import { ChecklistCard, type ChecklistCardData } from "@/components/getting-started/ChecklistCard";
+import { TipBubble } from "@/components/getting-started/TipBubble";
+import { PrepTile, type PrepData } from "@/components/getting-started/PrepTile";
+import { STEPS, type StepKey } from "@/engine/getting-started";
+import { effectiveLevel, endTime, packaging, prepTile } from "@/engine/first-session";
+import { dur } from "@/engine/format";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
 import { addDays, formatLong, timeIn } from "@/lib/dates";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView, canPrepareNext, flagOf } from "@/server/menu-view";
 import { householdCan } from "@/server/entitlements-load";
+import { firstSessionInfo, isFirstSessionFor, syncChecklist, tipForTab, tipsSeen } from "@/server/getting-started";
 import { schoolMenusFor } from "@/server/school-canteen";
 import { getProfile, getUser, requireHousehold, withSession } from "@/server/session";
 import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
@@ -19,7 +26,7 @@ import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 export const metadata: Metadata = { title: fr.nav.menu };
 
 /** Onglet Menu (§8.1). `?week=next` affiche la semaine suivante déjà préparée. */
-export default async function MenuPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+export default async function MenuPage({ searchParams }: { searchParams: Promise<{ week?: string; prep?: string }> }) {
   const { user: authUser, household } = await requireHousehold("/app");
   const [ctx, profile, user, params] = await Promise.all([
     loadHouseholdContext(household.id),
@@ -47,7 +54,14 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
   const env = await engineEnvFor(ctx);
   const pm = portionModelFor(ctx, row.start_date);
   const view = buildMenuView(ctx, env, row, pm, today);
-  const summary = await summarize(ctx, row.plan, env);
+  // Première session du foyer : niveau « débutant » par défaut (SPEC_PRISE_EN_MAIN §4.4.3).
+  const first = await firstSessionInfo(household.id);
+  const level = effectiveLevel({
+    firstSession: isFirstSessionFor(first, row.id),
+    override: first.override,
+    setting: ctx.settings.session.level,
+  });
+  const summary = await summarize(ctx, row.plan, env, level);
   const month = monthOf(row.start_date);
   const quick = (r: { steps?: string[]; prepMin?: number; blocks?: { active: number; passive: number }[] }) =>
     !!r.steps || (r.prepMin ?? 0) + (r.blocks ?? []).reduce((s, b) => s + b.active + b.passive, 0) <= 30;
@@ -141,6 +155,65 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
   }
 
   const progress = await loadProgressView(household.id, authUser.id, { passport: false });
+
+  // Prise en main (SPEC_PRISE_EN_MAIN §4.1, §4.2) : checklist du foyer et bulle de l'onglet, décidées côté serveur.
+  const [checklist, tip] = await Promise.all([
+    syncChecklist(household.id, { isAdmin: household.role === "admin" }),
+    tipForTab("menu", { userId: authUser.id, householdId: household.id, timezone: ctx.timezone }),
+  ]);
+
+  // Tile « Demain, ta première session » et Sheet de préparation (§4.4.1, §4.4.2).
+  const sessionWeek = next ?? current;
+  const tileState = first.active
+    ? prepTile({
+        today,
+        sessionDay: ctx.settings.session.day,
+        hasWeek: !!sessionWeek,
+        started: first.started,
+        done: false,
+      })
+    : null;
+  let prep: PrepData | null = null;
+  if (tileState && sessionWeek) {
+    const sessionPm = portionModelFor(ctx, sessionWeek.start_date);
+    const pack = packaging(env, sessionWeek.plan, sessionPm);
+    const weekId = sessionWeek.id;
+    const [all, seen, sessionSummary] = await Promise.all([
+      withSession((db) => db.selectFrom("shopping_items").select("checked").where("week_id", "=", weekId).execute()),
+      tipsSeen(authUser.id),
+      summarize(ctx, sessionWeek.plan, env, level),
+    ]);
+    prep = {
+      state: tileState,
+      today,
+      boxes: pack.boxes.map((b) => ({ portions: b.portions, label: b.label, box: b.box })),
+      fridge: pack.fridge,
+      freezer: pack.freezer,
+      shopping: { checked: all.filter((i) => i.checked).length, total: all.length },
+      duration: dur(sessionSummary.sessionMinutes),
+      end: endTime(ctx.settings.session.time, sessionSummary.sessionMinutes),
+      level,
+      isAdmin: household.role === "admin",
+      tileDismissed: seen.includes(`prep_tile:${today}`),
+      initialOpen: params.prep === "1",
+    };
+  }
+  const checklistData: ChecklistCardData | null =
+    checklist && !checklist.dismissed && checklist.state.mode !== "hidden"
+      ? {
+          mode: checklist.state.mode,
+          done: Object.fromEntries(STEPS.map((k) => [k, checklist.state.steps[k].done])) as Record<StepKey, boolean>,
+          doneCount: checklist.state.doneCount,
+          total: checklist.state.total,
+          next: checklist.state.next,
+          autoCollapsed: checklist.state.autoCollapsed,
+          isAdmin: checklist.isAdmin,
+          sessionStarted: checklist.state.steps.start_session.done,
+          prepareNextStart: isCurrent && !next && canPrepareNext(today) ? nextStart : null,
+          // Une seule carte d'aide développée : la checklist se réduit quand la Tile est affichée.
+          forceCollapsed: !!prep && !prep.tileDismissed,
+        }
+      : null;
   return (
     <>
       <MenuScreen
@@ -154,6 +227,15 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
         shortcuts={shortcuts}
         childFactor={pm.childFactor}
         canteen={canteen}
+        topSlot={
+          (checklistData || prep) && (
+            <>
+              {checklistData && <ChecklistCard key="checklist" data={checklistData} />}
+              {prep && <PrepTile key="prep" data={prep} />}
+            </>
+          )
+        }
+        dayTip={tip && <TipBubble key="tip" tip={tip} />}
         weeks={{
           isCurrent,
           hasNext: !!next && isCurrent,

@@ -17,7 +17,7 @@ import {
   withSession,
 } from "@/server/session";
 import { approvedAssociation, attachHousehold } from "@/server/associations";
-import { sendWelcome } from "@/server/emails";
+import { runGettingStartedMessages } from "@/server/getting-started-messages";
 import { trackEvent } from "@/server/events";
 import { generateAndStore } from "@/server/weeks";
 import { fr } from "@/i18n/fr";
@@ -204,8 +204,6 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
 
   await trackEvent("onboarding_done", { userId: user.id, householdId, props: { diet: diet.diet, goals } });
   await trackEvent("trial_started", { userId: user.id, householdId });
-  if (user.email)
-    await sendWelcome(user.email, user.id, input.household.members[0]?.name ?? "").catch(() => null);
 
   // Heures de notification du compte (le consentement aux notifications se donne plus tard, §4).
   await withSession((db) =>
@@ -227,17 +225,27 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
   const start = nextMonday(today);
   const generated = await generateAndStore(householdId, start);
   if (!generated.ok) return { ok: false, error: fr.onboarding.generationFailed, retry: true };
+  await welcome(householdId, user.id);
   redirect(`/onboarding/recap?week=${start}`);
+}
+
+/** J0 de la séquence de prise en main (SPEC_PRISE_EN_MAIN §4.5) : bienvenue avec le menu prêt ; ne bloque jamais le parcours. */
+async function welcome(householdId: string, userId: string) {
+  await runGettingStartedMessages((process.env.APP_URL ?? "http://localhost:3000").replace(/\/$/, ""), new Date(), {
+    householdId,
+    userId,
+  }).catch((error) => console.error("message de bienvenue :", error));
 }
 
 /** Relance la génération de la première semaine après un échec (foyer déjà enregistré). */
 export async function retryFirstWeek(): Promise<OnboardingResult | void> {
-  const { household } = await requireHousehold("/onboarding");
+  const { user, household } = await requireHousehold("/onboarding");
   const row = await withSession((db) =>
     db.selectFrom("households").select("timezone").where("id", "=", household.id).executeTakeFirst(),
   );
   const start = nextMonday(todayIn(row?.timezone ?? "Europe/Paris"));
   const generated = await generateAndStore(household.id, start);
   if (!generated.ok) return { ok: false, error: fr.onboarding.generationFailed, retry: true };
+  await welcome(household.id, user.id);
   redirect(`/onboarding/recap?week=${start}`);
 }

@@ -83,3 +83,11 @@ describe("can", () => {
     expect(can(trial, "household.members", { now: NOW, used: 8 })).toBe(false);
   });
 });
+
+describe("onboarding (prise en main)", () => {
+  it("est gratuit pour toutes les offres, avec ou sans association", () => {
+    for (const offer of [free, trial, expired, monthly, asso(free), asso(monthly)]) {
+      expect(can(offer, "onboarding", { now: NOW })).toBe(true);
+    }
+  });
+});

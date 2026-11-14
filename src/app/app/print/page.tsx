@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PrintSheet, type PrintData } from "@/components/print/PrintSheet";
 import { canteenDays } from "@/engine/canteen";
 import { breakfastId } from "@/engine/catalog/derive";
@@ -10,6 +9,8 @@ import { fr } from "@/i18n/fr";
 import { addDays, formatLong } from "@/lib/dates";
 import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { buildMenuView } from "@/server/menu-view";
+import { LinkButton } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/Layout";
 import { UpgradeCard } from "@/components/ui/UpgradeCard";
 import { householdCan } from "@/server/entitlements-load";
 import { requireHousehold, withSession } from "@/server/session";
@@ -29,9 +30,13 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
   const row = ctx.weeks.find((w) => w.start_date === params.week) ?? next ?? current;
   if (!row) {
     return (
-      <p className="text-muted">
-        {t.noWeek} <Link href="/app" className="lnk">{t.back}</Link>
-      </p>
+      <EmptyState
+        icon="print"
+        title={fr.gettingStarted.empty.print.title}
+        action={<LinkButton href="/app">{fr.gettingStarted.empty.print.action}</LinkButton>}
+      >
+        {fr.gettingStarted.empty.print.text}
+      </EmptyState>
     );
   }
 

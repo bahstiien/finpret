@@ -1,7 +1,13 @@
 "use client";
 
 import { PageHeader } from "@/components/ui/Layout";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { SessionTip } from "@/components/getting-started/SessionTip";
+import { Segmented } from "@/components/ui/Segmented";
+import type { FirstSessionTip } from "@/engine/getting-started";
+import type { SessionLevel } from "@/engine/types";
+import { setFirstSessionLevelAction } from "@/server/actions/getting-started";
 import { useMenuAction } from "@/components/menu/useMenuAction";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -28,14 +34,18 @@ function startDate(startedAt: string | null, planned: string) {
 }
 
 /** Garde l'écran allumé pendant la session (Wake Lock API), et le redemande au retour sur l'onglet. */
-function useWakeLock(active: boolean) {
+function useWakeLock(active: boolean): boolean {
+  const [acquired, setAcquired] = useState(false);
   useEffect(() => {
     if (!active || !("wakeLock" in navigator)) return;
     let lock: WakeLockSentinel | null = null;
     const request = () =>
       navigator.wakeLock
         .request("screen")
-        .then((l) => (lock = l))
+        .then((l) => {
+          lock = l;
+          setAcquired(true);
+        })
         .catch(() => {});
     void request();
     const onVisible = () => document.visibilityState === "visible" && void request();
@@ -45,6 +55,7 @@ function useWakeLock(active: boolean) {
       void lock?.release();
     };
   }, [active]);
+  return acquired;
 }
 
 /** Session guidée (maquette Session) : domaine Session = pêche, étape en grand, cases de 36 px, boutons de 60 px. */
@@ -57,7 +68,13 @@ export function SessionScreen({
   maxMinutes,
   doublesToBank,
   pantryToUpdate,
+  tip,
+  firstSession = null,
 }: {
+  /** Bulle de la prise en main, ancrée sur la carte de démarrage. */
+  tip?: React.ReactNode;
+  /** Première session du foyer : niveau et conseils déjà vus (SPEC_PRISE_EN_MAIN §4.4). */
+  firstSession?: { level: SessionLevel; seen: string[] } | null;
   weekId: string;
   weekLabel: string;
   steps: SessionStep[];
@@ -73,7 +90,10 @@ export function SessionScreen({
   const started = !!row?.started_at;
   const [now, setNow] = useState(() => Date.now());
   const { run, pending } = useMenuAction();
-  useWakeLock(started);
+  const wakeAcquired = useWakeLock(started);
+  const [fsDone, setFsDone] = useState<string[]>([]);
+  const router = useRouter();
+  const [, startLevel] = useTransition();
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
@@ -92,6 +112,25 @@ export function SessionScreen({
           <p className="num-xl">{dur(total)}</p>
           <p className="t-ui">{t.startCard(steps.length, hhmm(new Date(Date.now() + total * 60000)))}</p>
           {total > maxMinutes && <p className="callout tone-warning t-ui">{t.overMax(dur(maxMinutes))}</p>}
+          {firstSession && canEdit && (
+            <div className="flex flex-col gap-1" data-testid="first-session-level">
+              <Segmented<SessionLevel>
+                label={fr.gettingStarted.firstSession.levelLabel}
+                value={firstSession.level}
+                options={[
+                  { value: "beginner", label: fr.gettingStarted.firstSession.beginner },
+                  { value: "confident", label: fr.gettingStarted.firstSession.confident },
+                ]}
+                onChange={(v) =>
+                  startLevel(async () => {
+                    await setFirstSessionLevelAction(v);
+                    router.refresh();
+                  })
+                }
+              />
+              <p className="t-small">{fr.gettingStarted.firstSession.levelHint}</p>
+            </div>
+          )}
           {canEdit ? (
             <Button type="button" size="lg" className="self-start" onClick={() => session?.start()}>
               {t.start}
@@ -100,6 +139,7 @@ export function SessionScreen({
             <p className="t-small">{t.viewerWait}</p>
           )}
         </Card>
+        {tip}
         <Card className="flex flex-col gap-2">
           <div className="sh">
             <h2 className="t-2">{t.overview}</h2>
@@ -128,6 +168,19 @@ export function SessionScreen({
   const activeTimer = row!.timers.find((x) => x.step === index && !x.doneAt);
   const upcoming = steps.slice(index + 1, index + 4);
   const nextStep = steps[index + 1];
+  // Conseils de la première session : un seul à la fois, au bon moment (SPEC_PRISE_EN_MAIN §4.4.4).
+  const fsGone = (key: FirstSessionTip) => !firstSession || firstSession.seen.includes(key) || fsDone.includes(key);
+  const fsTip: FirstSessionTip | null =
+    canEdit && firstSession
+      ? !fsGone("fs_next") && allDone && !!nextStep
+        ? "fs_next"
+        : !fsGone("fs_timers") && row!.timers.length > 0
+          ? "fs_timers"
+          : !fsGone("fs_wake") && wakeAcquired
+            ? "fs_wake"
+            : null
+      : null;
+  const fsClose = (key: FirstSessionTip) => () => setFsDone((d) => [...d, key]);
 
   return (
     <>
@@ -180,6 +233,7 @@ export function SessionScreen({
           <h1 id="session-step-title" className="t-1 balance">
             {step.name}
           </h1>
+          {fsTip === "fs_wake" && <SessionTip tip="fs_wake" onDone={fsClose("fs_wake")} />}
           <ul className="card !py-1">
             {step.tasks.map((task, j) => {
               const key = `${index}-${j}`;
@@ -220,6 +274,7 @@ export function SessionScreen({
               </Button>
             </Card>
           )}
+          {fsTip === "fs_timers" && <SessionTip tip="fs_timers" onDone={fsClose("fs_timers")} />}
           {FEATURES.freezerAndLeftovers && step.actions && canEdit && (
             <div className="flex flex-wrap gap-2">
               {doublesToBank && step.actions.bankDoubles && (
@@ -272,6 +327,7 @@ export function SessionScreen({
         </aside>
       </div>
 
+      {fsTip === "fs_next" && <SessionTip tip="fs_next" onDone={fsClose("fs_next")} />}
       {canEdit && index >= steps.length - 1 && allDone && <SessionDoneBanner weekId={weekId} />}
       {canEdit && (
         <nav

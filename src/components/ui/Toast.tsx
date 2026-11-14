@@ -2,14 +2,16 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-type Toast = { id: number; text: string; tone: "info" | "error" };
-const ToastContext = createContext<(text: string, tone?: Toast["tone"]) => void>(() => {});
+type ToastAction = { label: string; onClick: () => void };
+type Toast = { id: number; text: string; tone: "info" | "error"; action?: ToastAction };
+const ToastContext = createContext<(text: string, tone?: Toast["tone"], action?: ToastAction) => void>(() => {});
 
 /** Messages éphémères après une action (« Repas retiré », « Enregistré »…), annoncés aux lecteurs d'écran. */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toast, setToast] = useState<Toast | null>(null);
   const show = useCallback(
-    (text: string, tone: Toast["tone"] = "info") => setToast({ id: Date.now(), text, tone }),
+    (text: string, tone: Toast["tone"] = "info", action?: ToastAction) =>
+      setToast({ id: Date.now(), text, tone, action }),
     [],
   );
   useEffect(() => {
@@ -32,6 +34,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             className={`toast pointer-events-auto max-w-md text-sm font-bold ${toast.tone === "error" ? "!bg-pink !text-[var(--on-fill)]" : ""}`}
           >
             {toast.text}
+            {toast.action && (
+              <button
+                type="button"
+                onClick={() => {
+                  toast.action?.onClick();
+                  setToast(null);
+                }}
+                className="lnk ml-3 min-h-11 px-1"
+              >
+                {toast.action.label}
+              </button>
+            )}
           </p>
         )}
       </div>

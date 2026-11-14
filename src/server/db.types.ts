@@ -405,6 +405,15 @@ export interface NotificationLog {
   user_id: string;
 }
 
+export interface OnboardingProgress {
+  completed_at: string | null;
+  created_at: Generated<string>;
+  dismissed_at: string | null;
+  first_session_level: "beginner" | "confident" | null;
+  household_id: string;
+  steps: Generated<Json>;
+}
+
 export interface Packs {
   ingredient_key: string;
   label: string;
@@ -526,24 +535,6 @@ export interface RecipeImports {
   url: string;
 }
 
-export interface RecipeSuggestions {
-  applied_recipe_id: string | null;
-  created_at: Generated<string>;
-  handled_at: string | null;
-  handled_by: string | null;
-  household_id: string | null;
-  id: Generated<number>;
-  kind: "edit" | "new";
-  message: string;
-  note: string | null;
-  recipe_id: string | null;
-  recipe_kind: "main" | "soup" | "simple" | "cake" | null;
-  source_url: string | null;
-  status: Generated<"new" | "accepted" | "rejected">;
-  title: string;
-  user_id: string | null;
-}
-
 export interface Recipes {
   allergens: Generated<string[] | null>;
   created_at: Generated<string>;
@@ -562,6 +553,24 @@ export interface Recipes {
   source_name: string | null;
   source_url: string | null;
   status: Generated<"draft" | "validated">;
+}
+
+export interface RecipeSuggestions {
+  applied_recipe_id: string | null;
+  created_at: Generated<string>;
+  handled_at: string | null;
+  handled_by: string | null;
+  household_id: string | null;
+  id: Generated<number>;
+  kind: "edit" | "new";
+  message: string;
+  note: string | null;
+  recipe_id: string | null;
+  recipe_kind: "main" | "soup" | "simple" | "cake" | null;
+  source_url: string | null;
+  status: Generated<"new" | "accepted" | "rejected">;
+  title: string;
+  user_id: string | null;
 }
 
 export interface SchoolMenus {
@@ -660,6 +669,7 @@ export interface UserSettings {
   notifications: Generated<Json>;
   terms_accepted_at: string | null;
   terms_version: string | null;
+  tips_seen: Generated<string[]>;
   user_id: string;
 }
 
@@ -713,6 +723,7 @@ export interface DB {
   members: Members;
   memberships: Memberships;
   notification_log: NotificationLog;
+  onboarding_progress: OnboardingProgress;
   packs: Packs;
   pantry: Pantry;
   pantry_saves: PantrySaves;

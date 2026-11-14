@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { TipBubble } from "@/components/getting-started/TipBubble";
+import { tipForTab } from "@/server/getting-started";
 import { StockScreen } from "@/components/stock/StockScreen";
 import { daysLeft, isUrgent } from "@/engine/antigaspi";
 import { fmtQ, fmtRaw } from "@/engine/format";
@@ -17,7 +19,7 @@ export const metadata: Metadata = { title: fr.nav.stock };
 
 /** Onglet Stock (§8.4) : réserve du congélateur et garde-manger. */
 export default async function StockPage() {
-  const { household } = await requireHousehold("/app/stock");
+  const { user, household } = await requireHousehold("/app/stock");
   if (!(await householdCan(household.id, "pantry"))) return <UpgradeCard />;
   const ctx = await loadHouseholdContext(household.id);
   const env = await engineEnvFor(ctx);
@@ -82,12 +84,14 @@ export default async function StockPage() {
         (a.daysLeft ?? Infinity) - (b.daysLeft ?? Infinity) || a.label.localeCompare(b.label, "fr"),
     );
 
+  const tip = await tipForTab("stock", { userId: user.id, householdId: household.id, timezone: ctx.timezone });
   const freezable = [...env.lib.mains.filter((r) => r.freeze), ...env.lib.soups.filter((r) => r.freeze)]
     .map((r) => ({ id: r.id, name: r.n }))
     .sort((a, b) => a.name.localeCompare(b.name, "fr"));
 
   return (
     <StockScreen
+      tip={tip && <TipBubble key="tip" tip={tip} />}
       canEdit={household.role !== "viewer"}
       freezer={freezer}
       pantry={pantry}

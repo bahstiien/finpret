@@ -24,11 +24,12 @@ Lancer en production le **lundi 4 janvier 2027** (rentrée scolaire, date à con
 | Foyers inscrits | 150 |
 | Foyers ayant terminé une session | 75 |
 | Foyers revenus une 2e semaine | 50 |
+| **Activation à 10 jours** : part des foyers (ayant fini l'onboarding) qui terminent une session dans les 10 jours suivant leur inscription (`signup`) | À fixer (SPEC_PRISE_EN_MAIN §11, Q1) |
 | Abonnés payants ou en essai avec carte | 40 |
 | Semaines de janvier avec menus de cantine publiés | 100 % |
 | Incident bloquant (perte de courses, double paiement) | 0 |
 
-Instrumente ces indicateurs dès J1 (table `events` : `user_id`, `household_id`, `name`, `props`, `created_at` ; événements : `signup`, `onboarding_done`, `week_generated`, `session_started`, `session_done`, `shopping_checked`, `trial_started`, `subscribed`, `association_joined`). Aucun outil d'analyse tiers.
+Instrumente ces indicateurs dès J1 (table `events` : `user_id`, `household_id`, `name`, `props`, `created_at` ; événements : `signup`, `onboarding_done`, `week_generated`, `session_started`, `session_done`, `shopping_checked`, `trial_started`, `subscribed`, `association_joined`, puis, pour la prise en main : `onboarding_step_done`, `onboarding_dismissed`, `onboarding_completed`, `onboarding_restarted`, `tip_shown`, `tip_dismissed`, `tips_reset`, `prep_sheet_opened`, `help_viewed`, `faq_opened`, `onboarding_message_sent`, `menu_move`, `menu_removed`, `invitation_sent`). L'indicateur d'activation et la 2e semaine se calculent par la requête de `docs/SPEC_PRISE_EN_MAIN.md` §7.4. Aucun outil d'analyse tiers.
 
 ## 2. Périmètre
 
@@ -45,6 +46,7 @@ Instrumente ces indicateurs dès J1 (table `events` : `user_id`, `household_id`,
 | Paiement | Stripe Checkout, mensuel, annuel, coupon association, essai, portail client | CSE, packs, achats intégrés |
 | Notifications | Web Push + e-mail : dîner, décongélation, menus publiés, fin d'essai | Courses prêtes, début de session |
 | Recettes | Catalogue du seed, Découvrir | Import par lien, recettes perso |
+| Prise en main | Checklist « Ta première semaine », conseils contextuels, états vides, première session accompagnée, séquence de messages J0–J14, Aide (`docs/SPEC_PRISE_EN_MAIN.md`) | Checklist semaine 2, récompenses ; état vide congélateur et « Mes recettes » (liés aux fonctions REPORTÉES) |
 | Impression | A4 de la semaine | — |
 | Admin | Validation associations, écoles, abonnements, reversements, support, journal | Statistiques avancées |
 
@@ -91,7 +93,7 @@ Fonction unique `can(household, feature)` dans `src/server/entitlements.ts`, uti
 
 | Fonctionnalité (`feature`) | Gratuit | Essai / abonné | Foyer rattaché à une association |
 | --- | --- | --- | --- |
-| `menu.generate`, `shopping`, `session`, `discover` | ✓ | ✓ | ✓ |
+| `menu.generate`, `shopping`, `session`, `discover`, `onboarding` | ✓ | ✓ | ✓ |
 | `menu.swap` | 3 par semaine | illimité | selon son offre |
 | `menu.move`, `menu.guests`, `pantry`, `notifications.meals`, `print` | — | ✓ | selon son offre |
 | `canteen`, `canteen.alert` | — | ✓ | **✓ toujours (D12)** |
@@ -357,6 +359,19 @@ RLS : `association_leads` sans accès client (insertion par action serveur, lect
 | **J8** | S8 | **Landing page `/associations` et `/associations/comment-ca-marche`** (§8 bis A), sitemap, robots, JSON-LD, formulaire de prospects ; impression, accessibilité, pages légales (gabarits), recette complète, test de restauration ; **gel le 18 décembre** | Lighthouse SEO ≥ 95 sur la landing, autres pages ≥ 90 ; JSON-LD valide ; aucun bug bloquant ; parcours A, B, C joués |
 | **J9** | S9–S10 | Bêta fermée (20 foyers), corrections uniquement ; passage Stripe en mode réel le 2 janvier | 0 incident de paiement ; 15 foyers bêta ont généré un menu |
 
+### Prise en main (SPEC_PRISE_EN_MAIN §9)
+
+J5, J7 et J8 étant livrés (RECAP_JANVIER), la prise en main s'ajoute en sous-jalons, sans toucher au gel du 18 décembre :
+
+| Sous-jalon | Dates | Contenu | Définition de « terminé » |
+| --- | --- | --- | --- |
+| **J5b-1** | 2–13 nov. | Migration, `can('onboarding')`, événements, moteur pur, checklist, bulles, états vides | Tests de la checklist verts ; pgTAP RLS ; Playwright checklist et bulle ; axe sur Menu |
+| **J5b-2** | 16–27 nov. | Tile et Sheet de préparation, niveau débutant, 3 conseils de première session, écran de fin | Playwright Sheet ; axe sur la Sheet |
+| **J7b** | 30 nov.–4 déc. | Séquence de messages J0–J14 (e-mail et Web Push) | Tests de la règle d'envoi verts ; pas de doublon sur 2 passages du cron |
+| **J8b** | 7–11 déc. | Aide (relance, conseils, FAQ, contact), audit axe final | axe sans violation, clair et sombre |
+
+Du 14 au 18 décembre : aucun développement nouveau. En cas de glissement de plus d'une semaine, retirer dans cet ordre : FAQ, bulles d'onglet, message `session_late`. Ne jamais retirer : checklist, Sheet de préparation.
+
 **La landing page peut être livrée en avance** (dès J4, elle ne dépend que du design system et du formulaire de prospects) : c'est conseillé, pour qu'elle soit indexée avant décembre et serve au démarchage des APE.
 
 **Si un jalon glisse de plus d'une semaine,** retirer dans cet ordre : vue tablette de la session, impression, garde-manger, page satellite. Ne jamais retirer : module École, paiement, courses partagées, landing `/associations`, fiche tuto.
@@ -379,6 +394,7 @@ RLS : `association_leads` sans accès client (insertion par action serveur, lect
 | `/asso/equipe` | Invitations des éditeurs |
 | `/admin/*` | Associations, écoles, menus, abonnements, reversements, prospects, support, journal |
 | `/api/stripe/webhook` | Webhook Stripe |
+| `/settings/help` | Aide : relance de la checklist, conseils, FAQ, contact (tous les membres) |
 | `/mentions-legales`, `/cgu`, `/cgv`, `/confidentialite`, `/partenariat-associations` | Pages légales |
 
 Variables d'environnement à ajouter à `.env.example` : `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`, `STRIPE_COUPON_ASSOCIATION`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `IBAN_ENCRYPTION_KEY`, `SENTRY_DSN`, `APP_URL=https://finpret.app`.
@@ -399,3 +415,4 @@ Variables d'environnement à ajouter à `.env.example` : `STRIPE_SECRET_KEY`, `S
 1. Statut juridique de l'éditeur (impacte factures, TVA, contrat) : prévoir les mentions de facture paramétrables (`COMPANY_NAME`, `COMPANY_ID`, `COMPANY_VAT`).
 2. Nom de l'école pilote et de son association : fournis à J9 pour la bêta.
 3. Rétractation de 14 jours et renonciation expresse au paiement après l'essai : case à cocher prévue dans Checkout (`consent_collection.terms_of_service`), texte `TODO(juriste)`.
+4. Prise en main : décisions arrêtées dans `docs/SPEC_PRISE_EN_MAIN.md` §11 (objectif d'activation 40 %, niveau débutant, type de boîtes, fenêtre de la séquence, masquage).
