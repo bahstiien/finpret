@@ -59,31 +59,56 @@ async function sentKeys(userId: string): Promise<string[]> {
   return rows.map((r) => (r.payload as { key: string }).key).sort();
 }
 
-test("J0 : le message de bienvenue est réservé à la fin de l'onboarding, une seule fois", async ({ page, request }) => {
+/**
+ * Premier message attendu à la fin de l'onboarding, selon la priorité de la spec (§4.5, règle 1) et les réglages par
+ * défaut du foyer (courses le samedi, session le dimanche) : après 18 h la veille, le message de veille passe avant
+ * la bienvenue, qui part le lendemain. Les parcours ne dépendent donc pas du jour ni de l'heure où ils tournent.
+ */
+function expectedFirst(now = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", hour: "2-digit", hourCycle: "h23" })
+    .format(now);
+  const tomorrow = new Date(now.getTime() + 86_400_000).toLocaleDateString("en-US", {
+    weekday: "short",
+    timeZone: "Europe/Paris",
+  });
+  if (Number(parts) >= 18 && tomorrow === "Sun") return "session_eve";
+  if (Number(parts) >= 18 && tomorrow === "Sat") return "shopping_eve";
+  return "welcome";
+}
+
+/** Inscription complète, puis attente du premier message réservé à la fin de l'onboarding (un seul). */
+async function signUpWithFirst(page: Page, name: string) {
+  const before = expectedFirst();
+  const account = await signUp(page, name);
+  const after = expectedFirst();
+  await expect.poll(() => sentKeys(account.userId), { timeout: 30_000 }).toHaveLength(1);
+  const [first] = await sentKeys(account.userId);
+  expect([before, after]).toContain(first);
+  return { ...account, first: first! };
+}
+
+test("J0 : un message est réservé à la fin de l'onboarding (la bienvenue, sauf veille après 18 h), une seule fois", async ({ page, request }) => {
   test.setTimeout(240_000);
-  const { userId } = await signUp(page, "msg-j0");
-  await expect.poll(() => sentKeys(userId), { timeout: 30_000 }).toEqual(["welcome"]);
-  // Un passage du planificateur ne le renvoie pas.
+  const { userId, first } = await signUpWithFirst(page, "msg-j0");
+  // Un passage du planificateur n'en ajoute pas un second le même jour.
   await runCron(request, new Date().toISOString());
-  expect(await sentKeys(userId)).toEqual(["welcome"]);
+  expect(await sentKeys(userId)).toEqual([first]);
 });
 
-test("un seul message par jour : la veille de la session attend le lendemain de la bienvenue", async ({ page, request }) => {
+test("un seul message par jour : rien de plus le jour du premier message", async ({ page, request }) => {
   test.setTimeout(240_000);
-  const { userId, householdId } = await signUp(page, "msg-un-par-jour");
-  await expect.poll(() => sentKeys(userId), { timeout: 30_000 }).toEqual(["welcome"]);
+  const { userId, householdId, first } = await signUpWithFirst(page, "msg-un-par-jour");
   await setSessionDayTomorrow(householdId);
-  // La bienvenue est partie aujourd'hui : « Demain, ta première session » ne part pas le même jour.
+  // Un message est déjà parti aujourd'hui : « Demain, ta première session » ne part pas le même jour.
   await runCron(request, eveInstant());
-  expect(await sentKeys(userId)).toEqual(["welcome"]);
+  expect(await sentKeys(userId)).toEqual([first]);
 });
 
 test("veille de la session : un message, jamais deux, même avec deux passages", async ({ page, request }) => {
   test.setTimeout(240_000);
-  const { userId, householdId } = await signUp(page, "msg-veille");
-  await expect.poll(() => sentKeys(userId), { timeout: 30_000 }).toEqual(["welcome"]);
+  const { userId, householdId } = await signUpWithFirst(page, "msg-veille");
   await setSessionDayTomorrow(householdId);
-  // On rejoue une situation « bienvenue partie un autre jour » : la priorité place la préparation avant la bienvenue.
+  // On rejoue une situation « premier message parti un autre jour » : la veille de la session part, une seule fois.
   await clearLog(userId);
   await runCron(request, eveInstant());
   expect(await sentKeys(userId)).toEqual(["session_eve"]);
@@ -93,8 +118,7 @@ test("veille de la session : un message, jamais deux, même avec deux passages",
 
 test("désinscrit et sans appareil : aucun message", async ({ page, request }) => {
   test.setTimeout(240_000);
-  const { userId, householdId } = await signUp(page, "msg-desinscrit");
-  await expect.poll(() => sentKeys(userId), { timeout: 30_000 }).toEqual(["welcome"]);
+  const { userId, householdId } = await signUpWithFirst(page, "msg-desinscrit");
   await clearLog(userId);
   await adminDb()
     .updateTable("user_settings")
@@ -108,8 +132,7 @@ test("désinscrit et sans appareil : aucun message", async ({ page, request }) =
 
 test("courses déjà cochées : pas de message « Ta liste est prête »", async ({ page, request }) => {
   test.setTimeout(240_000);
-  const { userId, householdId } = await signUp(page, "msg-courses");
-  await expect.poll(() => sentKeys(userId), { timeout: 30_000 }).toEqual(["welcome"]);
+  const { userId, householdId } = await signUpWithFirst(page, "msg-courses");
   await clearLog(userId);
   // Courses demain, déjà cochées : l'étape est faite, le message ne part pas.
   const weekday = new Date(Date.now() + 86_400_000).toLocaleDateString("en-US", { weekday: "short", timeZone: "Europe/Paris" });

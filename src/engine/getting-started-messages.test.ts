@@ -26,6 +26,13 @@ describe("séquence de messages de la prise en main", () => {
     expect(at("2027-01-04T10:00:00Z", { isCreator: false }).send).toBeNull();
   });
 
+  it("inscription la veille de la session après 18 h : la veille d'abord, la bienvenue le lendemain", () => {
+    // Samedi 9 janvier, 19 h 30 à Paris ; session le dimanche.
+    const signupAt = "2027-01-09T18:20:00Z";
+    expect(at("2027-01-09T18:30:00Z", { signupAt }).send).toBe("session_eve");
+    expect(at("2027-01-10T09:30:00Z", { signupAt, sent: { session_eve: "2027-01-09" } }).send).toBe("welcome");
+  });
+
   it("la bienvenue se rattrape le lendemain, pas au-delà", () => {
     expect(at("2027-01-05T10:00:00Z").send).toBe("welcome");
     expect(at("2027-01-06T10:00:00Z").send).toBeNull();
