@@ -22,10 +22,16 @@ export type Env = {
   diet: DietRules | null;
   /** Bonus de tirage des recettes importées par le foyer (+0,3, §8.8). */
   bonus: Record<string, number>;
+  /**
+   * Recherche par id dans tout le catalogue, régime compris : une semaine enregistrée reste lisible
+   * même si le foyer a depuis changé de régime, d'allergies ou de refus.
+   */
   mainById: Map<string, Main>;
   soupById: Map<string, Soup>;
   simpleById: Map<string, Simple>;
   cakeById: Map<string, Cake>;
+  /** Recettes que le régime du foyer autorise : seules celles-ci peuvent être choisies à la main. */
+  allowed: Set<string>;
 };
 
 /** Le régime, les allergènes et les refus filtrent le catalogue avant tout le reste (§7.3, point 7). */
@@ -98,10 +104,13 @@ export function createEnv(options: {
     ignoreDislike: false,
     diet: options.diet ?? null,
     bonus,
-    mainById: new Map(filtered.mains.map((r) => [r.id, r])),
-    soupById: new Map(filtered.soups.map((r) => [r.id, r])),
-    simpleById: new Map(filtered.simples.map((r) => [r.id, r])),
-    cakeById: new Map(filtered.cakes.map((r) => [r.id, r])),
+    mainById: new Map(options.lib.mains.map((r) => [r.id, r])),
+    soupById: new Map(options.lib.soups.map((r) => [r.id, r])),
+    simpleById: new Map(options.lib.simples.map((r) => [r.id, r])),
+    cakeById: new Map(options.lib.cakes.map((r) => [r.id, r])),
+    allowed: new Set(
+      [...filtered.mains, ...filtered.soups, ...filtered.simples, ...filtered.cakes].map((r) => r.id),
+    ),
   };
 }
 
