@@ -1147,6 +1147,398 @@
    "product": "Châtaignes entières Notre Jardin",
    "pack": "420g",
    "packPrice": 5.23
+  },
+  "veau": {
+   "p": 21.9,
+   "per": "kg",
+   "product": "Sauté de veau",
+   "pack": "500g",
+   "packPrice": 10.95,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "crevettes": {
+   "p": 17.5,
+   "per": "kg",
+   "product": "Crevettes décortiquées crues surgelées",
+   "pack": "400g",
+   "packPrice": 7,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "calamars": {
+   "p": 12,
+   "per": "kg",
+   "product": "Anneaux d'encornet surgelés",
+   "pack": "500g",
+   "packPrice": 6,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "moules": {
+   "p": 5.5,
+   "per": "kg",
+   "product": "Moules de corde prêtes à cuire",
+   "pack": "1.4kg",
+   "packPrice": 7.7,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "sardines": {
+   "p": 1.6,
+   "per": "boite",
+   "product": "Sardines à l'huile d'olive",
+   "pack": "135g",
+   "packPrice": 1.6,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "maquereau": {
+   "p": 14,
+   "per": "kg",
+   "product": "Filets de maquereau frais",
+   "pack": "300g",
+   "packPrice": 4.2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "truite": {
+   "p": 22,
+   "per": "kg",
+   "product": "Pavés de truite",
+   "pack": "2x125g",
+   "packPrice": 5.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "poissonblanc": {
+   "p": 13,
+   "per": "kg",
+   "product": "Filets de colin d'Alaska surgelés",
+   "pack": "400g",
+   "packPrice": 5.2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "sole": {
+   "p": 18,
+   "per": "kg",
+   "product": "Filets de limande surgelés",
+   "pack": "400g",
+   "packPrice": 7.2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "dorade": {
+   "p": 4.5,
+   "per": "pc",
+   "product": "Dorade royale entière vidée (≈ 400 g)",
+   "pack": "1 pièce",
+   "packPrice": 4.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "chorizo": {
+   "p": 14,
+   "per": "kg",
+   "product": "Chorizo doux",
+   "pack": "225g",
+   "packPrice": 3.15,
+   "note": "lactose fréquent dans les chorizos du commerce ; estimation du 14/11/2026 à vérifier au drive"
+  },
+  "jambonsec": {
+   "p": 0.45,
+   "per": "pc",
+   "product": "Jambon cru x8 tranches",
+   "pack": "8 tranches",
+   "packPrice": 3.6,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "anchois": {
+   "p": 40,
+   "per": "kg",
+   "product": "Filets d'anchois à l'huile",
+   "pack": "50g",
+   "packPrice": 2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "tomatescerises": {
+   "p": 6,
+   "per": "kg",
+   "product": "Tomates cerises barquette",
+   "pack": "250g",
+   "packPrice": 1.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "echalote": {
+   "p": 0.12,
+   "per": "pc",
+   "product": "Échalotes filet 500 g",
+   "pack": "500g (≈ 20 pièces)",
+   "packPrice": 2.4,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "cebette": {
+   "p": 0.2,
+   "per": "pc",
+   "product": "Oignons nouveaux botte",
+   "pack": "botte (≈ 8)",
+   "packPrice": 1.6,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "celeri": {
+   "p": 0.25,
+   "per": "pc",
+   "product": "Céleri branche",
+   "pack": "pied (≈ 8 branches)",
+   "packPrice": 1.99,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "coriandre": {
+   "p": 0.99,
+   "per": "pc",
+   "product": "Coriandre botte",
+   "pack": "1 botte",
+   "packPrice": 0.99,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "citronvert": {
+   "p": 0.35,
+   "per": "pc",
+   "product": "Citrons verts filet",
+   "pack": "500g (≈ 6)",
+   "packPrice": 2.1,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "grenade": {
+   "p": 1.5,
+   "per": "pc",
+   "product": "Grenade",
+   "pack": "1 pièce",
+   "packPrice": 1.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "roquette": {
+   "p": 12,
+   "per": "kg",
+   "product": "Roquette sachet",
+   "pack": "125g",
+   "packPrice": 1.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "cerises": {
+   "p": 8,
+   "per": "kg",
+   "product": "Cerises (ou griottes surgelées hors saison)",
+   "pack": "500g",
+   "packPrice": 4,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "prunes": {
+   "p": 3.5,
+   "per": "kg",
+   "product": "Prunes vrac",
+   "pack": "1kg",
+   "packPrice": 3.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "figues": {
+   "p": 0.6,
+   "per": "pc",
+   "product": "Figues fraîches",
+   "pack": "barquette de 6",
+   "packPrice": 3.6,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "raisin": {
+   "p": 4,
+   "per": "kg",
+   "product": "Raisin blanc",
+   "pack": "500g",
+   "packPrice": 2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "myrtilles": {
+   "p": 10,
+   "per": "kg",
+   "product": "Myrtilles surgelées",
+   "pack": "300g",
+   "packPrice": 3,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "pistaches": {
+   "p": 30,
+   "per": "kg",
+   "product": "Pistaches décortiquées",
+   "pack": "100g",
+   "packPrice": 3,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "pignons": {
+   "p": 60,
+   "per": "kg",
+   "product": "Pignons de pin",
+   "pack": "50g",
+   "packPrice": 3,
+   "note": "marqués fruits à coque par prudence (contaminations croisées fréquentes) ; estimation du 14/11/2026 à vérifier au drive"
+  },
+  "noisettes": {
+   "p": 16,
+   "per": "kg",
+   "product": "Noisettes décortiquées",
+   "pack": "125g",
+   "packPrice": 2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "amandesentieres": {
+   "p": 16,
+   "per": "kg",
+   "product": "Amandes effilées",
+   "pack": "125g",
+   "packPrice": 2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "capres": {
+   "p": 20,
+   "per": "kg",
+   "product": "Câpres au vinaigre",
+   "pack": "100g (égoutté 50g)",
+   "packPrice": 2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "harissa": {
+   "p": 0.15,
+   "per": "cs",
+   "product": "Harissa tube",
+   "pack": "140g (≈ 10 c.s.)",
+   "packPrice": 1.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "vermicelles": {
+   "p": 2.4,
+   "per": "kg",
+   "product": "Langues d'oiseau / vermicelles",
+   "pack": "500g",
+   "packPrice": 1.2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "confiture": {
+   "p": 5,
+   "per": "kg",
+   "product": "Confiture extra",
+   "pack": "370g",
+   "packPrice": 1.85,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "patetartiner": {
+   "p": 7,
+   "per": "kg",
+   "product": "Pâte à tartiner cacao-noisettes",
+   "pack": "750g",
+   "packPrice": 5.25,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "vinblanc": {
+   "p": 4,
+   "per": "l",
+   "product": "Vin blanc sec de cuisine",
+   "pack": "75cl",
+   "packPrice": 3,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "vinrouge": {
+   "p": 4,
+   "per": "l",
+   "product": "Vin rouge de table",
+   "pack": "75cl",
+   "packPrice": 3,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "baguette": {
+   "p": 0.9,
+   "per": "pc",
+   "product": "Baguette",
+   "pack": "250g",
+   "packPrice": 0.9,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "safran": {
+   "p": 1.5,
+   "per": "pc",
+   "product": "Safran en poudre (dose de 0,1 g)",
+   "pack": "2 doses",
+   "packPrice": 3,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "piment": {
+   "p": 0.1,
+   "per": "cc",
+   "product": "Piment d'Espelette / flocons",
+   "pack": "40g (≈ 20 c.c.)",
+   "packPrice": 2,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "curcuma": {
+   "p": 0.05,
+   "per": "cc",
+   "product": "Curcuma moulu",
+   "pack": "40g (≈ 20 c.c.)",
+   "packPrice": 1,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "vinaigre": {
+   "p": 0.03,
+   "per": "cs",
+   "product": "Vinaigre de vin rouge",
+   "pack": "50cl (≈ 33 c.s.)",
+   "packPrice": 1,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "sucrevanille": {
+   "p": 0.15,
+   "per": "pc",
+   "product": "Sucre vanillé x10 sachets",
+   "pack": "10 sachets",
+   "packPrice": 1.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "pasteque": {
+   "p": 1.5,
+   "per": "kg",
+   "product": "Pastèque entière",
+   "pack": "≈ 3 kg",
+   "packPrice": 4.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "avocat": {
+   "p": 0.99,
+   "per": "pc",
+   "product": "Avocat",
+   "pack": "1 pièce",
+   "packPrice": 0.99,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "coeursartichaut": {
+   "p": 12,
+   "per": "kg",
+   "product": "Cœurs d'artichauts en bocal",
+   "pack": "240g égoutté",
+   "packPrice": 2.9,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "fauxfilet": {
+   "p": 26,
+   "per": "kg",
+   "product": "Rumsteck / faux-filet",
+   "pack": "2x150g",
+   "packPrice": 7.8,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "biscuits": {
+   "p": 4,
+   "per": "kg",
+   "product": "Petits-beurre",
+   "pack": "200g",
+   "packPrice": 0.8,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
+  },
+  "sauge": {
+   "p": 0.15,
+   "per": "cc",
+   "product": "Sauge séchée",
+   "pack": "15g (≈ 10 c.c.)",
+   "packPrice": 1.5,
+   "note": "estimation du 14/11/2026 à vérifier au drive"
   }
  }
 }

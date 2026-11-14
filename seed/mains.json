@@ -24213,5 +24213,3909 @@
   "box": "riz et curry",
   "jj": "Réchauffe 2 min au micro-ondes.",
   "o": "in"
+ },
+ {
+  "id": "x3_gratin_choufleur_lentilles",
+  "n": "Gratin de chou-fleur et lentilles vertes à l'emmental",
+  "s": "Gratin chou-fleur-lentilles",
+  "d": "Lentilles et chou-fleur sous une béchamel moutardée, gratinés à l'emmental.",
+  "o": "fr",
+  "p": "veg",
+  "grp": "gratin",
+  "comfort": true,
+  "oven": true,
+  "fridge": 3,
+  "freeze": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   500,
+   32,
+   55,
+   12
+  ],
+  "diff": 2,
+  "ing": {
+   "choufleur": 800,
+   "lentillesvertes": 300,
+   "lait": 400,
+   "farine": 30,
+   "beurre": 15,
+   "moutarde": 1,
+   "emmental": 80
+  },
+  "prepMin": 5,
+  "prep": [
+   "Détaille {choufleur} de chou-fleur en petits bouquets."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 25,
+    "a": [
+     "Cuis {lentillesvertes} de lentilles 25 min dans 3 fois leur volume d'eau, sale en fin de cuisson et égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Dans une autre casserole, cuis le chou-fleur 8 min à l'eau salée : il doit rester un peu ferme. Égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Béchamel : fais fondre {beurre} de beurre, ajoute {farine} de farine, puis {lait} de lait en fouettant jusqu'à ce que ça nappe. Hors du feu, ajoute {moutarde} de moutarde, sel et poivre."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 15,
+    "a": [
+     "Mélange lentilles et chou-fleur dans un plat, nappe de béchamel et couvre de {emmental} d'emmental. Gratine 15 min à 200 °C."
+    ]
+   }
+  ],
+  "box": "gratin en parts",
+  "jj": "Réchauffe au four ou au micro-ondes."
+ },
+ {
+  "id": "x3_salade_quinoa_petitspois_oeufs",
+  "n": "Salade tiède de quinoa, petits pois, œufs et sauce skyr-citron",
+  "s": "Salade quinoa-petits pois",
+  "d": "Quinoa et petits pois, œufs durs et sauce skyr au citron, à manger tiède ou froid.",
+  "o": "fr",
+  "p": "veg",
+  "oven": false,
+  "fridge": 3,
+  "freeze": false,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   560,
+   33,
+   60,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "quinoa": 280,
+   "petitspois": 400,
+   "oeufs": 8,
+   "skyr": 200,
+   "citron": 1,
+   "moutarde": 1,
+   "huile": 1,
+   "tomatescerises": 250
+  },
+  "prepMin": 2,
+  "prep": [
+   "Rince {quinoa} de quinoa."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 15,
+    "a": [
+     "Cuis le quinoa 12 à 15 min à l'eau salée, ajoute {petitspois} de petits pois pour les 5 dernières minutes. Égoutte et laisse tiédir."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 9,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 9 min, refroidis-les et écale-les."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Sauce : {skyr} de skyr, le jus de {citron}, {moutarde} de moutarde, {huile} d'huile, sel et poivre. Verse dans un petit pot."
+    ]
+   }
+  ],
+  "box": "quinoa et petits pois en boîtes, œufs entiers, sauce à part",
+  "jj": "Coupe les œufs en quartiers, ajoute {tomatescerises} de tomates cerises coupées en deux et la sauce."
+ },
+ {
+  "id": "x3_courgettes_farcies_boulgour_feta",
+  "n": "Courgettes farcies au boulgour, pois chiches et feta, salsa aux pignons",
+  "s": "Courgettes farcies boulgour",
+  "d": "Courgettes garnies de boulgour à la tomate et aux pois chiches, gratinées à la feta, avec une salsa citronnée aux pignons.",
+  "o": "tr",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   560,
+   22,
+   62,
+   24
+  ],
+  "diff": 2,
+  "ing": {
+   "courgette": 4,
+   "boulgour": 180,
+   "poischiches": 1,
+   "feta": 150,
+   "tomatefraiche": 2,
+   "oignon": 1,
+   "ail": 1,
+   "cumin": 1,
+   "pignons": 40,
+   "citron": 1,
+   "persil": 1,
+   "huile": 2
+  },
+  "prepMin": 15,
+  "prep": [
+   "Coupe {courgette} en deux dans la longueur et creuse-les à la cuillère en gardant 1 cm de bord. Hache la chair, {oignon} et 1 gousse d'ail. Coupe {tomatefraiche} en dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "a": [
+     "Cuis {boulgour} de boulgour 10 min à l'eau salée, égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais revenir l'oignon et la chair de courgette 5 min dans 1 c.s. d'huile. Ajoute l'ail, les tomates et {cumin} de cumin, cuis 5 min.",
+     "Mélange avec le boulgour et {poischiches} de pois chiches égouttés."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Préchauffe à 190 °C. Remplis les courgettes, émiette {feta} de feta dessus et enfourne 25 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 4,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais dorer {pignons} de pignons à sec 3 min. Mélange-les avec {persil} ciselé, le jus de {citron} et 1 c.s. d'huile : c'est la salsa. Mets-la en pot."
+    ]
+   }
+  ],
+  "box": "courgettes farcies, salsa à part",
+  "jj": "Réchauffe 15 min au four à 180 °C ou 3 min au micro-ondes, parsème de salsa aux pignons."
+ },
+ {
+  "id": "x3_aubergines_anchois_lentilles",
+  "n": "Aubergines rôties à l'anchois et à l'origan, lentilles vertes et œufs mollets",
+  "s": "Aubergines anchois-lentilles",
+  "d": "Aubergines fondantes nappées d'un hachis ail-anchois-origan, sur des lentilles au citron.",
+  "o": "it",
+  "p": "poisson",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   520,
+   30,
+   45,
+   24
+  ],
+  "diff": 2,
+  "ing": {
+   "aubergine": 3,
+   "anchois": 50,
+   "ail": 2,
+   "origan": 1,
+   "huile": 4,
+   "citron": 1,
+   "lentillesvertes": 250,
+   "oeufs": 4,
+   "persil": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {aubergine} en deux dans la longueur et quadrille la chair au couteau. Hache finement {anchois} d'anchois avec 2 gousses d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 30,
+    "a": [
+     "Préchauffe à 210 °C. Badigeonne les aubergines de 3 c.s. d'huile, sale peu et enfourne 30 min, face coupée vers le haut."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 20,
+    "wait": false,
+    "a": [
+     "Cuis {lentillesvertes} de lentilles vertes 20 min, égoutte et assaisonne du jus d'½ citron et d'1 c.s. d'huile."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mélange le hachis anchois-ail avec {origan} d'origan et le jus du reste de {citron}. Étale-le sur les aubergines encore chaudes."
+    ]
+   }
+  ],
+  "box": "aubergines et lentilles ensemble",
+  "jj": "Cuis {oeufs} 6 min. Réchauffe aubergines et lentilles 3 min au micro-ondes, ajoute les œufs coupés en deux et {persil} ciselé."
+ },
+ {
+  "id": "x3_aubergines_yaourt_curry_riz",
+  "n": "Aubergines rôties au yaourt au curry, pois chiches et riz",
+  "s": "Aubergines yaourt-curry",
+  "d": "Aubergines rôties bien dorées, oignons et amandes au curry, yaourt au citron vert et grenade.",
+  "o": "in",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   600,
+   20,
+   82,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "aubergine": 3,
+   "huile": 5,
+   "poischiches": 2,
+   "oignon": 1,
+   "amandesentieres": 30,
+   "curry": 2,
+   "cumin": 1,
+   "yaourt": 2,
+   "curcuma": 0.5,
+   "citronvert": 1,
+   "grenade": 1,
+   "riz": 240
+  },
+  "prepMin": 10,
+  "prep": [
+   "Pèle {aubergine} une bande sur deux et coupe-les en rondelles de 2 cm. Émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 5,
+    "passive": 40,
+    "a": [
+     "Préchauffe à 220 °C. Mélange les aubergines avec 4 c.s. d'huile et du sel, étale-les sur 2 plaques et rôtis 40 min en les retournant à mi-cuisson.",
+     "Ajoute {poischiches} de pois chiches égouttés sur les plaques pour les 15 dernières minutes."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais dorer l'oignon 8 min dans 1 c.s. d'huile, ajoute {amandesentieres} d'amandes, 1 c.s. de curry et {cumin} de cumin, 2 min."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Sauce : mélange {yaourt} de yaourt, 1 c.s. de curry, {curcuma} de curcuma, le zeste et le jus de {citronvert}. Égrène {grenade}."
+    ]
+   }
+  ],
+  "box": "aubergines et pois chiches, oignons aux amandes, sauce et grenade à part",
+  "jj": "Cuis {riz} de riz. Réchauffe aubergines et pois chiches, garnis d'oignons aux amandes, de sauce au yaourt et de grenade."
+ },
+ {
+  "id": "x3_salade_choufleur_lentilles_grenade",
+  "n": "Salade de chou-fleur rôti, lentilles, grenade et pistaches",
+  "s": "Salade chou-fleur-grenade",
+  "d": "Chou-fleur rôti au paprika et chou-fleur cru râpé, lentilles, herbes, grenade, pistaches et feta.",
+  "o": "il",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   560,
+   26,
+   52,
+   28
+  ],
+  "diff": 2,
+  "ing": {
+   "choufleur": 900,
+   "oignon": 1,
+   "huile": 5,
+   "paprika": 1,
+   "ail": 1,
+   "lentillesvertes": 200,
+   "cumin": 1,
+   "citron": 1,
+   "persil": 1,
+   "menthe": 1,
+   "grenade": 1,
+   "pistaches": 40,
+   "feta": 150
+  },
+  "prepMin": 10,
+  "prep": [
+   "Râpe un tiers de {choufleur} de chou-fleur et détaille le reste en bouquets. Émince {oignon}. Égrène {grenade}."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Préchauffe à 200 °C. Mélange les bouquets et l'oignon avec 2 c.s. d'huile, {paprika} de paprika, 1 gousse d'ail râpée et du sel. Rôtis 25 min, laisse tiédir."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 20,
+    "wait": false,
+    "a": [
+     "Cuis {lentillesvertes} de lentilles vertes 20 min, égoutte."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 5,
+    "passive": 0,
+    "a": [
+     "Mélange lentilles, chou-fleur rôti et cru, 3 c.s. d'huile, {cumin} de cumin, le jus de {citron}, {persil} et {menthe} ciselés, la grenade et {pistaches} de pistaches concassées."
+    ]
+   }
+  ],
+  "box": "salade en boîte, feta à part",
+  "jj": "Sors la salade 20 min avant et ajoute {feta} de feta émiettée."
+ },
+ {
+  "id": "x3_gratin_choufleur_poisson_moutarde",
+  "n": "Gratin de chou-fleur et poisson blanc à la moutarde, pommes de terre",
+  "s": "Gratin chou-fleur-poisson",
+  "d": "Chou-fleur, pommes de terre et poisson nappés d'une sauce crème-moutarde, gratinés à l'emmental.",
+  "o": "fr",
+  "p": "poisson",
+  "grp": "gratin",
+  "comfort": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 2,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   560,
+   40,
+   38,
+   26
+  ],
+  "diff": 2,
+  "ing": {
+   "choufleur": 800,
+   "pommedeterre": 500,
+   "poissonblanc": 500,
+   "beurre": 15,
+   "farine": 20,
+   "lait": 250,
+   "creme": 150,
+   "moutarde": 2,
+   "emmental": 100
+  },
+  "prepMin": 10,
+  "prep": [
+   "Détaille {choufleur} de chou-fleur en bouquets. Pèle {pommedeterre} de pommes de terre et coupe-les en rondelles de 5 mm. Coupe {poissonblanc} de poisson en gros cubes."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 8,
+    "a": [
+     "Cuis chou-fleur et pommes de terre 8 min à l'eau bouillante salée, égoutte bien."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Sauce : fais fondre {beurre} de beurre, ajoute {farine} de farine puis {lait} de lait en fouettant. Quand ça épaissit, ajoute {creme} de crème et {moutarde} de moutarde."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 25,
+    "a": [
+     "Préchauffe à 200 °C. Mets légumes et poisson dans un plat, nappe de sauce, couvre de {emmental} d'emmental et gratine 25 min."
+    ]
+   }
+  ],
+  "box": "gratin en parts",
+  "jj": "Réchauffe 15 min au four à 180 °C ou 3 min au micro-ondes, sers avec une salade."
+ },
+ {
+  "id": "x3_poischiches_blettes_yaourt_boulgour",
+  "n": "Pois chiches et blettes au cumin, yaourt à l'ail et boulgour",
+  "s": "Pois chiches-blettes",
+  "d": "Pois chiches mijotés avec les blettes, l'oignon et le cumin, servis avec un yaourt bien froid.",
+  "o": "lb",
+  "p": "veg",
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "fridge": 4,
+  "freeze": false,
+  "oven": false,
+  "m": [
+   580,
+   24,
+   80,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "poischiches": 2,
+   "blette": 500,
+   "oignon": 1,
+   "huile": 3,
+   "cumin": 2,
+   "ail": 1,
+   "yaourt": 2,
+   "citron": 0.5,
+   "boulgour": 240
+  },
+  "prepMin": 8,
+  "prep": [
+   "Émince {oignon}. Sépare les côtes des feuilles de {blette} de blettes : émince les côtes, coupe grossièrement les feuilles."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 10,
+    "a": [
+     "Fais suer l'oignon 4 min dans 2 c.s. d'huile, ajoute les côtes 5 min.",
+     "Ajoute {poischiches} de pois chiches égouttés, les feuilles, {cumin} de cumin et un fond d'eau. Couvre et cuis 10 min."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 2,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Mélange {yaourt} de yaourt avec 1 gousse d'ail râpée et le jus de {citron}. Mets en pot."
+    ]
+   }
+  ],
+  "box": "pois chiches et blettes, yaourt à part",
+  "jj": "Cuis {boulgour} de boulgour 10 min. Réchauffe les pois chiches, arrose d'1 c.s. d'huile et sers avec le yaourt froid."
+ },
+ {
+  "id": "x3_tofu_haricotsverts_chraimeh",
+  "n": "Tofu et haricots verts sauce chraimeh, semoule",
+  "s": "Tofu chraimeh",
+  "d": "Tofu doré et haricots verts dans une sauce tomate relevée au paprika, au cumin et à l'ail.",
+  "o": "il",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 4,
+  "freeze": false,
+  "oven": false,
+  "m": [
+   540,
+   28,
+   62,
+   19
+  ],
+  "diff": 2,
+  "ing": {
+   "tofu": 400,
+   "haricotsverts": 400,
+   "passata": 300,
+   "ail": 3,
+   "paprika": 2,
+   "cumin": 1,
+   "piment": 0.5,
+   "huile": 3,
+   "citron": 0.5,
+   "semoule": 240,
+   "coriandre": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {tofu} de tofu en cubes et éponge-les. Équeute {haricotsverts} de haricots verts. Hache 3 gousses d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 7,
+    "a": [
+     "Cuis les haricots 7 min à l'eau bouillante salée, égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Dore le tofu 6 min dans 2 c.s. d'huile, réserve."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 4,
+    "passive": 8,
+    "a": [
+     "Dans la même poêle, fais revenir l'ail 30 s dans 1 c.s. d'huile avec {paprika} de paprika, {cumin} de cumin et {piment} de piment. Ajoute {passata} de passata et un verre d'eau, mijote 8 min.",
+     "Remets le tofu et les haricots 2 min, arrose du jus de {citron}."
+    ]
+   }
+  ],
+  "box": "tofu et haricots en sauce",
+  "jj": "Verse de l'eau bouillante salée sur {semoule} de semoule, couvre 5 min. Réchauffe le tofu et parsème de {coriandre} ciselée."
+ },
+ {
+  "id": "x3_salade_deux_haricots_quinoa_feta",
+  "n": "Salade de haricots verts et blancs au citron vert, quinoa et feta",
+  "s": "Salade deux haricots",
+  "d": "Haricots verts croquants, haricots blancs, quinoa et feta, échalote et coriandre, vinaigrette au citron vert.",
+  "o": "mx",
+  "p": "veg",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": false,
+  "m": [
+   540,
+   25,
+   55,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "haricotsverts": 400,
+   "haricotsblancs": 1,
+   "quinoa": 200,
+   "echalote": 1,
+   "citronvert": 2,
+   "huile": 3,
+   "coriandre": 1,
+   "feta": 150
+  },
+  "prepMin": 8,
+  "prep": [
+   "Équeute {haricotsverts} de haricots verts. Émince finement {echalote}. Rince {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 12,
+    "a": [
+     "Cuis {quinoa} de quinoa 12 min, égoutte et laisse tiédir."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 7,
+    "wait": false,
+    "a": [
+     "Cuis les haricots verts 7 min, rafraîchis-les à l'eau froide."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 4,
+    "passive": 0,
+    "a": [
+     "Mélange quinoa, haricots, échalote, le zeste et le jus de {citronvert}, 3 c.s. d'huile et {coriandre} ciselée."
+    ]
+   }
+  ],
+  "box": "salade en boîte, feta à part",
+  "jj": "Sors la salade 15 min avant et émiette {feta} de feta dessus."
+ },
+ {
+  "id": "x3_carottes_harissa_lentilles_semoule",
+  "n": "Carottes rôties à la harissa, lentilles et semoule, yaourt à la cannelle",
+  "s": "Carottes harissa-lentilles",
+  "d": "Carottes rôties harissa-miel et carottes crues au yaourt cannelle, sur des lentilles, avec de la grenade.",
+  "o": "ma",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "fridge": 4,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   580,
+   26,
+   88,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "carotte": 8,
+   "harissa": 2,
+   "miel": 2,
+   "huile": 3,
+   "lentillesvertes": 250,
+   "citron": 1,
+   "yaourt": 2,
+   "cannelle": 0.5,
+   "grenade": 1,
+   "semoule": 160
+  },
+  "prepMin": 10,
+  "prep": [
+   "Pèle {carotte} : coupe les trois quarts en bâtonnets et râpe le reste. Égrène {grenade}."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 30,
+    "a": [
+     "Préchauffe à 200 °C. Mélange les bâtonnets avec 2 c.s. d'huile, {harissa} de harissa et 1 c.s. de miel. Rôtis 30 min en remuant une fois."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 20,
+    "wait": false,
+    "a": [
+     "Cuis {lentillesvertes} de lentilles vertes 20 min, égoutte et assaisonne d'1 c.s. d'huile et du jus d'½ citron."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Mélange {yaourt} de yaourt, {cannelle} de cannelle, 1 c.s. de miel et le reste du jus de {citron}, puis les carottes râpées. Mets en pot."
+    ]
+   }
+  ],
+  "box": "carottes rôties et lentilles, yaourt et grenade à part",
+  "jj": "Verse de l'eau bouillante salée sur {semoule} de semoule, couvre 5 min. Réchauffe carottes et lentilles, ajoute le yaourt froid et la grenade."
+ },
+ {
+  "id": "x3_butternut_salsa_mais_haricotsnoirs",
+  "n": "Butternut rôtie, salsa maïs-citron vert, haricots noirs, feta et riz",
+  "s": "Butternut salsa maïs",
+  "d": "Cubes de butternut rôtis, haricots noirs au cumin, salsa de maïs et tomate au citron vert, feta émiettée.",
+  "o": "mx",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2
+  ],
+  "fridge": 4,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   600,
+   22,
+   90,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "butternut": 900,
+   "huile": 3,
+   "paprika": 1,
+   "haricotsnoirs": 1,
+   "cumin": 1,
+   "mais": 1,
+   "tomatefraiche": 1,
+   "citronvert": 1,
+   "coriandre": 1,
+   "feta": 120,
+   "riz": 240
+  },
+  "prepMin": 10,
+  "prep": [
+   "Pèle {butternut} de butternut et coupe-la en cubes de 2 cm. Coupe {tomatefraiche} en petits dés."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 30,
+    "a": [
+     "Préchauffe à 210 °C. Mélange la butternut avec 2 c.s. d'huile, {paprika} de paprika et du sel, rôtis 30 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 5,
+    "wait": false,
+    "a": [
+     "Chauffe {haricotsnoirs} de haricots noirs égouttés 5 min avec 1 c.s. d'huile et {cumin} de cumin."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Salsa : mélange {mais} de maïs égoutté, la tomate, le zeste et le jus de {citronvert} et {coriandre} ciselée. Mets en pot."
+    ]
+   }
+  ],
+  "box": "butternut et haricots noirs, salsa à part",
+  "jj": "Cuis {riz} de riz. Réchauffe butternut et haricots, ajoute la salsa froide et {feta} de feta émiettée."
+ },
+ {
+  "id": "x3_celerirave_roti_cuisses_poulet",
+  "n": "Céleri-rave rôti entier, cuisses de poulet, pommes de terre et huile de coriandre",
+  "s": "Céleri-rave rôti et poulet",
+  "d": "Céleri-rave cuit entier en papillote jusqu'à devenir fondant, cuisses de poulet rôties et huile coriandre-citron.",
+  "o": "fr",
+  "p": "volaille",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   620,
+   40,
+   40,
+   32
+  ],
+  "diff": 2,
+  "ing": {
+   "celerirave": 1000,
+   "cuisse": 4,
+   "pommedeterre": 600,
+   "huile": 5,
+   "cumin": 1,
+   "ail": 2,
+   "coriandre": 1,
+   "citron": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Brosse {celerirave} de céleri-rave sous l'eau et pique-le à la fourchette. Coupe {pommedeterre} de pommes de terre en quartiers."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 5,
+    "passive": 80,
+    "a": [
+     "Préchauffe à 190 °C. Frotte le céleri avec 1 c.s. d'huile, {cumin} de cumin et du sel, enveloppe-le de papier cuisson puis d'aluminium et enfourne 1 h 20."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 45,
+    "wait": false,
+    "a": [
+     "Au bout de 35 min, glisse dans le four une plaque avec {cuisse}, les pommes de terre, 2 gousses d'ail écrasées et 2 c.s. d'huile. Rôtis 45 min."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Huile de coriandre : hache finement {coriandre} et mélange avec le jus de {citron} et 2 c.s. d'huile. Mets en pot."
+    ]
+   }
+  ],
+  "box": "céleri en tranches épaisses, poulet et pommes de terre, huile à part",
+  "jj": "Réchauffe 15 min au four à 180 °C et nappe le céleri d'huile de coriandre."
+ },
+ {
+  "id": "x3_pdt_couches_harissa_poischiches",
+  "n": "Pommes de terre croustillantes en couches, harissa, ail confit et pois chiches",
+  "s": "Pommes de terre en couches harissa",
+  "d": "Fines tranches de pommes de terre serrées et dorées à la harissa, gousses d'ail confites, pois chiches rôtis et sauce yaourt.",
+  "o": null,
+  "p": "veg",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "comfort": true,
+  "m": [
+   525,
+   17,
+   66,
+   21
+  ],
+  "diff": 2,
+  "ing": {
+   "pommedeterre": 1000,
+   "poischiches": 2,
+   "harissa": 2,
+   "ail": 8,
+   "beurre": 30,
+   "huile": 3,
+   "herbes": 1,
+   "yaourt": 3,
+   "citron": 1
+  },
+  "prepMin": 15,
+  "prep": [
+   "Tranche {pommedeterre} de pommes de terre en rondelles de 3 mm, à la mandoline si tu en as une. Mélange-les avec {beurre} de beurre fondu, 2 c.s. d'huile, {harissa} de harissa et {herbes} d'herbes.",
+   "Égoutte {poischiches} de pois chiches et enrobe-les de 1 c.s. d'huile."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 8,
+    "passive": 50,
+    "a": [
+     "Range les tranches debout, bien serrées, dans un grand plat. Glisse {ail} d'ail en chemise entre les rangées. Enfourne 50 min à 200 °C.",
+     "À mi-cuisson, répartis les pois chiches sur les bords du plat."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Sauce : {yaourt} de yaourt, le jus de {citron}, sel. Presse 2 gousses d'ail confites dedans."
+    ]
+   }
+  ],
+  "box": "pommes de terre et pois chiches, sauce à part",
+  "jj": "Réchauffe 10 min au four à 200 °C pour retrouver le croustillant (ou 2 min au micro-ondes), sers avec la sauce froide."
+ },
+ {
+  "id": "x3_pdt_four_tonnato_oeufs",
+  "n": "Pommes de terre au four, œufs durs et sauce tonnato, haricots verts",
+  "s": "Pommes de terre tonnato",
+  "d": "Grosses pommes de terre rôties entières, œufs durs, sauce au thon et aux câpres, haricots verts.",
+  "o": "it",
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   525,
+   36,
+   58,
+   16
+  ],
+  "diff": 2,
+  "ing": {
+   "pommedeterre": 1200,
+   "oeufs": 6,
+   "thon": 2,
+   "skyr": 150,
+   "capres": 20,
+   "citron": 1,
+   "haricotsverts": 400,
+   "huile": 2
+  },
+  "prepMin": 5,
+  "prep": [
+   "Lave {pommedeterre} de grosses pommes de terre et pique-les à la fourchette."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 50,
+    "a": [
+     "Enfourne les pommes de terre entières 50 min à 200 °C."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 9 min, passe-les sous l'eau froide et écale-les."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Cuis {haricotsverts} de haricots verts 8 min à l'eau salée, égoutte, assaisonne de 1 c.s. d'huile."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 4,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Sauce tonnato : mixe {thon} de thon égoutté, {skyr} de skyr, {capres} de câpres, le jus de {citron} et 1 c.s. d'huile jusqu'à ce que ce soit lisse."
+    ]
+   }
+  ],
+  "box": "pommes de terre, œufs et haricots verts ; sauce à part",
+  "jj": "Réchauffe pommes de terre et haricots 3 min au micro-ondes. Ouvre les pommes de terre, garnis de quartiers d'œuf et nappe de sauce froide."
+ },
+ {
+  "id": "x3_pdt_farcies_harissa_lentilles",
+  "n": "Pommes de terre farcies harissa-lentilles, salade croquante au yaourt",
+  "s": "Pommes de terre farcies harissa",
+  "d": "Peaux de pommes de terre croustillantes à la harissa, garnies de lentilles et de feta, crudités au yaourt.",
+  "o": null,
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "m": [
+   590,
+   25,
+   82,
+   15
+  ],
+  "diff": 2,
+  "ing": {
+   "pommedeterre": 1200,
+   "lentillesvertes": 200,
+   "feta": 120,
+   "oignon": 1,
+   "cumin": 1,
+   "harissa": 2,
+   "huile": 2,
+   "carotte": 2,
+   "concombre": 1,
+   "yaourt": 2
+  },
+  "prepMin": 8,
+  "prep": [
+   "Lave {pommedeterre} de grosses pommes de terre. Émince {oignon}. Râpe {carotte}."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 50,
+    "a": [
+     "Enfourne les pommes de terre entières 50 min à 200 °C."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "wait": false,
+    "a": [
+     "Cuis {lentillesvertes} de lentilles vertes 25 min à l'eau, égoutte. Fais revenir l'oignon dans 1 c.s. d'huile avec {cumin} de cumin, ajoute les lentilles."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 10,
+    "passive": 12,
+    "a": [
+     "Coupe les pommes de terre en deux et creuse-les en laissant 1 cm de chair. Écrase la chair avec les lentilles et {feta} de feta, regarnis les peaux.",
+     "Badigeonne les bords de {harissa} de harissa mêlée à 1 c.s. d'huile. Enfourne 12 min à 220 °C."
+    ]
+   }
+  ],
+  "box": "pommes de terre farcies ; carottes râpées à part",
+  "jj": "Réchauffe 10 min au four ou 3 min au micro-ondes. Râpe {concombre}, mélange-le aux carottes avec {yaourt} de yaourt et sers à côté."
+ },
+ {
+  "id": "x3_gratin_pdt_artichauts_poulet",
+  "n": "Gratin de pommes de terre et d'artichauts au poulet",
+  "s": "Gratin pommes de terre-artichauts",
+  "d": "Pommes de terre fondantes, cœurs d'artichauts et poulet sous une crème à l'ail gratinée.",
+  "o": "fr",
+  "p": "volaille",
+  "grp": "gratin",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "m": [
+   575,
+   44,
+   47,
+   22
+  ],
+  "diff": 2,
+  "ing": {
+   "pommedeterre": 900,
+   "coeursartichaut": 400,
+   "poulet": 500,
+   "creme": 250,
+   "ail": 1,
+   "emmental": 100,
+   "beurre": 15,
+   "herbes": 1,
+   "salade": 1
+  },
+  "prepMin": 15,
+  "prep": [
+   "Tranche finement {pommedeterre} de pommes de terre. Coupe {coeursartichaut} de cœurs d'artichauts en quartiers et {poulet} de poulet en dés. Râpe {ail} d'ail dans {creme} de crème."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 0,
+    "a": [
+     "Saisis le poulet 4 min dans une poêle bien chaude avec {herbes} d'herbes, sel et poivre."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 8,
+    "passive": 50,
+    "a": [
+     "Beurre un plat avec {beurre} de beurre. Alterne pommes de terre, artichauts et poulet, verse la crème à l'ail et couvre d'{emmental} d'emmental râpé.",
+     "Couvre d'aluminium et enfourne 35 min à 190 °C, puis découvre 15 min pour gratiner."
+    ]
+   }
+  ],
+  "box": "gratin en parts",
+  "jj": "Réchauffe 3 min au micro-ondes ou 15 min au four à 180 °C. Sers avec {salade}."
+ },
+ {
+  "id": "x3_aubergines_teriyaki_tofu_riz",
+  "n": "Aubergines laquées teriyaki, tofu doré et riz",
+  "s": "Aubergines teriyaki",
+  "d": "Demi-aubergines fondantes laquées soja-miel, cubes de tofu caramélisés, riz et sésame.",
+  "o": "jp",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   570,
+   21,
+   73,
+   20
+  ],
+  "diff": 2,
+  "ing": {
+   "aubergine": 3,
+   "tofu": 400,
+   "riz": 250,
+   "soja": 5,
+   "miel": 2,
+   "gingembre": 1,
+   "ail": 1,
+   "huile": 3,
+   "sesame": 1,
+   "cebette": 2
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {aubergine} en deux dans la longueur et quadrille la chair au couteau. Coupe {tofu} de tofu en cubes, sèche-les dans un torchon.",
+   "Sauce teriyaki : {soja} de sauce soja, {miel} de miel, {gingembre} râpé et {ail} d'ail râpée."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 28,
+    "a": [
+     "Badigeonne les aubergines de 2 c.s. d'huile, enfourne 20 min à 210 °C. Nappe-les de la moitié de la sauce et remets 8 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Cuis {riz} de riz à l'eau salée."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Dore le tofu 7 min dans 1 c.s. d'huile, verse le reste de la sauce et laisse laquer 1 min."
+    ]
+   }
+  ],
+  "box": "aubergines et tofu, riz à part",
+  "jj": "Réchauffe 2 min au micro-ondes, parsème de {sesame} de sésame et de {cebette} émincées."
+ },
+ {
+  "id": "x3_salade_carottes_roties_poulet",
+  "n": "Salade de carottes rôties au miel, poulet, boulgour, roquette et noix",
+  "s": "Salade carottes rôties-poulet",
+  "d": "Carottes rôties au cumin, poulet doré, boulgour, roquette et noix, sauce citron-miel.",
+  "o": null,
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   610,
+   40,
+   62,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "carotte": 8,
+   "cumin": 1,
+   "huile": 3,
+   "poulet": 500,
+   "boulgour": 240,
+   "citron": 1,
+   "miel": 1,
+   "noix": 50,
+   "roquette": 100
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {carotte} en bâtonnets et {poulet} de poulet en lamelles."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Mélange les carottes avec 2 c.s. d'huile et {cumin} de cumin, enfourne 25 min à 210 °C."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 12,
+    "wait": false,
+    "a": [
+     "Cuis {boulgour} de boulgour 12 min à l'eau salée, égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Dore le poulet 7 min dans 1 c.s. d'huile, sale et poivre."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Sauce : le jus de {citron}, {miel} de miel, sel. Concasse {noix} de noix."
+    ]
+   }
+  ],
+  "box": "boulgour, carottes et poulet ensemble ; noix et sauce à part",
+  "jj": "Se mange tiède ou froid : ajoute {roquette} de roquette, les noix et la sauce au dernier moment."
+ },
+ {
+  "id": "x3_tourte_aubergine_accordeon",
+  "n": "Tourte d'aubergines en accordéon, ricotta, tomate et mozzarella",
+  "s": "Tourte d'aubergines en accordéon",
+  "d": "Aubergines entaillées en éventail sur une pâte feuilletée, crème de ricotta, tomate et mozzarella fondante.",
+  "o": null,
+  "p": "veg",
+  "grp": "tarte",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   655,
+   28,
+   42,
+   40
+  ],
+  "diff": 3,
+  "ing": {
+   "aubergine": 3,
+   "huile": 2,
+   "patefeuilletee": 1,
+   "ricotta": 250,
+   "oeufs": 2,
+   "passata": 300,
+   "mozzarella": 250,
+   "origan": 1,
+   "salade": 1
+  },
+  "prepMin": 15,
+  "prep": [
+   "Coupe {aubergine} en deux dans la longueur. Pose-les face coupée en bas et entaille-les tous les 5 mm sans aller jusqu'au bout, en accordéon.",
+   "Mélange {ricotta} de ricotta avec {oeufs}, sel et poivre. Tranche {mozzarella} de mozzarella."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 20,
+    "a": [
+     "Badigeonne les aubergines de {huile} d'huile, précuis-les 20 min à 190 °C."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 8,
+    "passive": 30,
+    "a": [
+     "Étale {patefeuilletee} dans un moule. Garnis de ricotta, puis de {passata} de passata. Pose les aubergines, glisse la mozzarella dans les entailles, parsème d'{origan} d'origan. Enfourne 30 min à 190 °C."
+    ]
+   }
+  ],
+  "box": "parts de tourte",
+  "jj": "Réchauffe 10 min au four à 180 °C, sers avec {salade}."
+ },
+ {
+  "id": "x3_ragout_lentilles_aubergines",
+  "n": "Ragoût de lentilles vertes aux aubergines, yaourt citronné et pain grillé",
+  "s": "Ragoût lentilles-aubergines",
+  "d": "Lentilles mijotées au vin blanc avec aubergines et tomates cerises saisies, servies avec un yaourt au citron pimenté.",
+  "o": null,
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "oven": false,
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   580,
+   27,
+   68,
+   15
+  ],
+  "ing": {
+   "lentillesvertes": 280,
+   "aubergine": 2,
+   "tomatescerises": 250,
+   "oignon": 1,
+   "ail": 3,
+   "herbes": 1,
+   "vinblanc": 80,
+   "bouillon": 1,
+   "huile": 3,
+   "yaourt": 2,
+   "citron": 1,
+   "origan": 1,
+   "piment": 0.5,
+   "pain": 8
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {aubergine} en cubes de 2 cm. Émince {oignon}, hache {ail} d'ail. Rince {lentillesvertes} de lentilles."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Dans une sauteuse, fais fondre l'oignon et l'ail 8 min dans 1 c.s. d'huile avec {herbes} d'herbes. Réserve-les dans un bol."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Ajoute 2 c.s. d'huile dans la sauteuse et fais dorer les aubergines et {tomatescerises} de tomates cerises 10 min à feu vif."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 35,
+    "a": [
+     "Remets l'oignon, ajoute les lentilles, {vinblanc} de vin blanc, {bouillon} émietté et 1 l d'eau. Couvre et mijote 35 min, jusqu'à ce que les lentilles soient tendres. Sale en fin de cuisson."
+    ]
+   }
+  ],
+  "box": "ragoût en boîtes, sauce yaourt à part",
+  "jj": "Réchauffe le ragoût avec un fond d'eau. Mélange {yaourt} de yaourt avec le zeste et le jus de {citron}, {origan} d'origan et {piment} de piment. Sers avec une cuillerée de sauce et {pain} grillées."
+ },
+ {
+  "id": "x3_boulgour_aubergines_oeufs",
+  "n": "Boulgour aux aubergines rôties et tomates, œufs durs et yaourt citronné",
+  "s": "Boulgour aubergines-œufs",
+  "d": "Aubergines rôties au cumin mêlées au boulgour et aux tomates fraîches, œufs durs et sauce yaourt à l'ail et au citron.",
+  "o": "tr",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   540,
+   24,
+   54,
+   22
+  ],
+  "ing": {
+   "boulgour": 240,
+   "aubergine": 2,
+   "tomatefraiche": 4,
+   "oeufs": 8,
+   "yaourt": 3,
+   "citron": 1,
+   "huile": 3,
+   "cumin": 1,
+   "persil": 1,
+   "ail": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {aubergine} en cubes et {tomatefraiche} en dés. Hache {persil} de persil."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Mélange les aubergines avec 2 c.s. d'huile, {cumin} de cumin et du sel. Enfourne 25 min à 210 °C en remuant à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 10 min dans l'eau bouillante, refroidis-les sous l'eau froide et écale-les."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {boulgour} de boulgour 10 min dans 2 fois son volume d'eau salée, égoutte."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mélange boulgour, aubergines, tomates, persil et 1 c.s. d'huile. Rectifie le sel."
+    ]
+   }
+  ],
+  "box": "boulgour aux légumes, œufs entiers, yaourt à part",
+  "jj": "Mélange {yaourt} de yaourt avec le zeste et le jus de {citron} et {ail} d'ail râpée. Sers le boulgour tiède ou froid, les œufs coupés en deux et la sauce."
+ },
+ {
+  "id": "x3_boulgour_champignons_lentilles_feta",
+  "n": "Boulgour aux champignons, lentilles vertes et feta",
+  "s": "Boulgour champignons-feta",
+  "d": "Champignons poêlés au cumin, boulgour et lentilles, citron, persil et feta émiettée.",
+  "o": null,
+  "p": "veg",
+  "fridge": 4,
+  "freeze": false,
+  "oven": false,
+  "diff": 1,
+  "m": [
+   540,
+   25,
+   62,
+   19
+  ],
+  "ing": {
+   "boulgour": 200,
+   "lentillesvertes": 150,
+   "champignons": 500,
+   "oignon": 2,
+   "feta": 150,
+   "persil": 1,
+   "huile": 3,
+   "cumin": 1,
+   "citron": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Émince {champignons} de champignons et {oignon}. Hache {persil} de persil. Rince {lentillesvertes} de lentilles."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 25,
+    "a": [
+     "Cuis les lentilles 25 min dans un grand volume d'eau non salée. Sale en fin de cuisson et égoutte."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {boulgour} de boulgour 10 min dans 2 fois son volume d'eau salée."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 12,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais revenir oignons et champignons dans 2 c.s. d'huile avec {cumin} de cumin, 10 min à feu vif, jusqu'à ce que leur eau soit évaporée."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mélange lentilles, boulgour et champignons. Arrose du jus de {citron} et de 1 c.s. d'huile, ajoute le persil."
+    ]
+   }
+  ],
+  "box": "boulgour aux lentilles, feta à part",
+  "jj": "Réchauffe 2 min au micro-ondes et émiette {feta} de feta par-dessus."
+ },
+ {
+  "id": "x3_gnocchis_romaine",
+  "n": "Gnocchis à la romaine gratinés, sauce tomate et épinards",
+  "s": "Gnocchis à la romaine",
+  "d": "Palets de semoule au lait et au parmesan, gratinés sur une sauce tomate à l'origan.",
+  "o": "it",
+  "p": "veg",
+  "grp": "gratin",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "diff": 3,
+  "m": [
+   550,
+   27,
+   54,
+   23
+  ],
+  "ing": {
+   "semoule": 200,
+   "lait": 750,
+   "beurre": 40,
+   "oeufs": 2,
+   "parmesan": 80,
+   "passata": 500,
+   "ail": 1,
+   "origan": 1,
+   "huile": 1,
+   "epinards": 400
+  },
+  "prepMin": 3,
+  "prep": [
+   "Hache {ail} d'ail. Huile une plaque et beurre un plat à gratin."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Porte {lait} de lait à frémissement avec la moitié du beurre ({beurre} au total) et du sel. Verse {semoule} de semoule en pluie en fouettant, cuis 5 min en remuant jusqu'à ce que ce soit très épais."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 4,
+    "passive": 20,
+    "a": [
+     "Hors du feu, ajoute {oeufs} battus et la moitié du parmesan ({parmesan} au total). Étale sur 1,5 cm d'épaisseur sur la plaque et laisse prendre 20 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 15,
+    "wait": false,
+    "a": [
+     "Mijote {passata} de passata avec l'ail, {origan} d'origan et {huile} d'huile, 15 min."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Verse la sauce dans le plat. Découpe des disques de semoule avec un verre et range-les en écailles dessus. Parsème du reste de beurre en parcelles et du reste de parmesan. Enfourne 20 min à 210 °C, jusqu'à ce que le dessus dore."
+    ]
+   }
+  ],
+  "box": "gratin dans son plat ou en parts",
+  "jj": "Réchauffe 15 min au four à 180 °C. Fais tomber {epinards} d'épinards 3 min à la poêle avec un peu de sel et sers à côté."
+ },
+ {
+  "id": "x3_risotto_safran_poulet",
+  "n": "Risotto au safran, poulet et petits pois",
+  "s": "Risotto safran-poulet",
+  "d": "Risotto doré au safran, dés de poulet et petits pois, fini au beurre et au parmesan.",
+  "o": "it",
+  "p": "volaille",
+  "grp": "risotto",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": false,
+  "oven": false,
+  "diff": 2,
+  "m": [
+   570,
+   36,
+   66,
+   16
+  ],
+  "ing": {
+   "rizrond": 300,
+   "poulet": 400,
+   "petitspois": 250,
+   "echalote": 2,
+   "safran": 1,
+   "bouillon": 2,
+   "parmesan": 50,
+   "beurre": 20,
+   "huile": 2
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {poulet} de poulet en dés. Cisèle {echalote}. Prépare 1,1 l de bouillon chaud avec {bouillon} et délaye {safran} de safran dedans."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 0,
+    "a": [
+     "Dore le poulet 5 min dans 1 c.s. d'huile. Réserve."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 22,
+    "passive": 0,
+    "a": [
+     "Dans la même cocotte, 1 c.s. d'huile, fais fondre les échalotes 3 min. Ajoute {rizrond} de riz et nacre-le 2 min. Verse le bouillon safrané louche par louche pendant 18 min en remuant.",
+     "Ajoute {petitspois} de petits pois et le poulet 4 min avant la fin. Hors du feu, incorpore {beurre} de beurre et {parmesan} de parmesan, couvre 2 min."
+    ]
+   }
+  ],
+  "box": "risotto en parts",
+  "jj": "Réchauffe à la poêle avec un fond de bouillon ou d'eau pour le rendre de nouveau crémeux."
+ },
+ {
+  "id": "x3_orzo_crevettes_feta",
+  "n": "Orzo aux crevettes, tomates cerises, épinards et feta citronnée",
+  "s": "Orzo crevettes-feta",
+  "d": "Petites pâtes cuites comme un risotto avec les tomates, crevettes et épinards, feta marinée au citron et à l'origan.",
+  "o": "gr",
+  "p": "poisson",
+  "pasta": true,
+  "fridge": 2,
+  "freeze": false,
+  "oven": false,
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   530,
+   34,
+   58,
+   16
+  ],
+  "ing": {
+   "vermicelles": 300,
+   "crevettes": 400,
+   "tomatescerises": 300,
+   "epinards": 150,
+   "feta": 150,
+   "bouillon": 1,
+   "huile": 2,
+   "citron": 1,
+   "ail": 2,
+   "origan": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {tomatescerises} de tomates cerises en deux, hache {ail} d'ail. Prépare 600 ml de bouillon chaud avec {bouillon}.",
+   "Émiette {feta} de feta et arrose-la du zeste et du jus de {citron} et de {origan} d'origan."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 15,
+    "passive": 0,
+    "a": [
+     "Fais revenir l'ail et les tomates 5 min dans {huile} d'huile. Ajoute {vermicelles} d'orzo, puis le bouillon. Cuis 10 min en remuant, ajoute un peu d'eau si besoin.",
+     "Ajoute {crevettes} de crevettes et {epinards} d'épinards, cuis 4 min jusqu'à ce que les crevettes soient roses."
+    ]
+   }
+  ],
+  "box": "orzo et crevettes, feta citronnée à part",
+  "jj": "Réchauffe 2 min au micro-ondes avec un trait d'eau, parsème de feta citronnée."
+ },
+ {
+  "id": "x3_boulettes_agneau_feta",
+  "n": "Boulettes d'agneau à la feta, pommes de terre rôties à l'origan et tzatziki",
+  "s": "Boulettes agneau-feta",
+  "d": "Boulettes d'agneau au cumin et à la feta cuites sur la plaque des pommes de terre, sauce yaourt-concombre.",
+  "o": "gr",
+  "p": "boeuf",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   650,
+   32,
+   45,
+   36
+  ],
+  "ing": {
+   "agneau": 450,
+   "feta": 100,
+   "oignon": 1,
+   "oeufs": 1,
+   "chapelure": 40,
+   "cumin": 1,
+   "pommedeterre": 800,
+   "origan": 2,
+   "huile": 2,
+   "yaourt": 2,
+   "concombre": 1,
+   "ail": 1,
+   "citron": 1
+  },
+  "prepMin": 15,
+  "prep": [
+   "Mixe {agneau} d'agneau (ou demande-le haché au boucher). Mélange-le avec {feta} de feta émiettée, {oignon} râpé, {oeufs}, {chapelure} de chapelure, {cumin} de cumin, sel et poivre. Forme 16 boulettes.",
+   "Coupe {pommedeterre} de pommes de terre en quartiers."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 40,
+    "a": [
+     "Mélange les pommes de terre avec {huile} d'huile, {origan} d'origan et du sel sur une plaque. Enfourne 20 min à 210 °C.",
+     "Ajoute les boulettes sur la plaque et enfourne 20 min de plus en les retournant à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 5,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Râpe {concombre} et presse-le. Mélange avec {yaourt} de yaourt, {ail} d'ail râpée et le jus de {citron}."
+    ]
+   }
+  ],
+  "box": "boulettes et pommes de terre, tzatziki à part",
+  "jj": "Réchauffe 10 min au four à 180 °C ou 3 min au micro-ondes, sers avec le tzatziki bien froid."
+ },
+ {
+  "id": "x3_hachis_boeuf_haricots_blancs",
+  "n": "Hachis de bœuf épicé, purée de haricots blancs et pommes de terre",
+  "s": "Hachis épicé, purée de haricots",
+  "d": "Bœuf haché au paprika et au cumin sous une purée moitié haricots blancs, moitié pommes de terre.",
+  "o": null,
+  "p": "boeuf",
+  "grp": "parmentier",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   500,
+   40,
+   47,
+   13
+  ],
+  "ing": {
+   "boeuf": 500,
+   "oignon": 1,
+   "carotte": 2,
+   "ail": 2,
+   "tomates": 1,
+   "paprika": 2,
+   "cumin": 1,
+   "haricotsblancs": 2,
+   "pommedeterre": 500,
+   "lait": 150,
+   "huile": 1,
+   "parmesan": 30
+  },
+  "prepMin": 10,
+  "prep": [
+   "Émince {oignon}, râpe {carotte}, hache {ail} d'ail. Épluche {pommedeterre} de pommes de terre et coupe-les en morceaux. Rince et égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 20,
+    "a": [
+     "Cuis les pommes de terre 20 min à l'eau salée. Ajoute les haricots les 3 dernières minutes."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Fais revenir oignon, carottes et ail 3 min dans {huile} d'huile. Ajoute {boeuf} de bœuf haché, {paprika} de paprika et {cumin} de cumin, dore 5 min. Verse {tomates} de tomates concassées et mijote 10 min."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 4,
+    "passive": 0,
+    "a": [
+     "Égoutte pommes de terre et haricots, écrase-les avec {lait} de lait chaud, sel et poivre."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 20,
+    "a": [
+     "Étale la viande dans un plat, couvre de purée, parsème de {parmesan} de parmesan. Enfourne 20 min à 200 °C."
+    ]
+   }
+  ],
+  "box": "hachis dans son plat ou en parts",
+  "jj": "Réchauffe 15 min au four à 180 °C ou 3 min au micro-ondes."
+ },
+ {
+  "id": "x3_poulet_farce_pain_raisins",
+  "n": "Poulet rôti et sa farce au pain, cumin et raisins secs, haricots verts",
+  "s": "Poulet rôti et sa farce",
+  "d": "Cuisses rôties, farce dorée au pain, à l'oignon fondu, aux raisins secs et au cumin, haricots verts.",
+  "o": "gb",
+  "p": "volaille",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   640,
+   42,
+   55,
+   27
+  ],
+  "ing": {
+   "cuisse": 4,
+   "baguette": 1,
+   "raisinssecs": 60,
+   "oignon": 1,
+   "cumin": 1,
+   "beurre": 30,
+   "bouillon": 1,
+   "oeufs": 1,
+   "persil": 1,
+   "haricotsverts": 500,
+   "huile": 1
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {baguette} rassise en petits cubes. Émince {oignon}, hache {persil} de persil. Équeute {haricotsverts} de haricots verts."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 45,
+    "a": [
+     "Frotte {cuisse} avec {huile} d'huile, sel et poivre. Enfourne 45 min à 200 °C."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais fondre l'oignon 5 min dans {beurre} de beurre avec {cumin} de cumin. Mélange avec le pain, {raisinssecs} de raisins secs, le persil, {oeufs} battu et 150 ml de bouillon chaud préparé avec {bouillon}."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 2,
+    "passive": 30,
+    "wait": false,
+    "a": [
+     "Tasse la farce dans un petit plat beurré et enfourne-la à côté du poulet pour les 30 dernières minutes, jusqu'à ce qu'elle dore."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Cuis les haricots verts 8 min à l'eau bouillante salée, égoutte."
+    ]
+   }
+  ],
+  "box": "poulet, farce et haricots ensemble",
+  "jj": "Réchauffe 12 min au four à 180 °C pour garder la farce croustillante, ou 3 min au micro-ondes."
+ },
+ {
+  "id": "x3_boulettes_boeuf_citron_celeri",
+  "n": "Boulettes de bœuf au citron, céleri-rave et pommes de terre mijotés",
+  "s": "Boulettes bœuf-citron, céleri",
+  "d": "Boulettes au zeste de citron mijotées dans un bouillon avec céleri-rave et pommes de terre, finies au jus de citron et au persil.",
+  "o": null,
+  "p": "boeuf",
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "diff": 2,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   490,
+   34,
+   48,
+   15
+  ],
+  "ing": {
+   "boeuf": 500,
+   "oeufs": 1,
+   "chapelure": 40,
+   "citron": 2,
+   "persil": 1,
+   "celerirave": 500,
+   "pommedeterre": 700,
+   "oignon": 1,
+   "ail": 1,
+   "bouillon": 1,
+   "huile": 2
+  },
+  "prepMin": 15,
+  "prep": [
+   "Mélange {boeuf} de bœuf haché, {oeufs}, {chapelure} de chapelure, le zeste de {citron}, la moitié de {persil} de persil haché, sel et poivre. Forme 16 boulettes.",
+   "Épluche {celerirave} de céleri-rave et {pommedeterre} de pommes de terre, coupe-les en cubes de 2 cm. Émince {oignon}, hache {ail} d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Dore les boulettes 5 min dans {huile} d'huile dans une cocotte. Réserve."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Fais revenir oignon et ail 2 min, ajoute céleri, pommes de terre, {bouillon} émietté et 400 ml d'eau. Remets les boulettes, couvre et mijote 25 min.",
+     "Hors du feu, arrose du jus des citrons et ajoute le reste du persil."
+    ]
+   }
+  ],
+  "box": "boulettes, légumes et bouillon ensemble",
+  "jj": "Réchauffe 3 min au micro-ondes ou à couvert dans une casserole."
+ },
+ {
+  "id": "x3_boulettes_ricotta_origan",
+  "n": "Boulettes de ricotta à l'origan au four, sauce tomate et pâtes",
+  "s": "Boulettes de ricotta",
+  "d": "Boulettes moelleuses ricotta-parmesan cuites au four dans la sauce tomate, servies sur des pâtes.",
+  "o": "it",
+  "p": "veg",
+  "pasta": true,
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   620,
+   29,
+   66,
+   24
+  ],
+  "ing": {
+   "ricotta": 400,
+   "oeufs": 2,
+   "farine": 90,
+   "parmesan": 50,
+   "origan": 2,
+   "passata": 600,
+   "ail": 2,
+   "huile": 2,
+   "patescompletes": 240,
+   "basilic": 1
+  },
+  "prepMin": 12,
+  "prep": [
+   "Égoutte {ricotta} de ricotta. Mélange-la avec {oeufs}, {farine} de farine, {parmesan} de parmesan, {origan} d'origan, sel et poivre. Forme 16 boulettes avec les mains farinées.",
+   "Hache {ail} d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 25,
+    "a": [
+     "Verse {passata} de passata dans un plat avec l'ail, {huile} d'huile et du sel. Dépose les boulettes dessus. Enfourne 25 min à 190 °C, jusqu'à ce qu'elles soient prises et dorées."
+    ]
+   }
+  ],
+  "box": "boulettes et sauce, pâtes à part",
+  "jj": "Cuis {patescompletes} de pâtes. Réchauffe boulettes et sauce 3 min au micro-ondes et sers sur les pâtes avec le basilic ({basilic})."
+ },
+ {
+  "id": "x3_poulet_marbella",
+  "n": "Poulet Marbella aux pruneaux, olives et câpres, riz",
+  "s": "Poulet Marbella",
+  "d": "Cuisses marinées au vinaigre, miel, ail et origan, rôties avec pruneaux, olives et câpres.",
+  "o": "us",
+  "p": "volaille",
+  "fridge": 4,
+  "freeze": true,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   690,
+   40,
+   75,
+   25
+  ],
+  "ing": {
+   "cuisse": 4,
+   "olives": 100,
+   "pruneaux": 120,
+   "capres": 30,
+   "ail": 4,
+   "vinaigre": 3,
+   "miel": 2,
+   "huile": 1,
+   "origan": 2,
+   "riz": 200,
+   "haricotsverts": 400
+  },
+  "prepMin": 8,
+  "prep": [
+   "Écrase {ail} d'ail. Mélange {vinaigre} de vinaigre, {miel} de miel, {huile} d'huile, {origan} d'origan, sel et poivre. Enrobe {cuisse} de ce mélange avec {pruneaux} de pruneaux, {olives} d'olives, {capres} de câpres et l'ail. Laisse mariner le temps de préchauffer le four."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 50,
+    "a": [
+     "Étale le tout dans un plat, peau vers le haut. Enfourne 50 min à 190 °C en arrosant à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Cuis {haricotsverts} de haricots verts 8 min à l'eau bouillante salée."
+    ]
+   }
+  ],
+  "box": "poulet et sauce avec les haricots, riz à part",
+  "jj": "Cuis {riz} de riz. Réchauffe le poulet et les haricots 3 min au micro-ondes."
+ },
+ {
+  "id": "x3_porc_gingembre_aubergines",
+  "n": "Porc sauté au gingembre, aubergines et cébettes, riz",
+  "s": "Porc gingembre-aubergines",
+  "d": "Lanières d'échine dorées, aubergines fondantes au gingembre, sauce soja-miel et vert de cébette.",
+  "o": "cn",
+  "p": "porc",
+  "fridge": 3,
+  "freeze": false,
+  "oven": false,
+  "diff": 2,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   590,
+   28,
+   56,
+   26
+  ],
+  "ing": {
+   "echine": 500,
+   "aubergine": 2,
+   "cebette": 4,
+   "gingembre": 1,
+   "ail": 2,
+   "soja": 4,
+   "miel": 1,
+   "huile": 2,
+   "riz": 240
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {echine} d'échine en fines lanières et {aubergine} en petits cubes. Émince {cebette} en séparant le blanc du vert. Râpe {gingembre}, hache {ail} d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 18,
+    "passive": 10,
+    "a": [
+     "Dore le porc 6 min à feu vif dans 1 c.s. d'huile, en 2 fois. Réserve.",
+     "Ajoute 1 c.s. d'huile, les aubergines, le blanc des cébettes, le gingembre et l'ail. Verse 80 ml d'eau, couvre et cuis 10 min.",
+     "Remets le porc, ajoute {soja} de sauce soja et {miel} de miel, cuis 4 min à découvert. Parsème du vert des cébettes."
+    ]
+   }
+  ],
+  "box": "porc et aubergines, riz à part",
+  "jj": "Cuis {riz} de riz. Réchauffe le porc 2 min à la poêle ou au micro-ondes."
+ },
+ {
+  "id": "x3_saucisses_pommes_roties",
+  "n": "Saucisses fumées rôties aux pommes, oignons rouges et pommes de terre",
+  "s": "Saucisses aux pommes rôties",
+  "d": "Une seule plaque : saucisses, pommes et pommes de terre laquées moutarde-miel.",
+  "o": "gb",
+  "p": "porc",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "diff": 1,
+  "m": [
+   710,
+   21,
+   56,
+   41
+  ],
+  "ing": {
+   "saucisse": 4,
+   "pomme": 3,
+   "oignon": 2,
+   "pommedeterre": 800,
+   "moutarde": 2,
+   "miel": 1,
+   "huile": 2,
+   "herbes": 1,
+   "salade": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {pommedeterre} de pommes de terre, {pomme} et {oignon} en quartiers. Pique {saucisse} avec une fourchette."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 40,
+    "a": [
+     "Sur une plaque, mélange pommes de terre et oignons avec {huile} d'huile, {herbes} d'herbes et du sel. Enfourne 15 min à 200 °C.",
+     "Ajoute saucisses et pommes, nappe le tout de {moutarde} de moutarde mélangée à {miel} de miel et 3 c.s. d'eau. Enfourne 25 min de plus en retournant à mi-cuisson."
+    ]
+   }
+  ],
+  "box": "plaque complète en boîtes",
+  "jj": "Réchauffe 10 min au four à 180 °C ou 3 min au micro-ondes. Sers avec {salade}."
+ },
+ {
+  "id": "x3_poulet_pesto_feuillete",
+  "n": "Poulet au pesto et à la mozzarella en croûte feuilletée, haricots verts",
+  "s": "Poulet pesto en croûte",
+  "d": "Filets de poulet saisis, pesto et mozzarella enfermés dans la pâte feuilletée, haricots verts et tomates rôties.",
+  "o": "gb",
+  "p": "volaille",
+  "grp": "tarte",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   630,
+   42,
+   30,
+   35
+  ],
+  "ing": {
+   "poulet": 520,
+   "patefeuilletee": 1,
+   "pesto": 0.5,
+   "mozzarella": 125,
+   "oeufs": 1,
+   "huile": 1,
+   "haricotsverts": 500,
+   "tomatescerises": 250
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {poulet} de poulet en 4 filets. Équeute {haricotsverts} de haricots verts. Égoutte {mozzarella} de mozzarella et tranche-la."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 10,
+    "a": [
+     "Saisis les filets 3 min par face dans {huile} d'huile, laisse tiédir 10 min."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 8,
+    "passive": 25,
+    "a": [
+     "Coupe {patefeuilletee} en 4 rectangles. Sur chacun : un filet, une cuillerée de pesto ({pesto} au total) et la mozzarella. Replie, soude les bords et dore à l'œuf battu ({oeufs}).",
+     "Enfourne 25 min à 200 °C. Ajoute {tomatescerises} de tomates cerises sur une autre plaque pour les 10 dernières minutes."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Cuis les haricots verts 8 min à l'eau bouillante salée."
+    ]
+   }
+  ],
+  "box": "croûtes à part, haricots et tomates ensemble",
+  "jj": "Réchauffe les croûtes 12 min au four à 180 °C pour garder la pâte croustillante, les légumes 2 min au micro-ondes."
+ },
+ {
+  "id": "x3_poulet_harissa_citron_semoule",
+  "n": "Cuisses de poulet rôties à la harissa et au citron, carottes et semoule",
+  "s": "Poulet rôti harissa",
+  "d": "Marinade harissa-cumin-citron, oignons et carottes rôtis dans le même plat, yaourt frais pour adoucir.",
+  "o": "tn",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "diff": 1,
+  "m": [
+   690,
+   44,
+   56,
+   28
+  ],
+  "ing": {
+   "cuisse": 4,
+   "harissa": 2,
+   "citron": 2,
+   "oignon": 2,
+   "carotte": 4,
+   "cumin": 1,
+   "huile": 2,
+   "semoule": 240,
+   "yaourt": 2,
+   "persil": 1
+  },
+  "prepMin": 10,
+  "prep": [
+   "Mélange {harissa} de harissa, {huile} d'huile, {cumin} de cumin et le jus d'un citron ({citron} au total). Enrobe {cuisse} de cette marinade.",
+   "Coupe {oignon} en quartiers, {carotte} en bâtons et l'autre citron en quartiers."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 45,
+    "a": [
+     "Étale poulet, oignons, carottes et quartiers de citron dans un plat. Enfourne 45 min à 200 °C en retournant le poulet à mi-cuisson."
+    ]
+   }
+  ],
+  "box": "poulet et légumes, semoule à part",
+  "jj": "Verse le même volume d'eau bouillante salée sur {semoule} de semoule, couvre 5 min, égrène. Réchauffe le poulet 3 min au micro-ondes et sers avec {yaourt} de yaourt et {persil} de persil haché."
+ },
+ {
+  "id": "x3_poulet_curcuma_riz_four",
+  "n": "Poulet au curcuma et riz cuits au four, chou-fleur et yaourt",
+  "s": "Poulet-riz au curcuma",
+  "d": "Tout cuit dans la même cocotte : poulet, riz parfumé au curcuma, au gingembre et au cumin, bouquets de chou-fleur.",
+  "o": "in",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "diff": 1,
+  "m": [
+   530,
+   43,
+   58,
+   11
+  ],
+  "ing": {
+   "poulet": 600,
+   "riz": 260,
+   "oignon": 1,
+   "curcuma": 1,
+   "cumin": 1,
+   "gingembre": 1,
+   "ail": 2,
+   "bouillon": 1,
+   "choufleur": 500,
+   "huile": 2,
+   "yaourt": 2,
+   "coriandre": 1
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {poulet} de poulet en gros morceaux. Émince {oignon}, râpe {gingembre}, hache {ail} d'ail. Détaille {choufleur} de chou-fleur en petits bouquets. Prépare 650 ml de bouillon chaud avec {bouillon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Dans une cocotte allant au four, fais revenir oignon et poulet 6 min dans {huile} d'huile. Ajoute gingembre, ail, {curcuma} de curcuma et {cumin} de cumin, mélange 1 min."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 35,
+    "a": [
+     "Ajoute {riz} de riz rincé, le chou-fleur et le bouillon. Porte à frémissement, couvre et enfourne 30 min à 190 °C. Laisse reposer 5 min à couvert."
+    ]
+   }
+  ],
+  "box": "riz au poulet en boîtes, yaourt à part",
+  "jj": "Réchauffe 3 min au micro-ondes avec un trait d'eau. Sers avec {yaourt} de yaourt et {coriandre} de coriandre ciselée."
+ },
+ {
+  "id": "x3_riz_four_olives_pois_chiches",
+  "n": "Riz au four aux olives et pois chiches, feta, menthe et grenade",
+  "s": "Riz au four olives-grenade",
+  "d": "Riz cuit au four avec pois chiches et olives, épinards, citron, puis feta, menthe et grains de grenade au service.",
+  "o": "lb",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "diff": 1,
+  "months": [
+   10,
+   11,
+   12,
+   1
+  ],
+  "m": [
+   600,
+   21,
+   75,
+   21
+  ],
+  "ing": {
+   "riz": 260,
+   "poischiches": 2,
+   "olives": 80,
+   "oignon": 1,
+   "bouillon": 1,
+   "huile": 2,
+   "cumin": 1,
+   "epinards": 200,
+   "citron": 1,
+   "feta": 150,
+   "menthe": 1,
+   "grenade": 1
+  },
+  "prepMin": 5,
+  "prep": [
+   "Émince {oignon}. Rince et égoutte {poischiches} de pois chiches. Prépare 550 ml de bouillon chaud avec {bouillon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 0,
+    "a": [
+     "Dans une cocotte allant au four, fais fondre l'oignon 4 min dans {huile} d'huile avec {cumin} de cumin. Ajoute {riz} de riz rincé, les pois chiches et {olives} d'olives, mélange 1 min."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 35,
+    "a": [
+     "Verse le bouillon, couvre hermétiquement et enfourne 25 min à 190 °C. Laisse reposer 10 min à couvert.",
+     "Ajoute {epinards} d'épinards hachés et le jus de {citron}, égrène : les épinards tombent dans la chaleur du riz."
+    ]
+   }
+  ],
+  "box": "riz en boîtes, feta, menthe et grenade à part",
+  "jj": "Réchauffe 2 min au micro-ondes. Ajoute {feta} de feta émiettée, les grains de {grenade} et {menthe} de menthe ciselée."
+ },
+ {
+  "id": "x3_riz_four_tomates_cabillaud",
+  "n": "Riz au four aux tomates cerises confites et à l'ail, cabillaud rôti",
+  "s": "Riz au four tomates-cabillaud",
+  "d": "Riz au paprika cuit au four avec tomates cerises, poivron et gousses d'ail entières, pavés de cabillaud posés dessus en fin de cuisson.",
+  "o": "es",
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": false,
+  "oven": true,
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   470,
+   30,
+   66,
+   10
+  ],
+  "ing": {
+   "riz": 280,
+   "tomatescerises": 400,
+   "poivron": 1,
+   "ail": 6,
+   "paprika": 1,
+   "bouillon": 1,
+   "huile": 3,
+   "cabillaud": 500,
+   "citron": 1,
+   "persil": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {poivron} en lanières. Pèle {ail} d'ail. Prépare 550 ml de bouillon chaud avec {bouillon}. Coupe {cabillaud} de cabillaud en 4 pavés."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 30,
+    "a": [
+     "Dans un plat, mélange {riz} de riz rincé, {tomatescerises} de tomates cerises, le poivron, l'ail, {paprika} de paprika et 2 c.s. d'huile. Verse le bouillon, couvre de papier aluminium et enfourne 30 min à 190 °C."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 2,
+    "passive": 12,
+    "a": [
+     "Pose les pavés sur le riz, arrose de 1 c.s. d'huile et du jus de {citron}, sale. Remets 12 min sans couvrir."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 1,
+    "passive": 0,
+    "a": [
+     "Écrase légèrement les tomates et l'ail dans le riz, parsème de {persil} de persil haché."
+    ]
+   }
+  ],
+  "box": "riz et poisson ensemble",
+  "jj": "Réchauffe 2 min au micro-ondes, couvert, avec un trait d'eau."
+ },
+ {
+  "id": "x3_gnocchis_maison_ragout_boeuf",
+  "n": "Gnocchis maison au parmesan, ragoût de bœuf à la tomate",
+  "s": "Gnocchis maison, ragoût",
+  "d": "Gnocchis de pommes de terre faits main, pochés puis dorés à la poêle, avec un ragoût de bœuf mijoté.",
+  "o": "it",
+  "p": "boeuf",
+  "grp": "bolo",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "diff": 3,
+  "m": [
+   650,
+   37,
+   78,
+   17
+  ],
+  "ing": {
+   "pommedeterre": 800,
+   "farine": 180,
+   "oeufs": 1,
+   "parmesan": 50,
+   "boeuf": 400,
+   "oignon": 1,
+   "carotte": 1,
+   "ail": 2,
+   "tomates": 2,
+   "origan": 1,
+   "huile": 1,
+   "beurre": 20
+  },
+  "prepMin": 5,
+  "prep": [
+   "Émince {oignon}, râpe {carotte}, hache {ail} d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 25,
+    "a": [
+     "Cuis {pommedeterre} de pommes de terre farineuses entières, avec la peau, 25 min dans l'eau salée."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 30,
+    "wait": false,
+    "a": [
+     "Fais revenir oignon, carotte et ail 3 min dans {huile} d'huile. Ajoute {boeuf} de bœuf haché, dore 5 min. Verse {tomates} de tomates concassées et {origan} d'origan, mijote 30 min à couvert."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 20,
+    "passive": 0,
+    "a": [
+     "Épluche les pommes de terre encore chaudes, écrase-les finement et laisse tiédir. Ajoute {oeufs}, {farine} de farine, la moitié de {parmesan} de parmesan et du sel. Pétris juste assez pour lier.",
+     "Roule en boudins de 2 cm et coupe des tronçons de 2 cm."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Plonge les gnocchis par fournées dans l'eau bouillante salée et retire-les à l'écumoire dès qu'ils remontent. Mélange-les avec {beurre} de beurre fondu pour qu'ils ne collent pas."
+    ]
+   }
+  ],
+  "box": "gnocchis à part, ragoût à part",
+  "jj": "Fais dorer les gnocchis 5 min à la poêle, réchauffe le ragoût et sers avec le reste du parmesan."
+ },
+ {
+  "id": "x3_truite_tomates_orange",
+  "n": "Truite rôtie aux tomates cerises et à l'orange, pommes de terre",
+  "s": "Truite tomates-orange",
+  "o": null,
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": false,
+  "oven": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   520,
+   36,
+   52,
+   18
+  ],
+  "diff": 2,
+  "d": "Pavés de truite rôtis sur des tomates cerises, des quartiers d'orange et quelques raisins secs, avec des pommes de terre dorées dans le même plat.",
+  "ing": {
+   "truite": 600,
+   "tomatescerises": 400,
+   "orange": 2,
+   "raisinssecs": 30,
+   "pommedeterre": 900,
+   "oignon": 1,
+   "huile": 3
+  },
+  "prepMin": 12,
+  "prep": [
+   "Coupe {pommedeterre} de pommes de terre en quartiers. Émince {oignon}. Coupe {orange} en quartiers fins, sans les éplucher. Sèche {truite} de truite et sale-la."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 20,
+    "a": [
+     "Mélange les pommes de terre et l'oignon avec 2 c.s. d'huile, sel et poivre. Enfourne 20 min à 200 °C."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 17,
+    "a": [
+     "Ajoute {tomatescerises} de tomates cerises, l'orange et {raisinssecs} de raisins secs, remue. Pose la truite par-dessus, arrose d'1 c.s. d'huile et baisse à 190 °C. Enfourne 15 à 17 min : la chair doit se détacher en lamelles."
+    ]
+   }
+  ],
+  "box": "truite posée sur les légumes et leur jus",
+  "jj": "Réchauffe 2 min au micro-ondes à puissance moyenne, ou 8 min au four couvert. À manger dans les 2 jours."
+ },
+ {
+  "id": "x3_galettes_panais_saumon_fume",
+  "n": "Galettes de panais au saumon fumé, lentilles vertes et sauce fromage blanc",
+  "s": "Galettes panais-saumon fumé",
+  "o": "gb",
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": true,
+  "oven": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   580,
+   33,
+   70,
+   18
+  ],
+  "diff": 2,
+  "d": "Galettes dorées de panais écrasé et de saumon fumé, servies avec des lentilles à la moutarde et une sauce fraîche au persil.",
+  "ing": {
+   "panais": 700,
+   "saumonfume": 200,
+   "oeufs": 2,
+   "farine": 60,
+   "persil": 1,
+   "lentillesvertes": 200,
+   "carotte": 2,
+   "moutarde": 1,
+   "fromageblanc": 200,
+   "citron": 1,
+   "huile": 3
+  },
+  "prepMin": 15,
+  "prep": [
+   "Épluche {panais} de panais et coupe-les en tronçons. Épluche {carotte} et coupe-les en petits dés. Hache le persil ({persil}). Émince {saumonfume} de saumon fumé."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 20,
+    "a": [
+     "Cuis les panais 18 à 20 min à la vapeur ou dans l'eau salée, jusqu'à ce qu'ils s'écrasent. Égoutte bien et laisse fumer 5 min."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 25,
+    "wait": false,
+    "a": [
+     "Dans une autre casserole, cuis {lentillesvertes} de lentilles vertes et les carottes 25 min dans 3 fois leur volume d'eau. Égoutte, mélange avec {moutarde} de moutarde, 1 c.s. d'huile, sel et poivre."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 10,
+    "passive": 0,
+    "a": [
+     "Écrase les panais, ajoute le saumon, {oeufs}, {farine} de farine, la moitié du persil et du poivre. Forme 12 galettes sur une plaque couverte de papier cuisson."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 2,
+    "passive": 20,
+    "a": [
+     "Badigeonne les galettes de 2 c.s. d'huile et enfourne 20 min à 200 °C, en les retournant à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 2,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Sauce : {fromageblanc} de fromage blanc, le jus de {citron}, le reste du persil, sel et poivre."
+    ]
+   }
+  ],
+  "box": "galettes, lentilles et sauce dans des boîtes séparées",
+  "jj": "Réchauffe les galettes 8 min au four à 200 °C (ou 2 min au micro-ondes) et les lentilles 2 min au micro-ondes. Sers avec la sauce bien froide."
+ },
+ {
+  "id": "x3_ragout_calamars_poivrons",
+  "n": "Ragoût de calamars aux poivrons rouges et pommes de terre",
+  "s": "Ragoût calamars-poivrons",
+  "o": "es",
+  "p": "poisson",
+  "grp": "mijote",
+  "fridge": 2,
+  "freeze": false,
+  "oven": false,
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "m": [
+   430,
+   30,
+   46,
+   9
+  ],
+  "diff": 2,
+  "d": "Calamars mijotés à la tomate et au vin blanc avec des poivrons rouges fondants et des pommes de terre.",
+  "ing": {
+   "calamars": 600,
+   "poivron": 3,
+   "tomates": 1,
+   "oignon": 1,
+   "ail": 2,
+   "vinblanc": 100,
+   "pommedeterre": 800,
+   "paprika": 1,
+   "persil": 1,
+   "huile": 2
+  },
+  "prepMin": 12,
+  "prep": [
+   "Émince {oignon} et {poivron} en lanières. Hache {ail} d'ail. Épluche {pommedeterre} de pommes de terre et coupe-les en cubes de 2 cm. Rince {calamars} d'anneaux d'encornet décongelés et sèche-les."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 0,
+    "a": [
+     "Fais revenir l'oignon, l'ail et les poivrons 8 min dans 2 c.s. d'huile. Ajoute {paprika} de paprika."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Verse {vinblanc} de vin blanc, laisse bouillir 1 min, puis ajoute {tomates} de tomates concassées, les pommes de terre et 200 ml d'eau. Sale, couvre et mijote 20 à 25 min, jusqu'à ce que les pommes de terre soient tendres."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 4,
+    "a": [
+     "Ajoute les calamars et cuis 4 min à feu doux, pas plus : au-delà ils deviennent caoutchouteux. Parsème de persil ({persil}) haché."
+    ]
+   }
+  ],
+  "box": "ragoût en boîtes individuelles",
+  "jj": "Réchauffe doucement 2 à 3 min au micro-ondes à puissance moyenne, sans faire bouillir. À manger dans les 2 jours."
+ },
+ {
+  "id": "x3_blanquette_veau",
+  "n": "Blanquette de veau aux champignons, riz",
+  "s": "Blanquette de veau",
+  "p": "boeuf",
+  "grp": "mijote",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   620,
+   38,
+   57,
+   22
+  ],
+  "diff": 3,
+  "o": "fr",
+  "d": "La vraie, au veau : la liaison crème-citron se fait le soir même pour une sauce bien lisse.",
+  "ing": {
+   "veau": 600,
+   "carotte": 3,
+   "champignons": 250,
+   "oignon": 1,
+   "bouillon": 1,
+   "beurre": 20,
+   "farine": 30,
+   "creme": 150,
+   "oeufs": 1,
+   "citron": 1,
+   "riz": 240
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {carotte} en rondelles épaisses et {oignon} en quartiers. Émince {champignons} de champignons."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 75,
+    "a": [
+     "Mets {veau} de veau dans une cocotte, couvre d'eau froide et porte à frémissement. Retire l'écume qui monte.",
+     "Ajoute l'oignon, les carottes et {bouillon}. Laisse cuire 1 h 15 à tout petit feu, couvercle entrouvert."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais sauter les champignons 5 min dans une noix de beurre, réserve."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 5,
+    "a": [
+     "Sors la viande et les carottes. Filtre et garde 500 ml de bouillon.",
+     "Fais fondre le reste de {beurre} de beurre, ajoute {farine} de farine et remue 1 min. Verse le bouillon petit à petit en fouettant jusqu'à ce que la sauce nappe.",
+     "Remets la viande, les carottes et les champignons dans la sauce, laisse frémir 5 min."
+    ]
+   }
+  ],
+  "box": "blanquette seule, riz à part",
+  "jj": "Réchauffe la blanquette à feu doux. Hors du feu, ajoute {creme} de crème fouettée avec le jaune de {oeufs} et le jus du {citron}, sans refaire bouillir. Cuis {riz} de riz."
+ },
+ {
+  "id": "x3_boeuf_bourguignon",
+  "n": "Bœuf bourguignon aux champignons et tagliatelles",
+  "s": "Bœuf bourguignon",
+  "p": "boeuf",
+  "grp": "mijote",
+  "comfort": true,
+  "fridge": 4,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   680,
+   50,
+   56,
+   21
+  ],
+  "diff": 3,
+  "o": "fr",
+  "d": "Long à mijoter mais sans difficulté, et encore meilleur réchauffé.",
+  "ing": {
+   "paleron": 700,
+   "lardons": 100,
+   "carotte": 4,
+   "oignon": 2,
+   "ail": 2,
+   "champignons": 250,
+   "vinrouge": 500,
+   "bouillon": 1,
+   "farine": 30,
+   "huile": 1,
+   "herbes": 1,
+   "patescompletes": 280
+  },
+  "prepMin": 12,
+  "prep": [
+   "Coupe {paleron} de paleron en gros cubes et sèche-les. Coupe {carotte} en rondelles, émince {oignon}, écrase {ail}. Coupe {champignons} de champignons en quartiers."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 15,
+    "passive": 150,
+    "a": [
+     "Fais dorer la viande en 3 fois dans {huile} d'huile, réserve. Fais revenir {lardons} de lardons et les oignons 5 min.",
+     "Remets la viande, saupoudre de {farine} de farine et mélange. Verse {vinrouge} de vin rouge, {bouillon} et 300 ml d'eau. Ajoute les carottes, l'ail et {herbes} d'herbes.",
+     "Couvre et laisse mijoter 2 h 30 à feu très doux, jusqu'à ce que la viande se défasse."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 0,
+    "wait": false,
+    "a": [
+     "Fais dorer les champignons à la poêle 5 min et ajoute-les au bourguignon pour le dernier quart d'heure."
+    ]
+   }
+  ],
+  "box": "bourguignon seul, pâtes à part",
+  "jj": "Réchauffe à feu doux et cuis {patescompletes} de tagliatelles ou de pâtes complètes."
+ },
+ {
+  "id": "x3_gratin_dauphinois_poulet",
+  "n": "Gratin dauphinois, blancs de poulet aux herbes et salade verte",
+  "s": "Gratin dauphinois",
+  "p": "volaille",
+  "grp": "gratin",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   560,
+   38,
+   49,
+   23
+  ],
+  "diff": 2,
+  "o": "fr",
+  "d": "Le gratin de pommes de terre au lait et à la crème, sans fromage, avec du poulet rôti à côté.",
+  "ing": {
+   "pommedeterre": 1000,
+   "lait": 400,
+   "creme": 200,
+   "ail": 1,
+   "beurre": 10,
+   "poulet": 500,
+   "herbes": 1,
+   "huile": 1,
+   "salade": 1
+  },
+  "prepMin": 15,
+  "prep": [
+   "Épluche {pommedeterre} de pommes de terre et coupe-les en tranches fines de 2 à 3 mm, sans les rincer.",
+   "Frotte un plat avec {ail} coupé en deux puis beurre-le avec {beurre} de beurre."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 5,
+    "passive": 70,
+    "a": [
+     "Range les tranches en couches dans le plat. Mélange {lait} de lait et {creme} de crème, sale, poivre et verse sur les pommes de terre.",
+     "Enfourne 1 h 10 à 170 °C. Couvre d'aluminium si le dessus dore trop vite."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 20,
+    "wait": false,
+    "a": [
+     "Pose {poulet} de blancs de poulet dans un petit plat avec {huile} d'huile et {herbes} d'herbes. Glisse-les dans le four pour les 20 dernières minutes."
+    ]
+   }
+  ],
+  "box": "gratin et poulet tranché dans la même boîte",
+  "jj": "Réchauffe 3 min au micro-ondes ou 15 min au four. Sers avec {salade} assaisonnée."
+ },
+ {
+  "id": "x3_ensalada_campera",
+  "n": "Ensalada campera : pommes de terre, thon, œufs et poivron",
+  "s": "Ensalada campera",
+  "d": "La salade de pommes de terre des campagnes espagnoles, thon, olives et œufs durs.",
+  "o": "es",
+  "p": "poisson",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 2,
+  "freeze": false,
+  "oven": false,
+  "diff": 1,
+  "m": [
+   520,
+   30,
+   45,
+   24
+  ],
+  "ing": {
+   "pommedeterre": 900,
+   "oeufs": 6,
+   "thon": 2,
+   "tomatefraiche": 3,
+   "poivron": 1,
+   "oignon": 1,
+   "olives": 80,
+   "huile": 3,
+   "vinaigre": 1,
+   "persil": 1
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {poivron} en petits dés et émince finement {oignon}. Égoutte {thon} de thon. Hache {persil}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 22,
+    "a": [
+     "Cuis {pommedeterre} de pommes de terre avec la peau 20 à 22 min à l'eau salée. Égoutte et laisse tiédir."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 10 min à l'eau bouillante, passe-les sous l'eau froide et écale-les."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 8,
+    "passive": 0,
+    "a": [
+     "Épluche les pommes de terre et coupe-les en gros cubes. Mélange avec le poivron, l'oignon, le thon, {olives} d'olives, 3 c.s. d'huile, {vinaigre} de vinaigre, le persil, sel et poivre.",
+     "Coupe les œufs en quartiers et pose-les sur la salade."
+    ]
+   }
+  ],
+  "box": "salade en boîtes, tomates à part",
+  "jj": "Coupe {tomatefraiche} en quartiers, ajoute-les et sers bien frais."
+ },
+ {
+  "id": "x3_pollo_ajillo",
+  "n": "Pollo al ajillo : poulet à l'ail, riz et haricots verts",
+  "s": "Pollo al ajillo",
+  "d": "Cuisses de poulet dorées puis mijotées avec une tête d'ail entière, citron et persil.",
+  "o": "es",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "diff": 2,
+  "m": [
+   610,
+   42,
+   54,
+   24
+  ],
+  "ing": {
+   "cuisse": 6,
+   "ail": 10,
+   "huile": 2,
+   "bouillon": 1,
+   "citron": 1,
+   "persil": 1,
+   "haricotsverts": 400,
+   "riz": 240
+  },
+  "prepMin": 6,
+  "prep": [
+   "Écrase légèrement 10 gousses d'ail avec le plat du couteau, sans les éplucher. Équeute {haricotsverts} de haricots verts. Dilue {bouillon} dans 200 ml d'eau chaude."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 14,
+    "passive": 25,
+    "a": [
+     "Sale {cuisse} et fais-les bien dorer 10 min de tous les côtés dans 2 c.s. d'huile, dans une cocotte.",
+     "Ajoute l'ail et laisse-le colorer 2 min. Verse le bouillon, couvre et laisse cuire 25 min à feu doux.",
+     "Découvre et laisse réduire le jus 8 min en retournant les cuisses. Ajoute le jus de {citron} et le persil haché ({persil})."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 3,
+    "passive": 8,
+    "wait": false,
+    "a": [
+     "Cuis les haricots verts 8 min à l'eau bouillante salée, égoutte-les."
+    ]
+   }
+  ],
+  "box": "poulet avec son jus et haricots verts, sans riz",
+  "jj": "Cuis {riz} de riz. Réchauffe le poulet et les haricots 3 min au micro-ondes."
+ },
+ {
+  "id": "x3_fabada",
+  "grp": "mijote",
+  "n": "Fabada express : haricots blancs, chorizo et saucisses fumées",
+  "s": "Fabada",
+  "d": "Le plat des Asturies en version rapide : haricots fondants, chorizo et saucisses.",
+  "o": "es",
+  "p": "porc",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "oven": false,
+  "comfort": true,
+  "diff": 1,
+  "m": [
+   650,
+   34,
+   48,
+   34
+  ],
+  "ing": {
+   "haricotsblancs": 4,
+   "chorizo": 150,
+   "saucisse": 4,
+   "oignon": 1,
+   "ail": 2,
+   "paprika": 1,
+   "bouillon": 1,
+   "pain": 4
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {chorizo} de chorizo en rondelles épaisses et {saucisse} en tronçons. Émince {oignon}, hache 2 gousses d'ail. Rince et égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 30,
+    "a": [
+     "Fais revenir le chorizo et les saucisses 5 min dans une cocotte, sans matière grasse. Ajoute l'oignon et l'ail, 4 min.",
+     "Ajoute 1 c.c. de paprika, les haricots, {bouillon} émietté et 500 ml d'eau. Mijote 30 min à petit feu, en remuant doucement pour ne pas écraser les haricots. Goûte avant de saler."
+    ]
+   }
+  ],
+  "box": "fabada avec son jus",
+  "jj": "Réchauffe 3 min au micro-ondes et sers avec {pain}.",
+  "cz": true
+ },
+ {
+  "id": "x3_lentejas_estofadas",
+  "n": "Lentejas estofadas : lentilles au paprika, carottes, pommes de terre et œufs durs",
+  "s": "Lentejas estofadas",
+  "d": "Le ragoût de lentilles espagnol, tomate et paprika, servi avec des œufs durs.",
+  "o": "es",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": false,
+  "oven": false,
+  "comfort": true,
+  "diff": 1,
+  "m": [
+   530,
+   31,
+   72,
+   12
+  ],
+  "ing": {
+   "lentillesvertes": 280,
+   "carotte": 2,
+   "pommedeterre": 300,
+   "oignon": 1,
+   "ail": 2,
+   "tomates": 1,
+   "paprika": 2,
+   "huile": 2,
+   "oeufs": 4,
+   "pain": 4
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {carotte} en rondelles et {pommedeterre} de pommes de terre en cubes. Émince {oignon}, hache 2 gousses d'ail. Rince {lentillesvertes} de lentilles."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 35,
+    "a": [
+     "Fais revenir l'oignon, l'ail et les carottes 5 min dans 2 c.s. d'huile avec 2 c.c. de paprika.",
+     "Ajoute les lentilles, les pommes de terre, {tomates} de tomates concassées et 900 ml d'eau. Mijote 35 min à couvert, rajoute un peu d'eau si besoin. Sale à la fin."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 10 min à l'eau bouillante, refroidis-les et écale-les."
+    ]
+   }
+  ],
+  "box": "lentilles en boîtes, œufs durs à part",
+  "jj": "Réchauffe les lentilles 3 min au micro-ondes, ajoute les œufs coupés en deux et sers avec {pain}."
+ },
+ {
+  "id": "x3_paella_poulet",
+  "n": "Paella au poulet et au chorizo, haricots verts et poivron",
+  "s": "Paella poulet-chorizo",
+  "d": "La paella familiale : riz rond au safran, poulet, chorizo, poivron et haricots verts.",
+  "o": "es",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": false,
+  "oven": false,
+  "diff": 3,
+  "m": [
+   640,
+   42,
+   70,
+   19
+  ],
+  "ing": {
+   "poulet": 500,
+   "chorizo": 80,
+   "rizrond": 300,
+   "poivron": 1,
+   "haricotsverts": 200,
+   "tomatefraiche": 2,
+   "ail": 2,
+   "safran": 1,
+   "paprika": 1,
+   "bouillon": 1,
+   "huile": 2,
+   "citron": 1
+  },
+  "prepMin": 10,
+  "prep": [
+   "Coupe {poulet} de poulet en morceaux, {chorizo} de chorizo en rondelles fines, {poivron} en lanières. Coupe {haricotsverts} de haricots verts en tronçons. Râpe {tomatefraiche} en gardant la peau à part. Dilue {bouillon} dans 1 l d'eau chaude."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 15,
+    "passive": 20,
+    "a": [
+     "Dans une grande poêle, dore le poulet et le chorizo 8 min dans 2 c.s. d'huile. Ajoute le poivron, les haricots verts, 2 gousses d'ail hachées et la tomate râpée, 6 min.",
+     "Ajoute 1 c.c. de paprika, {safran} de safran et le bouillon. Porte à ébullition, puis répartis {rizrond} de riz rond en pluie.",
+     "Cuis 18 à 20 min sans remuer, en baissant le feu à mi-cuisson. Laisse reposer 5 min sous un torchon."
+    ]
+   }
+  ],
+  "box": "paella en boîtes, citron à part",
+  "jj": "Réchauffe 3 min au micro-ondes avec 2 c.s. d'eau et sers avec {citron} en quartiers."
+ },
+ {
+  "id": "x3_paella_fruits_mer",
+  "n": "Paella aux crevettes, calamars et petits pois",
+  "s": "Paella de la mer",
+  "d": "Riz au safran, crevettes et encornets, cuit en une seule poêle.",
+  "o": "es",
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": false,
+  "oven": false,
+  "diff": 3,
+  "m": [
+   570,
+   38,
+   76,
+   11
+  ],
+  "ing": {
+   "crevettes": 400,
+   "calamars": 300,
+   "rizrond": 300,
+   "petitspois": 150,
+   "poivron": 1,
+   "oignon": 1,
+   "tomates": 1,
+   "ail": 2,
+   "safran": 1,
+   "bouillon": 1,
+   "huile": 2,
+   "citron": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Décongèle {crevettes} de crevettes et {calamars} d'encornets, sèche-les. Émince {oignon}, coupe {poivron} en dés, hache 2 gousses d'ail. Dilue {bouillon} dans 1 l d'eau chaude."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 15,
+    "passive": 20,
+    "a": [
+     "Dans une grande poêle, fais revenir l'oignon, le poivron et l'ail 6 min dans 2 c.s. d'huile. Ajoute {tomates} de tomates concassées et laisse réduire 4 min.",
+     "Ajoute {rizrond} de riz rond, {safran} de safran et le bouillon chaud. Répartis bien le riz et cuis 12 min sans remuer.",
+     "Pose les calamars, les crevettes et {petitspois} de petits pois sur le riz. Poursuis 8 min jusqu'à ce que le liquide soit absorbé. Laisse reposer 5 min à couvert."
+    ]
+   }
+  ],
+  "box": "paella en boîtes, citron à part",
+  "jj": "Réchauffe 3 min au micro-ondes avec 2 c.s. d'eau, sans dépasser pour garder les crevettes tendres. Sers avec {citron} en quartiers."
+ },
+ {
+  "id": "x3_empanada_thon",
+  "grp": "tarte",
+  "n": "Empanada au thon, poivron et tomate, salade verte",
+  "s": "Empanada au thon",
+  "d": "La grande tourte galicienne : thon, poivron et œufs durs dans une sauce tomate, sous pâte feuilletée.",
+  "o": "es",
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": true,
+  "oven": true,
+  "diff": 3,
+  "m": [
+   690,
+   31,
+   52,
+   39
+  ],
+  "ing": {
+   "patefeuilletee": 2,
+   "thon": 2,
+   "oeufs": 3,
+   "oignon": 1,
+   "poivron": 1,
+   "passata": 250,
+   "huile": 1,
+   "salade": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Émince {oignon} et coupe {poivron} en petits dés. Égoutte {thon} de thon."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "a": [
+     "Cuis 2 des {oeufs} 10 min à l'eau bouillante, refroidis-les et hache-les."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Fais revenir l'oignon et le poivron 8 min dans 1 c.s. d'huile. Ajoute {passata} de passata et laisse réduire 10 min. Hors du feu, ajoute le thon émietté et les œufs hachés. Laisse tiédir."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 6,
+    "passive": 30,
+    "a": [
+     "Préchauffe le four à 190 °C. Déroule une des {patefeuilletee} sur la plaque, étale la garniture en laissant 2 cm de bord, couvre avec la seconde et soude les bords en les pinçant.",
+     "Dore avec le dernier œuf battu, fais un petit trou au centre et enfourne 30 min."
+    ]
+   }
+  ],
+  "box": "empanada en parts",
+  "jj": "Réchauffe 10 min au four ou 1 min au micro-ondes et sers avec {salade}.",
+  "kid": "Elle ou il pince les bords et dore la pâte au pinceau."
+ },
+ {
+  "id": "x3_escalivada_poischiches",
+  "n": "Escalivada : poivrons, aubergines et oignons rôtis, pois chiches et œufs durs, tartines",
+  "s": "Escalivada",
+  "d": "Les légumes rôtis de Catalogne, fondants et parfumés à l'ail, avec pois chiches et œufs durs.",
+  "o": "es",
+  "p": "veg",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "fridge": 4,
+  "freeze": false,
+  "oven": true,
+  "diff": 2,
+  "m": [
+   530,
+   22,
+   58,
+   22
+  ],
+  "ing": {
+   "poivron": 3,
+   "aubergine": 2,
+   "oignon": 2,
+   "ail": 2,
+   "huile": 4,
+   "vinaigre": 1,
+   "persil": 1,
+   "poischiches": 2,
+   "oeufs": 4,
+   "pain": 8
+  },
+  "prepMin": 4,
+  "prep": [
+   "Pique {aubergine} à la fourchette. Coupe {oignon} en deux sans les éplucher. Rince et égoutte {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 45,
+    "a": [
+     "Préchauffe le four à 220 °C. Pose {poivron}, les aubergines et les oignons entiers sur une plaque huilée. Rôtis 45 min en les retournant à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 10 min à l'eau bouillante, refroidis-les et écale-les."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 12,
+    "passive": 10,
+    "a": [
+     "Enferme les poivrons 10 min dans un saladier couvert. Retire peaux et graines, effiloche poivrons, aubergines et oignons en lanières.",
+     "Assaisonne avec 4 c.s. d'huile, {vinaigre} de vinaigre, 2 gousses d'ail pressées, sel et persil haché ({persil}). Mélange avec les pois chiches."
+    ]
+   }
+  ],
+  "box": "escalivada aux pois chiches en boîtes, œufs à part",
+  "jj": "Sers tiède ou à température ambiante, avec les œufs coupés en quartiers et {pain} grillé.",
+  "cz": false
+ },
+ {
+  "id": "x3_croquetas_jambon",
+  "n": "Croquetas au jambon au four, pommes de terre vapeur et salade",
+  "s": "Croquetas au jambon",
+  "d": "Les croquettes crémeuses des bars à tapas, panées et dorées au four plutôt que frites.",
+  "o": "es",
+  "p": "porc",
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "comfort": true,
+  "diff": 4,
+  "m": [
+   620,
+   25,
+   72,
+   25
+  ],
+  "ing": {
+   "jambon": 6,
+   "beurre": 60,
+   "farine": 120,
+   "lait": 700,
+   "oeufs": 2,
+   "chapelure": 120,
+   "huile": 2,
+   "pommedeterre": 600,
+   "salade": 1
+  },
+  "prepMin": 5,
+  "prep": [
+   "Hache très finement {jambon} de jambon."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 12,
+    "passive": 0,
+    "a": [
+     "Fais fondre {beurre} de beurre, ajoute 80 g de farine et remue 2 min. Verse {lait} de lait petit à petit en fouettant, jusqu'à obtenir une béchamel très épaisse.",
+     "Ajoute le jambon, une pincée de muscade et du poivre. Étale dans un plat, couvre au contact et laisse refroidir."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 0,
+    "passive": 90,
+    "a": [
+     "Laisse la béchamel prendre au frigo 1 h 30."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 20,
+    "passive": 0,
+    "a": [
+     "Avec les mains farinées, forme une vingtaine de croquettes. Passe-les dans le reste de {farine} de farine, puis dans {oeufs} battus, puis dans {chapelure} de chapelure."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 20,
+    "a": [
+     "Pose-les sur une plaque, arrose de 2 c.s. d'huile et enfourne 20 min à 210 °C en les retournant à mi-cuisson."
+    ]
+   }
+  ],
+  "box": "croquettes en boîte, sans pommes de terre",
+  "jj": "Cuis {pommedeterre} de pommes de terre à la vapeur. Réchauffe les croquettes 8 min au four ou à l'air fryer à 180 °C et sers avec {salade}."
+ },
+ {
+  "id": "x3_poulet_aubergines_miel",
+  "n": "Cuisses de poulet et aubergines rôties au miel et au paprika, boulgour",
+  "s": "Poulet-aubergines au miel",
+  "d": "Aubergines rôties arrosées de miel citronné, comme en Andalousie, avec des cuisses de poulet au paprika.",
+  "o": "es",
+  "p": "volaille",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "oven": true,
+  "diff": 1,
+  "m": [
+   620,
+   40,
+   56,
+   26
+  ],
+  "ing": {
+   "cuisse": 6,
+   "aubergine": 3,
+   "huile": 3,
+   "paprika": 2,
+   "miel": 2,
+   "citron": 1,
+   "persil": 1,
+   "boulgour": 240
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {aubergine} en tranches épaisses ou en quartiers."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 6,
+    "passive": 35,
+    "a": [
+     "Préchauffe le four à 210 °C. Pose {cuisse} et les aubergines sur une plaque, badigeonne-les de 3 c.s. d'huile mélangées à 2 c.c. de paprika, sel et poivre.",
+     "Rôtis 35 min en retournant les aubergines à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mélange {miel} de miel et le jus de {citron}, arrose les aubergines encore chaudes. Parsème de persil haché ({persil})."
+    ]
+   }
+  ],
+  "box": "poulet et aubergines, sans boulgour",
+  "jj": "Cuis {boulgour} de boulgour. Réchauffe le poulet et les aubergines 3 min au micro-ondes."
+ },
+ {
+  "id": "x3_pasta_fagioli_lardons",
+  "o": "it",
+  "n": "Pasta e fagioli : petites pâtes, haricots blancs et lardons",
+  "s": "Pasta e fagioli",
+  "p": "porc",
+  "pasta": true,
+  "comfort": true,
+  "fridge": 4,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   500,
+   25,
+   68,
+   13
+  ],
+  "diff": 1,
+  "d": "Le plat des grands-mères italiennes, à mi-chemin entre la soupe épaisse et les pâtes.",
+  "ing": {
+   "vermicelles": 250,
+   "haricotsblancs": 2,
+   "lardons": 120,
+   "tomates": 1,
+   "carotte": 1,
+   "celeri": 1,
+   "oignon": 1,
+   "ail": 2,
+   "bouillon": 1,
+   "herbes": 1,
+   "parmesan": 40,
+   "huile": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe {carotte}, {celeri} et {oignon} en petits dés. Hache 2 gousses d'ail. Égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 20,
+    "a": [
+     "Fais dorer {lardons} de lardons dans 1 c.s. d'huile, ajoute les dés de légumes et l'ail, 6 min à feu moyen.",
+     "Ajoute les haricots, {tomates} de tomates concassées, {bouillon}, 1 c.c. d'herbes et 1 l d'eau. Mijote 20 min.",
+     "Écrase la moitié des haricots à la fourchette pour que le bouillon devienne crémeux."
+    ]
+   }
+  ],
+  "box": "base aux haricots seule, sans pâtes",
+  "jj": "Porte la base à ébullition avec un verre d'eau, cuis-y {vermicelles} de petites pâtes 8 à 10 min en remuant, sers avec {parmesan} de parmesan."
+ },
+ {
+  "id": "x3_pollo_peperoni_polenta",
+  "o": "it",
+  "n": "Poulet mijoté à la peperonata et polenta crémeuse",
+  "s": "Pollo con peperoni",
+  "p": "volaille",
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "fridge": 3,
+  "freeze": true,
+  "oven": false,
+  "m": [
+   580,
+   40,
+   48,
+   25
+  ],
+  "diff": 2,
+  "d": "Cuisses de poulet fondantes dans des poivrons confits à la tomate, relevés d'un trait de vinaigre.",
+  "ing": {
+   "cuisse": 4,
+   "poivron": 4,
+   "oignon": 1,
+   "ail": 2,
+   "tomates": 1,
+   "origan": 1,
+   "vinaigre": 1,
+   "huile": 1,
+   "polenta": 200,
+   "parmesan": 30
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {poivron} en lanières et {oignon} en demi-rondelles. Hache 2 gousses d'ail."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 15,
+    "passive": 35,
+    "a": [
+     "Fais dorer {cuisse} 5 min de chaque côté dans 1 c.s. d'huile, puis retire-les.",
+     "Fais revenir l'oignon et les poivrons 10 min dans la même cocotte. Ajoute l'ail, {tomates} de tomates concassées, 1 c.c. d'origan et du sel.",
+     "Remets les cuisses, couvre et mijote 35 min. Ajoute 1 c.s. de vinaigre en fin de cuisson."
+    ]
+   }
+  ],
+  "box": "poulet et poivrons, sans polenta",
+  "jj": "Porte 800 ml d'eau salée à ébullition, verse {polenta} de polenta en pluie en fouettant, 5 min, ajoute {parmesan} de parmesan. Réchauffe le poulet à couvert."
+ },
+ {
+  "id": "x3_caponata_thon_semoule",
+  "o": "it",
+  "n": "Caponata sicilienne au thon et semoule",
+  "s": "Caponata au thon",
+  "p": "poisson",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "fridge": 2,
+  "freeze": false,
+  "oven": true,
+  "m": [
+   450,
+   26,
+   58,
+   12
+  ],
+  "diff": 2,
+  "d": "Aubergines fondantes en sauce aigre-douce aux olives et aux câpres, servies avec du thon.",
+  "ing": {
+   "aubergine": 3,
+   "celeri": 2,
+   "oignon": 1,
+   "tomates": 1,
+   "olives": 60,
+   "capres": 30,
+   "vinaigre": 2,
+   "sucre": 10,
+   "huile": 3,
+   "thon": 2,
+   "semoule": 250
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {aubergine} en cubes de 2 cm, {celeri} en tronçons fins et émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Mélange les aubergines avec 2 c.s. d'huile et du sel sur une plaque. Enfourne 25 min à 210 °C en remuant à mi-cuisson."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Fais fondre l'oignon et le céleri 8 min dans 1 c.s. d'huile.",
+     "Ajoute {tomates} de tomates concassées, {olives} d'olives, {capres} de câpres, {sucre} de sucre et 2 c.s. de vinaigre. Mijote 10 min."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Mélange les aubergines rôties dans la sauce et laisse tiédir."
+    ]
+   }
+  ],
+  "box": "caponata seule",
+  "jj": "Verse de l'eau bouillante salée sur {semoule} de semoule, couvre 5 min. Sers avec la caponata tiède ou réchauffée et {thon} de thon émietté."
+ },
+ {
+  "id": "x3_arancini_four_salade",
+  "o": "it",
+  "n": "Arancini au four, sauce tomate et salade verte",
+  "s": "Arancini au four",
+  "p": "veg",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "oven": true,
+  "m": [
+   615,
+   29,
+   85,
+   18
+  ],
+  "diff": 4,
+  "d": "Boulettes de riz au parmesan et aux petits pois, cœur de mozzarella filante, panées et dorées au four.",
+  "ing": {
+   "rizrond": 250,
+   "bouillon": 2,
+   "petitspois": 150,
+   "parmesan": 60,
+   "mozzarella": 200,
+   "oeufs": 2,
+   "farine": 50,
+   "chapelure": 100,
+   "huile": 2,
+   "passata": 400,
+   "origan": 1,
+   "salade": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {mozzarella} de mozzarella en 12 cubes. Bats {oeufs} dans une assiette creuse, mets {farine} de farine et {chapelure} de chapelure dans deux autres."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 18,
+    "a": [
+     "Porte 750 ml d'eau à ébullition avec {bouillon}. Verses-y {rizrond} de riz rond et cuis 18 min en remuant souvent, jusqu'à ce que tout le liquide soit absorbé. Ajoute {petitspois} de petits pois les 5 dernières minutes, puis {parmesan} de parmesan."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 2,
+    "passive": 30,
+    "a": [
+     "Étale le riz sur une plaque et laisse-le refroidir complètement."
+    ]
+   },
+   {
+    "mode": "plan",
+    "active": 20,
+    "passive": 0,
+    "a": [
+     "Forme 12 boules en glissant un cube de mozzarella au centre de chacune. Roule-les dans la farine, l'œuf puis la chapelure."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 3,
+    "passive": 25,
+    "a": [
+     "Pose les arancini sur une plaque, arrose de 2 c.s. d'huile. Enfourne 25 min à 210 °C en les retournant à mi-cuisson."
+    ]
+   }
+  ],
+  "box": "arancini en boîte, sans sauce",
+  "jj": "Réchauffe les arancini 10 min à l'air fryer à 180 °C. Chauffe {passata} de passata avec 1 c.c. d'origan et sers avec {salade}."
  }
 ]

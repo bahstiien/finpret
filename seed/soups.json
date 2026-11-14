@@ -1732,5 +1732,338 @@
   ],
   "box": "soupe et nouilles séparées",
   "jj": "Réchauffe la soupe et verse sur les nouilles."
+ },
+ {
+  "id": "x3_pappa_pomodoro",
+  "n": "Pappa al pomodoro, mozzarella et parmesan",
+  "s": "Pappa al pomodoro",
+  "d": "Soupe épaisse de tomates et de pain rassis, à l'huile d'olive et au basilic.",
+  "o": "it",
+  "p": "veg",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "m": [
+   460,
+   22,
+   40,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "oignon": 1,
+   "ail": 2,
+   "huile": 3,
+   "tomates": 2,
+   "bouillon": 1,
+   "pain": 6,
+   "basilic": 1,
+   "mozzarella": 250,
+   "parmesan": 40
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon} et 2 gousses d'ail. Coupe {pain} en cubes."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon et l'ail 5 min dans {huile} d'huile d'olive.",
+     "Ajoute {tomates} de tomates pelées, {bouillon} et 50 cl d'eau. Laisse mijoter 15 min.",
+     "Ajoute le pain et cuis encore 5 min en remuant : la soupe doit devenir épaisse. Hors du feu, ajoute la moitié du basilic ({basilic})."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe doucement avec un peu d'eau si elle a trop épaissi. Sers avec {mozzarella} de mozzarella déchirée, {parmesan} de parmesan et le reste du basilic."
+ },
+ {
+  "id": "x3_soupe_froide_choufleur_gingembre",
+  "n": "Soupe froide concombre-chou-fleur au gingembre, œufs durs et pois chiches dorés",
+  "s": "Soupe froide chou-fleur-gingembre",
+  "d": "Soupe fraîche et piquante mixée au skyr, sans réchauffer.",
+  "o": "in",
+  "p": "veg",
+  "fridge": 2,
+  "freeze": false,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   510,
+   30,
+   58,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "choufleur": 250,
+   "concombre": 1,
+   "gingembre": 1,
+   "skyr": 300,
+   "citron": 1,
+   "oeufs": 4,
+   "poischiches": 2,
+   "huile": 1,
+   "cumin": 1,
+   "pain": 8
+  },
+  "prepMin": 4,
+  "prep": [
+   "Détaille {choufleur} de chou-fleur en petits bouquets. Coupe {concombre} en morceaux. Épluche {gingembre}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 3,
+    "a": [
+     "Plonge le chou-fleur 3 min dans l'eau bouillante, puis passe-le sous l'eau froide."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 9,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 9 min, refroidis et écale-les."
+    ]
+   },
+   {
+    "mode": "blender",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Au blender : chou-fleur, concombre, gingembre, {skyr} de skyr, le jus de {citron} et 15 cl d'eau froide. Sale, mixe finement et réserve au frais."
+    ]
+   }
+  ],
+  "box": "1 bouteille par soir, œufs à part",
+  "jj": "Fais dorer {poischiches} de pois chiches égouttés 5 min à la poêle avec {huile} d'huile et {cumin} de cumin. Sers la soupe bien froide avec les œufs coupés, les pois chiches et {pain}."
+ },
+ {
+  "id": "x3_veloute_tomate_chips_parmesan",
+  "n": "Velouté de tomates aux haricots blancs, chips de parmesan à l'origan",
+  "s": "Velouté tomate-parmesan",
+  "d": "Velouté de tomates épaissi aux haricots blancs, avec des chips de parmesan croustillantes à l'origan.",
+  "o": "it",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   400,
+   21,
+   46,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "oignon": 1,
+   "ail": 1,
+   "huile": 1,
+   "tomates": 2,
+   "haricotsblancs": 1,
+   "bouillon": 1,
+   "parmesan": 100,
+   "origan": 1,
+   "pain": 8
+  },
+  "prepMin": 5,
+  "prep": [
+   "Émince {oignon} et {ail} d'ail. Égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon et l'ail 5 min dans {huile} d'huile. Ajoute {tomates} de tomates, les haricots et {bouillon} avec 60 cl d'eau. Mijote 20 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 2,
+    "passive": 0,
+    "a": [
+     "Mixe jusqu'à obtenir un velouté lisse, rectifie l'assaisonnement."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 4,
+    "passive": 7,
+    "wait": false,
+    "a": [
+     "Chips : mélange {parmesan} de parmesan râpé et {origan} d'origan. Forme 12 petits tas espacés sur du papier cuisson, enfourne 6 à 7 min à 190 °C. Laisse durcir sur la plaque."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir ; chips dans une boîte hermétique",
+  "jj": "Réchauffe, pose les chips de parmesan sur le velouté et sers avec {pain}."
+ },
+ {
+  "id": "x3_soupe_oignon_gratinee",
+  "n": "Soupe à l'oignon gratinée, croûtons à l'emmental et œuf poché",
+  "s": "Soupe à l'oignon",
+  "p": "veg",
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   490,
+   22,
+   50,
+   21
+  ],
+  "diff": 2,
+  "o": "fr",
+  "d": "Oignons fondus longuement, gros croûtons gratinés et un œuf poché dans chaque bol.",
+  "ing": {
+   "oignon": 5,
+   "beurre": 30,
+   "farine": 20,
+   "bouillon": 2,
+   "baguette": 1,
+   "emmental": 120,
+   "oeufs": 4
+  },
+  "prepMin": 10,
+  "prep": [
+   "Émince finement {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 40,
+    "a": [
+     "Fais blondir les oignons dans {beurre} de beurre 25 min à feu doux, en remuant souvent.",
+     "Saupoudre de {farine} de farine, remue 1 min. Verse 1,2 L d'eau et {bouillon}, laisse frémir 15 min."
+    ]
+   }
+  ],
+  "box": "1 boîte ou bocal par soir",
+  "jj": "Réchauffe la soupe. Casse {oeufs} un à un dans la soupe frémissante et laisse-les pocher 3 min. Coupe {baguette} en tranches, couvre-les de {emmental} d'emmental et gratine 5 min à l'air fryer à 200 °C. Pose les croûtons sur les bols."
+ },
+ {
+  "id": "x3_salmorejo",
+  "n": "Salmorejo, œufs durs, jambon cru et pain grillé",
+  "s": "Salmorejo",
+  "d": "La crème froide de tomate et de pain de Cordoue, plus épaisse qu'un gaspacho.",
+  "o": "es",
+  "p": "porc",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "fridge": 3,
+  "freeze": false,
+  "diff": 1,
+  "m": [
+   540,
+   26,
+   52,
+   25
+  ],
+  "ing": {
+   "tomatefraiche": 10,
+   "baguette": 1,
+   "ail": 1,
+   "huile": 4,
+   "oeufs": 6,
+   "jambonsec": 4
+  },
+  "prepMin": 6,
+  "prep": [
+   "Coupe grossièrement {tomatefraiche}. Coupe la moitié de {baguette} en morceaux, garde l'autre moitié pour le soir."
+  ],
+  "blocks": [
+   {
+    "mode": "blender",
+    "active": 5,
+    "passive": 10,
+    "a": [
+     "Mixe les tomates très finement. Ajoute le pain et laisse-le s'imbiber 10 min.",
+     "Ajoute 1 gousse d'ail, 4 c.s. d'huile et du sel, puis mixe jusqu'à obtenir une crème épaisse et lisse. Réserve au frais."
+    ]
+   },
+   {
+    "mode": "feu",
+    "active": 2,
+    "passive": 10,
+    "wait": false,
+    "a": [
+     "Cuis {oeufs} 10 min à l'eau bouillante, refroidis-les et écale-les."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, œufs à part",
+  "jj": "Sers bien frais avec les œufs durs hachés, {jambonsec} de jambon cru en lanières et le reste du pain grillé."
+ },
+ {
+  "id": "x3_ribollita",
+  "o": "it",
+  "n": "Ribollita toscane au chou et aux haricots",
+  "s": "Ribollita",
+  "p": "veg",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "fridge": 4,
+  "freeze": true,
+  "m": [
+   470,
+   20,
+   58,
+   14
+  ],
+  "diff": 1,
+  "d": "La soupe paysanne toscane, si épaisse qu'on la sert sur du pain grillé.",
+  "ing": {
+   "haricotsblancs": 2,
+   "chou": 0.5,
+   "carotte": 2,
+   "celeri": 2,
+   "oignon": 1,
+   "ail": 3,
+   "tomates": 1,
+   "bouillon": 2,
+   "herbes": 1,
+   "huile": 3,
+   "pain": 8,
+   "parmesan": 40
+  },
+  "prepMin": 8,
+  "prep": [
+   "Émince {chou} en fines lanières. Coupe {carotte}, {celeri} et {oignon} en dés. Hache 2 gousses d'ail. Égoutte {haricotsblancs} de haricots blancs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 10,
+    "passive": 30,
+    "a": [
+     "Fais revenir l'oignon, les carottes et le céleri 8 min dans 2 c.s. d'huile, ajoute l'ail.",
+     "Ajoute le chou, {tomates} de tomates concassées, {bouillon}, 1 c.c. d'herbes et 1,2 l d'eau. Mijote 25 min.",
+     "Ajoute les haricots, écrase-en un tiers à la fourchette et cuis encore 5 min : la soupe doit être épaisse."
+    ]
+   }
+  ],
+  "box": "1 boîte par soir",
+  "jj": "Grille {pain}, frotte-les avec la dernière gousse d'ail. Pose-les au fond des bols, verse la soupe bien chaude par-dessus et finis avec {parmesan} de parmesan et 1 c.s. d'huile d'olive."
  }
 ]

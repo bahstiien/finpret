@@ -961,5 +961,309 @@
   "l": "Châtaignes cuites",
   "u": "g",
   "c": "epicerie"
+ },
+ "veau": {
+  "l": "Sauté de veau",
+  "u": "g",
+  "c": "viande"
+ },
+ "crevettes": {
+  "l": "Crevettes décortiquées crues",
+  "u": "g",
+  "c": "surgeles"
+ },
+ "calamars": {
+  "l": "Anneaux d'encornet",
+  "u": "g",
+  "c": "surgeles"
+ },
+ "moules": {
+  "l": "Moules",
+  "u": "g",
+  "c": "viande"
+ },
+ "sardines": {
+  "l": "Sardines à l'huile",
+  "u": "boite",
+  "s": " de 135 g",
+  "c": "epicerie"
+ },
+ "maquereau": {
+  "l": "Filets de maquereau frais",
+  "u": "g",
+  "c": "viande"
+ },
+ "truite": {
+  "l": "Pavés de truite",
+  "u": "g",
+  "c": "viande"
+ },
+ "poissonblanc": {
+  "l": "Filets de poisson blanc (merlu, colin, lieu)",
+  "u": "g",
+  "c": "viande"
+ },
+ "sole": {
+  "l": "Filets de sole ou de limande",
+  "u": "g",
+  "c": "viande"
+ },
+ "dorade": {
+  "l": "Dorades entières vidées",
+  "u": "pc",
+  "n": [
+   "dorade",
+   "dorades"
+  ],
+  "c": "viande"
+ },
+ "chorizo": {
+  "l": "Chorizo",
+  "u": "g",
+  "c": "viande"
+ },
+ "jambonsec": {
+  "l": "Jambon cru",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "tranche",
+   "tranches"
+  ],
+  "c": "viande"
+ },
+ "anchois": {
+  "l": "Filets d'anchois à l'huile",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "tomatescerises": {
+  "l": "Tomates cerises",
+  "u": "g",
+  "c": "legumes"
+ },
+ "echalote": {
+  "l": "Échalotes",
+  "u": "pc",
+  "n": [
+   "échalote",
+   "échalotes"
+  ],
+  "c": "legumes"
+ },
+ "cebette": {
+  "l": "Oignons nouveaux (cébettes)",
+  "u": "pc",
+  "n": [
+   "cébette",
+   "cébettes"
+  ],
+  "c": "legumes"
+ },
+ "celeri": {
+  "l": "Céleri branche",
+  "u": "pc",
+  "n": [
+   "branche de céleri",
+   "branches de céleri"
+  ],
+  "c": "legumes"
+ },
+ "coriandre": {
+  "l": "Coriandre fraîche",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "bouquet",
+   "bouquets"
+  ],
+  "c": "legumes"
+ },
+ "citronvert": {
+  "l": "Citrons verts",
+  "u": "pc",
+  "n": [
+   "citron vert",
+   "citrons verts"
+  ],
+  "half": true,
+  "c": "legumes"
+ },
+ "grenade": {
+  "l": "Grenades",
+  "u": "pc",
+  "n": [
+   "grenade",
+   "grenades"
+  ],
+  "c": "legumes"
+ },
+ "roquette": {
+  "l": "Roquette",
+  "u": "g",
+  "c": "legumes"
+ },
+ "cerises": {
+  "l": "Cerises",
+  "u": "g",
+  "c": "legumes"
+ },
+ "prunes": {
+  "l": "Prunes",
+  "u": "g",
+  "c": "legumes"
+ },
+ "figues": {
+  "l": "Figues fraîches",
+  "u": "pc",
+  "n": [
+   "figue",
+   "figues"
+  ],
+  "c": "legumes"
+ },
+ "raisin": {
+  "l": "Raisin frais",
+  "u": "g",
+  "c": "legumes"
+ },
+ "myrtilles": {
+  "l": "Myrtilles surgelées",
+  "u": "g",
+  "c": "surgeles"
+ },
+ "pistaches": {
+  "l": "Pistaches décortiquées",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "pignons": {
+  "l": "Pignons de pin",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "noisettes": {
+  "l": "Noisettes",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "amandesentieres": {
+  "l": "Amandes entières ou effilées",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "capres": {
+  "l": "Câpres",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "harissa": {
+  "l": "Harissa",
+  "u": "cs",
+  "c": "epicerie"
+ },
+ "vermicelles": {
+  "l": "Petites pâtes (orzo, vermicelles)",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "confiture": {
+  "l": "Confiture",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "patetartiner": {
+  "l": "Pâte à tartiner chocolat-noisette",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "vinblanc": {
+  "l": "Vin blanc sec",
+  "u": "ml",
+  "c": "epicerie"
+ },
+ "vinrouge": {
+  "l": "Vin rouge",
+  "u": "ml",
+  "c": "epicerie"
+ },
+ "baguette": {
+  "l": "Baguette",
+  "u": "pc",
+  "n": [
+   "baguette",
+   "baguettes"
+  ],
+  "half": true,
+  "c": "boulangerie"
+ },
+ "safran": {
+  "l": "Safran en poudre",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "dose",
+   "doses"
+  ],
+  "c": "base"
+ },
+ "piment": {
+  "l": "Piment (flocons ou poudre)",
+  "u": "cc",
+  "c": "base"
+ },
+ "curcuma": {
+  "l": "Curcuma",
+  "u": "cc",
+  "c": "base"
+ },
+ "vinaigre": {
+  "l": "Vinaigre de vin",
+  "u": "cs",
+  "c": "base"
+ },
+ "sucrevanille": {
+  "l": "Sucre vanillé",
+  "u": "pc",
+  "showN": true,
+  "n": [
+   "sachet",
+   "sachets"
+  ],
+  "c": "base"
+ },
+ "pasteque": {
+  "l": "Pastèque",
+  "u": "g",
+  "c": "legumes"
+ },
+ "avocat": {
+  "l": "Avocats",
+  "u": "pc",
+  "n": [
+   "avocat",
+   "avocats"
+  ],
+  "c": "legumes"
+ },
+ "coeursartichaut": {
+  "l": "Cœurs d'artichauts (bocal ou surgelés)",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "fauxfilet": {
+  "l": "Faux-filet ou rumsteck",
+  "u": "g",
+  "c": "viande"
+ },
+ "biscuits": {
+  "l": "Biscuits secs (petits-beurre ou sablés)",
+  "u": "g",
+  "c": "epicerie"
+ },
+ "sauge": {
+  "l": "Sauge séchée",
+  "u": "cc",
+  "c": "base"
  }
 }

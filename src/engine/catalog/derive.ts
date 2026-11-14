@@ -18,6 +18,20 @@ export const ANIMAL_PROTEIN: Record<string, Exclude<Protein, "veg">> = {
   cabillaud: "poisson",
   thon: "poisson",
   saumonfume: "poisson",
+  veau: "boeuf",
+  crevettes: "poisson",
+  calamars: "poisson",
+  moules: "poisson",
+  sardines: "poisson",
+  maquereau: "poisson",
+  truite: "poisson",
+  poissonblanc: "poisson",
+  sole: "poisson",
+  dorade: "poisson",
+  chorizo: "porc",
+  jambonsec: "porc",
+  anchois: "poisson",
+  fauxfilet: "boeuf",
 };
 
 /** Ordre de priorité quand une recette sans champ `p` mélange plusieurs protéines. */

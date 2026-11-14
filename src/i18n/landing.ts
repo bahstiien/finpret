@@ -21,7 +21,7 @@ export const landingExample = {
   sessionMinutes: 163,
   beginnerMinutes: 184,
   /** Fourchette des estimations sur 24 semaines générées pour ce foyer (4 dates × 6 graines). */
-  rangeMinutes: [123, 203],
+  rangeMinutes: [130, 205],
   boxes: 10,
   fridgeMeals: 7,
   freezerMeals: 3,
@@ -236,8 +236,8 @@ export const landingV2 = {
   catalogue: {
     label: "Le catalogue",
     items: [
-      { n: "500+", label: "recettes de repas" },
-      { n: "40+", label: "goûters" },
+      { n: "600+", label: "recettes de repas" },
+      { n: "60+", label: "goûters" },
       { n: "30+", label: "petits-déjeuners" },
     ],
     season: "De saison, toute l'année",

@@ -70,7 +70,7 @@ describe("données du catalogue", () => {
     for (const o of origins) if (o) expect(isIsoRegion(o), o).toBe(true);
   });
 
-  it("19 pays après la migration de données", () => {
-    expect(new Set(origins.filter(Boolean)).size).toBe(19);
+  it("23 pays après l'import du 14/11/2026", () => {
+    expect(new Set(origins.filter(Boolean)).size).toBe(23);
   });
 });

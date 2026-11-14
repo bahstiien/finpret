@@ -34,7 +34,7 @@ describe("prix de référence", () => {
   it("couvrent tous les ingrédients du seed, avec la base attendue", () => {
     expect(issues).toEqual([]);
     expect(Object.keys(seed!.prices.prices).sort()).toEqual(Object.keys(seed!.ingredients).sort());
-    expect(buildCatalogRows(seed!).prices).toHaveLength(152);
+    expect(buildCatalogRows(seed!).prices).toHaveLength(201);
   });
 
   it("gardent la source des seules estimations hors drive", () => {
