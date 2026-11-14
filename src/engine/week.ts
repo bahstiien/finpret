@@ -31,50 +31,59 @@ export type SlotEntry =
 export function slotMap(env: Env, w: WeekPlan): Record<string, SlotEntry> {
   const m = monthOf(w.start);
   const map: Record<string, SlotEntry> = {};
-  w.groups.forEach((g, i) =>
-    g.meals.forEach(
-      (x) => (map[`${x.day}-${x.meal}`] = { kind: "main", i, r: resolve(env, env.mainById.get(g.id)!, m) }),
-    ),
-  );
+  w.groups.forEach((g, i) => {
+    const base = env.mainById.get(g.id);
+    if (!base) return;
+    const r = resolve(env, base, m);
+    g.meals.forEach((x) => (map[`${x.day}-${x.meal}`] = { kind: "main", i, r }));
+  });
   if (w.soup) {
-    const r = resolve(env, env.soupById.get(w.soup.id)!, m);
-    w.soup.days.forEach((d) => (map[`${d}-dinner`] = { kind: "soup", r }));
+    const base = env.soupById.get(w.soup.id);
+    if (base) {
+      const r = resolve(env, base, m);
+      w.soup.days.forEach((d) => (map[`${d}-dinner`] = { kind: "soup", r }));
+    }
   }
-  w.simples.forEach((s, i) => (map[`${s.day}-dinner`] = { kind: "simple", i, r: env.simpleById.get(s.id)! }));
-  (w.bank ?? []).forEach(
-    (s, i) => (map[`${s.day}-${s.meal}`] = { kind: "bank", i, r: bankRecipe(env, s.id)! }),
-  );
+  w.simples.forEach((s, i) => {
+    const r = env.simpleById.get(s.id);
+    if (r) map[`${s.day}-dinner`] = { kind: "simple", i, r };
+  });
+  (w.bank ?? []).forEach((s, i) => {
+    const r = bankRecipe(env, s.id);
+    if (r) map[`${s.day}-${s.meal}`] = { kind: "bank", i, r };
+  });
   return map;
 }
 
 export function activeMains(env: Env, w: WeekPlan, pm: PortionModel) {
   const m = monthOf(w.start);
-  return w.groups.map((g, i) => {
+  return w.groups.flatMap((g, i) => {
+    const base = env.mainById.get(g.id);
+    if (!base) return [];
     const meals = g.meals.filter((x) => !isRemoved(w, x.day, x.meal));
     const P = meals.reduce((s, x) => s + mealPd(w, pm, x.day, x.meal), 0);
-    const base = env.mainById.get(g.id)!;
     const doubled = (w.doubles ?? []).includes(i) && base.freeze;
-    return { i, r: resolve(env, base, m), meals, allMeals: g.meals, P, doubled, cookP: doubled ? P * 2 : P };
+    return [{ i, r: resolve(env, base, m), meals, allMeals: g.meals, P, doubled, cookP: doubled ? P * 2 : P }];
   });
 }
 
 export function activeSoup(env: Env, w: WeekPlan, pm: PortionModel) {
   if (!w.soup) return null;
+  const base = env.soupById.get(w.soup.id);
+  if (!base) return null;
   const days = w.soup.days.filter((d) => !isRemoved(w, d, "dinner"));
   return {
-    r: resolve(env, env.soupById.get(w.soup.id)!, monthOf(w.start)),
+    r: resolve(env, base, monthOf(w.start)),
     days,
     P: days.reduce((s, d) => s + mealPd(w, pm, d, "dinner"), 0),
   };
 }
 
 export const activeSimples = (env: Env, w: WeekPlan) =>
-  w.simples.map((s, i) => ({
-    i,
-    day: s.day,
-    r: env.simpleById.get(s.id)!,
-    on: !isRemoved(w, s.day, "dinner"),
-  }));
+  w.simples.flatMap((s, i) => {
+    const r = env.simpleById.get(s.id);
+    return r ? [{ i, day: s.day, r, on: !isRemoved(w, s.day, "dinner") }] : [];
+  });
 
 export const activeCake = (env: Env, w: WeekPlan, cakeOn: boolean): Cake | null =>
   cakeOn && w.cake ? (env.cakeById.get(w.cake) ?? null) : null;

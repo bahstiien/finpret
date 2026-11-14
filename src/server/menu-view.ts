@@ -306,9 +306,10 @@ export function buildMenuView(
       doubled: false,
       canDouble: false,
     })),
-    ...(w.bank ?? []).map((b, i) => {
-      const r = env.mainById.get(b.id) ?? env.soupById.get(b.id)!;
-      return {
+    ...(w.bank ?? []).flatMap((b, i) => {
+      const r = env.mainById.get(b.id) ?? env.soupById.get(b.id);
+      if (!r) return [];
+      return [{
         kind: "bank" as const,
         index: i,
         recipeId: b.id,
@@ -320,7 +321,7 @@ export function buildMenuView(
         ...flags(b.id),
         doubled: false,
         canDouble: false,
-      };
+      }];
     }),
   ];
 

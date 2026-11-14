@@ -262,7 +262,10 @@ export function buildSession(input: SessionInput): Session {
     st.push(
       t.storage.fromBank(
         fromBank
-          .map((b) => t.storage.fromBankItem(mealLabel(week, b), bankRecipe(env, b.id)!.s.toLowerCase()))
+          .flatMap((b) => {
+            const recipe = bankRecipe(env, b.id);
+            return recipe ? [t.storage.fromBankItem(mealLabel(week, b), recipe.s.toLowerCase())] : [];
+          })
           .join(", "),
       ),
     );
