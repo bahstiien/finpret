@@ -1,5 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { type NextRequest, NextResponse } from "next/server";
+import { runGettingStartedMessages } from "@/server/getting-started-messages";
 import { runNotifications } from "@/server/notify";
 import { createNotifyDeps } from "@/server/notify-deps";
 import { runStreakPausedNotifications } from "@/server/streak-notify";
@@ -24,7 +25,8 @@ export async function GET(request: NextRequest) {
   const trial = await runTrialEnding(request.nextUrl.origin, now);
   const streakPaused = await runStreakPausedNotifications(request.nextUrl.origin, now);
   const renewal = await runRenewalNotices(request.nextUrl.origin, now);
-  return NextResponse.json({ ...summary, trialEnding: trial, streakPaused, renewalNotice: renewal });
+  const gettingStarted = await runGettingStartedMessages(request.nextUrl.origin, now);
+  return NextResponse.json({ ...summary, trialEnding: trial, streakPaused, renewalNotice: renewal, gettingStarted });
 }
 
 export const POST = GET;

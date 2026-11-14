@@ -6,7 +6,7 @@ import { cronSecret } from "./tests/e2e/helpers/cron";
 // Mêmes variables que l'application (DATABASE_URL de la base Postgres locale, secrets Better Auth).
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
-const PORT = 3300;
+const PORT = Number(process.env.E2E_PORT ?? 3300);
 
 // Liens magiques déposés par l'application au lieu d'être envoyés (lus par helpers/auth.ts).
 // Vidé au démarrage par le processus principal seulement : les workers rechargent aussi ce fichier.

@@ -104,6 +104,8 @@ export function MenuScreen({
   weeks,
   canteen = {},
   streak,
+  topSlot,
+  dayTip,
 }: {
   header: { date: string; greeting: string; name: string };
   view: MenuView;
@@ -124,6 +126,9 @@ export function MenuScreen({
   canteen?: Record<string, CanteenEntry[]>;
   /** Série fin prête (Progrès), si le foyer la montre. */
   streak?: Pick<StreakState, "current" | "currentWeek"> | null;
+  /** Prise en main : checklist sous l'en-tête, et bulle ancrée sur le bandeau des jours. */
+  topSlot?: React.ReactNode;
+  dayTip?: React.ReactNode;
 }) {
   const inWeek = view.todayIndex >= 1 && view.todayIndex <= 7;
   const [selected, setSelected] = useState(inWeek ? view.todayIndex : 1);
@@ -175,6 +180,8 @@ export function MenuScreen({
           </Link>
         </div>
       </div>
+
+      {topSlot}
 
       {alerts.map((a) => (
         <div
@@ -232,6 +239,8 @@ export function MenuScreen({
         </p>
       </div>
 
+      {dayTip}
+
       <WeekBoard
         view={view}
         filter={filter}
@@ -266,7 +275,7 @@ export function MenuScreen({
         />
       </div>
 
-      <section className="flex flex-col gap-4">
+      <section id="plats" className="flex scroll-mt-4 flex-col gap-4">
         <SectionHeader
           title={t.dishes}
           aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>}

@@ -112,6 +112,10 @@ async function editWeek(
   if (feature === "menu.swap") {
     await trackEvent("menu_swap", { userId: user.id, householdId: household.id, props: { week: weekId } });
   }
+  // Prise en main (SPEC_PRISE_EN_MAIN §4.1) : « Déplacer » coche l'étape « Ajuster un repas ».
+  if (feature === "menu.move") {
+    await trackEvent("menu_move", { userId: user.id, householdId: household.id, props: { week: weekId } });
+  }
   revalidatePath("/app", "layout");
   return { ok: true, data: { message: res.message } };
 }
@@ -124,6 +128,12 @@ const slotLabel = (k: string) => {
   const [d, m] = k.split("-") as [string, "lunch" | "dinner"];
   return `${fr.days[Number(d) - 1]} ${fr.meals[m].toLowerCase()}`;
 };
+
+/** Événement `menu_removed` : un repas retiré de la semaine (étape « Ajuster un repas » de la prise en main). */
+async function trackRemoved(weekId: string) {
+  const { user, household } = await requireHousehold("/app");
+  await trackEvent("menu_removed", { userId: user.id, householdId: household.id, props: { week: weekId } });
+}
 
 type SwapKind = "main" | "soup" | "simple" | "bank";
 
@@ -157,11 +167,15 @@ export async function swapDish(weekId: string, kind: SwapKind, index: number) {
 export async function toggleMealAction(weekId: string, d: number, m: "lunch" | "dinner") {
   if (!day.safeParse(d).success || !meal.safeParse(m).success)
     return { ok: false as const, error: fr.errors.generic };
-  return editWeek(weekId, ({ plan }) => {
+  let removedNow = false;
+  const res = await editWeek(weekId, ({ plan }) => {
     const next = toggleMeal(plan, d, m);
     const removed = next.removed.includes(`${d}-${m}`);
+    removedNow = removed;
     return { plan: next, message: removed ? t.removed : t.restored };
   });
+  if (res.ok && removedNow) await trackRemoved(weekId);
+  return res;
 }
 
 /** « Déplacer » : échange deux créneaux. */
@@ -338,6 +352,7 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
     return { ok: false as const, error: toUserMessage(e) };
   }
   if (on || inWeek) {
+    if (on) await trackRemoved(weekId);
     revalidatePath("/app", "layout");
     return { ok: true as const, data: { message: on ? t.slotOff(slotLabel(k)) : t.slotOn(slotLabel(k)) } };
   }

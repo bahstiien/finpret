@@ -6,7 +6,8 @@ import pg from "pg";
 import type { DB } from "../../../src/server/db.types";
 
 /** Domaine et préfixe des comptes de test : le nettoyage ne touche qu'à eux. */
-export const TEST_EMAIL_PREFIX = "e2e-";
+/** `E2E_PREFIX` isole une exécution : le nettoyage final d'une autre exécution (préfixe `e2e-`) ne supprime pas ses comptes en cours de test. */
+export const TEST_EMAIL_PREFIX = process.env.E2E_PREFIX ?? "e2e-";
 export const TEST_EMAIL_DOMAIN = "@example.com";
 
 export const dbConfigured = Boolean(process.env.DATABASE_URL);

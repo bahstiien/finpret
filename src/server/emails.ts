@@ -8,6 +8,7 @@ import {
   AssociationRejectedEmail,
   HouseholdInvitationEmail,
   ContactMessageEmail,
+  GettingStartedEmail,
   MagicLinkEmail,
   PasswordResetEmail,
   PaymentFailedEmail,
@@ -17,6 +18,8 @@ import {
   VerifyEmail,
   WelcomeEmail,
 } from "@/emails/templates";
+import type { MessageKey } from "@/engine/getting-started-messages";
+import { type MessageVars, messagesFr } from "@/i18n/getting-started-messages";
 import { type Email, sendEmail, type SendResult } from "@/server/email";
 import type { StatementInput } from "@/server/payouts";
 
@@ -110,6 +113,33 @@ export async function sendWelcome(to: string, userId: string, name: string): Pro
       {
         unsubscribeUrl: unsub,
       },
+    ),
+  );
+}
+
+/** Message de la séquence de prise en main (SPEC_PRISE_EN_MAIN §4.5) : désinscription en un clic obligatoire. */
+export async function sendGettingStartedEmail(
+  to: string,
+  userId: string,
+  key: MessageKey,
+  vars: MessageVars,
+): Promise<SendResult> {
+  const copy = messagesFr[key];
+  const unsub = unsubscribeUrl(userId);
+  const abs = (path: string) => `${appUrl()}${path}`;
+  return sendEmail(
+    await build(
+      to,
+      copy.subject,
+      createElement(GettingStartedEmail, {
+        title: copy.subject,
+        paragraphs: copy.paragraphs(vars),
+        cta: copy.cta,
+        url: abs(copy.url),
+        secondary: copy.secondary && { label: copy.secondary.label, url: abs(copy.secondary.url) },
+        unsubscribeUrl: unsub,
+      }),
+      { unsubscribeUrl: unsub },
     ),
   );
 }

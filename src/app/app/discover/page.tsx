@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { DiscoverScreen, type DiscoverRecipe, type PlannedDish } from "@/components/discover/DiscoverScreen";
+import { TipBubble } from "@/components/getting-started/TipBubble";
+import { tipForTab } from "@/server/getting-started";
+
 import { ALLERGENS } from "@/engine/catalog/allergens";
 import type { Protein } from "@/engine/catalog/schema";
 import { allIngredientKeys, breakfastId, dietTags, recipeAllergens } from "@/engine/catalog/derive";
@@ -25,7 +28,7 @@ export default async function DiscoverPage({
   searchParams: Promise<{ open?: string; plan?: string; origin?: string }>;
 }) {
   const params = await searchParams;
-  const { household } = await requireHousehold("/app/discover");
+  const { user, household } = await requireHousehold("/app/discover");
   const ctx = await loadHouseholdContext(household.id);
   const { lib: full, imported } = await loadLibrary(household.id);
   // Les recettes supprimées par le foyer ne sont plus proposées.
@@ -37,6 +40,7 @@ export default async function DiscoverPage({
     simples: full.simples.filter((r) => !retired.has(r.id)),
     cakes: full.cakes.filter((r) => !retired.has(r.id)),
   };
+  const tip = await tipForTab("discover", { userId: user.id, householdId: household.id, timezone: ctx.timezone });
   const { current, next, today } = currentAndNext(ctx);
   const week = next ?? current;
   const month = monthOf(week?.start_date ?? today);
@@ -188,6 +192,7 @@ export default async function DiscoverPage({
   return (
     <DiscoverScreen
       dishes={dishes}
+      tip={tip && <TipBubble key="tip" tip={tip} />}
       recipes={[...recipes, ...cakes]}
       breakfasts={breakfasts}
       regions={[...new Set(recipes.map((r) => r.region).filter((x): x is string => !!x))]}

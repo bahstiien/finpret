@@ -8,6 +8,7 @@ import { recordPantrySaves } from "@/server/antigaspi";
 import { withAdmin } from "@/server/db";
 import { type ActionResult } from "@/server/errors";
 import { trackEvent } from "@/server/events";
+import { type FirstRecap, isFirstSessionWeek, loadFirstRecap } from "@/server/first-session-recap";
 import { cancelPause, finishSession, planPause } from "@/server/progress";
 import { createProgressStore } from "@/server/progress-store";
 import { loadProgressView } from "@/server/progress-view";
@@ -25,9 +26,11 @@ export type SessionDoneResult = {
   frise?: FriseWeek[];
   /** Tampons obtenus et pas encore célébrés. */
   stamps?: { kind: "country" | "season"; key: string; label: string }[];
+  /** Première session du foyer : récapitulatif (SPEC_PRISE_EN_MAIN §4.4.5), sinon null. */
+  recap: FirstRecap | null;
 };
 
-const NOTHING: SessionDoneResult = { visible: false, current: 0 };
+const NOTHING: SessionDoneResult = { visible: false, current: 0, recap: null };
 
 /**
  * Fin de session : `done_at`, recettes cuisinées, tampons, série (SPEC_PROGRES §3, §4). La semaine doit appartenir au
@@ -56,11 +59,19 @@ export async function finishSessionAction(weekId: string): Promise<SessionDoneRe
     console.error("Anti-gaspi :", error instanceof Error ? error.message : error);
   }
   const view = await loadProgressView(household.id, user.id, { passport: false });
+  // Le récapitulatif de la première session ne doit jamais empêcher d'afficher la fin de session.
+  let recap: FirstRecap | null = null;
+  try {
+    if (await isFirstSessionWeek(household.id, weekId)) recap = await loadFirstRecap(household.id, weekId);
+  } catch (error) {
+    console.error("récapitulatif de première session :", error);
+  }
   return {
     visible: view.visible,
     current: view.streak.current,
     frise: view.streak.frise.slice(-8),
     stamps: view.pending.flatMap((a) => (a.kind === "streak" ? [] : [{ kind: a.kind, key: a.key, label: a.label }])),
+    recap,
   };
 }
 

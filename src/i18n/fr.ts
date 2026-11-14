@@ -1,5 +1,6 @@
 /** Textes de l'interface (CLAUDE.md, règle 5) : tutoiement, ton chaleureux et direct. */
 import { assoFr, subscriptionFr } from "./asso";
+import { gettingStartedFr } from "./getting-started";
 
 export const fr = {
   app: {
@@ -1647,4 +1648,5 @@ export const fr = {
     },
     toasts: { paused: "Pause posée. Ta série t’attend.", cancelled: "Pause annulée." },
   },
+  gettingStarted: gettingStartedFr,
 } as const;

@@ -5,7 +5,7 @@ import { createEnv, type Env } from "@/engine/env";
 import { ensureOccurrenceIds } from "@/engine/occurrences";
 import { pantryAfterWeek, totals } from "@/engine/quantities";
 import { buildSession } from "@/engine/session";
-import type { WeekPlan } from "@/engine/types";
+import type { SessionLevel, WeekPlan } from "@/engine/types";
 import { isRemoved } from "@/engine/week";
 import { addDays, mondayOf, nextMonday, todayIn } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
@@ -63,7 +63,13 @@ export function currentAndNext(ctx: HouseholdContext) {
 export type WeekSummary = { meals: number; sessionMinutes: number; shoppingItems: number };
 
 /** Récapitulatif d'une semaine : repas prévus du lundi au vendredi, durée de session, articles de courses. */
-export async function summarize(ctx: HouseholdContext, plan: WeekPlan, env?: Env): Promise<WeekSummary> {
+export async function summarize(
+  ctx: HouseholdContext,
+  plan: WeekPlan,
+  env?: Env,
+  /** Niveau de la session (première session : voir `firstSessionInfo`) ; par défaut, le réglage du foyer. */
+  level: SessionLevel = ctx.settings.session.level,
+): Promise<WeekSummary> {
   const e = env ?? (await engineEnvFor(ctx));
   const pm = portionModelFor(ctx, plan.start);
   const t = totals(e, plan, pm, ctx.settings.menu.cake.enabled);
@@ -74,7 +80,7 @@ export async function summarize(ctx: HouseholdContext, plan: WeekPlan, env?: Env
     pantry: ctx.pantry,
     totals: t,
     equipment: toEquipment(ctx.settings),
-    level: ctx.settings.session.level,
+    level,
   });
   const slots = [
     ...plan.groups.flatMap((g) => g.meals),

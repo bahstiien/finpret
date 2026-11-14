@@ -630,3 +630,49 @@ export function StatementEmail({
     </Layout>
   );
 }
+
+/**
+ * Gabarit des 6 messages de la prise en main (SPEC_PRISE_EN_MAIN §4.5) : un titre, un corps court, un bouton, et un
+ * second lien discret pour « On décale ta session ? ». Les textes viennent de `src/i18n/getting-started-messages.ts`.
+ * Non transactionnels : le lien de désinscription en un clic est obligatoire.
+ */
+export function GettingStartedEmail({
+  title,
+  paragraphs,
+  cta,
+  url,
+  secondary,
+  unsubscribeUrl,
+}: {
+  title: string;
+  paragraphs: string[];
+  cta: string;
+  /** URL absolue du bouton. */
+  url: string;
+  secondary?: { label: string; url: string };
+  unsubscribeUrl: string;
+}) {
+  return (
+    <Layout
+      preview={paragraphs[0] ?? title}
+      badge="TA PREMIÈRE SEMAINE"
+      title={title}
+      unsubscribeUrl={unsubscribeUrl}
+      reason="Tu reçois cet e-mail car tu viens de commencer avec Fin Prêt."
+    >
+      {paragraphs.map((text, i) => (
+        <Text key={i} style={p}>
+          {text}
+        </Text>
+      ))}
+      <Cta href={url}>{cta}</Cta>
+      {secondary && (
+        <Text style={small}>
+          <Link href={secondary.url} style={{ color: VIOLET, fontWeight: 700 }}>
+            {secondary.label}
+          </Link>
+        </Text>
+      )}
+    </Layout>
+  );
+}

@@ -11,6 +11,7 @@ import { can } from "@/server/entitlements";
 import { sendHouseholdInvitation } from "@/server/emails";
 import { loadOffer } from "@/server/entitlements-load";
 import { type ActionResult, toUserMessage } from "@/server/errors";
+import { trackEvent } from "@/server/events";
 import { ACTIVE_HOUSEHOLD_COOKIE, getHouseholds, requireUser, withSession } from "@/server/session";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
@@ -67,7 +68,7 @@ const inviteSchema = z.object({
 export type InviteState = { error?: string; token?: string };
 
 export async function createInvitation(_prev: InviteState, formData: FormData): Promise<InviteState> {
-  await requireUser("/settings/household");
+  const user = await requireUser("/settings/household");
   const parsed = inviteSchema.safeParse({
     householdId: formData.get("householdId"),
     role: formData.get("role"),
@@ -117,6 +118,7 @@ export async function createInvitation(_prev: InviteState, formData: FormData): 
   if (parsed.data.email) {
     await sendHouseholdInvitation(parsed.data.email, householdName ?? "ton foyer", token).catch(() => null);
   }
+  await trackEvent("invitation_sent", { userId: user.id, householdId: parsed.data.householdId });
   revalidatePath("/settings/household");
   return { token };
 }

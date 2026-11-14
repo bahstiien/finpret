@@ -38,6 +38,21 @@ export const EVENT_NAMES = [
   "adaptation_undone",
   "adaptation_conflict",
   "shopping_review_completed",
+  // Prise en main (SPEC_PRISE_EN_MAIN §6).
+  "onboarding_step_done",
+  "onboarding_dismissed",
+  "onboarding_completed",
+  "onboarding_restarted",
+  "tip_shown",
+  "tip_dismissed",
+  "tips_reset",
+  "prep_sheet_opened",
+  "help_viewed",
+  "faq_opened",
+  "onboarding_message_sent",
+  "menu_move",
+  "menu_removed",
+  "invitation_sent",
 ] as const;
 
 export type EventName = (typeof EVENT_NAMES)[number];

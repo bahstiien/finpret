@@ -51,6 +51,9 @@ Le design system est en **thème clair uniquement**. Le code garde pour l'instan
 | `Sheet` | Feuille modale (`<dialog>`) |
 | `Faq`, `Breadcrumbs`, `TextLink` | Contenu des pages publiques |
 | `Stamp` | Tampon du passeport (rond ou carré, encre `ink-fixed`) |
+| `Checklist` | Étapes qui se cochent seules, progression « N sur M », carte réductible (assemblage de `Card`, `ProgressBar`, `Pill`, `Icon`) |
+| `TipCoachmark` | `.coach` fermable de la prise en main : « Compris », croix et Échap, non modale (`Coachmark` reste la version statique) |
+| `Tile` | Carte cliquable mise en avant (Tile « Demain, ta première session ») |
 | `Skeleton` | Chargement |
 | `Icon` | Pictogrammes en ligne, décoratifs sauf `label` |
 

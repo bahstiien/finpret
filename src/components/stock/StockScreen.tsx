@@ -1,6 +1,6 @@
 "use client";
 
-import { PageHeader } from "@/components/ui/Layout";
+import { EmptyState, PageHeader } from "@/components/ui/Layout";
 import { useState } from "react";
 import { Flag } from "@/components/menu/Flag";
 import { useMenuAction } from "@/components/menu/useMenuAction";
@@ -58,7 +58,10 @@ export function StockScreen({
   ingredients,
   freezable,
   week,
+  tip,
 }: {
+  /** Bulle de la prise en main, ancrée sous le titre du garde-manger. */
+  tip?: React.ReactNode;
   canEdit: boolean;
   freezer: FreezerRow[];
   pantry: PantryRow[];
@@ -72,6 +75,7 @@ export function StockScreen({
   return (
     <>
       <PageHeader title={fr.nav.stock} />
+      {tip}
 
       {FEATURES.freezerAndLeftovers && week && canEdit && (!week.pantryDone || week.doublesToBank) && (
         <Card tone="banane" padding="cozy" className="flex flex-col gap-3">
@@ -189,7 +193,21 @@ export function StockScreen({
 
       <Card padding="cozy" className="flex flex-col gap-3" data-testid="pantry">
         <h2 className="t-2">{t.pantry}</h2>
-        {pantry.length === 0 && <p className="text-sm text-muted">{t.pantryEmpty}</p>}
+        {pantry.length === 0 && (
+          <EmptyState
+            icon="pot"
+            title={fr.gettingStarted.empty.pantry.title}
+            action={
+              canEdit ? (
+                <Button type="button" onClick={() => document.getElementById("refused-search")?.focus()}>
+                  {fr.gettingStarted.empty.pantry.action}
+                </Button>
+              ) : undefined
+            }
+          >
+            {fr.gettingStarted.empty.pantry.text}
+          </EmptyState>
+        )}
         <ul className="flex flex-col">
           {pantry.map((p) => (
             <li

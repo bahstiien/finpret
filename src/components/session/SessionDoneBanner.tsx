@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LinkButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { fr } from "@/i18n/fr";
 import { finishSessionAction, type SessionDoneResult } from "@/server/actions/progress";
@@ -38,9 +39,13 @@ export function SessionDoneBanner({ weekId }: { weekId: string }) {
       active = false;
     };
   }, [weekId, router]);
-  if (!result?.visible || result.current < 1) return null;
+  if (!result) return null;
+  const recap = result.recap && <FirstRecapCard recap={result.recap} />;
+  if (!result.visible || result.current < 1) return recap;
   const stamp = result.stamps?.[0];
   return (
+    <>
+    {recap}
     <section className="card tone-progres flex flex-col gap-4" data-testid="session-streak">
       <div className="flex flex-wrap items-center gap-4">
         <Icon name="streak" className="size-8" />
@@ -71,6 +76,28 @@ export function SessionDoneBanner({ weekId }: { weekId: string }) {
       <Link href="/app/progress?from=session" className="lnk min-h-11 content-center self-start">
         {t.title}
       </Link>
+    </section>
+    </>
+  );
+}
+
+/** Écran de fin de la première session : repas préparés, durée réelle, consigne du lundi soir. */
+function FirstRecapCard({ recap }: { recap: NonNullable<SessionDoneResult["recap"]> }) {
+  const t = fr.gettingStarted.firstSession.done;
+  return (
+    <section aria-label={t.title} className="card tone-success flex flex-col gap-2" data-testid="first-session-recap">
+      <h2 className="t-2">{t.title}</h2>
+      <p className="t-ui">
+        {t.meals(recap.meals)}
+        {recap.duration && ` · ${t.duration(recap.duration)}`}
+      </p>
+      {recap.consigne && (
+        <p>{recap.consigne.monday ? t.monday(recap.consigne.text) : t.next(recap.consigne.day, recap.consigne.text)}</p>
+      )}
+      <p>{t.closing}</p>
+      <LinkButton href="/app" className="self-start">
+        {t.cta}
+      </LinkButton>
     </section>
   );
 }

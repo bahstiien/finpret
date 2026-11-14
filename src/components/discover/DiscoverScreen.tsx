@@ -19,11 +19,12 @@ import { deleteImportedRecipe } from "@/server/actions/imports";
 import { replaceDishAction, setCakeAction, setWeekendAction } from "@/server/actions/menu";
 import type { Flag as FlagData } from "@/server/menu-view";
 import { buttonClass } from "@/components/ui/Button";
-import { PageHeader } from "@/components/ui/Layout";
+import { EmptyState, PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
 import { SuggestSheet } from "./SuggestSheet";
 
 const t = fr.discover;
+const empty = fr.gettingStarted.empty;
 
 export type DiscoverRecipe = {
   id: string;
@@ -94,8 +95,11 @@ export function DiscoverScreen({
   openId,
   openPlan,
   initialOrigin,
+  tip,
 }: {
   dishes: PlannedDish[];
+  /** Bulle de la prise en main, ancrée sous le titre. */
+  tip?: React.ReactNode;
   recipes: DiscoverRecipe[];
   breakfasts: Breakfast[];
   regions: string[];
@@ -171,6 +175,7 @@ export function DiscoverScreen({
           )}
         </div>
       </div>
+      {tip}
       <div role="tablist" aria-label={t.segments} className="seg self-start">
         {(["recipes", "breakfasts"] as const).map((s) => (
           <button
@@ -293,6 +298,32 @@ export function DiscoverScreen({
           <p className="t-small muted mono" aria-live="polite">
             {t.count(shown.length)}
           </p>
+          {list.length === 0 && (
+            <EmptyState
+              icon={favorites && !query.trim() ? "sparkle" : "search"}
+              title={(favorites && !query.trim() ? empty.discoverNoFavorite : empty.discoverNoResult).title}
+              action={
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    setRegion("");
+                    setOrigin("");
+                    setKind("");
+                    setSeasonal(false);
+                    setFavorites(false);
+                    setVegetarian(false);
+                    setShowAll(false);
+                    setMine(false);
+                  }}
+                >
+                  {(favorites && !query.trim() ? empty.discoverNoFavorite : empty.discoverNoResult).action}
+                </Button>
+              }
+            >
+              {(favorites && !query.trim() ? empty.discoverNoFavorite : empty.discoverNoResult).text}
+            </EmptyState>
+          )}
           <ul className="grid gap-3 min-[900px]:grid-cols-2" data-testid="discover-list">
             {shown.map((r) => (
               <RecipeCard

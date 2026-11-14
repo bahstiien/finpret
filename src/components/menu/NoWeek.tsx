@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { PageHeader } from "@/components/ui/Layout";
+import { EmptyState, PageHeader } from "@/components/ui/Layout";
 import { fr } from "@/i18n/fr";
 import { prepareWeekAction } from "@/server/actions/menu";
 import { useMenuAction } from "./useMenuAction";
@@ -28,19 +27,19 @@ export function NoWeek({
           </>
         }
       />
-      <Card tone="peach" className="flex flex-col gap-4">
-        <p className="t-ui">{fr.menu.noWeek}</p>
-        {canEdit && (
-          <Button
-            type="button"
-            disabled={pending}
-            onClick={() => run(() => prepareWeekAction(start))}
-            className="self-start"
-          >
-            {fr.menu.prepare}
-          </Button>
-        )}
-      </Card>
+      <EmptyState
+        icon="sparkle"
+        title={fr.gettingStarted.empty.menuNoWeek.title}
+        action={
+          canEdit ? (
+            <Button type="button" disabled={pending} onClick={() => run(() => prepareWeekAction(start))}>
+              {fr.gettingStarted.empty.menuNoWeek.action}
+            </Button>
+          ) : undefined
+        }
+      >
+        {fr.gettingStarted.empty.menuNoWeek.text}
+      </EmptyState>
     </>
   );
 }
