@@ -4,7 +4,6 @@ import {
   ConfirmDelete,
   NotificationsForm,
   ProfileNameForm,
-  SignOutOthers,
   ThemeForm,
 } from "@/components/settings/ProfileForms";
 import { type CanteenChild, CanteenForm } from "@/components/settings/CanteenForms";
@@ -21,7 +20,7 @@ import { ADMIN_SECTIONS, type SettingsSection } from "@/lib/settings-sections";
 import { leaveHousehold, switchHousehold } from "@/server/actions/households";
 import { signOut } from "@/server/actions/auth";
 import { deleteAccount, deleteHousehold } from "@/server/actions/settings";
-import { loadHouseholdContext } from "@/server/household-context";
+import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
 import { getHouseholds, getProfile, requireHousehold, withSession } from "@/server/session";
 import { buttonClass } from "@/components/ui/Button";
 
@@ -39,6 +38,8 @@ export async function generateMetadata({
 export default async function SettingsSectionPage({ params }: { params: Promise<{ section: string }> }) {
   const { section: raw } = await params;
   if (raw === "notifications") redirect("/settings/profile#notifications");
+  // L'ancienne section Données : l'export et la suppression du foyer sont dans le Profil.
+  if (raw === "data") redirect("/settings/profile");
   if (!(ADMIN_SECTIONS as readonly string[]).includes(raw)) notFound();
   const section = raw as SettingsSection;
   const { user, household } = await requireHousehold(`/settings/${section}`);
@@ -60,26 +61,26 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
       );
       return <DietForm initial={ctx.settings.diet} ingredients={data} />;
     }
-    case "menu":
-      return <MenuForm initial={ctx.settings.menu} />;
+    case "menu": {
+      // Portions par défaut de chaque créneau de la semaine en cours : de quoi ramener le budget à la portion.
+      const pm = portionModelFor(ctx, mondayOf(todayIn(ctx.timezone)));
+      const portions = Object.fromEntries(
+        [1, 2, 3, 4, 5].flatMap((d) => (["lunch", "dinner"] as const).map((m) => [`${d}-${m}`, pm.base(d, m)])),
+      );
+      return <MenuForm initial={ctx.settings.menu} portions={portions} />;
+    }
     case "session":
       return <SessionForm initial={ctx.settings.session} equipment={ctx.settings.equipment} />;
     case "shopping": {
-      const { aisles, base } = await withSession(async (db) => ({
-        aisles: await db
-          .selectFrom("aisles")
-          .select(["key", "label"])
-          .where("key", "!=", "base")
-          .orderBy("position")
-          .execute(),
-        base: await db
+      const base = await withSession((db) =>
+        db
           .selectFrom("ingredients")
           .select(["key", "label"])
           .where("aisle", "=", "base")
           .orderBy("label")
           .execute(),
-      }));
-      return <ShoppingForm initial={ctx.settings.shopping} aisles={aisles} baseIngredients={base} />;
+      );
+      return <ShoppingForm initial={ctx.settings.shopping} baseIngredients={base} />;
     }
     case "canteen": {
       const today = todayIn(ctx.timezone);
@@ -133,41 +134,6 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
       });
       return <CanteenForm initial={ctx.settings.canteen} kids={children} canEdit />;
     }
-    case "data":
-      return (
-        <>
-          <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.data.export}</h2>
-            <p className="text-sm text-muted">{t.data.exportHint}</p>
-            <a href="/settings/data/export" download className={buttonClass({ className: "self-start" })}>
-              {t.data.export}
-            </a>
-          </Card>
-          <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.data.history}</h2>
-            {ctx.weeks.length ? (
-              <ul className="flex flex-col" data-testid="weeks-history">
-                {ctx.weeks.map((w) => (
-                  <li key={w.id} className="row mono min-h-11">
-                    {fr.menu.weekOf(formatShort(w.start_date))}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-muted">{t.data.noHistory}</p>
-            )}
-          </Card>
-          <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.danger}</h2>
-            <h3 className="t-3">{t.data.deleteHousehold}</h3>
-            <ConfirmDelete
-              action={deleteHousehold}
-              label={t.data.deleteHousehold}
-              hint={t.data.deleteHouseholdHint(ctx.name)}
-            />
-          </Card>
-        </>
-      );
     case "profile": {
       const [profile, households, userSettings] = await Promise.all([
         getProfile(),
@@ -218,18 +184,20 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
               initial={notifications.success ? notifications.data : notificationsSchema.parse({})}
             />
           </Card>
-          <Card className="flex flex-col gap-3">
-            <h2 className="t-2">{t.profile.connection}</h2>
-            <p className="text-sm text-muted">{t.profile.devicesHint}</p>
-            <div className="flex flex-wrap items-start gap-3">
-              <SignOutOthers />
-              <form action={signOut}>
-                <Button type="submit" variant="outline">
-                  {fr.appShell.signOut}
-                </Button>
-              </form>
-            </div>
-          </Card>
+          <form action={signOut} className="min-[900px]:hidden">
+            <Button type="submit" variant="outline" className="btn--block">
+              {fr.appShell.signOut}
+            </Button>
+          </form>
+          {household.role === "admin" && (
+            <Card className="flex flex-col gap-3" id="export">
+              <h2 className="t-2">{t.data.export}</h2>
+              <p className="text-sm text-muted">{t.data.exportHint}</p>
+              <a href="/settings/data/export" download className={buttonClass({ className: "self-start" })}>
+                {t.data.export}
+              </a>
+            </Card>
+          )}
           <Card className="flex flex-col gap-4">
             <h2 className="t-2">{t.danger}</h2>
             <ActionForm
@@ -245,6 +213,16 @@ export default async function SettingsSectionPage({ params }: { params: Promise<
               label={t.data.deleteAccount}
               hint={t.data.deleteAccountHint}
             />
+            {household.role === "admin" && (
+              <>
+                <h3 className="t-3">{t.data.deleteHousehold}</h3>
+                <ConfirmDelete
+                  action={deleteHousehold}
+                  label={t.data.deleteHousehold}
+                  hint={t.data.deleteHouseholdHint(ctx.name)}
+                />
+              </>
+            )}
           </Card>
         </>
       );

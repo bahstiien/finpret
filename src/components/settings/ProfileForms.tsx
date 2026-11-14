@@ -10,7 +10,7 @@ import type { ActionResult } from "@/server/errors";
 import { FEATURES } from "@/lib/features";
 import { recordProgressEvent } from "@/server/actions/progress";
 import { removePushSubscription, savePushSubscription, sendTestNotification } from "@/server/actions/push";
-import { saveNotifications, saveProfile, signOutOtherDevices } from "@/server/actions/settings";
+import { saveNotifications, saveProfile } from "@/server/actions/settings";
 import { SaveStatus, useAutosave } from "./Autosave";
 
 const t = fr.settings.profile;
@@ -215,31 +215,6 @@ export function ThemeForm() {
         ))}
       </div>
     </fieldset>
-  );
-}
-
-export function SignOutOthers() {
-  const [pending, startTransition] = useTransition();
-  const [message, setMessage] = useState<{ tone: "success" | "error"; text: string }>();
-  return (
-    <div className="flex flex-col gap-2">
-      <Button
-        type="button"
-        variant="outline"
-        disabled={pending}
-        onClick={() =>
-          startTransition(async () => {
-            const res = await signOutOtherDevices();
-            setMessage(
-              res.ok ? { tone: "success", text: t.signedOutOthers } : { tone: "error", text: res.error },
-            );
-          })
-        }
-      >
-        {t.signOutOthers}
-      </Button>
-      {message && <FormMessage tone={message.tone}>{message.text}</FormMessage>}
-    </div>
   );
 }
 

@@ -7,7 +7,6 @@ export const ADMIN_SECTIONS = [
   "shopping",
   "canteen",
   "subscription",
-  "data",
   "profile",
 ] as const;
 export type SettingsSection = (typeof ADMIN_SECTIONS)[number];
@@ -15,7 +14,7 @@ export const MEMBER_SECTIONS: readonly SettingsSection[] = ["profile"];
 
 /** Regroupement affiché dans la navigation et l'accueil des réglages : le foyer, la cuisine, le compte. */
 export const SETTINGS_GROUPS = [
-  { key: "household", sections: ["household", "subscription", "data"] },
+  { key: "household", sections: ["household", "subscription"] },
   { key: "kitchen", sections: ["diet", "menu", "shopping", "session", "canteen"] },
   { key: "account", sections: ["profile"] },
 ] as const satisfies readonly { key: string; sections: readonly SettingsSection[] }[];

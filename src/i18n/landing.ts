@@ -298,7 +298,7 @@ export const landingV2 = {
       {
         tone: "progres",
         icon: "sparkle",
-        title: "Nos progrès",
+        title: "Progrès",
         text: "Une série de semaines, un passeport de recettes sur la carte du monde.",
       },
       {

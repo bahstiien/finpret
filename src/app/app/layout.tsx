@@ -47,6 +47,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       >
         <AppFrame
           shoppingLeft={count ?? 0}
+          userName={ctx.members.find((m) => m.userId === user.id)?.name || user.email}
           top={<TimerBar />}
           overlay={celebrations ? <CelebrationHost data={celebrations} /> : null}
         >

@@ -8,7 +8,7 @@ import { currentAndNext } from "@/server/weeks";
 import { PageHeader } from "@/components/ui/Layout";
 
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
-  const { household } = await requireHousehold("/settings");
+  const { user, household } = await requireHousehold("/settings");
   const ctx = await loadHouseholdContext(household.id);
   const { current, next } = currentAndNext(ctx);
   const week = next ?? current;
@@ -25,7 +25,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
     left = Number(n);
   }
   return (
-    <AppFrame shoppingLeft={left}>
+    <AppFrame shoppingLeft={left} userName={ctx.members.find((m) => m.userId === user.id)?.name || user.email}>
       <PageHeader title={fr.settings.title} />
       <SettingsShell groups={groupsFor(household.role)}>{children}</SettingsShell>
     </AppFrame>

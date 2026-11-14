@@ -101,10 +101,8 @@ export default async function ShoppingPage() {
 
   const tip = await tipForTab("shopping", { userId: user.id, householdId: household.id, timezone: ctx.timezone });
   const allAisles = aisles.filter((a) => a.key !== "base");
-  const order = [
-    ...ctx.settings.shopping.aisleOrder.filter((k) => allAisles.some((a) => a.key === k)),
-    ...allAisles.map((a) => a.key).filter((k) => !ctx.settings.shopping.aisleOrder.includes(k)),
-  ];
+  // Rayons dans l'ordre du catalogue (plus de réglage « Ordre des rayons »).
+  const order = allAisles.map((a) => a.key);
   const labels = Object.fromEntries(
     items
       .filter((i) => i.ingredient_key)
