@@ -1,41 +1,59 @@
 ---
-version: alpha
-name: Fin Prêt
-description: Application web progressive de planification de repas et de batch cooking pour plusieurs foyers.
+version: "2.1"
+name: Fin Prêt Néo
+description: Application web progressive de planification de repas et de cuisine en lots pour les familles, en néo-brutalisme.
 colors:
-  bg: "#f4f3f8"
+  bg: "#fff8e7"
   surface: "#ffffff"
+  chip: "#fff6d6"
   ink: "#17151f"
-  muted: "#6b6878"
-  line: "#eceaf2"
-  violet: "#7a5af8"
-  banana: "#ffd23f"
-  green: "#1fa85a"
-  blue-soft: "#dcebff"
-  blue-ink: "#1f4e8c"
-  pink-soft: "#ffe6ec"
-  pink-ink: "#a3264a"
-  yellow-soft: "#fff6d6"
-  peach: "#ffe3d6"
-  peach-ink: "#a33a12"
-  chip: "#f1f0f5"
-  violet-soft: "#ece7ff"
-  violet-strong: "#4b2fc9"
+  muted: "#4a4658"
+  line: "#17151f"
   nav: "#17151f"
-  on-nav: "#ffffff"
-  green-soft: "#e2f5e6"
-  green-ink: "#17633a"
+  on-nav: "#fff8e7"
+  violet: "#7a5af8"
+  violet-strong: "#4b2fc9"
+  on-violet: "#ffffff"
+  banane: "#ffd23f"
+  on-banane: "#17151f"
+  green: "#1fa85a"
   green-strong: "#17803f"
+  blue: "#4d96ff"
+  pink: "#ff6b9d"
+  peach: "#ff8c42"
+  yellow: "#fff6d6"
   cream-ink: "#7a5a00"
+  on-fill: "#17151f"
+  ink-fixed: "#17151f"
+  focus: "#7a5af8"
+  kit-band: "#7a5af8"
+  on-kit-band: "#ffffff"
+  kit-offer: "#ffd23f"
+  on-kit-offer: "#17151f"
+  kit-annot: "#e5007e"
+  on-kit-annot: "#ffffff"
 typography:
   display:
-    fontFamily: Manrope
+    fontFamily: Archivo Black
+    textTransform: uppercase
   sans:
-    fontFamily: Manrope
+    fontFamily: Space Grotesk
+  mono:
+    fontFamily: Space Mono
 rounded:
-  card: 1.5rem
-  sheet: 2rem
+  r0: 0px
+  r1: 2px
+  r2: 4px
+  card: 4px
+  sheet: 4px
   pill: 9999px
+borders:
+  mobile: 2px
+  desktop: 3px
+shadows:
+  sm: 2px 2px 0 #17151f
+  base: 3px 3px 0 #17151f
+  lg: 5px 5px 0 #17151f
 spacing:
   "0": 0px
   "2": 2px
@@ -54,97 +72,147 @@ spacing:
 
 ## Overview
 
-Fin Prêt aide des foyers à planifier leurs repas et à cuisiner en lots. L'interface vise la clarté et la douceur : un titre et une action principale par écran, des teintes douces, des formes arrondies, un retour immédiat au toucher. Le texte est en français, au tutoiement, chaleureux et direct ; les pages destinées aux bureaux d'association vouvoient.
+Fin Prêt aide les familles à planifier les repas de la semaine et à cuisiner en lots le dimanche. Le design system s'appelle « Fin Prêt Néo » (v2.1). Il est **néo-brutaliste** : aplats francs, bordures encre épaisses, ombres dures décalées, coins quasi droits, rien de flou ni de dégradé. L'énergie vient du contraste et de la couleur. Les effets n'y sont pour rien.
 
-Les règles du skill `landing-page-design` priment sur SPEC §11 et sur les maquettes pour la typographie, les espacements, les rayons, les icônes et le mouvement.
+La clarté passe avant le style : un titre et une seule action principale par écran. Le texte est en français, au tutoiement, chaleureux, direct et jamais culpabilisant. Les pages destinées aux bureaux d'association vouvoient.
+
+Sources de référence :
+- `design-system/tokens.json` : seule source des jetons. `pnpm tokens` génère `src/styles/tokens.css`, contrôlé en CI par `pnpm tokens:check`. On ne modifie jamais `tokens.css` à la main.
+- `src/styles/neo.css` : classes des primitives (`.btn`, `.card`, `.pill`, `.seg`, `.stamp`, `.faq`…).
+- `docs/DESIGN_SYSTEM.md` : catalogue des composants.
+- `/design-system` : galerie vivante, disponible en développement uniquement.
+- Maquette d'origine : projet « Fin Prêt Néo » dans Claude Design (palette A).
+
+Les règles de ce fichier priment sur celles du skill `landing-page-design` dès qu'elles se contredisent : rayons, ombres, polices, mouvement.
 
 ## Colors
 
-Les couleurs viennent de `design-system/tokens.json`, jamais écrites en dur dans les composants. `bg` est le fond de page, `surface` le fond des cartes, `ink` le texte, `muted` le texte secondaire, `line` les séparations discrètes.
+Toutes les couleurs viennent des jetons, jamais écrites en dur.
 
-`banana` porte l'action principale ; le texte posé dessus reste sombre dans les deux thèmes. `violet` porte le focus et les actions secondaires (`violet-soft` en fond, `violet-strong` en texte). `green` signale le succès ou la progression.
+- **Neutres.** `bg` (crème) est le fond de page. `surface` (blanc) est le fond des cartes, `chip` celui des puces et des zones calmes. `ink` porte le texte, `muted` le texte secondaire. `line` (encre) sert aux bordures et aux ombres. `nav` et `on-nav` forment la barre de navigation sombre.
+- **Deux signatures.**
+  - `banane` = action principale (`cta`). **Une seule action banane par écran.**
+  - `violet` = sélection et mise en avant (`sel`). Le texte blanc (`on-violet`) n'y est admis qu'en 16 px gras minimum.
+- **Un domaine, un aplat.** Le jeton `role` de `tokens.json` les associe ainsi :
 
-Les teintes d'état ou de catégorie vont par paires : un fond `-soft` (ou `peach`) et un texte `-ink` de la même famille. `nav` et `on-nav` forment la barre de navigation, sombre dans les deux thèmes.
+  | Domaine | Aplat |
+  |---|---|
+  | `menu` | violet |
+  | `courses` | vert |
+  | `stock` | bleu |
+  | `progres` | banane |
+  | `session` | pêche |
+  | `alerte` | rose |
 
-Les fonds sont plats : jamais de dégradé en arrière-plan. Le seul dégradé admis est celui du texte du titre de la page d'accueil des associations.
+- **Statuts.** `info` (bleu), `success` (vert), `warning` (banane) et `danger` (rose). Ils vont toujours avec une icône et un texte : l'état ne se lit jamais par la couleur seule.
+- **Texte sur aplat.** Encre (`on-fill`) sur vert, bleu, rose, pêche, banane et jaune. Blanc uniquement sur violet et sur `nav`. Jamais de blanc sur vert (contraste 3,09:1).
+- **Support imprimé** (kit des associations) :
+  - `kit-band` / `on-kit-band` pour le bandeau ;
+  - `kit-offer` / `on-kit-offer` pour l'encart offre ;
+  - `kit-annot` pour les repères de maquette, qui ne s'impriment jamais.
+
+  Un document imprimé doit rester lisible en noir et blanc.
+- Aucun dégradé, aucune transparence, aucun fond flouté.
 
 ## Themes
 
-Le thème suit le système ; l'attribut `data-theme` sur `<html>` impose un choix manuel, mémorisé sur l'appareil. Les valeurs du frontmatter sont celles du thème clair. Sans valeur ci-dessous, le token garde sa valeur claire en thème sombre.
-
-Les fonds sombres neutres (`bg`, `surface`, `chip`, `line`, `nav`) se limitent à #000000, #181818, #1F1F1F, #272727, #313131 et #131209. Les teintes douces (`blue-soft`, `pink-soft`, `yellow-soft`, `peach`, `green-soft`, `violet-soft`) restent des surfaces colorées sémantiques en sombre : c'est l'exception à cette liste.
-
-| Token | Sombre |
-|---|---|
-| bg | #181818 |
-| surface | #1f1f1f |
-| ink | #f3f1f8 |
-| muted | #a6a2b4 |
-| line | #313131 |
-| blue-soft | #1d2b44 |
-| blue-ink | #a9c8f5 |
-| pink-soft | #3a1d29 |
-| pink-ink | #f5a3bb |
-| yellow-soft | #352d14 |
-| peach | #3d2419 |
-| peach-ink | #f5a582 |
-| chip | #272727 |
-| violet-soft | #2a2345 |
-| violet-strong | #c4b5fd |
-| nav | #000000 |
-| on-nav | #f3f1f8 |
-| green-soft | #183324 |
-| green-ink | #86efac |
-| green-strong | #4ade80 |
-| cream-ink | #ffd86b |
+Le design system est en **thème clair uniquement**. `tokens.json` garde encore un bloc `color.dark` hérité de l'ancien design. Le code ne l'utilise pas : il reste à retirer ou à redessiner. Un nouveau jeton n'a pas de valeur sombre.
 
 ## Typography
 
-Une seule famille, Manrope, pour les titres (`display`) comme pour le texte (`sans`) ; aucune autre police, aucun italique. Les graisses vont de la normale au gras : jamais plus lourd. Les tailles sont uniquement celles de l'échelle Tailwind, avec leur interligne ; une taille qui n'en est pas une se ramène au palier inférieur. Les chiffres sont à largeur fixe pour que les quantités et les durées s'alignent.
+Trois familles, pas d'italique.
 
-La hiérarchie descend du titre de page au titre de section, de carte, au texte puis au texte secondaire. Les titres de page passent par `PageHeader`, jamais par un titre stylé à la main. Les titres se répartissent en lignes équilibrées et le texte courant évite le mot isolé en fin de paragraphe. Les boutons principaux sont en `text-base` semi-gras, les petits boutons d'en-tête en `text-sm`.
+- **Archivo Black** (`font-display`) : les titres, **toujours en capitales**.
+- **Space Grotesk** (`font-body` / `font-sans`) : le texte et l'interface.
+- **Space Mono** (`font-mono`) : tous les nombres, dates, quantités, prix, minuteurs, codes et métadonnées.
+
+Les styles de texte passent par des classes (taille mobile → desktop) :
+
+| Classe | Taille |
+|---|---|
+| `t-hero` | 52 → 112 (un seul par écran) |
+| `t-1` | 34 → 56 |
+| `t-2` | 24 → 32 |
+| `t-3` | 18 → 20 |
+| `t-body` | 16 |
+| `t-ui` | 16 gras |
+| `t-small` | 14 |
+| `t-label` | 13, capitales |
+| `t-kicker` | 12, capitales, mono |
+| `num-l` | 36 → 48 |
+| `num-xl` | 64 → 120 |
+
+Dans l'app, le corps de texte ne descend jamais sous 14 px. Les autres tailles suivent uniquement l'échelle Tailwind ; une valeur hors échelle se ramène au palier inférieur. Les titres de page passent par `PageHeader`, jamais par un titre stylé à la main.
 
 ## Layout
 
-Les marges, espacements et gouttières n'utilisent que les paliers de `spacing` ; une valeur intermédiaire se ramène au palier inférieur. Un bouton principal a 8 px de marge verticale et 12 px de marge horizontale, avec une hauteur minimale de 44 px pour le toucher.
+Les marges, espacements et gouttières n'utilisent que les paliers de `spacing`. La marge d'écran est de 16 px sur mobile et de 40 px sur desktop. Le seuil desktop est 900 px : les bordures et les ombres y grossissent.
 
-Sur les pages publiques, le titre et le sous-titre du hero ne dépassent pas 680 px de large, et le saut de ligne tombe là où la phrase respire.
+Cibles tactiles :
+- `--touch-min` 44 px : toute cible ;
+- `--touch-main` 52 px : boutons md et champs ;
+- `--touch-session` 60 px : bouton lg et navigation de la session guidée.
+
+Les éléments d'une même grille peuvent se coller sur des filets encre (`Bento`) au lieu d'être espacés.
 
 ## Elevation & Depth
 
-La profondeur reste rare : seules la barre flottante mobile et les feuilles modales portent l'ombre `shadow-float`. Partout ailleurs, la hiérarchie vient du contraste entre `bg` et `surface`, pas de bordures dures ; une bordure entoure toute la forme ou n'existe pas.
+La profondeur vient d'**ombres dures** : décalage x = y, flou 0, couleur `line`.
 
-La barre de navigation des pages publiques flotte au-dessus du contenu, compacte et centrée, sur une surface translucide floutée.
+| Ombre | Mobile | Desktop |
+|---|---|---|
+| `--sh-sm` | 2 px | 3 px |
+| `--sh` | 3 px | 6 px |
+| `--sh-lg` | 5 px | 9 px |
+
+Variantes colorées : `--sh-violet` et `--sh-banane`. Aucune ombre floue, aucune élévation par transparence.
 
 ## Shapes
 
-Les rayons suivent l'échelle Tailwind. Les cartes utilisent `card`, les feuilles modales `sheet`, les étiquettes `pill`, les boutons le rayon `xl`, les champs et lignes de liste le rayon `2xl`.
-
-Une forme posée dans une autre, à moins de 32 px du bord, prend pour rayon celui de l'extérieur moins la marge ; si le résultat ne dépasse pas 2 px, elle reste à angle droit.
+- **Bordure encre partout.** Cartes, boutons, champs, images et feuilles ont une bordure `--bw` : 2 px sur mobile, 3 px sur desktop. Elle entoure toute la forme, jamais un seul côté. Les pointillés sont réservés aux états désactivés, aux emplacements vides et aux squelettes.
+- **Rayons quasi nuls.** `--r0` 0, `--r1` 2 px (défaut) et `--r2` 4 px (maximum). Les cartes et les feuilles prennent 4 px au plus. La pilule (`--r-pill`) est réservée à `Pill` / `Badge`.
+- **Inclinaisons.** Les jetons `--tilt-l`, `--tilt-1`, `--tilt-r`, `--tilt-2` et `--tilt-sticker` (−3° à 2°) donnent le côté « collé à la main ». Pas plus d'une ou deux pièces inclinées par écran (sticker, tampon, badge d'offre), jamais un texte long.
 
 ## Components
 
-Les composants vivent dans `src/components/ui/` et s'importent depuis `@/components/ui`. Un nouveau composant y est ajouté, exporté par l'index et présenté dans la galerie `/design-system`.
+Les composants vivent dans `src/components/ui/` et s'importent depuis `@/components/ui`. Un nouveau composant y est ajouté, exporté par `index.ts` et présenté dans la galerie `/design-system`. Le catalogue complet est dans `docs/DESIGN_SYSTEM.md`.
 
-Les actions passent par `Button`, `LinkButton` ou `buttonClass()` pour un lien, avec une seule action principale (`primary`) par écran ; les actions secondaires sont plus discrètes. Les boutons-icônes exigent un libellé ARIA. Les icônes passent par `Icon` et viennent toutes de Phosphor, en un seul trait.
+- **Actions** : `Button`, `LinkButton` ou `buttonClass()` pour un lien.
+  - Variantes : `primary` (banane), `secondary` (violet), `outline`, `dark`, `ghost`, `danger`.
+  - Tailles : sm 44, md 52, lg 60.
+  - Une seule `primary` par écran. `IconButton` exige un `label`.
+- **Surfaces** : `Card` et sa `tone` (surface, violet, dark, yellow, blue, pink, peach, green, banane), `Sheet` pour les feuilles modales.
+- **Étiquettes** : `Pill` / `Badge` pour les états, `Sticker` (incliné, ombre dure) pour les nouveautés et les offres, `Stamp` pour le tampon du passeport, en encre `ink-fixed`.
+- **Messages** : `Callout`, `EmptyState`, `Toast` (`useToast()`), `Coachmark` (une seule bulle d'aide à la fois), `Skeleton`.
+- **Icônes** : `Icon`, en trait simple. Pas d'icônes Material ni d'emoji ; les origines sont des drapeaux dessinés.
+- **Focus** : visible et plein, 3 px en `--focus` décalé de 3 px.
 
-Les surfaces passent par `Card` et sa teinte, les messages en ligne par `Callout` (annoncé aux lecteurs d'écran), les écrans vides par `EmptyState`, le chargement par `Skeleton`, les confirmations par `useToast()`.
+Pas encore portés depuis la maquette : `OfferBox` et `MealFrieze`, prévus pour le kit imprimé des associations.
 
-Le focus visible est violet ; sur un aplat violet, marqué `on-violet`, il passe à `banana`.
+## Motion
 
-Les pages publiques partagent `PublicHeader` (lien d'évitement et barre flottante `PublicNav`, dont la page courante porte `aria-current`) et `PublicFooter`. Une section entre dans l'écran avec `Reveal`, une phrase de fond s'allume mot à mot avec `TaglineReveal`, et `not-found.tsx` porte la page 404 de marque.
+Le mouvement est **mécanique**, sans fondu ni easing doux. La courbe est `--ease-base` (`steps(2)`).
 
-Tout mouvement suit la courbe `ease-base`, jamais celle du navigateur ; seuls `transform` et `opacity` s'animent, et les durées viennent de `design-system/tokens.json`. Avec `prefers-reduced-motion`, le déplacement devient un simple fondu.
+- Survol : l'élément s'enfonce de 2 px et son ombre raccourcit.
+- Clic : il s'écrase sur son ombre.
+- Nouveau tampon : il s'abat par paliers.
+
+Durées : `--t-fast` 90 ms pour le survol et le clic, `--t-stamp` 360 ms pour le tampon. Seuls `transform` et `opacity` s'animent. Avec `prefers-reduced-motion`, tout s'arrête.
 
 ## Do's and Don'ts
 
-- Ne jamais écrire une couleur en dur : utiliser les tokens. Seule exception : le texte sombre sur fond `banana`.
+- Ne jamais écrire une couleur en dur : déclarer le jeton dans `design-system/tokens.json`, puis lancer `pnpm tokens`.
+- Ne pas mettre plus d'une action banane par écran.
+- Ne pas poser de texte blanc sur vert, ni de texte blanc de moins de 16 px gras sur violet.
+- Ne pas utiliser de dégradé, d'ombre floue, de transparence ou de flou d'arrière-plan.
+- Ne pas dépasser 4 px de rayon, sauf la pilule de `Pill`.
+- Ne pas poser de bordure sur un seul côté d'une forme.
+- Ne pas utiliser d'autre police qu'Archivo Black, Space Grotesk et Space Mono, ni d'italique, ni de titre en minuscules.
+- Ne pas écrire de nombre, de prix ou de durée hors de Space Mono.
+- Ne pas incliner plus de deux pièces par écran, ni un texte long.
 - Ne pas écrire de `<h1 className="text-4xl …">` à la main : utiliser `PageHeader`.
 - Ne pas fabriquer de bouton à la main : utiliser `Button`, `LinkButton` ou `buttonClass()`.
-- Ne pas déclarer de couleur ailleurs que dans `design-system/tokens.json`, puis régénérer avec `pnpm tokens`.
-- Ne pas ajouter de texte d'interface hors de `src/i18n/fr.ts`.
-- Ne pas utiliser de taille, de rayon ou de marge arbitraire hors de l'échelle Tailwind et du tableau `spacing`.
-- Ne pas utiliser de graisse 800 ou 900, ni d'italique.
-- Ne pas utiliser d'icônes Material.
-- Ne pas poser de dégradé en arrière-plan ni de bordure sur un seul côté d'une carte.
-- Respecter `prefers-reduced-motion` : toute animation s'arrête ou devient un fondu.
+- Ne pas utiliser de taille, de marge ou de rayon hors des échelles.
+- Ne pas ajouter de texte d'interface hors de `src/i18n/fr.ts`. Mettre une espace insécable avant `: ; ? !` et un verbe d'action sur les boutons.
+- Ne pas utiliser d'emoji ni d'icônes Material, et ne jamais représenter d'enfant.
+- Respecter `prefers-reduced-motion`.
