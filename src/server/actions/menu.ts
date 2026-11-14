@@ -256,7 +256,8 @@ export async function setWeekendAction(weekId: string, key: string, recipeId: st
   return editWeek(weekId, ({ env, plan }) => {
     if (
       recipeId &&
-      !(env.mainById.has(recipeId) || env.soupById.has(recipeId) || env.simpleById.has(recipeId))
+      (!env.allowed.has(recipeId) ||
+        !(env.mainById.has(recipeId) || env.soupById.has(recipeId) || env.simpleById.has(recipeId)))
     ) {
       return { error: t.unknownRecipe };
     }
@@ -302,7 +303,7 @@ export async function replaceDishAction(
 /** Changer le goûter de la semaine. */
 export async function setCakeAction(weekId: string, cakeId: string) {
   return editWeek(weekId, ({ env, plan }) => {
-    if (!env.cakeById.has(cakeId)) return { error: t.unknownRecipe };
+    if (!env.cakeById.has(cakeId) || !env.allowed.has(cakeId)) return { error: t.unknownRecipe };
     return { plan: { ...plan, cake: cakeId }, message: t.cakeSet(nameOf(env, cakeId)) };
   });
 }
