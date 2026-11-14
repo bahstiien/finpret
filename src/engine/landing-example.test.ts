@@ -22,6 +22,19 @@ import { isRemoved, mealLabel } from "./week";
 
 const { seed } = validateSeed(rawSeed);
 const lib = libraryFromSeed(seed!);
+// L'exemple de semaine (recettes, courses, étapes) a été rédigé avec le catalogue d'avant l'import du 14/11/2026 :
+// il est généré sans les recettes x3_, pour ne pas réécrire la landing à chaque ajout. Les chiffres annoncés
+// (effectifs du catalogue, fourchette de durée) utilisent, eux, le catalogue complet.
+const notImported = <T extends { id: string }>(list: T[]) => list.filter((r) => !r.id.startsWith("x3_"));
+const exampleLib = libraryFromSeed(
+  validateSeed({
+    ...rawSeed,
+    mains: notImported(rawSeed.mains),
+    soups: notImported(rawSeed.soups),
+    simples: notImported(rawSeed.simples),
+    cakes: notImported(rawSeed.cakes),
+  }).seed!,
+);
 
 // Foyer de l'exemple : 2 adultes, 2 enfants (7 et 4 ans le 1er mars 2027), enfants à la cantine le midi en semaine.
 const members = [
@@ -52,8 +65,8 @@ const equipment: Equipment = {
   freezer: true,
 };
 
-function weekFor(start: string, seed: number, level?: "beginner" | "confident") {
-  const env = createEnv({ lib, pantry: {}, ratings: {}, random: seededRandom(seed) });
+function weekFor(start: string, seed: number, level?: "beginner" | "confident", catalog = exampleLib) {
+  const env = createEnv({ lib: catalog, pantry: {}, ratings: {}, random: seededRandom(seed) });
   const pm = householdPortions({ members, presence, weekStart: start });
   const result = generateWeek({
     env,
@@ -179,7 +192,7 @@ describe("landing : exemple de semaine", () => {
 
   it("fourchette annoncée : estimations de 24 semaines générées pour ce foyer", () => {
     const totalsList = ["2027-03-01", "2027-06-07", "2027-10-04", "2027-01-04"].flatMap((start) =>
-      [1, 2, 3, 4, 5, 6].map((n) => weekFor(start, n).session.total),
+      [1, 2, 3, 4, 5, 6].map((n) => weekFor(start, n, undefined, lib).session.total),
     );
     expect([Math.min(...totalsList), Math.max(...totalsList)]).toEqual([...landingExample.rangeMinutes]);
   });

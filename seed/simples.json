@@ -2192,5 +2192,2701 @@
    "Nacre {rizrond} de riz rond 2 min, ajoute le bouillon ({bouillon} cube dans 1 L d'eau chaude) louche par louche en remuant, 18 min.",
    "Hors du feu, ajoute {parmesan} de parmesan, {chevre} de chèvre et les courgettes réservées."
   ]
+ },
+ {
+  "id": "x3_gnocchis_petitspois_skyr",
+  "n": "Gnocchis poêlés aux petits pois, sauce skyr-citron",
+  "s": "Gnocchis petits pois-skyr",
+  "o": "it",
+  "m": [
+   540,
+   29,
+   85,
+   5
+  ],
+  "diff": 1,
+  "ing": {
+   "petitspois": 600,
+   "ail": 1,
+   "huile": 1,
+   "gnocchis": 800,
+   "skyr": 500,
+   "citron": 1,
+   "persil": 1
+  },
+  "steps": [
+   "Cuis {petitspois} de petits pois 5 min à l'eau bouillante, égoutte.",
+   "Fais revenir 1 gousse d'ail émincée 1 min dans {huile} d'huile d'olive, ajoute {gnocchis} de gnocchis et laisse-les dorer 6 à 8 min, puis les petits pois.",
+   "Hors du feu, enrobe avec {skyr} de skyr, le zeste et le jus de {citron}. Ne fais plus bouillir. Parsème de persil ({persil}) ciselé."
+  ]
+ },
+ {
+  "id": "x3_salade_sardines_pdt_oeufs",
+  "n": "Salade tiède de sardines, pommes de terre et œufs",
+  "s": "Salade sardines-pommes de terre",
+  "o": "fr",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   600,
+   42,
+   46,
+   26
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 1000,
+   "oeufs": 8,
+   "tomatefraiche": 3,
+   "concombre": 1,
+   "moutarde": 1,
+   "huile": 1,
+   "citron": 1,
+   "sardines": 3
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min à l'eau salée et {oeufs} 9 min.",
+   "Pendant ce temps, coupe {tomatefraiche} et {concombre} en morceaux. Vinaigrette : {moutarde} de moutarde, {huile} d'huile et le jus de {citron}.",
+   "Coupe les pommes de terre tièdes, ajoute les légumes, {sardines} de sardines égouttées en morceaux et les œufs en quartiers. Arrose de vinaigrette."
+  ]
+ },
+ {
+  "id": "x3_omelette_saumon_epinards",
+  "n": "Omelette au saumon fumé, épinards et ricotta",
+  "s": "Omelette saumon-épinards",
+  "o": "fr",
+  "m": [
+   530,
+   39,
+   32,
+   26
+  ],
+  "diff": 2,
+  "ing": {
+   "epinardssurg": 400,
+   "huile": 1,
+   "oeufs": 8,
+   "ricotta": 250,
+   "saumonfume": 200,
+   "citron": 1,
+   "pain": 8
+  },
+  "steps": [
+   "Fais décongeler {epinardssurg} d'épinards à la poêle avec {huile} d'huile, laisse s'évaporer l'eau.",
+   "Bats {oeufs} avec du poivre (pas de sel, le saumon l'est déjà), verse sur les épinards et cuis 5 à 6 min à feu doux.",
+   "Parsème de {ricotta} de ricotta par petites cuillerées et de {saumonfume} de saumon fumé en lanières. Plie l'omelette, ajoute quelques gouttes de {citron} et sers avec {pain} grillé."
+  ]
+ },
+ {
+  "id": "x3_tofu_brouille_harissa",
+  "n": "Tofu brouillé à la harissa, tartines et tomates",
+  "s": "Tofu brouillé harissa",
+  "o": "tn",
+  "m": [
+   460,
+   28,
+   36,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "oignon": 1,
+   "huile": 2,
+   "tofu": 600,
+   "harissa": 1,
+   "curcuma": 1,
+   "pain": 8,
+   "tomatefraiche": 4
+  },
+  "steps": [
+   "Émince {oignon} et fais-le fondre 5 min dans {huile} d'huile d'olive.",
+   "Émiette {tofu} de tofu à la fourchette dans la poêle, ajoute {harissa} de harissa, {curcuma} de curcuma et 2 c.s. d'eau. Fais sauter 5 min.",
+   "Sers sur {pain} grillé, avec {tomatefraiche} en quartiers."
+  ]
+ },
+ {
+  "id": "x3_shakshuka_verte",
+  "n": "Shakshuka verte aux poireaux, épinards et petits pois",
+  "s": "Shakshuka verte",
+  "o": "il",
+  "m": [
+   525,
+   29,
+   42,
+   26
+  ],
+  "diff": 2,
+  "ing": {
+   "poireau": 2,
+   "huile": 2,
+   "cumin": 1,
+   "epinards": 350,
+   "petitspois": 150,
+   "oeufs": 8,
+   "feta": 100,
+   "pain": 8
+  },
+  "steps": [
+   "Émince {poireau} et fais-les fondre 10 min dans {huile} d'huile avec {cumin} de cumin.",
+   "Ajoute {epinards} d'épinards, {petitspois} de petits pois et 10 cl d'eau. Laisse cuire 5 min, jusqu'à ce que tout soit tendre.",
+   "Creuse des puits, casse-y {oeufs}, couvre et cuis 6 min. Émiette {feta} de feta et sers avec {pain}."
+  ]
+ },
+ {
+  "id": "x3_frittata_spaghettis",
+  "n": "Frittata de spaghettis aux petits pois et parmesan, salade verte",
+  "s": "Frittata de spaghettis",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   450,
+   26,
+   38,
+   19
+  ],
+  "diff": 2,
+  "ing": {
+   "patescompletes": 200,
+   "petitspois": 150,
+   "oeufs": 8,
+   "parmesan": 60,
+   "persil": 1,
+   "huile": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de spaghettis à l'eau salée, ajoute {petitspois} de petits pois pour les 3 dernières minutes. Égoutte.",
+   "Bats {oeufs} avec {parmesan} de parmesan, le persil ({persil}) ciselé et du poivre. Ajoute pâtes et petits pois.",
+   "Verse dans une poêle antiadhésive huilée ({huile}), couvre et cuis 10 min à feu doux. Retourne sur une assiette, fais glisser dans la poêle et cuis encore 4 min. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x3_salade_pates_brocoli_thon",
+  "n": "Salade de pâtes au brocoli, thon et tomates cerises",
+  "s": "Salade pâtes brocoli-thon",
+  "o": "fr",
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "m": [
+   440,
+   31,
+   52,
+   9
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 280,
+   "brocoli": 500,
+   "moutarde": 1,
+   "citron": 1,
+   "huile": 2,
+   "thon": 2,
+   "tomatescerises": 200
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes à l'eau salée. 4 min avant la fin, ajoute {brocoli} de brocoli en petits bouquets. Égoutte et passe sous l'eau froide.",
+   "Vinaigrette : {moutarde} de moutarde, le jus de {citron}, {huile} d'huile, sel et poivre.",
+   "Mélange pâtes et brocoli avec {thon} de thon émietté, {tomatescerises} de tomates cerises coupées en deux et la vinaigrette."
+  ]
+ },
+ {
+  "id": "x3_taboule_saumon_radis",
+  "n": "Taboulé au saumon fumé, radis et concombre, sauce skyr",
+  "s": "Taboulé saumon-radis",
+  "o": "fr",
+  "months": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   430,
+   27,
+   48,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "semoule": 240,
+   "huile": 2,
+   "radis": 1,
+   "concombre": 1,
+   "persil": 1,
+   "saumonfume": 250,
+   "citron": 1,
+   "skyr": 200
+  },
+  "steps": [
+   "Verse sur {semoule} de semoule son volume d'eau bouillante salée, couvre 5 min puis égrène à la fourchette avec {huile} d'huile.",
+   "Émince {radis}, coupe {concombre} en dés, ciselle le persil ({persil}) et taille {saumonfume} de saumon fumé en lanières.",
+   "Mélange le tout avec le jus de {citron}. Sers frais avec {skyr} de skyr poivré."
+  ]
+ },
+ {
+  "id": "x3_croque_sardines",
+  "n": "Croque-monsieur aux sardines et salade verte",
+  "s": "Croque sardines",
+  "o": "fr",
+  "m": [
+   400,
+   28,
+   27,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "sardines": 2,
+   "ricotta": 100,
+   "moutarde": 1,
+   "painmie": 8,
+   "tomatefraiche": 1,
+   "emmental": 60,
+   "salade": 1
+  },
+  "steps": [
+   "Écrase {sardines} de sardines égouttées avec {ricotta} de ricotta et {moutarde} de moutarde.",
+   "Tartine la moitié de {painmie}, ajoute {tomatefraiche} en fines rondelles et {emmental} d'emmental râpé, puis referme.",
+   "Cuis 10 à 12 min au four à 200 °C, ou 6 min à l'air fryer. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x3_galettes_herbes_kuku",
+  "n": "Galettes aux herbes façon kuku, salade de cébettes aux amandes et pita",
+  "s": "Galettes aux herbes",
+  "o": "ir",
+  "m": [
+   620,
+   33,
+   52,
+   32
+  ],
+  "diff": 2,
+  "ing": {
+   "persil": 2,
+   "coriandre": 1,
+   "menthe": 1,
+   "oeufs": 10,
+   "cumin": 2,
+   "chapelure": 40,
+   "raisinssecs": 30,
+   "noix": 30,
+   "huile": 2,
+   "cebette": 6,
+   "amandesentieres": 40,
+   "citron": 1,
+   "skyr": 300,
+   "painpita": 4
+  },
+  "steps": [
+   "Hache finement {persil} de persil, {coriandre} de coriandre et la moitié de {menthe} de menthe. Mélange avec {oeufs} battus, {cumin} de cumin, {chapelure} de chapelure, {raisinssecs} de raisins secs et {noix} de noix concassées. Sale.",
+   "Chauffe un peu d'huile dans une grande poêle antiadhésive et cuis de grandes galettes, 1 à 2 min par face, en plusieurs fois ({huile} d'huile en tout).",
+   "Salade : émince très finement {cebette} avec le reste de la menthe, ajoute {amandesentieres} d'amandes dorées 2 min à sec et le jus de {citron}.",
+   "Sers les galettes chaudes ou tièdes avec la salade, {skyr} de skyr salé et {painpita} réchauffés."
+  ]
+ },
+ {
+  "id": "x3_galettes_mais_feta_haricots",
+  "n": "Galettes de maïs à la feta, haricots noirs à la tomate et skyr",
+  "s": "Galettes de maïs",
+  "o": "mx",
+  "m": [
+   620,
+   30,
+   95,
+   15
+  ],
+  "diff": 2,
+  "ing": {
+   "farine": 150,
+   "levure": 1,
+   "oeufs": 3,
+   "lait": 100,
+   "mais": 2,
+   "feta": 100,
+   "haricotsnoirs": 2,
+   "tomates": 1,
+   "cumin": 1,
+   "huile": 2,
+   "skyr": 200
+  },
+  "steps": [
+   "Mélange {farine} de farine et {levure} de levure, ajoute {oeufs} et {lait} de lait, puis {mais} de maïs égoutté et {feta} de feta émiettée.",
+   "Dans une casserole, chauffe {haricotsnoirs} de haricots noirs égouttés avec {tomates} de tomates concassées et {cumin} de cumin, 10 min à feu doux.",
+   "Pendant ce temps, cuis des cuillerées de pâte dans une poêle huilée ({huile} d'huile en tout), 3 min par face.",
+   "Sers les galettes avec les haricots et {skyr} de skyr."
+  ]
+ },
+ {
+  "id": "x3_saumon_carpaccio_tomates",
+  "n": "Saumon poêlé, carpaccio de tomates au gingembre et citron vert, riz",
+  "s": "Saumon et carpaccio de tomates",
+  "o": "fr",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   570,
+   31,
+   54,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 240,
+   "tomatefraiche": 6,
+   "cebette": 3,
+   "gingembre": 1,
+   "citronvert": 1,
+   "huile": 2,
+   "saumon": 500,
+   "soja": 2
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Tranche très finement {tomatefraiche} et étale-les sur un plat. Parsème de {cebette} émincées et de {gingembre} râpé. Arrose du jus de {citronvert} et d'1 c.s. d'huile d'olive.",
+   "Poêle {saumon} de saumon 3 à 4 min par face dans le reste de l'huile ({huile} en tout), ajoute {soja} de sauce soja en fin de cuisson. Sers avec le riz et le carpaccio."
+  ]
+ },
+ {
+  "id": "x3_keftas_dinde_raita",
+  "n": "Keftas de dinde au cumin, raïta tomate-concombre et riz",
+  "s": "Keftas de dinde et raïta",
+  "o": "in",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   470,
+   38,
+   53,
+   10
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 240,
+   "concombre": 1,
+   "tomatefraiche": 2,
+   "skyr": 300,
+   "cumin": 2,
+   "citron": 1,
+   "menthe": 1,
+   "dinde": 500,
+   "garammasala": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Raïta : râpe {concombre} et presse-le, coupe {tomatefraiche} en dés. Mélange avec {skyr} de skyr, 1 c.c. de cumin, le jus d'un demi-citron ({citron}) et la menthe ({menthe}) ciselée. Sale.",
+   "Mélange {dinde} de dinde hachée avec le reste du cumin ({cumin} en tout), {garammasala} de garam masala et du sel. Forme des petites saucisses et dore-les 8 min dans {huile} d'huile.",
+   "Sers les keftas avec le riz et la raïta bien fraîche."
+  ]
+ },
+ {
+  "id": "x3_orzo_courgettes_noix_poulet",
+  "n": "Salade d'orzo aux courgettes crues, noix, parmesan et poulet",
+  "s": "Orzo courgettes-poulet",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   595,
+   36,
+   46,
+   27
+  ],
+  "diff": 1,
+  "ing": {
+   "vermicelles": 240,
+   "poulet": 400,
+   "herbes": 1,
+   "huile": 3,
+   "courgette": 2,
+   "noix": 60,
+   "citron": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {vermicelles} d'orzo à l'eau salée, égoutte et passe sous l'eau froide.",
+   "Coupe {poulet} de poulet en lanières, saupoudre de {herbes} d'herbes de Provence et saisis 6 à 8 min dans 1 c.s. d'huile.",
+   "Taille {courgette} en très fins rubans à l'économe. Fais dorer {noix} de noix 3 min à sec et concasse-les.",
+   "Mélange orzo, courgettes, poulet et noix avec le jus de {citron} et le reste de l'huile ({huile} en tout). Termine par {parmesan} de parmesan en copeaux."
+  ]
+ },
+ {
+  "id": "x3_panzanella_thon_oeufs",
+  "n": "Salade de tomates au pain grillé, anchois, câpres, thon et œufs durs",
+  "s": "Panzanella au thon",
+  "o": "it",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "m": [
+   490,
+   35,
+   33,
+   23
+  ],
+  "diff": 2,
+  "ing": {
+   "oeufs": 6,
+   "pain": 8,
+   "huile": 3,
+   "tomatefraiche": 6,
+   "anchois": 30,
+   "capres": 20,
+   "ail": 1,
+   "vinaigre": 1,
+   "thon": 2
+  },
+  "steps": [
+   "Cuis {oeufs} 9 min, refroidis et écale-les.",
+   "Coupe {pain} en cubes et fais-les dorer à la poêle avec 1 c.s. d'huile.",
+   "Coupe {tomatefraiche} en morceaux. Hache {anchois} d'anchois, {capres} de câpres et 1 gousse d'ail, puis mélange avec {vinaigre} de vinaigre et le reste de l'huile ({huile} en tout).",
+   "Mélange tomates, pain et sauce, ajoute {thon} de thon émietté et laisse le pain s'imbiber 5 min. Pose les œufs en quartiers par-dessus."
+  ]
+ },
+ {
+  "id": "x3_salade_saumonfume_pdt_pomme",
+  "n": "Salade verte, concombre et pomme, saumon fumé et pommes de terre tièdes",
+  "s": "Salade saumon fumé-pommes de terre",
+  "o": "fr",
+  "m": [
+   480,
+   25,
+   56,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 800,
+   "oeufs": 4,
+   "moutarde": 1,
+   "vinaigre": 1,
+   "miel": 1,
+   "huile": 3,
+   "echalote": 1,
+   "salade": 1,
+   "concombre": 1,
+   "pomme": 1,
+   "saumonfume": 250
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min à l'eau salée et {oeufs} 6 min.",
+   "Vinaigrette : {moutarde} de moutarde, {vinaigre} de vinaigre, {miel} de miel, {huile} d'huile et {echalote} ciselée.",
+   "Lave {salade}, coupe {concombre} et {pomme} en fines lamelles.",
+   "Au dernier moment, mélange salade, concombre, pomme et pommes de terre tièdes en rondelles avec la vinaigrette. Ajoute {saumonfume} de saumon fumé et les œufs écalés."
+  ]
+ },
+ {
+  "id": "x3_pasteque_feta_poulet",
+  "n": "Salade de pastèque, feta et menthe, poulet au citron vert et semoule",
+  "s": "Pastèque-feta et poulet",
+  "o": "gr",
+  "months": [
+   7,
+   8
+  ],
+  "m": [
+   575,
+   41,
+   57,
+   20
+  ],
+  "diff": 1,
+  "ing": {
+   "semoule": 200,
+   "huile": 2,
+   "poulet": 500,
+   "citronvert": 2,
+   "pasteque": 800,
+   "pomme": 1,
+   "menthe": 1,
+   "feta": 150
+  },
+  "steps": [
+   "Couvre {semoule} de semoule d'eau bouillante salée à hauteur, laisse gonfler 5 min puis égrène avec 1 c.s. d'huile.",
+   "Coupe {poulet} de poulet en morceaux, saisis-les 8 min dans le reste de l'huile ({huile} en tout) et arrose du jus d'un des citrons verts ({citronvert} en tout).",
+   "Coupe {pasteque} de pastèque en cubes et {pomme} en fines lamelles. Arrose du jus du citron vert restant, ajoute la menthe ({menthe}) ciselée et {feta} de feta émiettée.",
+   "Sers bien frais avec le poulet et la semoule."
+  ]
+ },
+ {
+  "id": "x3_raisin_mozzarella_jambon",
+  "n": "Raisin poêlé, mozzarella, jambon cru et tartines grillées",
+  "s": "Raisin poêlé-mozzarella",
+  "o": "it",
+  "months": [
+   8,
+   9,
+   10
+  ],
+  "m": [
+   530,
+   26,
+   46,
+   26
+  ],
+  "diff": 1,
+  "ing": {
+   "raisin": 400,
+   "huile": 2,
+   "vinaigre": 1,
+   "pain": 8,
+   "roquette": 100,
+   "mozzarella": 250,
+   "jambonsec": 8,
+   "basilic": 1
+  },
+  "steps": [
+   "Saisis {raisin} de raisin 5 min dans 1 c.s. d'huile, jusqu'à ce qu'il colore et éclate un peu. Déglace avec {vinaigre} de vinaigre.",
+   "Fais griller {pain}.",
+   "Dispose {roquette} de roquette, {mozzarella} de mozzarella déchirée et {jambonsec} de jambon cru. Ajoute le raisin tiède, le basilic ({basilic}) et le reste de l'huile ({huile} en tout). Sers avec les tartines."
+  ]
+ },
+ {
+  "id": "x3_maquereau_salade_hiver",
+  "n": "Maquereau poêlé, salade croquante chou-fenouil-pomme et pommes de terre",
+  "s": "Maquereau et salade croquante",
+  "o": "fr",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   520,
+   31,
+   48,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 800,
+   "chou": 0.5,
+   "fenouil": 1,
+   "carotte": 2,
+   "pomme": 1,
+   "yaourt": 2,
+   "moutarde": 1,
+   "citron": 1,
+   "maquereau": 500,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min à la vapeur ou à l'eau salée.",
+   "Émince très finement {chou} et {fenouil}, râpe {carotte} et {pomme}. Mélange avec {yaourt} de yaourt, {moutarde} de moutarde et le jus de {citron}. Laisse reposer 10 min.",
+   "Poêle {maquereau} de maquereau dans {huile} d'huile, 3 min côté peau puis 1 min de l'autre côté.",
+   "Sers le maquereau avec les pommes de terre et la salade croquante."
+  ]
+ },
+ {
+  "id": "x3_salade_haricots_pesto",
+  "n": "Salade de haricots verts et haricots blancs au pesto, œufs mollets et pain grillé",
+  "s": "Haricots au pesto",
+  "o": "it",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   650,
+   30,
+   58,
+   33
+  ],
+  "diff": 1,
+  "ing": {
+   "haricotsverts": 500,
+   "oeufs": 4,
+   "pesto": 1,
+   "huile": 1,
+   "haricotsblancs": 2,
+   "tomatescerises": 200,
+   "parmesan": 50,
+   "pain": 8
+  },
+  "steps": [
+   "Cuis {haricotsverts} de haricots verts 7 min à l'eau bouillante salée et {oeufs} 6 min. Rafraîchis les haricots, écale les œufs.",
+   "Délaye {pesto} dans {huile} d'huile.",
+   "Mélange haricots verts, {haricotsblancs} de haricots blancs égouttés et {tomatescerises} de tomates cerises coupées en deux avec le pesto. Ajoute {parmesan} de parmesan en copeaux et les œufs coupés en deux.",
+   "Sers avec {pain} grillé."
+  ]
+ },
+ {
+  "id": "x3_ecrase_courgettes_poulet_boulgour",
+  "n": "Écrasé de courgettes à l'ail et à l'origan, poulet au citron et boulgour",
+  "s": "Écrasé courgettes-poulet",
+  "o": "gr",
+  "m": [
+   560,
+   42,
+   55,
+   18
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "boulgour": 240,
+   "poulet": 500,
+   "citron": 1,
+   "huile": 3,
+   "courgette": 4,
+   "ail": 2,
+   "origan": 1,
+   "yaourt": 1
+  },
+  "steps": [
+   "Cuis {boulgour} de boulgour 10 min à l'eau salée.",
+   "Coupe {poulet} de poulet en aiguillettes, arrose du jus d'½ citron et d'1 c.s. d'huile, saisis-le 6 min à la poêle.",
+   "Dans une autre poêle, fais dorer {courgette} en rondelles 12 min dans 2 c.s. d'huile. Ajoute 2 gousses d'ail hachées et {origan} d'origan, 1 min.",
+   "Écrase grossièrement à la fourchette hors du feu, mélange avec {yaourt} de yaourt et le reste du jus de {citron}. Sers avec le poulet et le boulgour."
+  ]
+ },
+ {
+  "id": "x3_semoule_cremeuse_courgettes_saumon",
+  "n": "Semoule crémeuse aux courgettes et petits pois, saumon poêlé",
+  "s": "Semoule crémeuse-saumon",
+  "o": "fr",
+  "m": [
+   610,
+   38,
+   58,
+   24
+  ],
+  "diff": 2,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "courgette": 2,
+   "petitspois": 200,
+   "huile": 2,
+   "bouillon": 1,
+   "semoule": 240,
+   "creme": 100,
+   "saumon": 480,
+   "persil": 1,
+   "citron": 1
+  },
+  "steps": [
+   "Fais revenir {courgette} en petits dés 8 min dans 1 c.s. d'huile, ajoute {petitspois} de petits pois et cuis 4 min de plus.",
+   "Délaye {bouillon} dans 35 cl d'eau bouillante, verse sur {semoule} de semoule, couvre 5 min puis égrène avec {creme} de crème.",
+   "Poêle {saumon} de saumon 3 min par face dans 1 c.s. d'huile.",
+   "Mélange les légumes et {persil} ciselé à la semoule, sers avec le saumon et des quartiers de {citron}."
+  ]
+ },
+ {
+  "id": "x3_tomates_roties_yaourt_oeufs",
+  "n": "Tomates cerises rôties sur yaourt froid, œufs mollets, pois chiches et pain grillé",
+  "s": "Tomates rôties-yaourt",
+  "o": "tr",
+  "m": [
+   540,
+   30,
+   52,
+   23
+  ],
+  "diff": 2,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "tomatescerises": 500,
+   "huile": 3,
+   "cumin": 1,
+   "sucre": 5,
+   "ail": 3,
+   "herbes": 1,
+   "citron": 1,
+   "poischiches": 1,
+   "oeufs": 4,
+   "pain": 8,
+   "skyr": 400,
+   "origan": 1,
+   "piment": 0.5
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Mélange {tomatescerises} de tomates cerises avec 3 c.s. d'huile, {cumin} de cumin, {sucre} de sucre, 3 gousses d'ail émincées, {herbes} d'herbes de Provence et le zeste de {citron} en rubans.",
+   "Rôtis-les serrées dans un plat 20 min, puis 5 min sous le gril pour qu'elles éclatent. Ajoute {poischiches} de pois chiches égouttés à mi-cuisson.",
+   "Pendant ce temps, cuis {oeufs} 6 min et fais griller {pain}.",
+   "Mélange {skyr} de skyr bien froid avec le jus du citron et du sel, étale-le dans un plat creux. Verse dessus les tomates brûlantes et leur jus, finis avec {origan} d'origan et {piment} de piment. Sers avec les œufs et le pain."
+  ]
+ },
+ {
+  "id": "x3_blettes_amandes_poisson_riz",
+  "n": "Blettes, épinards et tomates aux amandes, poisson blanc poêlé et riz",
+  "s": "Blettes-amandes et poisson",
+  "o": "es",
+  "m": [
+   520,
+   36,
+   60,
+   15
+  ],
+  "diff": 2,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "ing": {
+   "riz": 240,
+   "amandesentieres": 50,
+   "blette": 400,
+   "huile": 3,
+   "ail": 2,
+   "epinards": 200,
+   "tomatefraiche": 3,
+   "poissonblanc": 500,
+   "citron": 1
+  },
+  "steps": [
+   "Lance {riz} de riz. Fais dorer {amandesentieres} d'amandes à sec 3 min, réserve.",
+   "Sépare côtes et feuilles de {blette} de blettes. Fais revenir les côtes émincées 6 min dans 2 c.s. d'huile avec 2 gousses d'ail hachées, puis les feuilles 4 min.",
+   "Ajoute {epinards} d'épinards et {tomatefraiche} en dés, cuis 3 min, puis les amandes.",
+   "Poêle {poissonblanc} de poisson 3 min par face dans 1 c.s. d'huile, arrose du jus de {citron}. Sers avec le riz et les légumes."
+  ]
+ },
+ {
+  "id": "x3_crevettes_brocoli_cacahuetes_riz",
+  "n": "Crevettes et brocoli sautés à l'ail, au soja et aux cacahuètes, riz",
+  "s": "Crevettes-brocoli cacahuètes",
+  "o": "cn",
+  "m": [
+   530,
+   34,
+   66,
+   13
+  ],
+  "diff": 2,
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  "ing": {
+   "riz": 240,
+   "brocoli": 500,
+   "crevettes": 400,
+   "huile": 2,
+   "ail": 3,
+   "soja": 3,
+   "miel": 1,
+   "cacahuetes": 40,
+   "cebette": 3
+  },
+  "steps": [
+   "Lance {riz} de riz. Cuis {brocoli} de brocoli en bouquets 4 min à la vapeur.",
+   "Saisis {crevettes} de crevettes 3 min dans 1 c.s. d'huile très chaude, réserve.",
+   "Dans la même poêle, fais sauter 3 gousses d'ail émincées 30 s dans 1 c.s. d'huile. Ajoute le brocoli, {soja} de sauce soja et {miel} de miel, 3 min, puis remets les crevettes.",
+   "Parsème de {cacahuetes} de cacahuètes concassées et de {cebette} émincées, sers sur le riz."
+  ]
+ },
+ {
+  "id": "x3_chou_roti_parmesan_oeufs",
+  "n": "Chou rôti ail-piment au parmesan, pommes de terre et œufs mollets",
+  "s": "Chou rôti parmesan",
+  "o": "it",
+  "m": [
+   560,
+   30,
+   45,
+   28
+  ],
+  "diff": 2,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "ing": {
+   "chou": 1,
+   "pommedeterre": 700,
+   "huile": 4,
+   "ail": 2,
+   "piment": 0.5,
+   "oeufs": 8,
+   "parmesan": 50,
+   "citron": 1,
+   "persil": 1
+  },
+  "steps": [
+   "Préchauffe le four à 210 °C. Coupe {chou} en 8 quartiers en gardant le trognon, et {pommedeterre} de pommes de terre en quartiers.",
+   "Mélange 4 c.s. d'huile, 2 gousses d'ail râpées et {piment} de piment. Badigeonne chou et pommes de terre, étale-les sur 2 plaques et rôtis 30 min en retournant à mi-cuisson.",
+   "Cuis {oeufs} 6 min, rafraîchis-les et écale-les.",
+   "À la sortie du four, râpe {parmesan} de parmesan sur le chou, arrose du jus de {citron} et parsème de {persil} ciselé. Sers avec les pommes de terre et les œufs."
+  ]
+ },
+ {
+  "id": "x3_asperges_amandes_truite_quinoa",
+  "n": "Asperges rôties aux amandes et aux câpres, truite et quinoa",
+  "s": "Asperges-truite-quinoa",
+  "o": "fr",
+  "m": [
+   560,
+   38,
+   40,
+   27
+  ],
+  "diff": 2,
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "ing": {
+   "quinoa": 200,
+   "asperges": 600,
+   "truite": 480,
+   "huile": 3,
+   "amandesentieres": 50,
+   "capres": 30,
+   "persil": 1,
+   "citron": 1
+  },
+  "steps": [
+   "Préchauffe le four à 210 °C. Cuis {quinoa} de quinoa 12 min.",
+   "Étale {asperges} d'asperges et {truite} de truite sur une plaque, arrose de 2 c.s. d'huile, sale et rôtis 12 min.",
+   "Fais dorer {amandesentieres} d'amandes à sec, mélange-les avec {capres} de câpres égouttées, {persil} ciselé, le jus de {citron} et 1 c.s. d'huile.",
+   "Sers asperges et truite sur le quinoa, nappe du mélange aux amandes."
+  ]
+ },
+ {
+  "id": "x3_tartines_avocat_feves_saumonfume",
+  "n": "Tartines d'écrasé avocat-fèves, saumon fumé et salade",
+  "s": "Tartines avocat-fèves",
+  "o": "gb",
+  "m": [
+   560,
+   30,
+   45,
+   28
+  ],
+  "diff": 1,
+  "months": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "ing": {
+   "feves": 300,
+   "avocat": 3,
+   "huile": 2,
+   "citron": 1,
+   "coriandre": 1,
+   "pain": 8,
+   "saumonfume": 200,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {feves} de fèves 3 min à l'eau bouillante, rafraîchis-les et retire leur peau.",
+   "Écrase grossièrement {avocat} et les fèves à la fourchette avec 1 c.s. d'huile, le jus de {citron} et {coriandre} ciselée. Sale.",
+   "Fais griller {pain}, tartine d'écrasé et ajoute {saumonfume} de saumon fumé.",
+   "Sers avec {salade} assaisonnée d'1 c.s. d'huile."
+  ]
+ },
+ {
+  "id": "x3_puree_haricots_muhammara_boulettes",
+  "n": "Purée de haricots blancs, muhammara et boulettes de bœuf, pita",
+  "s": "Haricots-muhammara et boulettes",
+  "o": "lb",
+  "m": [
+   690,
+   42,
+   58,
+   30
+  ],
+  "diff": 2,
+  "months": [
+   7,
+   8,
+   9,
+   10
+  ],
+  "ing": {
+   "poivron": 2,
+   "huile": 4,
+   "boeuf": 400,
+   "cumin": 1,
+   "persil": 1,
+   "noix": 60,
+   "ail": 2,
+   "paprika": 1,
+   "citron": 1,
+   "haricotsblancs": 2,
+   "painpita": 4
+  },
+  "steps": [
+   "Coupe {poivron} en lanières et fais-les fondre 10 min à la poêle couverte dans 1 c.s. d'huile.",
+   "Mélange {boeuf} de bœuf haché avec {cumin} de cumin, {persil} ciselé et du sel. Façonne des petites boulettes et dore-les 8 min dans 1 c.s. d'huile.",
+   "Mixe les poivrons avec {noix} de noix, 1 gousse d'ail, {paprika} de paprika, le jus de {citron} et 1 c.s. d'huile : c'est la muhammara.",
+   "Mixe {haricotsblancs} de haricots blancs égouttés avec 1 gousse d'ail, 1 c.s. d'huile et 3 c.s. d'eau. Étale la purée, creuse un puits pour la muhammara, ajoute les boulettes et sers avec {painpita} tiédis."
+  ]
+ },
+ {
+  "id": "x3_frites_feta_origan_oeufs",
+  "n": "Frites au four origan-feta, patates douces, œufs au plat et salade",
+  "s": "Frites origan-feta",
+  "o": "gr",
+  "comfort": true,
+  "m": [
+   540,
+   20,
+   52,
+   26
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 600,
+   "patatedouce": 500,
+   "huile": 3,
+   "paprika": 1,
+   "oeufs": 6,
+   "salade": 1,
+   "feta": 150,
+   "origan": 2,
+   "citron": 1
+  },
+  "steps": [
+   "Préchauffe le four à 220 °C. Coupe {pommedeterre} de pommes de terre et {patatedouce} de patates douces en frites, sèche-les bien dans un torchon.",
+   "Mélange-les avec 3 c.s. d'huile et {paprika} de paprika. Étale-les sur 2 plaques sans les superposer, enfourne 30 min en retournant à mi-cuisson.",
+   "Pendant ce temps, cuis {oeufs} au plat et lave {salade}.",
+   "À la sortie du four, parsème les frites de {feta} de feta émiettée et d'{origan} d'origan, arrose du jus de {citron}."
+  ]
+ },
+ {
+  "id": "x3_cabillaud_puree_huile_olive",
+  "n": "Cabillaud poêlé au citron, purée à l'huile d'olive et haricots verts",
+  "s": "Cabillaud et purée à l'huile d'olive",
+  "o": "it",
+  "m": [
+   540,
+   35,
+   49,
+   21
+  ],
+  "diff": 2,
+  "ing": {
+   "pommedeterre": 1000,
+   "haricotsverts": 400,
+   "lait": 150,
+   "huile": 6,
+   "ail": 1,
+   "cabillaud": 600,
+   "citron": 1
+  },
+  "steps": [
+   "Épluche {pommedeterre} de pommes de terre, coupe-les en gros morceaux et cuis-les 20 min à l'eau salée frémissante. Cuis {haricotsverts} de haricots verts 8 min dans une autre casserole.",
+   "Égoutte les pommes de terre et écrase-les au presse-purée avec {lait} de lait chaud. Ajoute 4 c.s. d'huile et {ail} d'ail râpée. Ne mixe pas, la purée deviendrait collante.",
+   "Poêle {cabillaud} de cabillaud 3 à 4 min par face dans 1 c.s. d'huile, arrose du jus de {citron}. Assaisonne les haricots verts avec la dernière c.s. d'huile."
+  ]
+ },
+ {
+  "id": "x3_truite_pdt_nouvelles_petits_pois",
+  "n": "Truite poêlée, pommes de terre nouvelles et petits pois à la coriandre",
+  "s": "Truite et pommes de terre nouvelles",
+  "o": "fr",
+  "months": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "m": [
+   500,
+   34,
+   43,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 800,
+   "petitspois": 300,
+   "truite": 520,
+   "huile": 3,
+   "citron": 1,
+   "coriandre": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre nouvelles entières 15 à 20 min à l'eau salée. Ajoute {petitspois} de petits pois pour les 4 dernières minutes, égoutte.",
+   "Poêle {truite} de truite côté peau 5 min dans 1 c.s. d'huile, retourne-la 1 min.",
+   "Mélange pommes de terre et petits pois avec 2 c.s. d'huile, le jus de {citron} et la coriandre ({coriandre}) ciselée."
+  ]
+ },
+ {
+  "id": "x3_tomates_panees_haricots_thon",
+  "n": "Tomates panées au paprika, salade de haricots blancs au thon",
+  "s": "Tomates panées",
+  "o": "us",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   520,
+   24,
+   49,
+   22
+  ],
+  "diff": 2,
+  "ing": {
+   "haricotsblancs": 2,
+   "thon": 1,
+   "echalote": 1,
+   "persil": 1,
+   "vinaigre": 1,
+   "huile": 6,
+   "tomatefraiche": 5,
+   "farine": 60,
+   "oeufs": 2,
+   "chapelure": 80,
+   "paprika": 1
+  },
+  "steps": [
+   "Salade : égoutte {haricotsblancs} de haricots blancs, mélange-les avec {thon} de thon émietté, {echalote} hachée, le persil ({persil}), {vinaigre} de vinaigre et 2 c.s. d'huile.",
+   "Coupe {tomatefraiche} bien fermes en tranches épaisses, éponge-les. Passe-les dans {farine} de farine, {oeufs} battus, puis {chapelure} de chapelure mêlée à {paprika} de paprika.",
+   "Poêle-les 3 min par face dans 4 c.s. d'huile à feu moyen, égoutte sur du papier absorbant et sers aussitôt avec la salade."
+  ]
+ },
+ {
+  "id": "x3_feuilletes_jambon_emmental",
+  "n": "Feuilletés jambon-emmental à la moutarde, salade et carottes râpées",
+  "s": "Feuilletés jambon-fromage",
+  "o": "fr",
+  "comfort": true,
+  "m": [
+   700,
+   27,
+   46,
+   44
+  ],
+  "diff": 1,
+  "ing": {
+   "patefeuilletee": 2,
+   "moutarde": 1,
+   "jambon": 4,
+   "emmental": 120,
+   "oeufs": 1,
+   "sesame": 1,
+   "carotte": 3,
+   "salade": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Découpe chaque {patefeuilletee} en 4 rectangles.",
+   "Sur une moitié de chaque rectangle : une pointe de moutarde ({moutarde} en tout), une demi-tranche de jambon ({jambon} en tout) et {emmental} d'emmental râpé. Replie et soude les bords à la fourchette.",
+   "Dore avec {oeufs} battu, parsème de {sesame} de sésame, enfourne 18 à 20 min.",
+   "Pendant la cuisson, râpe {carotte} et assaisonne-les avec {salade}, {huile} d'huile et un trait de vinaigre."
+  ]
+ },
+ {
+  "id": "x3_tartines_petits_pois_saumon",
+  "n": "Tartines crème de petits pois-menthe, saumon fumé et concombre",
+  "s": "Tartines petits pois-saumon",
+  "o": "fr",
+  "m": [
+   445,
+   28,
+   39,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "petitspois": 300,
+   "ricotta": 250,
+   "citron": 1,
+   "menthe": 1,
+   "huile": 1,
+   "pain": 8,
+   "saumonfume": 200,
+   "concombre": 1
+  },
+  "steps": [
+   "Cuis {petitspois} de petits pois 5 min à l'eau bouillante, rafraîchis-les sous l'eau froide.",
+   "Mixe-les avec {ricotta} de ricotta, le jus de ½ {citron}, la menthe ({menthe}) et {huile} d'huile. Garde une poignée de pois entiers pour le croquant.",
+   "Grille {pain}, tartine de crème de petits pois, ajoute {saumonfume} de saumon fumé. Sers avec {concombre} en bâtonnets."
+  ]
+ },
+ {
+  "id": "x3_polenta_cremeuse_saucisses",
+  "n": "Polenta crémeuse au parmesan, saucisses et tomates cerises poêlées",
+  "s": "Polenta crémeuse et saucisses",
+  "o": "it",
+  "comfort": true,
+  "m": [
+   640,
+   25,
+   52,
+   35
+  ],
+  "diff": 1,
+  "ing": {
+   "saucisse": 4,
+   "huile": 1,
+   "tomatescerises": 400,
+   "ail": 1,
+   "herbes": 1,
+   "lait": 500,
+   "polenta": 220,
+   "beurre": 30,
+   "parmesan": 60
+  },
+  "steps": [
+   "Fais dorer {saucisse} en tronçons 5 min dans {huile} d'huile. Ajoute {tomatescerises} de tomates cerises, {ail} d'ail écrasée et {herbes} d'herbes, laisse compoter 8 min.",
+   "Porte {lait} de lait et 40 cl d'eau salée à ébullition. Verse {polenta} de polenta en pluie en remuant, cuis 5 min.",
+   "Hors du feu, ajoute {beurre} de beurre et {parmesan} de parmesan : la polenta doit rester coulante. Sers aussitôt avec les saucisses et les tomates."
+  ]
+ },
+ {
+  "id": "x3_fettuccine_tomates_pimentees_haricots",
+  "n": "Fettuccine aux tomates cerises pimentées, haricots blancs et parmesan",
+  "s": "Fettuccine tomates pimentées",
+  "o": "it",
+  "m": [
+   560,
+   22,
+   88,
+   14
+  ],
+  "diff": 1,
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "tomatescerises": 500,
+   "haricotsblancs": 2,
+   "ail": 2,
+   "piment": 0.5,
+   "huile": 3,
+   "parmesan": 40,
+   "basilic": 1
+  },
+  "steps": [
+   "Fais revenir {ail} d'ail émincées dans {huile} d'huile avec {piment} de piment. Ajoute {tomatescerises} de tomates cerises, couvre et cuis 12 min jusqu'à ce qu'elles éclatent.",
+   "Ajoute {haricotsblancs} de haricots blancs rincés et réchauffe 3 min en écrasant quelques tomates. Cuis {patescompletes} de pâtes en gardant une louche d'eau de cuisson.",
+   "Mélange pâtes et sauce avec un peu d'eau de cuisson. Sers avec {parmesan} de parmesan râpé et le basilic ({basilic})."
+  ]
+ },
+ {
+  "id": "x3_pates_parmesan_pistaches_brocoli",
+  "n": "Pâtes au parmesan, pistaches et citron, brocoli et jambon cru croustillant",
+  "s": "Pâtes parmesan-pistaches",
+  "o": "it",
+  "m": [
+   565,
+   26,
+   62,
+   22
+  ],
+  "diff": 2,
+  "pasta": true,
+  "ing": {
+   "patescompletes": 320,
+   "brocoli": 300,
+   "parmesan": 80,
+   "pistaches": 60,
+   "beurre": 30,
+   "citron": 1,
+   "jambonsec": 4
+  },
+  "steps": [
+   "Fais croustiller {jambonsec} de jambon cru 3 min dans une poêle sèche, puis émiette-les. Concasse {pistaches} de pistaches.",
+   "Cuis {patescompletes} de pâtes avec {brocoli} de brocoli en petits bouquets les 5 dernières minutes. Garde 150 ml d'eau de cuisson.",
+   "Hors du feu, fais fondre {beurre} de beurre dans la casserole, ajoute {parmesan} de parmesan râpé et l'eau de cuisson petit à petit en remuant pour une sauce lisse. Mélange avec pâtes et brocoli, ajoute le zeste de {citron}, les pistaches et le jambon."
+  ]
+ },
+ {
+  "id": "x3_pates_saumon_fume_petits_pois",
+  "n": "Pâtes au saumon fumé, crème citronnée et petits pois",
+  "s": "Pâtes saumon fumé",
+  "o": "fr",
+  "m": [
+   490,
+   25,
+   65,
+   13
+  ],
+  "diff": 1,
+  "pasta": true,
+  "ing": {
+   "patescompletes": 320,
+   "saumonfume": 180,
+   "creme": 200,
+   "citron": 1,
+   "petitspois": 250,
+   "persil": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes et ajoute {petitspois} de petits pois les 3 dernières minutes. Garde un peu d'eau de cuisson.",
+   "Chauffe doucement {creme} de crème avec le zeste de {citron}, sans faire bouillir.",
+   "Hors du feu, mélange pâtes, petits pois, crème, {saumonfume} de saumon fumé en lanières, un filet de jus de citron et {persil} de persil haché. Détends avec un peu d'eau de cuisson."
+  ]
+ },
+ {
+  "id": "x3_carbonara_champignons",
+  "n": "Carbonara aux champignons et au parmesan",
+  "s": "Carbonara champignons",
+  "o": "it",
+  "m": [
+   480,
+   26,
+   60,
+   14
+  ],
+  "diff": 2,
+  "pasta": true,
+  "comfort": true,
+  "ing": {
+   "patescompletes": 320,
+   "champignons": 400,
+   "oeufs": 4,
+   "parmesan": 70,
+   "ail": 1,
+   "huile": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes et garde 150 ml d'eau de cuisson.",
+   "Fais sauter {champignons} de champignons émincés et {ail} d'ail hachée dans {huile} d'huile, 8 min à feu vif.",
+   "Bats {oeufs} avec {parmesan} de parmesan et beaucoup de poivre. Hors du feu, mélange pâtes, champignons et œufs avec un peu d'eau de cuisson jusqu'à une sauce nappante, sans cuire les œufs. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x3_riz_saute_crevettes",
+  "n": "Riz sauté aux crevettes, œufs, carottes et petits pois",
+  "s": "Riz sauté crevettes",
+  "o": "cn",
+  "m": [
+   460,
+   28,
+   56,
+   11
+  ],
+  "diff": 2,
+  "ing": {
+   "riz": 240,
+   "crevettes": 350,
+   "oeufs": 3,
+   "carotte": 2,
+   "petitspois": 200,
+   "cebette": 3,
+   "gingembre": 1,
+   "soja": 3,
+   "huile": 2
+  },
+  "steps": [
+   "Cuis {riz} de riz (ou prends un reste de riz de la veille) et étale-le sur une assiette pour qu'il refroidisse.",
+   "Saisis {crevettes} de crevettes 4 min dans 1 c.s. d'huile, réserve. Fais sauter {carotte} râpées, {petitspois} de petits pois et {gingembre} râpé 3 min dans 1 c.s. d'huile.",
+   "Ajoute le riz et saute 4 min. Pousse-le sur le côté et brouille {oeufs} dans l'espace libre. Remets les crevettes, ajoute {soja} de sauce soja et {cebette} émincées, mélange 1 min."
+  ]
+ },
+ {
+  "id": "x3_farfalles_legumes_verts_feta",
+  "n": "Farfalles aux légumes verts, edamame et feta citronnée",
+  "s": "Farfalles légumes verts",
+  "o": "it",
+  "m": [
+   545,
+   24,
+   65,
+   18
+  ],
+  "diff": 1,
+  "pasta": true,
+  "ing": {
+   "patescompletes": 320,
+   "brocoli": 250,
+   "petitspois": 150,
+   "edamame": 150,
+   "epinards": 100,
+   "feta": 150,
+   "citron": 1,
+   "huile": 2
+  },
+  "steps": [
+   "Cuis {patescompletes} de farfalles. Ajoute {brocoli} de brocoli en petits bouquets 5 min avant la fin, puis {petitspois} de petits pois et {edamame} d'edamame 3 min avant.",
+   "Égoutte en gardant un peu d'eau de cuisson. Remets dans la casserole avec {epinards} d'épinards et {huile} d'huile, mélange pour les faire tomber.",
+   "Ajoute le zeste et le jus de {citron}, {feta} de feta émiettée et un peu d'eau de cuisson pour lier."
+  ]
+ },
+ {
+  "id": "x3_fusilli_sardines_capres",
+  "n": "Fusilli aux sardines, tomates cerises, câpres et roquette",
+  "s": "Fusilli aux sardines",
+  "o": "it",
+  "m": [
+   450,
+   24,
+   64,
+   11
+  ],
+  "diff": 1,
+  "pasta": true,
+  "ing": {
+   "patescompletes": 320,
+   "sardines": 2,
+   "tomatescerises": 300,
+   "ail": 2,
+   "capres": 20,
+   "citron": 1,
+   "roquette": 80,
+   "chapelure": 30
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes. Fais dorer {chapelure} de chapelure à sec dans une poêle, réserve.",
+   "Dans la même poêle, chauffe un peu de l'huile de {sardines} de sardines avec {ail} d'ail émincées et {tomatescerises} de tomates cerises coupées en deux, 6 min.",
+   "Ajoute les sardines émiettées, {capres} de câpres, le jus de {citron} et les pâtes égouttées. Mélange avec {roquette} de roquette et parsème de chapelure grillée."
+  ]
+ },
+ {
+  "id": "x3_spaghettis_asperges_orange",
+  "n": "Spaghettis aux asperges, orange et parmesan, œufs mollets",
+  "s": "Spaghettis asperges-orange",
+  "o": "it",
+  "m": [
+   505,
+   24,
+   61,
+   17
+  ],
+  "diff": 2,
+  "pasta": true,
+  "months": [
+   4,
+   5,
+   6
+  ],
+  "ing": {
+   "patescompletes": 320,
+   "asperges": 500,
+   "orange": 1,
+   "parmesan": 50,
+   "beurre": 20,
+   "huile": 1,
+   "oeufs": 4
+  },
+  "steps": [
+   "Cuis {oeufs} 6 min 30 dans l'eau bouillante, refroidis-les et écale-les. Cuis {patescompletes} de spaghettis, garde un peu d'eau de cuisson.",
+   "Coupe {asperges} d'asperges en tronçons et fais-les sauter 8 min dans {huile} d'huile et {beurre} de beurre.",
+   "Mélange pâtes et asperges avec le zeste de {orange}, 2 c.s. de son jus, {parmesan} de parmesan et un peu d'eau de cuisson. Sers avec les œufs coupés en deux."
+  ]
+ },
+ {
+  "id": "x3_salade_boeuf_basilic_riz",
+  "n": "Salade tiède de bœuf saisi au basilic, tomates cerises, concombre et riz",
+  "s": "Salade de bœuf au basilic",
+  "o": "th",
+  "m": [
+   475,
+   32,
+   53,
+   14
+  ],
+  "diff": 2,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "fauxfilet": 500,
+   "riz": 240,
+   "basilic": 1,
+   "tomatescerises": 250,
+   "concombre": 1,
+   "soja": 3,
+   "citronvert": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz, rince-le à l'eau froide et égoutte.",
+   "Saisis {fauxfilet} de bœuf 2 à 3 min par face dans {huile} d'huile très chaude. Laisse reposer 5 min, puis tranche finement.",
+   "Mélange {tomatescerises} de tomates cerises coupées, {concombre} en dés, le basilic ({basilic}) effeuillé, {soja} de sauce soja et le jus de {citronvert}. Dispose sur le riz avec le bœuf."
+  ]
+ },
+ {
+  "id": "x3_faux_filet_harissa_semoule",
+  "n": "Faux-filet à la harissa, sauce poivron-citron et semoule",
+  "s": "Faux-filet harissa",
+  "o": "tn",
+  "m": [
+   510,
+   38,
+   44,
+   20
+  ],
+  "diff": 2,
+  "ing": {
+   "fauxfilet": 600,
+   "poivron": 2,
+   "harissa": 1,
+   "citron": 1,
+   "ail": 1,
+   "huile": 2,
+   "semoule": 200,
+   "salade": 1
+  },
+  "steps": [
+   "Fais revenir {poivron} émincés avec {ail} d'ail hachée dans 1 c.s. d'huile, 10 min. Mixe avec {harissa} de harissa et le jus de {citron}.",
+   "Verse le même volume d'eau bouillante salée sur {semoule} de semoule, couvre 5 min puis égrène.",
+   "Saisis {fauxfilet} de faux-filet dans 1 c.s. d'huile à la cuisson voulue, laisse reposer 5 min. Tranche et sers avec la sauce tiède, la semoule et {salade}."
+  ]
+ },
+ {
+  "id": "x3_agneau_poele_ail_citron",
+  "n": "Agneau poêlé à l'ail et au citron, pommes de terre sautées et haricots verts",
+  "s": "Agneau poêlé ail-citron",
+  "o": "fr",
+  "m": [
+   530,
+   25,
+   34,
+   31
+  ],
+  "diff": 2,
+  "ing": {
+   "agneau": 450,
+   "ail": 2,
+   "citron": 1,
+   "herbes": 1,
+   "huile": 3,
+   "pommedeterre": 700,
+   "haricotsverts": 400
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en petits dés et fais-les sauter 20 min à couvert dans 2 c.s. d'huile, en remuant. Cuis {haricotsverts} de haricots verts 8 min à l'eau salée.",
+   "Coupe {agneau} d'agneau en tranches de 1 cm. Mélange avec 1 c.s. d'huile, {ail} d'ail râpées, {herbes} d'herbes, sel et poivre.",
+   "Saisis l'agneau 2 à 3 min par face dans une poêle très chaude. Laisse reposer 5 min et arrose du jus de {citron}."
+  ]
+ },
+ {
+  "id": "x3_cotes_porc_peches",
+  "n": "Côtes de porc aux pêches, miel et moutarde, riz et salade",
+  "s": "Côtes de porc aux pêches",
+  "o": "us",
+  "m": [
+   600,
+   31,
+   58,
+   26
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "echine": 600,
+   "peche": 3,
+   "miel": 1,
+   "moutarde": 1,
+   "herbes": 1,
+   "huile": 1,
+   "riz": 240,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Saisis {echine} d'échine en tranches 4 min par face dans {huile} d'huile. Ajoute {peche} en quartiers et {herbes} d'herbes, cuis 5 min à feu moyen.",
+   "Mélange {miel} de miel, {moutarde} de moutarde et 2 c.s. d'eau. Verse sur le porc et les pêches, laisse napper 2 min en vérifiant que la viande est cuite à cœur. Sers avec le riz et {salade}."
+  ]
+ },
+ {
+  "id": "x3_couscous_herbes_poulet_citron",
+  "n": "Couscous aux tomates cerises et aux herbes, poulet grillé au citron",
+  "s": "Couscous herbes-poulet",
+  "o": "ma",
+  "m": [
+   480,
+   37,
+   50,
+   13
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "semoule": 250,
+   "bouillon": 1,
+   "poulet": 500,
+   "cumin": 1,
+   "citron": 2,
+   "huile": 3,
+   "tomatescerises": 350,
+   "concombre": 1,
+   "persil": 1,
+   "menthe": 1
+  },
+  "steps": [
+   "Verse 300 ml de bouillon bouillant préparé avec {bouillon} sur {semoule} de semoule, couvre 5 min.",
+   "Coupe {poulet} de poulet en aiguillettes, mélange avec 1 c.s. d'huile, {cumin} de cumin et le zeste d'un citron. Poêle 6 à 7 min.",
+   "Égrène la semoule avec 2 c.s. d'huile et le jus des citrons ({citron} au total). Ajoute {tomatescerises} de tomates cerises coupées, {concombre} en dés, {persil} de persil et {menthe} de menthe ciselés. Sers avec le poulet."
+  ]
+ },
+ {
+  "id": "x3_maquereau_salsa_pistache",
+  "n": "Maquereau poêlé, salsa tomate-pistache aux épices et pommes de terre",
+  "s": "Maquereau salsa pistache",
+  "o": "il",
+  "m": [
+   620,
+   35,
+   42,
+   34
+  ],
+  "diff": 2,
+  "ing": {
+   "maquereau": 600,
+   "pistaches": 50,
+   "tomatefraiche": 2,
+   "citron": 1,
+   "garammasala": 1,
+   "huile": 2,
+   "pommedeterre": 900,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre coupées en deux 20 min à la vapeur ou dans l'eau salée.",
+   "Salsa : concasse {pistaches} de pistaches, coupe {tomatefraiche} en petits dés. Mélange avec le jus de {citron}, une pincée de garam masala, 1 c.s. d'huile et du sel.",
+   "Sèche {maquereau} de filets de maquereau. Poêle-les côté peau 4 min dans 1 c.s. d'huile, retourne-les 2 min.",
+   "Sers le poisson nappé de salsa, avec les pommes de terre et {salade}."
+  ]
+ },
+ {
+  "id": "x3_saumon_salsa_pignons_riz",
+  "n": "Saumon poêlé, salsa pignons-câpres-raisins et riz",
+  "s": "Saumon salsa pignons",
+  "o": "it",
+  "m": [
+   690,
+   31,
+   60,
+   35
+  ],
+  "diff": 2,
+  "ing": {
+   "saumon": 500,
+   "celeri": 3,
+   "pignons": 30,
+   "capres": 30,
+   "olives": 40,
+   "raisinssecs": 40,
+   "safran": 1,
+   "persil": 1,
+   "citron": 1,
+   "huile": 4,
+   "riz": 260
+  },
+  "steps": [
+   "Cuis {riz} de riz. Fais tremper {raisinssecs} de raisins secs 10 min dans de l'eau chaude, et {safran} de safran dans 1 c.s. d'eau chaude.",
+   "Coupe {celeri} en petits dés. Fais-les revenir 4 min avec {pignons} de pignons dans 3 c.s. d'huile. Hors du feu, ajoute {capres} de câpres, {olives} d'olives coupées, les raisins égouttés, le safran, le persil ({persil}) haché, le zeste et un filet de jus de {citron}.",
+   "Poêle {saumon} de saumon côté peau 3 min dans 1 c.s. d'huile, retourne et cuis encore 2 à 3 min.",
+   "Sers le saumon nappé de salsa, avec le riz."
+  ]
+ },
+ {
+  "id": "x3_salade_crevettes_mais_quinoa",
+  "n": "Salade de crevettes sautées, maïs, tomates et quinoa au citron vert",
+  "s": "Salade crevettes-maïs",
+  "o": "mx",
+  "m": [
+   490,
+   32,
+   54,
+   14
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "crevettes": 500,
+   "mais": 1,
+   "tomatefraiche": 4,
+   "concombre": 1,
+   "citronvert": 2,
+   "coriandre": 1,
+   "quinoa": 240,
+   "huile": 3
+  },
+  "steps": [
+   "Cuis {quinoa} de quinoa 12 min dans 2 fois son volume d'eau salée, égoutte et étale-le pour qu'il tiédisse.",
+   "Fais sauter {crevettes} de crevettes 4 min dans 1 c.s. d'huile bien chaude, jusqu'à ce qu'elles soient roses.",
+   "Coupe {tomatefraiche} et {concombre} en dés. Égoutte {mais} de maïs. Mélange avec le quinoa, le jus de {citronvert}, 2 c.s. d'huile, la coriandre ({coriandre}) ciselée, sel et poivre.",
+   "Ajoute les crevettes tièdes et sers."
+  ]
+ },
+ {
+  "id": "x3_saumon_chorizo_haricots_blancs",
+  "n": "Saumon rôti au chorizo, tomates cerises et haricots blancs",
+  "s": "Saumon au chorizo",
+  "o": "es",
+  "m": [
+   600,
+   41,
+   35,
+   28
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "saumon": 500,
+   "chorizo": 80,
+   "tomatescerises": 300,
+   "haricotsblancs": 2,
+   "ail": 1,
+   "huile": 1,
+   "citron": 1,
+   "pain": 4
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Égoutte et rince {haricotsblancs} de haricots blancs. Coupe {chorizo} de chorizo en petits dés et écrase {ail} d'ail.",
+   "Dans un plat, mélange les haricots, {tomatescerises} de tomates cerises, le chorizo, l'ail et {huile} d'huile. Enfourne 10 min.",
+   "Pose {saumon} de saumon sur les haricots et enfourne 12 à 15 min : le saumon doit rester nacré à cœur.",
+   "Arrose de jus de {citron} et sers avec {pain} grillées pour saucer."
+  ]
+ },
+ {
+  "id": "x3_poisson_courgettes_orzo",
+  "n": "Poisson blanc mijoté aux courgettes et tomates, petites pâtes à la poêle",
+  "s": "Poisson tout-en-un",
+  "o": "es",
+  "m": [
+   450,
+   33,
+   52,
+   8
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "pasta": true,
+  "ing": {
+   "poissonblanc": 600,
+   "courgette": 2,
+   "tomatescerises": 250,
+   "oignon": 1,
+   "bouillon": 1,
+   "huile": 2,
+   "paprika": 1,
+   "vermicelles": 250
+  },
+  "steps": [
+   "Coupe {oignon} et {courgette} en dés. Fais-les revenir 6 min dans 2 c.s. d'huile, dans une grande sauteuse.",
+   "Ajoute {tomatescerises} de tomates cerises coupées en deux, {paprika} de paprika, {vermicelles} de petites pâtes, {bouillon} émietté et 700 ml d'eau chaude. Couvre et laisse cuire 6 min.",
+   "Pose {poissonblanc} de poisson blanc coupé en 4 sur les pâtes, sale, couvre et cuis 8 min à feu doux : le poisson doit être opaque et les pâtes avoir bu le bouillon."
+  ]
+ },
+ {
+  "id": "x3_poisson_mojo_riz_haricots_noirs",
+  "n": "Poisson mojo à la cubaine, riz et haricots noirs",
+  "s": "Poisson mojo",
+  "o": "cu",
+  "m": [
+   500,
+   33,
+   58,
+   12
+  ],
+  "diff": 2,
+  "ing": {
+   "poissonblanc": 600,
+   "orange": 1,
+   "citronvert": 2,
+   "ail": 3,
+   "cumin": 1,
+   "huile": 3,
+   "coriandre": 1,
+   "riz": 240,
+   "haricotsnoirs": 1
+  },
+  "steps": [
+   "Mojo : mélange le jus de {orange} et de {citronvert}, {ail} d'ail hachées fin, {cumin} de cumin et 2 c.s. d'huile. Garde 3 c.s. de côté.",
+   "Fais mariner {poissonblanc} de poisson blanc 10 min au frais dans le reste du mojo.",
+   "Pendant ce temps, cuis {riz} de riz et réchauffe {haricotsnoirs} de haricots noirs rincés avec une pincée de sel.",
+   "Égoutte le poisson et poêle-le 3 à 4 min de chaque côté dans 1 c.s. d'huile. Sers sur le riz et les haricots, arrosé du mojo gardé de côté et parsemé de coriandre ({coriandre})."
+  ]
+ },
+ {
+  "id": "x3_crevettes_teriyaki_riz_brocoli",
+  "n": "Crevettes sautées sauce teriyaki, riz et brocoli",
+  "s": "Crevettes teriyaki",
+  "o": "jp",
+  "m": [
+   490,
+   35,
+   68,
+   6
+  ],
+  "diff": 1,
+  "ing": {
+   "crevettes": 600,
+   "soja": 4,
+   "miel": 2,
+   "ail": 1,
+   "gingembre": 1,
+   "huile": 1,
+   "sesame": 1,
+   "riz": 280,
+   "brocoli": 400
+  },
+  "steps": [
+   "Cuis {riz} de riz. Coupe {brocoli} de brocoli en petits bouquets et cuis-les 5 min à la vapeur.",
+   "Sauce : mélange {soja} de sauce soja, {miel} de miel, 2 c.s. d'eau, {ail} d'ail haché et {gingembre} râpé.",
+   "Saisis {crevettes} de crevettes 2 min dans {huile} d'huile très chaude. Verse la sauce et laisse réduire 2 à 3 min en remuant, jusqu'à ce qu'elle nappe les crevettes.",
+   "Sers sur le riz avec le brocoli, parsemé de {sesame} de sésame."
+  ]
+ },
+ {
+  "id": "x3_saumon_pesto_abricot_semoule",
+  "n": "Saumon rôti au pesto d'abricot et coriandre, semoule et courgettes",
+  "s": "Saumon pesto d'abricot",
+  "o": "ma",
+  "m": [
+   655,
+   36,
+   54,
+   32
+  ],
+  "diff": 2,
+  "months": [
+   6,
+   7,
+   8
+  ],
+  "ing": {
+   "saumon": 500,
+   "abricots": 250,
+   "coriandre": 1,
+   "amandesentieres": 40,
+   "citron": 1,
+   "huile": 3,
+   "semoule": 240,
+   "courgette": 2
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Coupe {courgette} en demi-rondelles, mélange avec 1 c.s. d'huile et étale-les sur une plaque.",
+   "Pesto : mixe {abricots} d'abricots dénoyautés, la coriandre ({coriandre}), {amandesentieres} d'amandes, le jus de {citron}, 2 c.s. d'huile et du sel.",
+   "Pose {saumon} de saumon sur la plaque, nappe-le de pesto et enfourne 15 à 18 min avec les courgettes.",
+   "Verse de l'eau bouillante salée sur {semoule} de semoule, couvre 5 min et égrène. Sers avec le saumon et les courgettes."
+  ]
+ },
+ {
+  "id": "x3_pates_courgettes_citron_menthe",
+  "n": "Pâtes aux courgettes, citron et menthe, œufs mollets et parmesan",
+  "s": "Pâtes courgettes-citron-menthe",
+  "o": "it",
+  "m": [
+   500,
+   24,
+   58,
+   16
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "pasta": true,
+  "ing": {
+   "patescompletes": 320,
+   "courgette": 3,
+   "menthe": 1,
+   "parmesan": 60,
+   "citron": 1,
+   "huile": 2,
+   "oeufs": 4
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes. Garde un verre d'eau de cuisson avant d'égoutter.",
+   "Plonge {oeufs} 6 min dans l'eau bouillante, refroidis-les et écale-les.",
+   "Coupe {courgette} en fins bâtonnets et fais-les sauter 4 min dans 2 c.s. d'huile. Ajoute la menthe ({menthe}) ciselée.",
+   "Mélange les pâtes avec les courgettes, un peu d'eau de cuisson, {parmesan} de parmesan râpé, le zeste et le jus de {citron}. Sers avec un œuf mollet coupé en deux par assiette."
+  ]
+ },
+ {
+  "id": "x3_pates_carbonara_saucisses",
+  "n": "Pâtes façon carbonara aux saucisses fumées et petits pois",
+  "s": "Carbonara aux saucisses",
+  "o": "it",
+  "m": [
+   670,
+   35,
+   62,
+   31
+  ],
+  "diff": 1,
+  "pasta": true,
+  "comfort": true,
+  "ing": {
+   "patescompletes": 320,
+   "saucisse": 2,
+   "oeufs": 3,
+   "parmesan": 60,
+   "persil": 1,
+   "petitspois": 300,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes, ajoute {petitspois} de petits pois pour les 4 dernières minutes. Garde un verre d'eau de cuisson.",
+   "Coupe {saucisse} en rondelles et dore-les 5 min à la poêle avec {huile} d'huile et du poivre. Coupe le feu.",
+   "Bats {oeufs} avec {parmesan} de parmesan râpé, le persil ({persil}) haché et 2 c.s. d'eau de cuisson.",
+   "Hors du feu, verse pâtes et petits pois dans la poêle, ajoute les œufs et mélange vivement : la sauce doit devenir crémeuse sans cuire. Détends avec un peu d'eau chaude si besoin."
+  ]
+ },
+ {
+  "id": "x3_poulet_croustillant_ail_roquette",
+  "n": "Poulet croustillant à l'ail, roquette citronnée et petites pâtes au parmesan",
+  "s": "Poulet croustillant à l'ail",
+  "o": "gb",
+  "m": [
+   560,
+   42,
+   58,
+   15
+  ],
+  "diff": 2,
+  "ing": {
+   "poulet": 500,
+   "pain": 4,
+   "ail": 2,
+   "citron": 1,
+   "roquette": 100,
+   "huile": 3,
+   "vermicelles": 240,
+   "parmesan": 30
+  },
+  "steps": [
+   "Cuis {vermicelles} de petites pâtes 8 à 10 min dans l'eau salée, égoutte et mélange avec {parmesan} de parmesan et un filet d'huile.",
+   "Mixe {pain} avec {ail} d'ail en chapelure grossière.",
+   "Aplatis {poulet} de filets de poulet à 1 cm d'épaisseur entre deux feuilles de papier cuisson. Badigeonne-les d'huile et presse la chapelure dessus pour qu'elle colle.",
+   "Dore-les 3 à 4 min de chaque côté dans 2 c.s. d'huile, jusqu'à ce qu'ils soient cuits à cœur.",
+   "Assaisonne {roquette} de roquette avec le jus de {citron}, sel et poivre. Sers le poulet tranché sur la roquette, avec les pâtes."
+  ]
+ },
+ {
+  "id": "x3_poisson_riz_tomates_tapenade",
+  "n": "Poisson vapeur sur riz, tomates cerises et tapenade express",
+  "s": "Poisson riz-tapenade",
+  "o": "fr",
+  "m": [
+   510,
+   28,
+   60,
+   15
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "poissonblanc": 500,
+   "riz": 300,
+   "olives": 80,
+   "ail": 1,
+   "huile": 3,
+   "tomatescerises": 350,
+   "basilic": 1,
+   "vinaigre": 1
+  },
+  "steps": [
+   "Tapenade express : hache finement {olives} d'olives et {ail} d'ail, mélange avec 2 c.s. d'huile.",
+   "Dans une sauteuse, mélange {riz} de riz avec un tiers de la tapenade, verse 600 ml d'eau, sale, couvre et porte à ébullition.",
+   "Coupe {tomatescerises} de tomates cerises en deux et assaisonne-les avec {vinaigre} de vinaigre, 1 c.s. d'huile et la moitié du basilic ({basilic}) ciselé.",
+   "Coupe {poissonblanc} de poisson blanc en 4, enfonce les morceaux dans le riz et pose les tomates dessus. Couvre 10 min à feu doux, puis découvre 2 min. Sers avec le reste de tapenade et de basilic."
+  ]
+ },
+ {
+  "id": "x3_dorades_soja_gingembre_riz",
+  "n": "Dorades rôties soja-gingembre, riz et brocoli",
+  "s": "Dorades soja-gingembre",
+  "o": "cn",
+  "m": [
+   530,
+   40,
+   60,
+   11
+  ],
+  "diff": 2,
+  "ing": {
+   "dorade": 4,
+   "gingembre": 1,
+   "soja": 3,
+   "cebette": 3,
+   "citronvert": 1,
+   "huile": 1,
+   "riz": 280,
+   "brocoli": 400
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Cuis {riz} de riz.",
+   "Entaille {dorade} de chaque côté et pose-les dans un plat huilé avec {huile} d'huile. Glisse dans le ventre et les entailles {gingembre} râpé et {cebette} émincées, arrose de {soja} de sauce soja.",
+   "Enfourne 20 à 25 min : la chair doit se détacher de l'arête. Pendant ce temps, cuis {brocoli} de brocoli 5 min à la vapeur.",
+   "Arrose de jus de {citronvert} et sers avec le riz, le brocoli et le jus du plat."
+  ]
+ },
+ {
+  "id": "x3_beignets_crevettes_mais_riz",
+  "n": "Beignets de crevettes et maïs, riz et salade de concombre",
+  "s": "Beignets crevettes-maïs",
+  "o": "th",
+  "m": [
+   590,
+   31,
+   80,
+   14
+  ],
+  "diff": 2,
+  "ing": {
+   "crevettes": 400,
+   "mais": 1,
+   "oeufs": 2,
+   "farine": 120,
+   "levure": 1,
+   "lait": 100,
+   "cebette": 2,
+   "huile": 3,
+   "riz": 240,
+   "concombre": 1,
+   "citronvert": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz. Coupe {concombre} en fines rondelles et assaisonne avec le jus de {citronvert} et du sel.",
+   "Hache grossièrement {crevettes} de crevettes, émince {cebette} et égoutte {mais} de maïs.",
+   "Mélange {farine} de farine et {levure} de levure, ajoute {oeufs} et {lait} de lait, fouette. Incorpore les crevettes, le maïs et les cébettes.",
+   "Chauffe {huile} d'huile dans une grande poêle. Dépose des cuillerées de pâte et dore-les 3 min de chaque côté. Sers avec le riz et la salade de concombre."
+  ]
+ },
+ {
+  "id": "x3_poisson_croustillant_thai_nouilles",
+  "n": "Poisson croustillant sauce soja-citron vert, nouilles de riz et haricots verts",
+  "s": "Poisson croustillant à la thaïe",
+  "o": "th",
+  "m": [
+   470,
+   30,
+   62,
+   9
+  ],
+  "diff": 2,
+  "ing": {
+   "poissonblanc": 600,
+   "farine": 30,
+   "citronvert": 1,
+   "soja": 2,
+   "miel": 1,
+   "ail": 1,
+   "gingembre": 1,
+   "huile": 2,
+   "nouillesriz": 250,
+   "haricotsverts": 300
+  },
+  "steps": [
+   "Fais tremper {nouillesriz} de nouilles de riz comme indiqué sur le paquet. Cuis {haricotsverts} de haricots verts 8 min à l'eau bouillante salée.",
+   "Sauce : mélange le jus de {citronvert}, {soja} de sauce soja, {miel} de miel, {ail} d'ail haché et {gingembre} râpé.",
+   "Sèche bien {poissonblanc} de poisson blanc et passe-le dans {farine} de farine. Dore-le 3 min de chaque côté dans {huile} d'huile très chaude, sans le bouger.",
+   "Retire le poisson, verse la sauce dans la poêle 30 s, puis mélange-y les nouilles égouttées et les haricots verts. Sers le poisson sur les nouilles."
+  ]
+ },
+ {
+  "id": "x3_cabillaud_jambon_cru_lentilles",
+  "n": "Cabillaud au jambon cru, lentilles et épinards",
+  "s": "Cabillaud au jambon cru",
+  "o": "it",
+  "m": [
+   490,
+   48,
+   34,
+   11
+  ],
+  "diff": 2,
+  "ing": {
+   "cabillaud": 600,
+   "jambonsec": 8,
+   "lentillesvertes": 240,
+   "epinards": 300,
+   "vinaigre": 1,
+   "huile": 2,
+   "herbes": 1
+  },
+  "steps": [
+   "Cuis {lentillesvertes} de lentilles vertes 20 à 25 min dans 3 fois leur volume d'eau, puis égoutte.",
+   "Coupe {cabillaud} de cabillaud en 4 pavés, poivre-les et enroule chacun dans 2 tranches de jambon cru ({jambonsec} en tout).",
+   "Dore-les 8 min dans 1 c.s. d'huile en les retournant, ajoute {herbes} d'herbes de Provence les 2 dernières minutes. Réserve.",
+   "Dans la même poêle, réchauffe les lentilles avec {vinaigre} de vinaigre et 1 c.s. d'huile. Fais tomber {epinards} d'épinards à côté 2 min. Sers le poisson sur les lentilles et les épinards."
+  ]
+ },
+ {
+  "id": "x3_souffle_fromage_jambon",
+  "n": "Soufflé au fromage, jambon et salade verte",
+  "s": "Soufflé au fromage",
+  "o": "fr",
+  "m": [
+   560,
+   34,
+   30,
+   33
+  ],
+  "diff": 3,
+  "comfort": true,
+  "ing": {
+   "beurre": 50,
+   "farine": 50,
+   "lait": 400,
+   "oeufs": 6,
+   "emmental": 150,
+   "jambon": 4,
+   "salade": 1,
+   "pain": 4
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Beurre un moule à soufflé (ou 4 ramequins). Sépare les blancs des jaunes de {oeufs}.",
+   "Béchamel épaisse : fais fondre {beurre} de beurre, ajoute {farine} de farine, puis {lait} de lait en fouettant jusqu'à épaississement. Hors du feu, ajoute les jaunes, {emmental} d'emmental râpé, un peu de muscade, sel et poivre.",
+   "Monte les blancs en neige avec une pincée de sel et incorpore-les en 3 fois, délicatement.",
+   "Verse dans le moule et enfourne 25 min (15 min en ramequins) sans ouvrir la porte. Sers aussitôt avec {jambon} de jambon, {salade} et {pain} grillées."
+  ]
+ },
+ {
+  "id": "x3_chaussons_chevre_tomate_haricots",
+  "n": "Chaussons feuilletés chèvre-tomate au thym, salade de haricots blancs et œufs",
+  "s": "Chaussons chèvre-tomate",
+  "o": "fr",
+  "m": [
+   640,
+   30,
+   42,
+   38
+  ],
+  "diff": 2,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "patefeuilletee": 1,
+   "chevre": 200,
+   "tomatefraiche": 2,
+   "herbes": 1,
+   "oeufs": 5,
+   "haricotsblancs": 2,
+   "echalote": 1,
+   "vinaigre": 1,
+   "huile": 2,
+   "persil": 1
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Fais durcir 4 des {oeufs} 9 min, refroidis-les et écale-les ; garde le dernier pour dorer.",
+   "Épépine {tomatefraiche} et coupe-les en petits dés. Mélange avec {chevre} de chèvre émietté, {herbes} d'herbes de Provence (ou de thym) et du poivre.",
+   "Coupe {patefeuilletee} en 8 carrés. Garnis la moitié de chaque carré, replie en triangle et soude les bords à la fourchette. Dore à l'œuf battu et enfourne 20 min.",
+   "Salade : rince {haricotsblancs} de haricots blancs, mélange avec {echalote} émincée, le persil ({persil}) haché, {vinaigre} de vinaigre, {huile} d'huile et du sel. Ajoute les œufs en quartiers et sers avec les chaussons chauds."
+  ]
+ },
+ {
+  "id": "x3_roules_chorizo_salade_poischiches",
+  "n": "Roulés feuilletés au chorizo, salade de pois chiches et poivron",
+  "s": "Roulés au chorizo",
+  "o": "es",
+  "m": [
+   600,
+   22,
+   46,
+   37
+  ],
+  "diff": 2,
+  "ing": {
+   "patefeuilletee": 1,
+   "chorizo": 100,
+   "ricotta": 100,
+   "paprika": 1,
+   "oeufs": 1,
+   "poischiches": 2,
+   "poivron": 1,
+   "concombre": 1,
+   "citron": 1,
+   "huile": 2
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Hache finement {chorizo} de chorizo et mélange-le avec {ricotta} de ricotta et {paprika} de paprika.",
+   "Déroule {patefeuilletee}, étale la garniture dessus, roule serré et place 10 min au congélateur pour raffermir.",
+   "Coupe en rondelles de 1,5 cm, pose-les sur une plaque, dore-les avec {oeufs} battu et enfourne 15 à 18 min.",
+   "Salade : rince {poischiches} de pois chiches, coupe {poivron} et {concombre} en dés. Assaisonne avec le jus de {citron}, {huile} d'huile, sel et poivre. Sers avec les roulés tièdes."
+  ]
+ },
+ {
+  "id": "x3_steak_echalote_frites",
+  "n": "Steak à l'échalote, frites au four et salade verte",
+  "s": "Steak à l'échalote",
+  "o": "fr",
+  "m": [
+   480,
+   37,
+   37,
+   19
+  ],
+  "diff": 2,
+  "comfort": true,
+  "ing": {
+   "fauxfilet": 600,
+   "echalote": 4,
+   "beurre": 20,
+   "huile": 2,
+   "bouillon": 1,
+   "moutarde": 1,
+   "pommedeterre": 800,
+   "salade": 1
+  },
+  "steps": [
+   "Frites : coupe {pommedeterre} de pommes de terre en bâtonnets, mélange avec 1 c.s. d'huile et enfourne 30 min à 210 °C en remuant à mi-cuisson.",
+   "Sors {fauxfilet} de steaks (rumsteck ou faux-filet) du frigo 15 min avant. Saisis-les dans une poêle bien chaude avec le reste d'huile, 2 à 3 min par face, puis réserve.",
+   "Dans la même poêle, fais fondre {echalote} émincées 5 min dans {beurre} de beurre. Ajoute ½ cube de {bouillon} dilué dans 150 ml d'eau, laisse réduire de moitié et ajoute {moutarde} de moutarde.",
+   "Remets les steaks 30 secondes dans la sauce. Sers avec les frites et {salade}."
+  ]
+ },
+ {
+  "id": "x3_sole_meuniere",
+  "n": "Sole meunière, pommes vapeur et haricots verts",
+  "s": "Sole meunière",
+  "o": "fr",
+  "m": [
+   440,
+   32,
+   46,
+   13
+  ],
+  "diff": 2,
+  "ing": {
+   "sole": 600,
+   "farine": 40,
+   "beurre": 50,
+   "citron": 1,
+   "persil": 1,
+   "pommedeterre": 800,
+   "haricotsverts": 400
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre en morceaux 20 min à la vapeur, avec {haricotsverts} de haricots verts les 10 dernières minutes.",
+   "Sèche {sole} de filets de sole, sale-les et passe-les dans {farine} de farine en tapotant l'excédent.",
+   "Fais fondre la moitié de {beurre} de beurre dans une grande poêle. Cuis les filets 2 min par face, sans trop les manipuler, puis pose-les sur les assiettes.",
+   "Fais mousser le reste du beurre jusqu'à ce qu'il blondisse, ajoute le jus du {citron} et {persil} haché. Verse sur le poisson."
+  ]
+ },
+ {
+  "id": "x3_moules_marinieres_frites",
+  "n": "Moules marinières et frites au four",
+  "s": "Moules-frites",
+  "o": "fr",
+  "m": [
+   470,
+   22,
+   52,
+   17
+  ],
+  "diff": 2,
+  "ing": {
+   "moules": 2000,
+   "echalote": 2,
+   "ail": 2,
+   "beurre": 20,
+   "vinblanc": 150,
+   "persil": 1,
+   "pommedeterre": 1000,
+   "huile": 2
+  },
+  "steps": [
+   "Frites : coupe {pommedeterre} de pommes de terre en bâtonnets, mélange avec {huile} d'huile et enfourne 30 min à 210 °C en remuant à mi-cuisson.",
+   "Trie {moules} de moules : jette celles qui sont cassées ou qui restent ouvertes quand tu les touches. Rince-les vite sous l'eau froide.",
+   "Dans une grande cocotte, fais fondre {echalote} et {ail} émincés dans {beurre} de beurre. Verse {vinblanc} de vin blanc et porte à ébullition.",
+   "Ajoute les moules, couvre et secoue la cocotte 5 min, jusqu'à ce qu'elles s'ouvrent. Jette celles qui restent fermées, parsème de {persil} haché et sers avec les frites. Du pain à la place des frites marche aussi pour saucer."
+  ]
+ },
+ {
+  "id": "x3_poireaux_vinaigrette_oeufs",
+  "n": "Poireaux vinaigrette, œufs mollets, jambon et pommes de terre tièdes",
+  "s": "Poireaux vinaigrette",
+  "o": "fr",
+  "m": [
+   400,
+   21,
+   39,
+   17
+  ],
+  "diff": 1,
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "ing": {
+   "poireau": 6,
+   "pommedeterre": 700,
+   "oeufs": 4,
+   "jambon": 4,
+   "echalote": 1,
+   "moutarde": 1,
+   "vinaigre": 2,
+   "huile": 3,
+   "persil": 1
+  },
+  "steps": [
+   "Garde le blanc et le vert tendre de {poireau}, fends-les et rince bien le sable. Coupe {pommedeterre} de pommes de terre en gros morceaux.",
+   "Cuis poireaux et pommes de terre 18 min dans l'eau salée frémissante. Ajoute {oeufs} les 6 dernières minutes, puis passe-les sous l'eau froide.",
+   "Vinaigrette : fouette {moutarde} de moutarde, {vinaigre} de vinaigre, {huile} d'huile et {echalote} hachée finement.",
+   "Égoutte bien les poireaux, nappe-les de vinaigrette encore tièdes avec les pommes de terre. Ajoute les œufs écalés, {jambon} de jambon roulé et {persil} haché."
+  ]
+ },
+ {
+  "id": "x3_oeufs_mimosa_carottes",
+  "n": "Œufs mimosa au thon, carottes râpées au citron et baguette",
+  "s": "Œufs mimosa",
+  "o": "fr",
+  "m": [
+   490,
+   30,
+   48,
+   18
+  ],
+  "diff": 2,
+  "ing": {
+   "oeufs": 8,
+   "thon": 1,
+   "skyr": 80,
+   "moutarde": 1,
+   "paprika": 1,
+   "carotte": 6,
+   "citron": 1,
+   "huile": 2,
+   "persil": 1,
+   "baguette": 1
+  },
+  "steps": [
+   "Plonge {oeufs} 10 min dans l'eau bouillante, puis refroidis-les sous l'eau froide.",
+   "Pendant ce temps, râpe {carotte}. Assaisonne avec le jus du {citron}, {huile} d'huile, sel, poivre et {persil} haché.",
+   "Écale les œufs, coupe-les en deux et sors les jaunes. Garde 2 jaunes de côté, écrase les autres avec {thon} émietté, {skyr} de skyr et {moutarde} de moutarde.",
+   "Remplis les blancs, émiette les jaunes gardés par-dessus et saupoudre de {paprika} de paprika. Sers avec les carottes et {baguette}."
+  ]
+ },
+ {
+  "id": "x3_huevos_rotos",
+  "n": "Huevos rotos : pommes de terre rôties, œufs au plat et jambon cru",
+  "s": "Huevos rotos",
+  "o": "es",
+  "m": [
+   570,
+   28,
+   46,
+   30
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 900,
+   "oeufs": 8,
+   "jambonsec": 6,
+   "huile": 3,
+   "paprika": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en grosses frites, sèche-les, mélange avec 2 c.s. d'huile et 1 c.c. de paprika. Cuis 25 min à l'air fryer à 200 °C en secouant à mi-cuisson.",
+   "Cuis {oeufs} au plat dans 1 c.s. d'huile, jaunes coulants.",
+   "Dresse les pommes de terre, ajoute {jambonsec} de jambon cru en lanières et les œufs. Crève les jaunes à table et mélange. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x3_fideua_crevettes",
+  "n": "Fideuà aux crevettes et au poivron",
+  "s": "Fideuà",
+  "o": "es",
+  "m": [
+   580,
+   37,
+   74,
+   13
+  ],
+  "diff": 2,
+  "pasta": true,
+  "ing": {
+   "vermicelles": 320,
+   "crevettes": 500,
+   "tomates": 1,
+   "poivron": 1,
+   "oignon": 1,
+   "ail": 2,
+   "safran": 1,
+   "bouillon": 1,
+   "huile": 2,
+   "citron": 1
+  },
+  "steps": [
+   "Dans une grande poêle, fais revenir {oignon} émincé, {poivron} en dés et 2 gousses d'ail 6 min dans 2 c.s. d'huile. Ajoute {tomates} de tomates concassées et {safran} de safran, 4 min.",
+   "Ajoute {vermicelles} de petites pâtes, remue 1 min, puis verse {bouillon} dilué dans 800 ml d'eau chaude. Cuis à feu moyen sans trop remuer, le temps indiqué sur le paquet.",
+   "Pose {crevettes} de crevettes sur les pâtes 4 min avant la fin. Laisse reposer 3 min et sers avec {citron} en quartiers."
+  ]
+ },
+ {
+  "id": "x3_merluza_salsa_verde",
+  "n": "Merlu en sauce verte à l'ail et au persil, pommes de terre et petits pois",
+  "s": "Merluza en salsa verde",
+  "o": "es",
+  "m": [
+   440,
+   38,
+   47,
+   9
+  ],
+  "diff": 2,
+  "ing": {
+   "poissonblanc": 680,
+   "pommedeterre": 800,
+   "petitspois": 200,
+   "ail": 3,
+   "persil": 1,
+   "farine": 15,
+   "bouillon": 1,
+   "huile": 2,
+   "citron": 1
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en rondelles épaisses et cuis-les 15 min à l'eau salée.",
+   "Dans une sauteuse, chauffe doucement 3 gousses d'ail hachées dans 2 c.s. d'huile, 1 min sans colorer. Ajoute {farine} de farine, remue 30 s, puis verse {bouillon} dilué dans 300 ml d'eau chaude en fouettant.",
+   "Pose {poissonblanc} de poisson blanc salé et poivré dans la sauce avec {petitspois} de petits pois. Couvre et cuis 8 min en retournant le poisson une fois.",
+   "Ajoute beaucoup de persil haché ({persil}) et le jus de {citron}. Sers avec les pommes de terre."
+  ]
+ },
+ {
+  "id": "x3_pan_tomate_sardines",
+  "n": "Pan con tomate, sardines, œufs durs et salade",
+  "s": "Pan con tomate",
+  "o": "es",
+  "m": [
+   560,
+   30,
+   52,
+   25
+  ],
+  "diff": 1,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "ing": {
+   "baguette": 1,
+   "tomatefraiche": 4,
+   "ail": 2,
+   "huile": 3,
+   "sardines": 2,
+   "oeufs": 6,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {oeufs} 10 min à l'eau bouillante, refroidis-les et écale-les.",
+   "Coupe {baguette} en tartines et fais-les griller. Frotte-les avec une gousse d'ail coupée en deux.",
+   "Râpe {tomatefraiche} en gardant la peau dans la main, assaisonne la pulpe de 3 c.s. d'huile et de sel. Étale sur le pain au dernier moment.",
+   "Sers avec {sardines} de sardines, les œufs en quartiers et {salade}."
+  ]
+ },
+ {
+  "id": "x3_gambas_patatas_bravas",
+  "n": "Gambas al ajillo et patatas bravas au four, salade",
+  "s": "Gambas et patatas bravas",
+  "o": "es",
+  "m": [
+   560,
+   34,
+   55,
+   21
+  ],
+  "diff": 2,
+  "ing": {
+   "crevettes": 600,
+   "pommedeterre": 800,
+   "passata": 250,
+   "oignon": 1,
+   "ail": 6,
+   "paprika": 1,
+   "piment": 1,
+   "vinaigre": 1,
+   "huile": 5,
+   "persil": 1,
+   "citron": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Coupe {pommedeterre} de pommes de terre en cubes, mélange avec 2 c.s. d'huile et sel. Rôtis 30 min au four à 210 °C ou 22 min à l'air fryer, en remuant à mi-cuisson.",
+   "Sauce brava : fais revenir {oignon} émincé et 1 gousse d'ail 4 min dans 1 c.s. d'huile. Ajoute {passata} de passata, 1 c.c. de paprika fumé, {piment} de piment et {vinaigre} de vinaigre. Laisse réduire 10 min, mixe.",
+   "Sèche {crevettes} de crevettes. Chauffe doucement 5 gousses d'ail émincées dans 2 c.s. d'huile sans les colorer, monte le feu et saisis les crevettes 2 à 3 min. Hors du feu : persil haché ({persil}) et jus de {citron}.",
+   "Nappe les pommes de terre de sauce et sers avec les crevettes et {salade}."
+  ]
+ },
+ {
+  "id": "x3_bocadillos_calamars",
+  "n": "Bocadillos de calamars à l'air fryer, sauce skyr-citron et salade",
+  "s": "Bocadillos de calamars",
+  "o": "es",
+  "m": [
+   590,
+   40,
+   74,
+   13
+  ],
+  "diff": 2,
+  "ing": {
+   "calamars": 600,
+   "farine": 60,
+   "oeufs": 2,
+   "chapelure": 100,
+   "paprika": 1,
+   "huile": 1,
+   "baguette": 1,
+   "skyr": 150,
+   "citron": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Décongèle et sèche bien {calamars} d'encornets. Passe-les dans {farine} de farine, puis dans {oeufs} battus, puis dans {chapelure} de chapelure mélangée à 1 c.c. de paprika et du sel.",
+   "Arrose de 1 c.s. d'huile et cuis 10 à 12 min à l'air fryer à 200 °C en secouant à mi-cuisson.",
+   "Mélange {skyr} de skyr avec le jus d'un demi {citron}, sel et poivre.",
+   "Coupe {baguette} en 4, ouvre les morceaux, garnis de sauce et de calamars. Sers avec {salade} et le reste du citron."
+  ]
+ },
+ {
+  "id": "x3_cacio_e_pepe_roquette",
+  "o": "it",
+  "pasta": true,
+  "n": "Cacio e pepe et salade roquette-tomates cerises",
+  "s": "Cacio e pepe",
+  "m": [
+   430,
+   20,
+   60,
+   12
+  ],
+  "diff": 3,
+  "ing": {
+   "patescompletes": 320,
+   "parmesan": 100,
+   "roquette": 100,
+   "tomatescerises": 250,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes dans une eau peu salée. Garde un grand bol d'eau de cuisson.",
+   "Fais griller 2 c.c. de poivre concassé 30 s à sec dans une grande poêle, ajoute une louche d'eau de cuisson puis les pâtes égouttées.",
+   "Hors du feu, verse {parmesan} de parmesan râpé petit à petit en remuant vite, avec un peu d'eau de cuisson, jusqu'à obtenir une sauce lisse et brillante.",
+   "Sers aussitôt avec {roquette} de roquette et {tomatescerises} de tomates cerises coupées en deux, arrosées d'1 c.s. d'huile d'olive."
+  ]
+ },
+ {
+  "id": "x3_amatriciana_lardons",
+  "o": "it",
+  "pasta": true,
+  "comfort": true,
+  "n": "Penne all'amatriciana aux lardons et salade verte",
+  "s": "Amatriciana",
+  "m": [
+   475,
+   22,
+   60,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "lardons": 150,
+   "tomates": 1,
+   "piment": 0.5,
+   "parmesan": 50,
+   "huile": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Fais dorer {lardons} de lardons 5 min dans 1 c.s. d'huile.",
+   "Ajoute {tomates} de tomates concassées et {piment} de piment, laisse réduire 12 min à feu moyen.",
+   "Pendant ce temps, cuis {patescompletes} de pâtes. Égoutte-les et mélange-les à la sauce avec un peu d'eau de cuisson.",
+   "Sers avec {parmesan} de parmesan râpé et {salade}."
+  ]
+ },
+ {
+  "id": "x3_dorade_four_pdt",
+  "o": "it",
+  "n": "Dorades au four, pommes de terre et tomates",
+  "s": "Dorade au four",
+  "m": [
+   390,
+   32,
+   36,
+   13
+  ],
+  "diff": 2,
+  "ing": {
+   "dorade": 2,
+   "pommedeterre": 700,
+   "tomatefraiche": 4,
+   "citron": 1,
+   "ail": 3,
+   "huile": 3,
+   "herbes": 1
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Coupe {pommedeterre} de pommes de terre en rondelles fines et précuis-les 5 min au micro-ondes.",
+   "Étale-les dans un grand plat avec {tomatefraiche} en quartiers, 3 gousses d'ail écrasées, 2 c.s. d'huile, sel et poivre.",
+   "Sale l'intérieur de {dorade}, glisses-y des rondelles de {citron} et 1 c.c. d'herbes. Pose-les sur les légumes, arrose d'1 c.s. d'huile.",
+   "Enfourne 25 min. Lève les filets à table en retirant les arêtes."
+  ]
+ },
+ {
+  "id": "x3_saltimbocca_polenta",
+  "o": "it",
+  "n": "Saltimbocca de veau, polenta et haricots verts",
+  "s": "Saltimbocca",
+  "m": [
+   515,
+   43,
+   42,
+   19
+  ],
+  "diff": 2,
+  "ing": {
+   "veau": 600,
+   "jambonsec": 4,
+   "sauge": 1,
+   "beurre": 30,
+   "huile": 1,
+   "vinblanc": 100,
+   "polenta": 200,
+   "parmesan": 30,
+   "haricotsverts": 400
+  },
+  "steps": [
+   "Cuis {haricotsverts} de haricots verts 8 min à l'eau salée.",
+   "Aplatis {veau} de veau en 8 fines escalopes, poivre-les. Pose sur chacune une demi-tranche de jambon cru ({jambonsec} au total) et un peu de sauge ({sauge}), fixe avec un cure-dent.",
+   "Verse {polenta} de polenta en pluie dans 800 ml d'eau salée bouillante, remue 5 min et ajoute {parmesan} de parmesan.",
+   "Dore les escalopes 2 min côté veau dans {beurre} de beurre et 1 c.s. d'huile, puis 1 min côté jambon. Verse {vinblanc} de vin blanc, laisse réduire 2 min et nappe-les de ce jus."
+  ]
+ },
+ {
+  "id": "x3_caprese_haricots_pain",
+  "o": "it",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "n": "Salade caprese, haricots blancs au basilic et pain grillé",
+  "s": "Caprese complète",
+  "m": [
+   400,
+   22,
+   40,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "mozzarella": 250,
+   "tomatefraiche": 6,
+   "basilic": 1,
+   "haricotsblancs": 1,
+   "pain": 8,
+   "huile": 3,
+   "vinaigre": 1
+  },
+  "steps": [
+   "Égoutte {haricotsblancs} de haricots blancs et assaisonne-les avec 1 c.s. d'huile, la moitié du basilic ({basilic}) ciselé, sel et poivre.",
+   "Coupe {tomatefraiche} et {mozzarella} de mozzarella en tranches, alterne-les dans un plat avec le reste du basilic.",
+   "Arrose de 2 c.s. d'huile d'olive et d'1 c.s. de vinaigre. Sers avec les haricots et {pain} grillées."
+  ]
  }
 ]

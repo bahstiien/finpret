@@ -1491,5 +1491,676 @@
    "Mélange {beurre} de beurre mou, {sucre} de sucre, {oeufs} œufs, {amande} de poudre d'amande et {farine} de farine.",
    "Verse la pâte, enfonce les abricots côté bombé vers le haut. Enfourne 35 min."
   ]
+ },
+ {
+  "id": "x3_crumble_peches_framboises",
+  "n": "Crumble pêches-framboises à la cannelle",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "m": [
+   210,
+   3,
+   28,
+   10
+  ],
+  "diff": 1,
+  "kid": "Il répartit les framboises sur les pêches et parsème le crumble.",
+  "ing": {
+   "peche": 6,
+   "fruitsrouges": 150,
+   "miel": 1,
+   "cannelle": 1,
+   "farine": 80,
+   "flocons": 50,
+   "beurre": 60,
+   "sucre": 40,
+   "amandesentieres": 30
+  },
+  "steps": [
+   "Coupe {peche} en quartiers dans un plat à gratin, ajoute {fruitsrouges} de framboises, {miel} de miel et {cannelle} de cannelle.",
+   "Sable du bout des doigts {farine} de farine, {flocons} de flocons, {beurre} de beurre froid et {sucre} de sucre, puis ajoute {amandesentieres} d'amandes effilées.",
+   "Parsème sur les fruits et enfourne 30 min à 180 °C, jusqu'à ce que le dessus soit doré."
+  ]
+ },
+ {
+  "id": "x3_prunes_mures",
+  "n": "Gâteau aux prunes et aux mûres",
+  "t": "gateau",
+  "tm": "1 h 05",
+  "parts": "8 parts",
+  "months": [
+   8,
+   9
+  ],
+  "m": [
+   275,
+   5,
+   35,
+   12
+  ],
+  "diff": 2,
+  "kid": "Il enfonce les morceaux de prune et les mûres dans la pâte.",
+  "ing": {
+   "farine": 180,
+   "sucre": 100,
+   "beurre": 100,
+   "oeufs": 3,
+   "prunes": 300,
+   "fruitsrouges": 150,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 175 °C et beurre un moule rond de 22 cm.",
+   "Fais fondre {beurre} de beurre avec une feuille de laurier si tu en as, laisse infuser 5 min puis retire la feuille.",
+   "Fouette {oeufs} avec {sucre} de sucre, ajoute {farine} de farine, {levure} de levure puis le beurre tiède.",
+   "Verse dans le moule, enfonce {prunes} de prunes dénoyautées en quartiers et {fruitsrouges} de mûres.",
+   "Enfourne 40 à 45 min et laisse refroidir avant de couper."
+  ]
+ },
+ {
+  "id": "x3_cake_myrtilles_citron",
+  "n": "Cake myrtilles, amande et citron",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "10 tranches",
+  "m": [
+   255,
+   6,
+   25,
+   14
+  ],
+  "diff": 2,
+  "kid": "Il râpe le zeste du citron et verse les myrtilles.",
+  "ing": {
+   "farine": 160,
+   "amande": 100,
+   "sucre": 100,
+   "oeufs": 3,
+   "beurre": 90,
+   "myrtilles": 180,
+   "citron": 1,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C et beurre un moule à cake.",
+   "Fouette {oeufs}, {sucre} de sucre et {beurre} de beurre fondu.",
+   "Ajoute {farine} de farine, {amande} de poudre d'amande, {levure} de levure et le zeste de {citron}.",
+   "Incorpore {myrtilles} de myrtilles encore surgelées, sans trop mélanger.",
+   "Enfourne 40 à 45 min. Une lame doit ressortir sèche."
+  ]
+ },
+ {
+  "id": "x3_clafoutis_figues",
+  "n": "Clafoutis aux figues et au thym",
+  "t": "gateau",
+  "tm": "50 min",
+  "parts": "8 parts",
+  "months": [
+   8,
+   9,
+   10
+  ],
+  "m": [
+   160,
+   5,
+   25,
+   4
+  ],
+  "diff": 1,
+  "kid": "Il range les quartiers de figue dans le plat.",
+  "ing": {
+   "figues": 8,
+   "oeufs": 3,
+   "farine": 80,
+   "sucre": 60,
+   "lait": 250,
+   "beurre": 15,
+   "herbes": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Beurre un plat avec {beurre} de beurre.",
+   "Coupe {figues} en quartiers et répartis-les dans le plat.",
+   "Au blender : {oeufs}, {sucre} de sucre, {farine} de farine et {lait} de lait, 20 s. Ajoute {herbes} de thym.",
+   "Verse sur les figues et enfourne 30 à 35 min. Se mange tiède ou froid."
+  ]
+ },
+ {
+  "id": "x3_noisettes_peches",
+  "n": "Gâteau noisettes, pêches et framboises",
+  "t": "gateau",
+  "tm": "1 h 05",
+  "parts": "10 parts",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "m": [
+   260,
+   5,
+   26,
+   15
+  ],
+  "diff": 2,
+  "kid": "Il dispose les quartiers de pêche et les framboises.",
+  "ing": {
+   "farine": 150,
+   "noisettes": 100,
+   "sucre": 110,
+   "oeufs": 3,
+   "beurre": 90,
+   "peche": 2,
+   "fruitsrouges": 120,
+   "levure": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Mixe {noisettes} de noisettes en poudre fine.",
+   "Fouette {oeufs}, {sucre} de sucre et {beurre} de beurre fondu, puis ajoute {farine} de farine, les noisettes et {levure} de levure.",
+   "Verse dans un moule de 22 cm, pose {peche} en quartiers et {fruitsrouges} de framboises.",
+   "Enfourne 40 à 45 min. Vérifie la cuisson au centre."
+  ]
+ },
+ {
+  "id": "x3_roules_choco_noisettes",
+  "n": "Roulés feuilletés chocolat-noisette et sésame",
+  "t": "biscuit",
+  "tm": "35 min",
+  "parts": "16 roulés",
+  "m": [
+   125,
+   2,
+   10,
+   8
+  ],
+  "diff": 2,
+  "kid": "Il étale la pâte à tartiner et roule la pâte.",
+  "ing": {
+   "patefeuilletee": 1,
+   "patetartiner": 120,
+   "noisettes": 40,
+   "sesame": 2,
+   "oeufs": 1
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Déroule {patefeuilletee}.",
+   "Étale {patetartiner} de pâte à tartiner, parsème {noisettes} de noisettes concassées et {sesame} de sésame.",
+   "Roule serré depuis le grand côté, coupe en tranches de 2 cm et pose-les à plat sur une plaque.",
+   "Dore avec {oeufs} battu et enfourne 17 à 20 min."
+  ]
+ },
+ {
+  "id": "x3_brunsli",
+  "n": "Biscuits chocolat-amande façon brunsli",
+  "t": "biscuit",
+  "tm": "35 min",
+  "parts": "24 biscuits",
+  "m": [
+   80,
+   2,
+   6,
+   5
+  ],
+  "diff": 2,
+  "kid": "Il découpe les biscuits à l'emporte-pièce.",
+  "ing": {
+   "amande": 200,
+   "sucre": 120,
+   "cacao": 3,
+   "oeufs": 2,
+   "cannelle": 1,
+   "chocolat": 30
+  },
+  "steps": [
+   "Préchauffe le four à 165 °C.",
+   "Mélange {amande} de poudre d'amande, {sucre} de sucre, {cacao} de cacao, {cannelle} de cannelle et {chocolat} de chocolat haché.",
+   "Ajoute les blancs de {oeufs}, sans les monter, et malaxe jusqu'à une pâte dense. Garde les jaunes pour une crème.",
+   "Étale sur 1 cm entre deux feuilles de cuisson, découpe des formes et enfourne 12 à 14 min. Ils durcissent en refroidissant."
+  ]
+ },
+ {
+  "id": "x3_cookies_pomme_crumble",
+  "n": "Cookies pomme-crumble",
+  "t": "biscuit",
+  "tm": "35 min",
+  "parts": "12 cookies",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   155,
+   3,
+   20,
+   7
+  ],
+  "diff": 2,
+  "kid": "Il forme les petits tas sur la plaque.",
+  "ing": {
+   "farine": 150,
+   "beurre": 90,
+   "sucre": 80,
+   "oeufs": 1,
+   "pomme": 1,
+   "flocons": 60,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Coupe {pomme} en tout petits dés.",
+   "Robot avec la feuille : {beurre} de beurre mou et {sucre} de sucre, puis {oeufs}.",
+   "Ajoute {farine} de farine, {flocons} de flocons d'avoine, {cannelle} de cannelle, puis les dés de pomme.",
+   "Forme 12 tas espacés sur une plaque et enfourne 13 à 15 min. Laisse refroidir sur une grille."
+  ]
+ },
+ {
+  "id": "x3_tatin_prunes",
+  "n": "Tarte Tatin aux prunes",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   7,
+   8,
+   9
+  ],
+  "m": [
+   245,
+   2,
+   31,
+   12
+  ],
+  "diff": 3,
+  "kid": "Il range les demi-prunes côté bombé sur le caramel refroidi.",
+  "ing": {
+   "prunes": 700,
+   "patefeuilletee": 1,
+   "sucre": 90,
+   "beurre": 50,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Coupe {prunes} de prunes en deux et dénoyaute-les.",
+   "Dans un moule allant sur le feu, fais fondre {sucre} de sucre jusqu'au caramel blond, puis ajoute {beurre} de beurre hors du feu.",
+   "Range les prunes serrées sur le caramel, saupoudre de {cannelle} de cannelle.",
+   "Couvre avec {patefeuilletee} en rentrant les bords et enfourne 30 min.",
+   "Attends 5 min, pose un plat dessus et retourne d'un coup."
+  ]
+ },
+ {
+  "id": "x3_tatin_pommes",
+  "n": "Tarte Tatin aux pommes",
+  "t": "gateau",
+  "tm": "1 h",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   280,
+   2,
+   38,
+   13
+  ],
+  "diff": 3,
+  "kid": "Il serre les quartiers de pomme dans le moule.",
+  "ing": {
+   "pomme": 6,
+   "patefeuilletee": 1,
+   "sucre": 110,
+   "beurre": 60
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Épluche {pomme} et coupe-les en quartiers.",
+   "Dans un moule allant sur le feu, fais un caramel blond avec {sucre} de sucre, puis ajoute {beurre} de beurre et une pincée de sel.",
+   "Range les pommes bien serrées et laisse-les 10 min sur feu doux pour qu'elles s'attendrissent.",
+   "Couvre avec {patefeuilletee} en rentrant les bords et enfourne 30 à 35 min.",
+   "Attends 5 min puis retourne sur un plat."
+  ]
+ },
+ {
+  "id": "x3_clafoutis_raisins",
+  "n": "Clafoutis aux raisins et au beurre noisette",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "8 parts",
+  "months": [
+   9,
+   10
+  ],
+  "m": [
+   280,
+   5,
+   36,
+   13
+  ],
+  "diff": 2,
+  "kid": "Il égrappe les raisins et les répartit dans le plat.",
+  "ing": {
+   "raisin": 500,
+   "oeufs": 4,
+   "sucre": 85,
+   "lait": 150,
+   "creme": 100,
+   "farine": 100,
+   "beurre": 80,
+   "sucrevanille": 2,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C. Beurre un plat et saupoudre-le de {sucrevanille}.",
+   "Égrappe {raisin} de raisin et étale-le dans le plat.",
+   "Chauffe {beurre} de beurre dans une casserole jusqu'à ce qu'il blondisse et sente la noisette. Laisse tiédir.",
+   "Fouette {farine} de farine, {sucre} de sucre, une pincée de sel et {oeufs}, puis {lait} de lait, {creme} de crème, le beurre noisette et {cannelle} de cannelle.",
+   "Verse sur les raisins et enfourne 40 min. Meilleur tiède."
+  ]
+ },
+ {
+  "id": "x3_cheesecake_cerises",
+  "n": "Cheesecake au fromage blanc, miel et cerises",
+  "t": "gateau",
+  "tm": "1 h 15 et 3 h au frais",
+  "parts": "10 parts",
+  "months": [
+   6,
+   7
+  ],
+  "m": [
+   280,
+   8,
+   36,
+   12
+  ],
+  "diff": 3,
+  "kid": "Il écrase les biscuits dans un sac avec le rouleau.",
+  "ing": {
+   "biscuits": 200,
+   "beurre": 70,
+   "fromageblanc": 500,
+   "oeufs": 3,
+   "sucre": 70,
+   "miel": 2,
+   "citron": 1,
+   "farine": 30,
+   "cerises": 300
+  },
+  "steps": [
+   "Préchauffe le four à 160 °C. Émiette {biscuits} de biscuits, mélange avec {beurre} de beurre fondu et tasse au fond d'un moule de 20 cm.",
+   "Fouette {fromageblanc} de fromage blanc égoutté, {oeufs}, {sucre} de sucre, {miel} de miel, {farine} de farine et le zeste de {citron}.",
+   "Dénoyaute {cerises} de cerises, ajoutes-en la moitié à la crème et verse sur le fond.",
+   "Enfourne 45 min, laisse refroidir dans le four entrouvert puis 3 h au frais.",
+   "Sers avec le reste des cerises."
+  ]
+ },
+ {
+  "id": "x3_meringues_fruits_rouges",
+  "n": "Meringues marbrées aux fruits rouges",
+  "t": "biscuit",
+  "tm": "1 h 30 dont 1 h de cuisson",
+  "parts": "8 meringues",
+  "m": [
+   150,
+   5,
+   29,
+   1
+  ],
+  "diff": 3,
+  "kid": "Il dessine les marbrures rouges avec une cuillère.",
+  "ing": {
+   "oeufs": 4,
+   "sucre": 200,
+   "fruitsrouges": 250,
+   "fromageblanc": 300
+  },
+  "steps": [
+   "Préchauffe le four à 110 °C. Pèse {fruitsrouges} de fruits rouges et écrases-en une poignée en purée.",
+   "Robot avec le fouet : monte les blancs de {oeufs} en neige, puis verse {sucre} de sucre petit à petit jusqu'à une meringue ferme et brillante. Garde les jaunes pour une crème.",
+   "Forme 8 disques sur une plaque, trace des marbrures avec la purée et enfourne 1 h. Laisse refroidir dans le four entrouvert.",
+   "Sers avec {fromageblanc} de fromage blanc et le reste des fruits."
+  ]
+ },
+ {
+  "id": "x3_creme_caramel",
+  "n": "Crèmes caramel au four",
+  "t": "gateau",
+  "tm": "1 h 10 et 2 h au frais",
+  "parts": "6 ramequins",
+  "m": [
+   195,
+   7,
+   30,
+   5
+  ],
+  "diff": 3,
+  "kid": "Il verse la crème dans les ramequins avec une louche.",
+  "ing": {
+   "sucre": 150,
+   "lait": 500,
+   "oeufs": 4,
+   "sucrevanille": 1
+  },
+  "steps": [
+   "Préchauffe le four à 160 °C. Prends {sucre} de sucre : fais un caramel ambré avec un peu plus de la moitié et 3 c.s. d'eau, puis répartis-le dans 6 ramequins.",
+   "Chauffe {lait} de lait avec {sucrevanille}.",
+   "Fouette {oeufs} avec le reste du sucre sans faire mousser, puis verse le lait chaud petit à petit.",
+   "Répartis dans les ramequins et cuis 40 min au bain-marie : la crème doit juste trembler.",
+   "Laisse 2 h au frais et démoule en passant une lame sur le bord."
+  ]
+ },
+ {
+  "id": "x3_gougeres",
+  "n": "Gougères au fromage",
+  "t": "biscuit",
+  "tm": "45 min",
+  "parts": "24 gougères",
+  "m": [
+   75,
+   3,
+   4,
+   5
+  ],
+  "diff": 3,
+  "kid": "Il dépose les petits tas de pâte sur la plaque avec deux cuillères.",
+  "ing": {
+   "farine": 120,
+   "beurre": 80,
+   "oeufs": 4,
+   "emmental": 120
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Porte à ébullition 200 ml d'eau avec {beurre} de beurre et une pincée de sel.",
+   "Hors du feu, verse {farine} de farine d'un coup et mélange. Remets 2 min sur feu doux en remuant pour dessécher la pâte.",
+   "Hors du feu, ajoute {oeufs} un par un en mélangeant bien entre chaque, puis {emmental} d'emmental.",
+   "Dépose des petits tas sur une plaque recouverte de papier cuisson et enfourne 25 min, sans ouvrir le four."
+  ]
+ },
+ {
+  "id": "x3_tarta_santiago",
+  "n": "Tarta de Santiago aux amandes",
+  "t": "gateau",
+  "tm": "45 min",
+  "parts": "8 parts",
+  "m": [
+   320,
+   10,
+   24,
+   20
+  ],
+  "diff": 1,
+  "kid": "Elle ou il râpe le zeste de citron et fouette les œufs avec le sucre.",
+  "ing": {
+   "amande": 250,
+   "sucre": 180,
+   "oeufs": 5,
+   "citron": 1,
+   "cannelle": 1,
+   "beurre": 10
+  },
+  "steps": [
+   "Préchauffe le four à 180 °C et beurre un moule de 22 cm avec {beurre} de beurre.",
+   "Fouette {oeufs} œufs et {sucre} de sucre 3 min, jusqu'à ce que le mélange mousse. Garde 1 c.s. de sucre pour la fin.",
+   "Ajoute {amande} de poudre d'amande, le zeste de {citron} et {cannelle} de cannelle. Mélange sans insister.",
+   "Verse dans le moule et enfourne 30 à 35 min. Laisse refroidir, puis saupoudre du sucre gardé, mixé fin."
+  ]
+ },
+ {
+  "id": "x3_flan_catalan",
+  "n": "Flan pâtissier à la catalane, cannelle et citron",
+  "t": "gateau",
+  "tm": "1 h 15",
+  "parts": "8 parts",
+  "m": [
+   320,
+   9,
+   40,
+   13
+  ],
+  "diff": 2,
+  "kid": "Elle ou il saupoudre le sucre sur le flan avant le passage sous le gril.",
+  "ing": {
+   "patebrisee": 1,
+   "lait": 750,
+   "oeufs": 4,
+   "sucre": 140,
+   "farine": 70,
+   "cannelle": 1,
+   "citron": 1
+  },
+  "steps": [
+   "Fais chauffer {lait} de lait avec {cannelle} de cannelle et le zeste de {citron}, puis laisse infuser 10 min.",
+   "Fouette {oeufs} œufs, 120 g de sucre et {farine} de farine. Verse le lait chaud dessus en fouettant, remets sur feu doux et remue jusqu'à ce que la crème épaississe.",
+   "Préchauffe le four à 180 °C. Étale {patebrisee} dans un moule, verse la crème et enfourne 40 min.",
+   "Laisse refroidir, saupoudre du reste des {sucre} de sucre et passe 2 à 3 min sous le gril pour caraméliser le dessus. Sers bien froid."
+  ]
+ },
+ {
+  "id": "x3_churros_four",
+  "n": "Churros au four, sucre et cannelle",
+  "t": "biscuit",
+  "tm": "45 min",
+  "parts": "16 churros",
+  "m": [
+   90,
+   2,
+   12,
+   4
+  ],
+  "diff": 3,
+  "kid": "Il roule les churros chauds dans le sucre à la cannelle.",
+  "ing": {
+   "farine": 150,
+   "beurre": 60,
+   "oeufs": 2,
+   "sucre": 60,
+   "cannelle": 1
+  },
+  "steps": [
+   "Préchauffe le four à 200 °C. Porte à ébullition 250 ml d'eau, {beurre} de beurre, 20 g de sucre et une pincée de sel.",
+   "Hors du feu, verse {farine} de farine d'un coup et mélange vivement. Remets 1 min sur le feu pour dessécher la pâte, puis ajoute {oeufs} œufs un à un.",
+   "Mets la pâte dans une poche à douille cannelée et forme 16 bâtonnets sur une plaque couverte de papier cuisson. Enfourne 20 à 25 min, jusqu'à ce qu'ils soient bien dorés.",
+   "Mélange le reste des {sucre} de sucre avec {cannelle} de cannelle et roules-y les churros encore chauds."
+  ]
+ },
+ {
+  "id": "x3_torta_caprese",
+  "n": "Torta caprese chocolat-amandes",
+  "t": "gateau",
+  "tm": "55 min",
+  "parts": "10 parts",
+  "m": [
+   400,
+   9,
+   24,
+   30
+  ],
+  "diff": 2,
+  "kid": "Elle ou il mélange la poudre d'amande dans le chocolat.",
+  "ing": {
+   "chocolat": 200,
+   "amande": 200,
+   "beurre": 120,
+   "sucre": 130,
+   "oeufs": 5,
+   "cacao": 2
+  },
+  "steps": [
+   "Préchauffe le four à 170 °C et beurre un moule de 22 cm. Fais fondre {chocolat} de chocolat avec {beurre} de beurre, laisse tiédir.",
+   "Sépare les blancs des jaunes de {oeufs}. Fouette les jaunes avec {sucre} de sucre jusqu'à ce qu'ils blanchissent.",
+   "Ajoute le chocolat fondu, {amande} de poudre d'amande et {cacao} de cacao.",
+   "Monte les blancs en neige avec une pincée de sel et incorpore-les délicatement. Enfourne 30 à 35 min : le cœur doit rester moelleux."
+  ]
+ },
+ {
+  "id": "x3_crostata_confiture",
+  "n": "Crostata à la confiture",
+  "t": "gateau",
+  "tm": "1 h 15",
+  "parts": "10 parts",
+  "m": [
+   350,
+   5,
+   52,
+   14
+  ],
+  "diff": 3,
+  "kid": "Elle ou il pose les bandes de pâte en croisillons sur la confiture.",
+  "ing": {
+   "farine": 300,
+   "beurre": 150,
+   "sucre": 100,
+   "oeufs": 2,
+   "citron": 1,
+   "confiture": 350
+  },
+  "steps": [
+   "Mélange {farine} de farine, {sucre} de sucre, une pincée de sel et le zeste de {citron}. Sable du bout des doigts avec {beurre} de beurre froid en dés.",
+   "Ajoute {oeufs}, forme une boule sans trop pétrir et laisse 30 min au frais.",
+   "Préchauffe le four à 180 °C. Étale les deux tiers de la pâte dans un moule, garnis de {confiture} de confiture.",
+   "Découpe le reste de pâte en bandes et dispose-les en croisillons. Enfourne 30 à 35 min, laisse refroidir avant de couper."
+  ]
+ },
+ {
+  "id": "x3_focaccia_herbes",
+  "n": "Focaccia aux herbes et à l'huile d'olive",
+  "t": "brioche",
+  "tm": "1 h 45",
+  "parts": "8 parts",
+  "m": [
+   265,
+   7,
+   46,
+   6
+  ],
+  "diff": 2,
+  "kid": "Elle ou il enfonce ses doigts dans la pâte pour faire les petits trous.",
+  "ing": {
+   "farine": 500,
+   "levureboul": 1,
+   "huile": 4,
+   "herbes": 1
+  },
+  "steps": [
+   "Mélange {farine} de farine, {levureboul}, 1 c.c. de sel, 2 c.s. d'huile et 350 ml d'eau tiède. Pétris 8 min.",
+   "Laisse lever 1 h dans un saladier huilé, couvert d'un torchon.",
+   "Étale la pâte sur une plaque huilée, laisse reposer 15 min. Préchauffe le four à 220 °C.",
+   "Creuse des trous avec les doigts, arrose de 2 c.s. d'huile, parsème d'1 c.c. d'herbes et de gros sel. Enfourne 20 à 25 min jusqu'à ce qu'elle soit bien dorée."
+  ]
  }
 ]

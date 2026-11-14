@@ -105,7 +105,7 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
   );
   await page.goto("/app/progress");
   await expect(page.getByTestId("streak-current")).toContainText("1 semaine fin prête");
-  await expect(page.getByTestId("passport-count")).toContainText(/\d+ pays sur 19/);
+  await expect(page.getByTestId("passport-count")).toContainText(/\d+ pays sur 23/);
   await expect(page.locator('[data-testid="country-stamps"] [data-state="earned"]').first()).toBeVisible();
 });
 

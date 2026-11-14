@@ -313,5 +313,41 @@
    330,
    17
   ]
+ },
+ {
+  "n": "Semoule au lait, miel et compote",
+  "d": "Semoule fine cuite 5 min dans le lait, un filet de miel et une bonne cuillère de compote de pommes.",
+  "t": "sucre",
+  "m": [
+   410,
+   15
+  ]
+ },
+ {
+  "n": "Brioche, compote et banane",
+  "d": "Deux tranches de brioche avec un peu de confiture, une compote et une banane.",
+  "t": "sucre",
+  "m": [
+   465,
+   9
+  ]
+ },
+ {
+  "n": "Riz au lait vanillé, mangue ou cerises",
+  "d": "Préparé la veille : riz rond cuit doucement 35 min dans le lait avec un peu de sucre et de vanille. Au matin, mangue en dés ou cerises poêlées 3 min.",
+  "t": "sucre",
+  "m": [
+   380,
+   11
+  ]
+ },
+ {
+  "n": "Yaourt grec, fraises et rhubarbe rôties",
+  "d": "Fraises et rhubarbe rôties 20 min au four avec un peu de sucre, préparées à l'avance, sur un bol de yaourt grec vanillé.",
+  "t": "sucre",
+  "m": [
+   300,
+   14
+  ]
  }
 ]
