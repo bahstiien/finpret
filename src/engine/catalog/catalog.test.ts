@@ -27,7 +27,7 @@ describe("validité du seed (§7.6)", () => {
 
   it("contient les volumes annoncés", () => {
     expect(Object.keys(seed!.ingredients)).toHaveLength(201);
-    expect(seed!.mains.length + seed!.soups.length + seed!.simples.length).toBe(672);
+    expect(seed!.mains.length + seed!.soups.length + seed!.simples.length).toBe(850);
     expect(seed!.cakes).toHaveLength(68);
     expect(seed!.breakfasts).toHaveLength(39);
   });
@@ -43,9 +43,9 @@ describe("validité du seed (§7.6)", () => {
 describe("lignes du catalogue", () => {
   it("produit une ligne par recette, avec des identifiants uniques", () => {
     const counts = Object.groupBy(rows!.recipes, (r) => r.kind);
-    expect(counts.main).toHaveLength(468);
-    expect(counts.soup).toHaveLength(40);
-    expect(counts.simple).toHaveLength(164);
+    expect(counts.main).toHaveLength(542);
+    expect(counts.soup).toHaveLength(59);
+    expect(counts.simple).toHaveLength(249);
     expect(counts.cake).toHaveLength(68);
     expect(counts.breakfast).toHaveLength(39);
     expect(new Set(rows!.recipes.map((r) => r.id)).size).toBe(rows!.recipes.length);

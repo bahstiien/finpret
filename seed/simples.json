@@ -4888,5 +4888,2575 @@
    "Coupe {tomatefraiche} et {mozzarella} de mozzarella en tranches, alterne-les dans un plat avec le reste du basilic.",
    "Arrose de 2 c.s. d'huile d'olive et d'1 c.s. de vinaigre. Sers avec les haricots et {pain} grillées."
   ]
+ },
+ {
+  "id": "x4_pates_thon_creme_citron",
+  "n": "Pâtes au thon, crème citronnée et petits pois",
+  "s": "Pâtes thon-citron",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   560,
+   35,
+   70,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "thon": 2,
+   "petitspois": 200,
+   "creme": 150,
+   "citron": 1,
+   "persil": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes, ajoute {petitspois} de petits pois les 3 dernières minutes.",
+   "Mélange {creme} de crème, le zeste et le jus de {citron}, {thon} de thon émietté et du poivre.",
+   "Égoutte les pâtes, mélange avec la sauce et un peu d'eau de cuisson, parsème de {persil} de persil."
+  ]
+ },
+ {
+  "id": "x4_onepot_tomate_epinards_mozza",
+  "n": "One pot pasta tomate, épinards et mozzarella",
+  "s": "One pot tomate-mozza",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   540,
+   24,
+   78,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "tomates": 1,
+   "epinardssurg": 250,
+   "oignon": 1,
+   "ail": 2,
+   "huile": 1,
+   "origan": 1,
+   "bouillon": 1,
+   "mozzarella": 200
+  },
+  "steps": [
+   "Mets dans une grande sauteuse {patescompletes} de pâtes, {tomates} de tomates concassées, {epinardssurg} d'épinards, {oignon} émincé, 2 gousses d'ail, {huile} d'huile, {origan} d'origan, {bouillon} et 800 ml d'eau.",
+   "Porte à ébullition et cuis 12 min en remuant souvent, jusqu'à ce que le liquide soit absorbé.",
+   "Ajoute {mozzarella} de mozzarella en morceaux, couvre 2 min et sers."
+  ]
+ },
+ {
+  "id": "x4_onepot_champignons_lardons",
+  "n": "One pot pasta champignons, lardons et crème",
+  "s": "One pot champignons-lardons",
+  "o": "fr",
+  "pasta": true,
+  "comfort": true,
+  "m": [
+   600,
+   27,
+   72,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "champignons": 300,
+   "lardons": 150,
+   "oignon": 1,
+   "bouillon": 1,
+   "creme": 150,
+   "parmesan": 40
+  },
+  "steps": [
+   "Fais dorer {lardons} de lardons et {oignon} émincé 4 min dans une grande sauteuse. Ajoute {champignons} de champignons émincés, 3 min.",
+   "Ajoute {patescompletes} de pâtes, {bouillon} et 800 ml d'eau. Cuis 12 min en remuant.",
+   "Ajoute {creme} de crème et {parmesan} de parmesan, mélange et sers."
+  ]
+ },
+ {
+  "id": "x4_pates_ricotta_jambon_petitspois",
+  "n": "Pâtes à la ricotta, jambon et petits pois",
+  "s": "Pâtes ricotta-jambon",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   560,
+   33,
+   72,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "ricotta": 250,
+   "jambon": 4,
+   "petitspois": 250,
+   "parmesan": 40,
+   "citron": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes, ajoute {petitspois} de petits pois les 4 dernières minutes.",
+   "Dans un saladier, détends {ricotta} de ricotta avec une louche d'eau de cuisson, le zeste de {citron} et {parmesan} de parmesan.",
+   "Ajoute les pâtes égouttées et {jambon} en lanières, mélange."
+  ]
+ },
+ {
+  "id": "x4_pates_rosees_poulet",
+  "n": "Pâtes rosées tomate-crème au poulet",
+  "s": "Pâtes rosées poulet",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   580,
+   42,
+   70,
+   13
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "poulet": 400,
+   "ail": 2,
+   "huile": 1,
+   "passata": 400,
+   "creme": 150,
+   "origan": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais dorer {poulet} de poulet en dés 6 min dans {huile} d'huile avec 2 gousses d'ail. Ajoute {passata} de passata et {origan} d'origan, 5 min, puis {creme} de crème.",
+   "Mélange avec les pâtes égouttées et sers avec {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_pates_chorizo_creme",
+  "n": "Pâtes au chorizo et à la crème, salade verte",
+  "s": "Pâtes chorizo-crème",
+  "o": "es",
+  "pasta": true,
+  "m": [
+   620,
+   25,
+   70,
+   25
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "chorizo": 120,
+   "oignon": 1,
+   "creme": 200,
+   "paprika": 0.5,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais revenir {chorizo} de chorizo en dés et {oignon} émincé 5 min à sec. Ajoute {creme} de crème et {paprika} de paprika, 3 min.",
+   "Mélange avec les pâtes et un peu d'eau de cuisson, sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_pates_crevettes_ail_citron",
+  "n": "Spaghetti aux crevettes, ail, citron et persil",
+  "s": "Spaghetti crevettes-ail",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   520,
+   34,
+   68,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "crevettes": 400,
+   "ail": 3,
+   "huile": 3,
+   "piment": 0.5,
+   "citron": 1,
+   "persil": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de spaghettis, garde un bol d'eau de cuisson.",
+   "Fais revenir 3 gousses d'ail émincées et {piment} de piment dans {huile} d'huile d'olive 1 min, ajoute {crevettes} de crevettes, 3 min.",
+   "Ajoute les pâtes, le zeste et le jus de {citron}, un peu d'eau de cuisson et {persil} de persil. Mélange 1 min."
+  ]
+ },
+ {
+  "id": "x4_pates_epinards_oeufs_mollets",
+  "n": "Pâtes aux épinards à l'ail et œufs mollets",
+  "s": "Pâtes épinards-œufs mollets",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   520,
+   25,
+   70,
+   15
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "epinardssurg": 400,
+   "ail": 3,
+   "huile": 2,
+   "oeufs": 4,
+   "parmesan": 50
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes. Cuis {oeufs} 6 min à l'eau bouillante, passe-les sous l'eau froide et écale-les.",
+   "Fais revenir 3 gousses d'ail dans {huile} d'huile, ajoute {epinardssurg} d'épinards, 6 min.",
+   "Mélange avec les pâtes et {parmesan} de parmesan, pose un œuf mollet ouvert sur chaque assiette."
+  ]
+ },
+ {
+  "id": "x4_mac_cheddar_brocoli",
+  "n": "Mac and cheese express au brocoli",
+  "s": "Mac express brocoli",
+  "o": "us",
+  "pasta": true,
+  "comfort": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   620,
+   28,
+   74,
+   23
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 300,
+   "brocoli": 400,
+   "beurre": 25,
+   "farine": 25,
+   "lait": 500,
+   "cheddar": 150,
+   "moutarde": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes avec {brocoli} de brocoli en petits bouquets les 5 dernières minutes.",
+   "Fais fondre {beurre} de beurre, ajoute {farine} de farine, puis {lait} de lait en fouettant jusqu'à épaississement. Ajoute {cheddar} de cheddar et {moutarde} de moutarde.",
+   "Mélange avec les pâtes et le brocoli égouttés."
+  ]
+ },
+ {
+  "id": "x4_pates_lardons_epinards",
+  "n": "Pâtes aux lardons, épinards et crème",
+  "s": "Pâtes lardons-épinards",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   590,
+   27,
+   70,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "lardons": 150,
+   "epinardssurg": 300,
+   "ail": 1,
+   "creme": 150,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais dorer {lardons} de lardons, ajoute 1 gousse d'ail et {epinardssurg} d'épinards, 6 min. Ajoute {creme} de crème.",
+   "Mélange avec les pâtes et {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_spaghetti_boulettes_express",
+  "n": "Spaghetti aux boulettes express à la sauce tomate",
+  "s": "Spaghetti boulettes",
+  "o": "it",
+  "pasta": true,
+  "comfort": true,
+  "m": [
+   640,
+   38,
+   72,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "steak": 4,
+   "herbes": 1,
+   "huile": 1,
+   "passata": 500,
+   "ail": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Forme 20 petites boulettes avec {steak} émiettés, {herbes} d'herbes, sel et poivre. Fais-les dorer 5 min dans {huile} d'huile.",
+   "Ajoute {passata} de passata et 1 gousse d'ail, mijote 10 min. Pendant ce temps, cuis {patescompletes} de spaghettis.",
+   "Sers les pâtes avec les boulettes et {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_pates_poulet_curry",
+  "n": "Pâtes au poulet, curry doux et crème",
+  "s": "Pâtes poulet-curry",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   580,
+   42,
+   68,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "poulet": 400,
+   "oignon": 1,
+   "huile": 1,
+   "curry": 1,
+   "creme": 200,
+   "petitspois": 150
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais dorer {poulet} de poulet en dés et {oignon} émincé 6 min dans {huile} d'huile. Ajoute {curry} de curry, {creme} de crème et {petitspois} de petits pois, 4 min.",
+   "Mélange avec les pâtes."
+  ]
+ },
+ {
+  "id": "x4_nouilles_dandan_boeuf",
+  "n": "Nouilles dan dan au bœuf et épinards",
+  "s": "Nouilles dan dan",
+  "o": "cn",
+  "m": [
+   620,
+   36,
+   66,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "nouillesramen": 300,
+   "boeuf": 400,
+   "huile": 1,
+   "ail": 2,
+   "gingembre": 1,
+   "soja": 3,
+   "beurrecacahuete": 2,
+   "piment": 0.5,
+   "epinardssurg": 250,
+   "cebette": 3
+  },
+  "steps": [
+   "Cuis {nouillesramen} de nouilles, ajoute {epinardssurg} d'épinards les 2 dernières minutes.",
+   "Fais dorer {boeuf} de bœuf haché dans {huile} d'huile avec 2 gousses d'ail et {gingembre} râpé, 6 min, ajoute 1 c.s. de soja.",
+   "Mélange le reste de {soja} de soja, {beurrecacahuete} de beurre de cacahuète, {piment} de piment et 4 c.s. d'eau chaude. Mélange avec les nouilles, garnis de bœuf et de {cebette} émincées."
+  ]
+ },
+ {
+  "id": "x4_pates_poireaux_chevre",
+  "n": "Pâtes aux poireaux fondants et au chèvre",
+  "s": "Pâtes poireaux-chèvre",
+  "o": "fr",
+  "pasta": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   560,
+   23,
+   72,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "poireau": 3,
+   "beurre": 15,
+   "creme": 100,
+   "chevre": 150,
+   "noix": 30
+  },
+  "steps": [
+   "Émince {poireau} et fais-les fondre 12 min à couvert dans {beurre} de beurre avec un peu d'eau.",
+   "Cuis {patescompletes} de pâtes pendant ce temps.",
+   "Ajoute {creme} de crème et {chevre} de chèvre aux poireaux, mélange aux pâtes, parsème de {noix} de noix."
+  ]
+ },
+ {
+  "id": "x4_pates_champignons_oeuf_poche",
+  "n": "Pâtes aux champignons, ail et persil, œuf poché",
+  "s": "Pâtes champignons-œuf",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   540,
+   25,
+   70,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "champignons": 500,
+   "ail": 2,
+   "huile": 2,
+   "persil": 1,
+   "oeufs": 4,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais dorer {champignons} de champignons émincés à feu vif dans {huile} d'huile, 8 min, avec 2 gousses d'ail et {persil} de persil.",
+   "Poche {oeufs} 3 min dans l'eau frémissante vinaigrée. Sers pâtes, champignons, œuf et {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_pates_saumon_petitspois",
+  "n": "Pâtes au saumon et petits pois, crème au citron",
+  "s": "Pâtes saumon-petits pois",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   590,
+   37,
+   68,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "saumon": 350,
+   "petitspois": 200,
+   "creme": 150,
+   "citron": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes avec {petitspois} de petits pois les 4 dernières minutes.",
+   "Fais cuire {saumon} de saumon en cubes 4 min dans {huile} d'huile, ajoute {creme} de crème, le zeste et le jus de {citron}.",
+   "Mélange avec les pâtes égouttées."
+  ]
+ },
+ {
+  "id": "x4_orzotto_champignons",
+  "n": "Orzotto aux champignons et parmesan",
+  "s": "Orzotto champignons",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   520,
+   22,
+   74,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "vermicelles": 300,
+   "champignons": 400,
+   "oignon": 1,
+   "huile": 1,
+   "bouillon": 1,
+   "parmesan": 70,
+   "beurre": 15,
+   "salade": 1
+  },
+  "steps": [
+   "Fais dorer {champignons} de champignons et {oignon} émincé 6 min dans {huile} d'huile.",
+   "Ajoute {vermicelles} d'orzo, {bouillon} et 750 ml d'eau chaude. Cuis 10 min en remuant souvent.",
+   "Ajoute {parmesan} de parmesan et {beurre} de beurre, sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_gnocchis_saucisse_brocoli",
+  "n": "Gnocchis poêlés, saucisse et brocoli",
+  "s": "Gnocchis saucisse-brocoli",
+  "o": "it",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   600,
+   24,
+   66,
+   26
+  ],
+  "diff": 1,
+  "ing": {
+   "gnocchis": 800,
+   "saucisse": 4,
+   "brocoli": 400,
+   "ail": 1,
+   "huile": 2,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {brocoli} de brocoli en bouquets 4 min à l'eau, égoutte.",
+   "Fais dorer {gnocchis} de gnocchis 6 min dans {huile} d'huile, ajoute {saucisse} en rondelles et 1 gousse d'ail, 4 min.",
+   "Ajoute le brocoli, mélange 2 min et sers avec {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_gnocchis_four_chorizo",
+  "n": "Gnocchis au four, tomate, chorizo et mozzarella",
+  "s": "Gnocchis chorizo-mozza",
+  "o": "it",
+  "comfort": true,
+  "m": [
+   620,
+   26,
+   72,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "gnocchis": 800,
+   "chorizo": 100,
+   "passata": 500,
+   "origan": 1,
+   "mozzarella": 200
+  },
+  "steps": [
+   "Préchauffe le four à 210 °C.",
+   "Mélange dans un plat {gnocchis} de gnocchis crus, {passata} de passata, {chorizo} de chorizo en dés, {origan} d'origan et 100 ml d'eau.",
+   "Couvre de {mozzarella} de mozzarella et enfourne 20 min."
+  ]
+ },
+ {
+  "id": "x4_penne_poulet_ricotta",
+  "n": "Penne au poulet, tomate et ricotta",
+  "s": "Penne poulet-ricotta",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   580,
+   44,
+   70,
+   13
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "poulet": 400,
+   "ail": 1,
+   "huile": 1,
+   "tomates": 1,
+   "ricotta": 200,
+   "origan": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de penne.",
+   "Fais dorer {poulet} de poulet en dés dans {huile} d'huile avec 1 gousse d'ail, ajoute {tomates} de tomates et {origan} d'origan, 8 min.",
+   "Mélange avec les pâtes, ajoute {ricotta} de ricotta par cuillerées."
+  ]
+ },
+ {
+  "id": "x4_coquillettes_jambon",
+  "n": "Coquillettes crémeuses jambon-emmental",
+  "s": "Coquillettes jambon",
+  "o": "fr",
+  "pasta": true,
+  "comfort": true,
+  "m": [
+   560,
+   31,
+   66,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 300,
+   "jambon": 4,
+   "creme": 100,
+   "emmental": 100,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de coquillettes, garde un peu d'eau de cuisson.",
+   "Remets-les dans la casserole avec {creme} de crème, {emmental} d'emmental, {jambon} en dés et un peu d'eau de cuisson. Mélange à feu doux 2 min.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_onepot_lentilles_saucisse",
+  "n": "One pot pâtes, lentilles corail et saucisse",
+  "s": "One pot lentilles-saucisse",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   620,
+   32,
+   82,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 280,
+   "lentillescorail": 100,
+   "saucisse": 3,
+   "oignon": 1,
+   "tomates": 1,
+   "bouillon": 1,
+   "herbes": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Fais dorer {saucisse} en rondelles et {oignon} émincé 4 min dans une sauteuse.",
+   "Ajoute {patescompletes} de pâtes, {lentillescorail} de lentilles corail, {tomates} de tomates, {bouillon}, {herbes} d'herbes et 900 ml d'eau. Cuis 12 min en remuant.",
+   "Sers avec {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_giouvetsi_express",
+  "n": "Giouvetsi express : orzo au bœuf et à la tomate",
+  "s": "Giouvetsi",
+  "o": "gr",
+  "pasta": true,
+  "m": [
+   600,
+   38,
+   66,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "boeuf": 400,
+   "vermicelles": 300,
+   "oignon": 1,
+   "huile": 1,
+   "tomates": 1,
+   "cannelle": 0.5,
+   "origan": 1,
+   "bouillon": 1,
+   "feta": 100
+  },
+  "steps": [
+   "Fais dorer {boeuf} de bœuf et {oignon} émincé 5 min dans {huile} d'huile.",
+   "Ajoute {vermicelles} d'orzo, {tomates} de tomates, {cannelle} de cannelle, {origan} d'origan, {bouillon} et 700 ml d'eau. Cuis 12 min en remuant.",
+   "Sers avec {feta} de feta émiettée."
+  ]
+ },
+ {
+  "id": "x4_pates_norcina",
+  "n": "Pâtes alla norcina : saucisse, champignons et crème",
+  "s": "Pâtes norcina",
+  "o": "it",
+  "pasta": true,
+  "comfort": true,
+  "m": [
+   630,
+   28,
+   70,
+   26
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "saucisse": 3,
+   "champignons": 250,
+   "oignon": 1,
+   "huile": 1,
+   "creme": 150,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais dorer {saucisse} en petits dés, {oignon} et {champignons} de champignons émincés dans {huile} d'huile, 8 min. Ajoute {creme} de crème.",
+   "Mélange avec les pâtes et {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_pates_yaourt_boeuf",
+  "n": "Pâtes au yaourt à l'ail et bœuf épicé",
+  "s": "Pâtes yaourt-bœuf",
+  "o": "tr",
+  "pasta": true,
+  "m": [
+   610,
+   40,
+   70,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "boeuf": 400,
+   "oignon": 1,
+   "huile": 1,
+   "paprika": 1,
+   "cumin": 1,
+   "tomates": 1,
+   "yaourt": 4,
+   "ail": 1,
+   "menthe": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes.",
+   "Fais dorer {boeuf} de bœuf et {oignon} émincé dans {huile} d'huile avec {paprika} de paprika et {cumin} de cumin, ajoute {tomates} de tomates, 8 min.",
+   "Mélange {yaourt} de yaourt avec 1 gousse d'ail râpée et du sel. Sers les pâtes nappées de yaourt et de bœuf, avec {menthe} de menthe."
+  ]
+ },
+ {
+  "id": "x4_omelette_paysanne",
+  "n": "Omelette paysanne pommes de terre-lardons, salade",
+  "s": "Omelette paysanne",
+  "o": "fr",
+  "comfort": true,
+  "m": [
+   520,
+   27,
+   32,
+   31
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 600,
+   "lardons": 150,
+   "oignon": 1,
+   "huile": 1,
+   "oeufs": 8,
+   "persil": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Fais dorer {pommedeterre} de pommes de terre en petits dés 15 min dans {huile} d'huile avec {oignon} émincé et {lardons} de lardons.",
+   "Verse {oeufs} battus avec {persil} de persil, cuis à feu doux à couvert 6 min.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_poelee_pdt_saucisses",
+  "n": "Poêlée de pommes de terre, saucisses et oignons",
+  "s": "Poêlée pommes de terre-saucisses",
+  "o": "fr",
+  "comfort": true,
+  "m": [
+   620,
+   24,
+   52,
+   34
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 900,
+   "saucisse": 6,
+   "oignon": 2,
+   "huile": 2,
+   "herbes": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre en cubes 8 min à l'eau, égoutte.",
+   "Fais-les dorer 10 min dans {huile} d'huile avec {oignon} émincés et {herbes} d'herbes, ajoute {saucisse} en rondelles, 6 min.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_poulet_ail_citron_semoule",
+  "n": "Poulet à l'ail et au citron, semoule aux petits pois",
+  "s": "Poulet citron-semoule",
+  "o": "fr",
+  "m": [
+   540,
+   44,
+   60,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "poulet": 500,
+   "ail": 3,
+   "citron": 1,
+   "huile": 2,
+   "herbes": 1,
+   "semoule": 250,
+   "petitspois": 200,
+   "persil": 1
+  },
+  "steps": [
+   "Fais dorer {poulet} de poulet en lanières 6 min dans {huile} d'huile avec 3 gousses d'ail et {herbes} d'herbes. Arrose du jus de {citron}.",
+   "Verse {semoule} de semoule et {petitspois} de petits pois dans autant d'eau bouillante salée, couvre 5 min.",
+   "Sers avec {persil} de persil."
+  ]
+ },
+ {
+  "id": "x4_steak_pdt_sautees",
+  "n": "Steak haché, pommes de terre sautées et salade",
+  "s": "Steak-pommes sautées",
+  "o": "fr",
+  "comfort": true,
+  "m": [
+   580,
+   34,
+   46,
+   27
+  ],
+  "diff": 1,
+  "ing": {
+   "steak": 4,
+   "pommedeterre": 800,
+   "huile": 2,
+   "ail": 1,
+   "persil": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre en cubes 8 min à l'eau, égoutte et fais-les dorer 12 min dans {huile} d'huile avec 1 gousse d'ail et {persil} de persil.",
+   "Cuis {steak} 3 min de chaque côté.",
+   "Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_poisson_creme_citron_riz",
+  "n": "Poisson blanc à la crème citronnée, riz et épinards",
+  "s": "Poisson crème-citron",
+  "o": "fr",
+  "m": [
+   520,
+   38,
+   60,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "poissonblanc": 600,
+   "riz": 240,
+   "epinardssurg": 300,
+   "creme": 150,
+   "citron": 1,
+   "beurre": 10
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Fais cuire {epinardssurg} d'épinards dans une poêle 6 min. Pose {poissonblanc} de poisson dessus, couvre et cuis 8 min.",
+   "Chauffe {creme} de crème avec {beurre} de beurre, le zeste et le jus de {citron}. Nappe le poisson et sers avec le riz."
+  ]
+ },
+ {
+  "id": "x4_riz_thon_mais_oeufs",
+  "n": "Riz poêlé au thon, maïs et œufs",
+  "s": "Riz thon-maïs-œufs",
+  "o": "fr",
+  "m": [
+   540,
+   32,
+   66,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 240,
+   "thon": 2,
+   "mais": 1,
+   "oeufs": 4,
+   "huile": 1,
+   "soja": 2,
+   "cebette": 2
+  },
+  "steps": [
+   "Cuis {riz} de riz (ou utilise du riz de la veille).",
+   "Brouille {oeufs} dans {huile} d'huile, ajoute le riz, {mais} de maïs égoutté et {thon} de thon émietté. Fais sauter 4 min.",
+   "Ajoute {soja} de sauce soja et {cebette} émincées."
+  ]
+ },
+ {
+  "id": "x4_pdt_champignons_oeufs",
+  "n": "Pommes de terre sautées aux champignons et œufs au plat",
+  "s": "Pommes de terre-champignons-œufs",
+  "o": "fr",
+  "m": [
+   500,
+   21,
+   46,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 800,
+   "champignons": 400,
+   "huile": 2,
+   "ail": 2,
+   "persil": 1,
+   "oeufs": 8
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre en cubes 8 min à l'eau, égoutte et fais-les dorer 10 min dans {huile} d'huile.",
+   "Ajoute {champignons} de champignons émincés, 2 gousses d'ail et {persil} de persil, 6 min.",
+   "Fais cuire {oeufs} au plat par-dessus, à couvert, 4 min."
+  ]
+ },
+ {
+  "id": "x4_couscous_express_legumes",
+  "n": "Couscous express aux pois chiches, carottes et raisins",
+  "s": "Couscous express",
+  "o": "ma",
+  "m": [
+   520,
+   18,
+   82,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "semoule": 250,
+   "poischiches": 2,
+   "carotte": 3,
+   "oignon": 1,
+   "huile": 2,
+   "raselhanout": 1,
+   "raisinssecs": 40,
+   "bouillon": 1,
+   "yaourt": 4
+  },
+  "steps": [
+   "Fais revenir {oignon} et {carotte} en dés 8 min dans {huile} d'huile avec {raselhanout} de ras el hanout.",
+   "Ajoute {poischiches} de pois chiches rincés, {raisinssecs} de raisins, {bouillon} et 300 ml d'eau, 5 min.",
+   "Verse {semoule} de semoule dans autant d'eau bouillante, couvre 5 min. Sers avec les légumes et {yaourt} de yaourt."
+  ]
+ },
+ {
+  "id": "x4_dinde_paprika_riz",
+  "n": "Dinde au paprika et riz en une poêle",
+  "s": "Dinde paprika-riz",
+  "o": "hu",
+  "m": [
+   540,
+   40,
+   66,
+   11
+  ],
+  "diff": 1,
+  "ing": {
+   "dinde": 450,
+   "riz": 240,
+   "oignon": 1,
+   "huile": 1,
+   "paprika": 2,
+   "tomates": 1,
+   "bouillon": 1,
+   "skyr": 150
+  },
+  "steps": [
+   "Fais dorer {dinde} de dinde et {oignon} émincé 5 min dans {huile} d'huile avec {paprika} de paprika.",
+   "Ajoute {riz} de riz, {tomates} de tomates, {bouillon} et 450 ml d'eau. Couvre et cuis 18 min.",
+   "Sers avec {skyr} de skyr."
+  ]
+ },
+ {
+  "id": "x4_burritos_oeufs_haricots",
+  "n": "Burritos aux œufs brouillés, haricots noirs et fromage",
+  "s": "Burritos œufs-haricots",
+  "o": "mx",
+  "m": [
+   560,
+   30,
+   54,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "tortilla": 8,
+   "oeufs": 8,
+   "haricotsnoirs": 1,
+   "cumin": 1,
+   "cheddar": 100,
+   "salade": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Chauffe {haricotsnoirs} de haricots noirs rincés avec {cumin} de cumin, écrase-les grossièrement.",
+   "Brouille {oeufs} dans {huile} d'huile à feu doux.",
+   "Garnis {tortilla} de haricots, d'œufs, de {cheddar} de cheddar et de salade ({salade}), roule et sers."
+  ]
+ },
+ {
+  "id": "x4_pain_perdu_sale",
+  "n": "Pain perdu salé jambon-fromage, salade",
+  "s": "Pain perdu salé",
+  "o": "fr",
+  "comfort": true,
+  "m": [
+   540,
+   32,
+   40,
+   27
+  ],
+  "diff": 1,
+  "ing": {
+   "painmie": 8,
+   "oeufs": 4,
+   "lait": 200,
+   "jambon": 4,
+   "emmental": 100,
+   "beurre": 20,
+   "salade": 1
+  },
+  "steps": [
+   "Bats {oeufs} avec {lait} de lait, sel et poivre.",
+   "Monte 4 sandwichs avec {painmie}, {jambon} et {emmental} d'emmental. Trempe-les dans le mélange.",
+   "Dore-les 3 min de chaque côté dans {beurre} de beurre. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_tartines_thon_gratinees",
+  "n": "Tartines gratinées au thon et tomate, salade",
+  "s": "Tartines thon gratinées",
+  "o": "fr",
+  "m": [
+   500,
+   32,
+   44,
+   20
+  ],
+  "diff": 1,
+  "ing": {
+   "pain": 8,
+   "thon": 2,
+   "fromageblanc": 100,
+   "moutarde": 1,
+   "tomatefraiche": 2,
+   "emmental": 100,
+   "salade": 1
+  },
+  "steps": [
+   "Mélange {thon} de thon, {fromageblanc} de fromage blanc et {moutarde} de moutarde.",
+   "Tartine sur {pain}, pose des rondelles de {tomatefraiche} et {emmental} d'emmental.",
+   "Gratine 8 min à 220 °C, sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_nouilles_sautees_oeufs",
+  "n": "Nouilles sautées aux œufs et aux carottes",
+  "s": "Nouilles œufs-carottes",
+  "o": "cn",
+  "m": [
+   500,
+   20,
+   68,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "nouillesramen": 300,
+   "oeufs": 6,
+   "carotte": 3,
+   "cebette": 3,
+   "ail": 1,
+   "gingembre": 1,
+   "huileneutre": 20,
+   "soja": 3,
+   "petitspois": 150
+  },
+  "steps": [
+   "Cuis {nouillesramen} de nouilles, égoutte.",
+   "Fais sauter {carotte} râpées, {petitspois} de petits pois, 1 gousse d'ail et {gingembre} râpé 3 min dans {huileneutre} d'huile, pousse sur le côté et brouille {oeufs}.",
+   "Ajoute les nouilles, {soja} de soja et {cebette} émincées, fais sauter 2 min."
+  ]
+ },
+ {
+  "id": "x4_riz_saute_chou_lardons",
+  "n": "Riz sauté au chou et aux lardons, œuf au plat",
+  "s": "Riz chou-lardons",
+  "o": "fr",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   560,
+   24,
+   64,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 240,
+   "chou": 0.5,
+   "lardons": 150,
+   "oignon": 1,
+   "soja": 2,
+   "oeufs": 4,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz (ou utilise du riz de la veille).",
+   "Fais dorer {lardons} de lardons et {oignon} émincé, ajoute {chou} émincé finement, 8 min.",
+   "Ajoute le riz et {soja} de soja, fais sauter 3 min. Sers avec {oeufs} cuits au plat dans {huile} d'huile."
+  ]
+ },
+ {
+  "id": "x4_puree_jambon_carottes",
+  "n": "Purée maison, jambon et carottes glacées",
+  "s": "Purée-jambon-carottes",
+  "o": "fr",
+  "comfort": true,
+  "m": [
+   520,
+   26,
+   58,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 900,
+   "lait": 200,
+   "beurre": 30,
+   "carotte": 5,
+   "sucre": 10,
+   "jambon": 6
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min, écrase avec {lait} de lait chaud et les deux tiers de {beurre} de beurre.",
+   "Cuis {carotte} en rondelles avec le reste du beurre, {sucre} de sucre et un fond d'eau à couvert 15 min, puis à découvert pour les glacer.",
+   "Sers avec {jambon}."
+  ]
+ },
+ {
+  "id": "x4_quiche_sans_pate",
+  "n": "Quiche sans pâte jambon-fromage, salade",
+  "s": "Quiche sans pâte",
+  "o": "fr",
+  "m": [
+   470,
+   32,
+   18,
+   29
+  ],
+  "diff": 1,
+  "ing": {
+   "oeufs": 6,
+   "lait": 300,
+   "farine": 50,
+   "jambon": 4,
+   "emmental": 120,
+   "salade": 1
+  },
+  "steps": [
+   "Préchauffe le four à 190 °C. Fouette {oeufs}, {farine} de farine et {lait} de lait.",
+   "Ajoute {jambon} en dés et {emmental} d'emmental, verse dans un plat beurré.",
+   "Enfourne 30 min. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_crevettes_coco_riz",
+  "n": "Crevettes au lait de coco et curry, riz",
+  "s": "Crevettes coco-curry",
+  "o": "th",
+  "m": [
+   540,
+   32,
+   62,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "crevettes": 400,
+   "laitcoco": 250,
+   "curry": 1,
+   "oignon": 1,
+   "ail": 1,
+   "gingembre": 1,
+   "huile": 1,
+   "epinardssurg": 200,
+   "riz": 240,
+   "citronvert": 1
+  },
+  "steps": [
+   "Cuis {riz} de riz.",
+   "Fais revenir {oignon}, 1 gousse d'ail et {gingembre} râpé dans {huile} d'huile avec {curry} de curry. Ajoute {laitcoco} de lait de coco et {epinardssurg} d'épinards, 5 min.",
+   "Ajoute {crevettes} de crevettes, 3 min, et le jus de {citronvert}."
+  ]
+ },
+ {
+  "id": "x4_cabillaud_pdt_yaourt",
+  "n": "Cabillaud, pommes de terre vapeur et sauce yaourt-citron",
+  "s": "Cabillaud sauce yaourt",
+  "o": "fr",
+  "m": [
+   460,
+   36,
+   46,
+   11
+  ],
+  "diff": 1,
+  "ing": {
+   "cabillaud": 600,
+   "pommedeterre": 800,
+   "yaourt": 2,
+   "citron": 1,
+   "persil": 1,
+   "huile": 1
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min à la vapeur.",
+   "Poêle {cabillaud} de cabillaud 4 min de chaque côté dans {huile} d'huile.",
+   "Mélange {yaourt} de yaourt, le zeste et le jus de {citron} et {persil} de persil, sers avec le poisson."
+  ]
+ },
+ {
+  "id": "x4_jacket_potatoes_thon",
+  "n": "Pommes de terre au four garnies thon-maïs-fromage blanc",
+  "s": "Jacket potatoes thon",
+  "o": "gb",
+  "m": [
+   520,
+   34,
+   66,
+   10
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 1200,
+   "thon": 2,
+   "mais": 1,
+   "fromageblanc": 200,
+   "cebette": 2,
+   "cheddar": 60,
+   "salade": 1
+  },
+  "steps": [
+   "Pique 4 grosses pommes de terre ({pommedeterre}), cuis-les 10 min au micro-ondes puis 20 min au four à 220 °C.",
+   "Mélange {thon} de thon, {mais} de maïs, {fromageblanc} de fromage blanc et {cebette} émincées.",
+   "Ouvre les pommes de terre, garnis, parsème de {cheddar} de cheddar et sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_cauliflower_cheese_jambon",
+  "n": "Chou-fleur au fromage et au jambon (cauliflower cheese)",
+  "s": "Chou-fleur au fromage",
+  "o": "gb",
+  "comfort": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   490,
+   30,
+   26,
+   29
+  ],
+  "diff": 1,
+  "ing": {
+   "choufleur": 1000,
+   "beurre": 25,
+   "farine": 25,
+   "lait": 500,
+   "cheddar": 150,
+   "moutarde": 1,
+   "jambon": 4,
+   "pain": 4
+  },
+  "steps": [
+   "Cuis {choufleur} de chou-fleur en bouquets 8 min à l'eau, égoutte.",
+   "Fais une béchamel avec {beurre} de beurre, {farine} de farine et {lait} de lait, ajoute {moutarde} de moutarde et les deux tiers de {cheddar} de cheddar.",
+   "Mets le chou-fleur et {jambon} en lanières dans un plat, nappe, parsème du reste de cheddar et gratine 15 min à 220 °C. Sers avec {pain}."
+  ]
+ },
+ {
+  "id": "x4_poireaux_creme_oeufs",
+  "n": "Poireaux à la crème et œufs mollets, tartines",
+  "s": "Poireaux-œufs mollets",
+  "o": "fr",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   470,
+   22,
+   36,
+   26
+  ],
+  "diff": 1,
+  "ing": {
+   "poireau": 5,
+   "beurre": 15,
+   "creme": 150,
+   "moutarde": 1,
+   "oeufs": 8,
+   "pain": 8
+  },
+  "steps": [
+   "Émince {poireau} et fais-les fondre 15 min à couvert dans {beurre} de beurre.",
+   "Ajoute {creme} de crème et {moutarde} de moutarde. Cuis {oeufs} 6 min à l'eau bouillante, écale-les.",
+   "Sers les poireaux avec les œufs ouverts et {pain} grillé."
+  ]
+ },
+ {
+  "id": "x4_riz_coco_poischiches_epinards",
+  "n": "Riz au lait de coco, pois chiches et épinards",
+  "s": "Riz coco-pois chiches",
+  "o": "in",
+  "m": [
+   560,
+   18,
+   76,
+   20
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 240,
+   "laitcoco": 250,
+   "poischiches": 2,
+   "epinardssurg": 300,
+   "oignon": 1,
+   "ail": 2,
+   "gingembre": 1,
+   "huile": 1,
+   "garammasala": 1,
+   "citronvert": 1
+  },
+  "steps": [
+   "Fais revenir {oignon}, 2 gousses d'ail et {gingembre} râpé dans {huile} d'huile avec {garammasala} de garam masala.",
+   "Ajoute {riz} de riz, {laitcoco} de lait de coco et 350 ml d'eau salée. Couvre et cuis 15 min.",
+   "Ajoute {poischiches} de pois chiches rincés et {epinardssurg} d'épinards, couvre 5 min. Arrose du jus de {citronvert}."
+  ]
+ },
+ {
+  "id": "x4_pilaf_poulet_amandes",
+  "n": "Pilaf de poulet aux amandes et raisins secs",
+  "s": "Pilaf poulet-amandes",
+  "o": "ir",
+  "m": [
+   580,
+   40,
+   68,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "poulet": 450,
+   "riz": 240,
+   "oignon": 1,
+   "huile": 1,
+   "curcuma": 1,
+   "cannelle": 0.5,
+   "raisinssecs": 40,
+   "amandesentieres": 40,
+   "bouillon": 1,
+   "yaourt": 4
+  },
+  "steps": [
+   "Fais dorer {poulet} de poulet en dés et {oignon} émincé 5 min dans {huile} d'huile avec {curcuma} de curcuma et {cannelle} de cannelle.",
+   "Ajoute {riz} de riz, {raisinssecs} de raisins, {bouillon} et 450 ml d'eau. Couvre et cuis 18 min.",
+   "Fais griller {amandesentieres} d'amandes concassées, parsème-les et sers avec {yaourt} de yaourt."
+  ]
+ },
+ {
+  "id": "x4_hf_echine_confiture_puree",
+  "n": "Tranches d'échine sauce confiture-vinaigre, purée et petits pois",
+  "s": "Échine confiture-purée",
+  "o": "us",
+  "comfort": true,
+  "m": [
+   600,
+   36,
+   58,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "echine": 600,
+   "confiture": 60,
+   "vinaigre": 1,
+   "echalote": 1,
+   "huile": 1,
+   "pommedeterre": 900,
+   "lait": 150,
+   "beurre": 20,
+   "petitspois": 300
+  },
+  "steps": [
+   "Cuis {pommedeterre} de pommes de terre 20 min, écrase avec {lait} de lait et {beurre} de beurre. Cuis {petitspois} de petits pois 5 min.",
+   "Saisis {echine} d'échine en tranches fines 3 min de chaque côté dans {huile} d'huile, réserve.",
+   "Dans la poêle, fais fondre {echalote} émincée, ajoute {confiture} de confiture, {vinaigre} de vinaigre et 3 c.s. d'eau. Laisse réduire 2 min et nappe la viande."
+  ]
+ },
+ {
+  "id": "x4_hf_spaghetti_saucisse_poivrons",
+  "n": "Spaghetti saucisse-poivrons à la toscane",
+  "s": "Spaghetti saucisse-poivrons",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "m": [
+   620,
+   27,
+   72,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "saucisse": 4,
+   "poivron": 2,
+   "oignon": 1,
+   "ail": 1,
+   "huile": 1,
+   "tomates": 1,
+   "herbes": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de spaghettis.",
+   "Fais dorer {saucisse} en rondelles, {poivron} et {oignon} émincés 8 min dans {huile} d'huile, ajoute 1 gousse d'ail, {tomates} de tomates et {herbes} d'herbes, 8 min.",
+   "Mélange avec les pâtes et sers avec {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_hf_echine_citron_courgettes",
+  "n": "Échine citron-thym, courgettes rôties et riz à l'ail",
+  "s": "Échine citron-courgettes",
+  "o": "fr",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   560,
+   36,
+   58,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "echine": 600,
+   "citron": 1,
+   "herbes": 1,
+   "huile": 2,
+   "courgette": 3,
+   "riz": 240,
+   "ail": 2,
+   "beurre": 10
+  },
+  "steps": [
+   "Rôtis {courgette} en demi-rondelles 20 min à 210 °C avec 1 c.s. d'huile.",
+   "Cuis {riz} de riz, mélange-le avec {beurre} de beurre et 2 gousses d'ail revenues.",
+   "Saisis {echine} d'échine en tranches 3 min de chaque côté dans le reste de {huile} d'huile avec {herbes} d'herbes, arrose du zeste et du jus de {citron}."
+  ]
+ },
+ {
+  "id": "x4_hf_tacos_poulet_bulgogi",
+  "n": "Tacos de poulet façon bulgogi, concombre mariné et crème piquante",
+  "s": "Tacos poulet bulgogi",
+  "o": "kr",
+  "m": [
+   540,
+   38,
+   50,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "poulet": 500,
+   "soja": 3,
+   "miel": 1,
+   "ail": 1,
+   "gingembre": 1,
+   "huile": 1,
+   "concombre": 1,
+   "vinaigre": 2,
+   "sucre": 5,
+   "tortilla": 8,
+   "skyr": 150,
+   "piment": 0.5,
+   "carotte": 2
+  },
+  "steps": [
+   "Coupe {concombre} en fines rondelles, mélange avec {vinaigre} de vinaigre, {sucre} de sucre et une pincée de sel. Râpe {carotte}.",
+   "Fais sauter {poulet} de poulet en lanières 6 min dans {huile} d'huile avec 1 gousse d'ail, {gingembre} râpé, {soja} de soja et {miel} de miel.",
+   "Mélange {skyr} de skyr avec {piment} de piment pour les grands. Garnis {tortilla} chaudes de poulet, carottes et concombre."
+  ]
+ },
+ {
+  "id": "x4_hf_bowl_poulet_vietnamien",
+  "n": "Bowl vietnamien au poulet caramélisé, carottes marinées et riz",
+  "s": "Bowl poulet vietnamien",
+  "o": "vn",
+  "m": [
+   560,
+   40,
+   70,
+   12
+  ],
+  "diff": 1,
+  "ing": {
+   "poulet": 500,
+   "sucre": 20,
+   "soja": 3,
+   "ail": 2,
+   "huileneutre": 15,
+   "riz": 240,
+   "carotte": 3,
+   "concombre": 1,
+   "vinaigre": 2,
+   "citronvert": 1,
+   "coriandre": 1,
+   "cacahuetes": 30
+  },
+  "steps": [
+   "Cuis {riz} de riz. Râpe {carotte}, coupe {concombre} en bâtonnets, mélange-les avec {vinaigre} de vinaigre et une pincée de sel.",
+   "Fais sauter {poulet} de poulet en dés 5 min dans {huileneutre} d'huile avec 2 gousses d'ail. Ajoute {sucre} de sucre et {soja} de soja, laisse caraméliser 3 min.",
+   "Sers en bols avec les crudités, le jus de {citronvert}, {coriandre} de coriandre et {cacahuetes} de cacahuètes concassées."
+  ]
+ },
+ {
+  "id": "x4_hf_tacos_banh_mi_boeuf",
+  "n": "Tacos banh mi au bœuf, carottes et concombre marinés",
+  "s": "Tacos banh mi",
+  "o": "vn",
+  "m": [
+   560,
+   34,
+   50,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "boeuf": 450,
+   "soja": 2,
+   "miel": 1,
+   "ail": 1,
+   "huile": 1,
+   "carotte": 2,
+   "concombre": 1,
+   "vinaigre": 2,
+   "sucre": 5,
+   "tortilla": 8,
+   "fromageblanc": 150,
+   "coriandre": 1
+  },
+  "steps": [
+   "Râpe {carotte}, coupe {concombre} en bâtonnets, mélange avec {vinaigre} de vinaigre, {sucre} de sucre et du sel.",
+   "Fais dorer {boeuf} de bœuf 6 min dans {huile} d'huile avec 1 gousse d'ail, {soja} de soja et {miel} de miel.",
+   "Garnis {tortilla} chaudes de bœuf, de crudités, de {fromageblanc} de fromage blanc et de {coriandre} de coriandre. Chacun compose les siens."
+  ]
+ },
+ {
+  "id": "x4_hf2_pasta_primavera",
+  "n": "Pasta primavera, sauce citron-parmesan",
+  "s": "Pasta primavera",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   540,
+   22,
+   76,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "courgette": 1,
+   "poivron": 1,
+   "petitspois": 200,
+   "ail": 1,
+   "huile": 2,
+   "citron": 1,
+   "creme": 100,
+   "parmesan": 70
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes, ajoute {petitspois} de petits pois les 3 dernières minutes.",
+   "Fais sauter {courgette} et {poivron} en dés 6 min dans {huile} d'huile avec 1 gousse d'ail.",
+   "Ajoute {creme} de crème, le zeste et le jus de {citron}, {parmesan} de parmesan, puis les pâtes et un peu d'eau de cuisson."
+  ]
+ },
+ {
+  "id": "x4_hf2_rigatoni_lardons_chevre",
+  "n": "Rigatoni lardons-chèvre et oignons caramélisés au vinaigre",
+  "s": "Rigatoni lardons-chèvre",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   620,
+   27,
+   74,
+   23
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "lardons": 150,
+   "oignon": 3,
+   "vinaigre": 1,
+   "sucre": 5,
+   "chevre": 120,
+   "salade": 1
+  },
+  "steps": [
+   "Fais fondre {oignon} émincés 15 min avec {lardons} de lardons, ajoute {vinaigre} de vinaigre et {sucre} de sucre, laisse caraméliser 2 min.",
+   "Cuis {patescompletes} de rigatoni, mélange-les à la poêlée avec un peu d'eau de cuisson.",
+   "Émiette {chevre} de chèvre dessus et sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_hf2_penne_boulettes_champignons",
+  "n": "Penne aux boulettes, sauce crème-champignons",
+  "s": "Penne boulettes-champignons",
+  "o": "it",
+  "pasta": true,
+  "comfort": true,
+  "m": [
+   640,
+   38,
+   70,
+   23
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "steak": 4,
+   "herbes": 1,
+   "huile": 1,
+   "champignons": 300,
+   "ail": 1,
+   "creme": 200,
+   "parmesan": 40
+  },
+  "steps": [
+   "Forme 20 boulettes avec {steak} émiettés, {herbes} d'herbes, sel et poivre. Dore-les 6 min dans {huile} d'huile, réserve.",
+   "Dans la même poêle, fais dorer {champignons} de champignons émincés avec 1 gousse d'ail, ajoute {creme} de crème et les boulettes, 4 min.",
+   "Cuis {patescompletes} de penne, mélange et sers avec {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_hf2_linguine_poulet_citron_haricots",
+  "n": "Linguine crémeuses poulet citron-ail, haricots verts",
+  "s": "Linguine poulet-citron",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   580,
+   44,
+   66,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "poulet": 400,
+   "haricotsverts": 300,
+   "ail": 2,
+   "huile": 1,
+   "creme": 150,
+   "citron": 1,
+   "parmesan": 40
+  },
+  "steps": [
+   "Cuis {patescompletes} de linguine avec {haricotsverts} de haricots verts coupés en deux les 6 dernières minutes.",
+   "Fais dorer {poulet} de poulet en lanières 6 min dans {huile} d'huile avec 2 gousses d'ail, ajoute {creme} de crème, le zeste et le jus de {citron}.",
+   "Mélange avec les pâtes et {parmesan} de parmesan."
+  ]
+ },
+ {
+  "id": "x4_hf2_fusilli_citron_echine",
+  "n": "Fusilli crémeux au citron, porc, petits pois et chapelure dorée",
+  "s": "Fusilli citron-porc",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   610,
+   38,
+   72,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "echine": 400,
+   "petitspois": 250,
+   "huile": 2,
+   "ail": 1,
+   "creme": 150,
+   "citron": 1,
+   "chapelure": 30,
+   "parmesan": 30
+  },
+  "steps": [
+   "Fais dorer {chapelure} de chapelure 2 min dans 1 c.s. d'huile, réserve.",
+   "Cuis {patescompletes} de fusilli avec {petitspois} de petits pois les 3 dernières minutes. Saisis {echine} d'échine en fines lanières 5 min dans le reste de {huile} d'huile avec 1 gousse d'ail.",
+   "Ajoute {creme} de crème, le zeste et le jus de {citron}, {parmesan} de parmesan et les pâtes. Parsème de chapelure."
+  ]
+ },
+ {
+  "id": "x4_hf2_rigatoni_romesco_boeuf",
+  "n": "Rigatoni sauce romesco aux poivrons rôtis, lamelles de bœuf",
+  "s": "Rigatoni romesco",
+  "o": "es",
+  "pasta": true,
+  "months": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "m": [
+   640,
+   40,
+   72,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "poivron": 3,
+   "amande": 40,
+   "ail": 1,
+   "paprika": 1,
+   "vinaigre": 1,
+   "huile": 3,
+   "fauxfilet": 400,
+   "creme": 80,
+   "salade": 1
+  },
+  "steps": [
+   "Fais griller {poivron} 15 min sous le gril du four, pèle-les et mixe avec {amande} de poudre d'amande, 1 gousse d'ail, {paprika} de paprika, {vinaigre} de vinaigre, 2 c.s. d'huile et {creme} de crème.",
+   "Cuis {patescompletes} de rigatoni et mélange avec la sauce.",
+   "Saisis {fauxfilet} de faux-filet 2 min de chaque côté dans le reste de {huile} d'huile, tranche et pose sur les pâtes. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_hf2_rigatoni_texmex",
+  "n": "Rigatoni crémeux tex-mex au bœuf et maïs",
+  "s": "Rigatoni tex-mex",
+  "o": "us",
+  "pasta": true,
+  "comfort": true,
+  "m": [
+   640,
+   38,
+   74,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "boeuf": 400,
+   "oignon": 1,
+   "huile": 1,
+   "cumin": 1,
+   "paprika": 1,
+   "mais": 1,
+   "tomates": 1,
+   "creme": 100,
+   "cheddar": 60
+  },
+  "steps": [
+   "Cuis {patescompletes} de rigatoni.",
+   "Fais dorer {boeuf} de bœuf et {oignon} émincé dans {huile} d'huile avec {cumin} de cumin et {paprika} de paprika. Ajoute {tomates} de tomates et {mais} de maïs, 8 min, puis {creme} de crème.",
+   "Mélange avec les pâtes et parsème de {cheddar} de cheddar."
+  ]
+ },
+ {
+  "id": "x4_hf2_gratin_raviolis_crevettes",
+  "n": "Gratin de raviolis aux crevettes et épinards, croûte parmesan",
+  "s": "Gratin raviolis-crevettes",
+  "o": "it",
+  "comfort": true,
+  "m": [
+   600,
+   34,
+   52,
+   27
+  ],
+  "diff": 1,
+  "ing": {
+   "patesfraiches": 600,
+   "crevettes": 300,
+   "passata": 400,
+   "creme": 100,
+   "epinardssurg": 200,
+   "ail": 1,
+   "chapelure": 30,
+   "parmesan": 50
+  },
+  "steps": [
+   "Préchauffe le four à 210 °C. Mélange dans un plat {patesfraiches} de raviolis crus, {crevettes} de crevettes, {passata} de passata, {creme} de crème, {epinardssurg} d'épinards décongelés et 1 gousse d'ail râpée.",
+   "Couvre de {chapelure} de chapelure et {parmesan} de parmesan.",
+   "Enfourne 20 min jusqu'à ce que le dessus soit doré."
+  ]
+ },
+ {
+  "id": "x4_hf2_nouilles_curry_coco_poulet",
+  "n": "Nouilles sautées au curry coco, poulet et cacahuètes",
+  "s": "Nouilles curry-coco",
+  "o": "th",
+  "m": [
+   620,
+   38,
+   66,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "nouillesriz": 250,
+   "poulet": 400,
+   "carotte": 2,
+   "huileneutre": 15,
+   "ail": 1,
+   "gingembre": 1,
+   "curry": 1,
+   "laitcoco": 200,
+   "soja": 2,
+   "citronvert": 1,
+   "cacahuetes": 40,
+   "coriandre": 1
+  },
+  "steps": [
+   "Fais tremper {nouillesriz} de nouilles de riz 8 min dans l'eau chaude, égoutte.",
+   "Fais sauter {poulet} de poulet en lanières et {carotte} en julienne 6 min dans {huileneutre} d'huile avec 1 gousse d'ail et {gingembre}. Ajoute {curry} de curry, {laitcoco} de lait de coco et {soja} de soja.",
+   "Ajoute les nouilles, mélange 2 min, arrose du jus de {citronvert} et parsème de {cacahuetes} de cacahuètes et de {coriandre} de coriandre."
+  ]
+ },
+ {
+  "id": "x4_hf2_onepot_toscane_crevettes",
+  "n": "One pot pasta toscane aux crevettes, épinards et ricotta",
+  "s": "One pot toscane",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   580,
+   34,
+   72,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "crevettes": 300,
+   "tomates": 1,
+   "epinardssurg": 250,
+   "ail": 2,
+   "huile": 1,
+   "bouillon": 1,
+   "ricotta": 150,
+   "parmesan": 40
+  },
+  "steps": [
+   "Mets dans une sauteuse {patescompletes} de pâtes, {tomates} de tomates, {epinardssurg} d'épinards, 2 gousses d'ail, {huile} d'huile, {bouillon} et 800 ml d'eau.",
+   "Cuis 11 min en remuant, ajoute {crevettes} de crevettes pour les 3 dernières minutes.",
+   "Ajoute {ricotta} de ricotta et {parmesan} de parmesan, mélange et sers."
+  ]
+ },
+ {
+  "id": "x4_hf2_poelee_boeuf_patatedouce",
+  "n": "Poêlée de bœuf, patate douce et maïs, crème au paprika",
+  "s": "Poêlée bœuf-patate douce",
+  "o": "us",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   600,
+   36,
+   58,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "patatedouce": 700,
+   "boeuf": 450,
+   "oignon": 1,
+   "huile": 2,
+   "cumin": 1,
+   "paprika": 1,
+   "mais": 1,
+   "skyr": 150,
+   "coriandre": 1
+  },
+  "steps": [
+   "Fais dorer {patatedouce} de patates douces en petits dés 12 min à couvert dans {huile} d'huile.",
+   "Ajoute {boeuf} de bœuf, {oignon} émincé, {cumin} de cumin et la moitié de {paprika} de paprika, 6 min, puis {mais} de maïs.",
+   "Mélange {skyr} de skyr avec le reste du paprika, sers avec la poêlée et {coriandre} de coriandre."
+  ]
+ },
+ {
+  "id": "x4_hf2_orzotto_oignon_truite",
+  "n": "Orzotto façon soupe à l'oignon, truite et salade",
+  "s": "Orzotto oignon-truite",
+  "o": "fr",
+  "pasta": true,
+  "m": [
+   580,
+   36,
+   66,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "oignon": 3,
+   "beurre": 20,
+   "vinblanc": 100,
+   "vermicelles": 300,
+   "bouillon": 1,
+   "emmental": 80,
+   "truite": 400,
+   "huile": 1,
+   "moutarde": 1,
+   "vinaigre": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Fais fondre {oignon} émincés 12 min dans {beurre} de beurre, déglace avec {vinblanc} de vin blanc.",
+   "Ajoute {vermicelles} d'orzo, {bouillon} et 750 ml d'eau chaude, cuis 10 min en remuant, puis {emmental} d'emmental.",
+   "Poêle {truite} de truite 3 min par face dans {huile} d'huile. Sers avec {salade} assaisonnée de {moutarde} de moutarde et {vinaigre} de vinaigre."
+  ]
+ },
+ {
+  "id": "x4_vp_huevos_flamenca",
+  "n": "Œufs à la flamenca végétariens : haricots blancs, tomate et feta",
+  "s": "Œufs à la flamenca",
+  "o": "es",
+  "m": [
+   489,
+   31,
+   39,
+   21
+  ],
+  "diff": 1,
+  "ing": {
+   "haricotsblancs": 2,
+   "oignon": 1,
+   "poivron": 1,
+   "ail": 2,
+   "huile": 1,
+   "paprika": 1,
+   "tomates": 1,
+   "oeufs": 8,
+   "feta": 100,
+   "pain": 4
+  },
+  "steps": [
+   "Fais revenir {oignon}, {poivron} et 2 gousses d'ail émincés 6 min dans {huile} d'huile avec {paprika} de paprika.",
+   "Ajoute {tomates} de tomates et {haricotsblancs} de haricots rincés, mijote 8 min. Creuse 8 nids, casse {oeufs} dedans, couvre 6 min.",
+   "Émiette {feta} de feta dessus, sers avec {pain}."
+  ]
+ },
+ {
+  "id": "x4_vp_tartines_haricots_oeufs",
+  "n": "Tartines de haricots blancs écrasés, œufs mollets et parmesan",
+  "s": "Tartines haricots-œufs",
+  "o": "it",
+  "m": [
+   535,
+   33,
+   45,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "haricotsblancs": 2,
+   "ail": 1,
+   "citron": 1,
+   "huile": 2,
+   "pain": 8,
+   "oeufs": 8,
+   "parmesan": 50,
+   "salade": 1
+  },
+  "steps": [
+   "Écrase {haricotsblancs} de haricots rincés avec 1 gousse d'ail, le jus de {citron}, {huile} d'huile, sel et poivre.",
+   "Cuis {oeufs} 6 min, écale-les.",
+   "Tartine {pain} grillé, pose un œuf coupé en deux, {parmesan} de parmesan, et sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_vp_pates_cottage_epinards",
+  "n": "Pâtes crémeuses cottage cheese, épinards et parmesan",
+  "s": "Pâtes cottage-épinards",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   516,
+   31,
+   61,
+   13
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "cottage": 400,
+   "epinardssurg": 300,
+   "ail": 2,
+   "huile": 1,
+   "parmesan": 60,
+   "citron": 1,
+   "petitspois": 200
+  },
+  "steps": [
+   "Cuis {patescompletes} de pâtes avec {petitspois} de petits pois les 3 dernières minutes.",
+   "Fais revenir 2 gousses d'ail dans {huile} d'huile, ajoute {epinardssurg} d'épinards, 6 min.",
+   "Mixe {cottage} de cottage cheese avec {parmesan} de parmesan et le zeste de {citron}, mélange avec les pâtes et les épinards hors du feu."
+  ]
+ },
+ {
+  "id": "x4_vp_bowl_quinoa_oeufs",
+  "n": "Bowl quinoa, pois chiches rôtis, œufs et sauce skyr-tahini",
+  "s": "Bowl quinoa-œufs",
+  "o": "lb",
+  "m": [
+   512,
+   29,
+   52,
+   20
+  ],
+  "diff": 1,
+  "ing": {
+   "quinoa": 200,
+   "poischiches": 1,
+   "huile": 2,
+   "cumin": 1,
+   "oeufs": 6,
+   "skyr": 200,
+   "tahini": 1,
+   "citron": 1,
+   "concombre": 1,
+   "carotte": 2
+  },
+  "steps": [
+   "Cuis {quinoa} de quinoa 12 min. Rôtis {poischiches} de pois chiches 20 min à 210 °C avec {huile} d'huile et {cumin} de cumin.",
+   "Cuis {oeufs} 8 min, écale-les. Mélange {skyr} de skyr, {tahini} de tahini et le jus de {citron}.",
+   "Compose les bols avec {concombre} en dés et {carotte} râpées."
+  ]
+ },
+ {
+  "id": "x4_vp_polenta_oeufs_haricots",
+  "n": "Polenta crémeuse au parmesan, haricots rouges à la tomate et œufs au plat",
+  "s": "Polenta-haricots-œufs",
+  "o": "it",
+  "comfort": true,
+  "m": [
+   457,
+   25,
+   53,
+   15
+  ],
+  "diff": 1,
+  "ing": {
+   "polenta": 180,
+   "lait": 400,
+   "parmesan": 60,
+   "haricotsrouges": 1,
+   "passata": 300,
+   "ail": 1,
+   "huile": 1,
+   "oeufs": 4
+  },
+  "steps": [
+   "Mijote {haricotsrouges} de haricots rincés avec {passata} de passata et 1 gousse d'ail, 10 min.",
+   "Porte {lait} de lait et 400 ml d'eau salée à ébullition, verse {polenta} de polenta, cuis 5 min, ajoute {parmesan} de parmesan.",
+   "Cuis {oeufs} au plat dans {huile} d'huile, sers sur la polenta avec les haricots."
+  ]
+ },
+ {
+  "id": "x4_vp_full_breakfast_vege",
+  "n": "Assiette anglaise végétarienne : œufs brouillés, haricots à la tomate, champignons",
+  "s": "Assiette anglaise végé",
+  "o": "gb",
+  "comfort": true,
+  "m": [
+   461,
+   33,
+   39,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "oeufs": 8,
+   "cottage": 150,
+   "haricotsblancs": 2,
+   "passata": 250,
+   "paprika": 0.5,
+   "champignons": 300,
+   "huile": 1,
+   "tomatefraiche": 2,
+   "pain": 4
+  },
+  "steps": [
+   "Mijote {haricotsblancs} de haricots rincés avec {passata} de passata et {paprika} de paprika 8 min.",
+   "Fais dorer {champignons} de champignons et {tomatefraiche} coupées en deux dans {huile} d'huile.",
+   "Brouille {oeufs} à feu doux avec {cottage} de cottage cheese, sers avec le tout et {pain} grillé."
+  ]
+ },
+ {
+  "id": "x4_vp_chana_skyr_pita",
+  "n": "Pois chiches au curry express, skyr et pitas",
+  "s": "Chana express",
+  "o": "in",
+  "m": [
+   436,
+   28,
+   64,
+   7
+  ],
+  "diff": 1,
+  "ing": {
+   "poischiches": 2,
+   "oignon": 1,
+   "ail": 2,
+   "gingembre": 1,
+   "huile": 1,
+   "garammasala": 2,
+   "tomates": 1,
+   "epinardssurg": 200,
+   "skyr": 400,
+   "painpita": 4
+  },
+  "steps": [
+   "Fais revenir {oignon}, 2 gousses d'ail et {gingembre} dans {huile} d'huile avec {garammasala} de garam masala.",
+   "Ajoute {tomates} de tomates, {poischiches} de pois chiches rincés et {epinardssurg} d'épinards, mijote 12 min.",
+   "Sers avec {skyr} de skyr et {painpita} chauds."
+  ]
+ },
+ {
+  "id": "x4_vp_onepot_lentilles_feta",
+  "n": "One pot pâtes, lentilles corail, épinards et feta",
+  "s": "One pot lentilles-feta",
+  "o": "gr",
+  "pasta": true,
+  "m": [
+   521,
+   25,
+   67,
+   14
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 280,
+   "lentillescorail": 120,
+   "tomates": 1,
+   "epinardssurg": 200,
+   "oignon": 1,
+   "ail": 2,
+   "huile": 1,
+   "origan": 1,
+   "bouillon": 1,
+   "feta": 150
+  },
+  "steps": [
+   "Mets dans une sauteuse {patescompletes} de pâtes, {lentillescorail} de lentilles, {tomates} de tomates, {epinardssurg} d'épinards, {oignon} émincé, 2 gousses d'ail, {huile} d'huile, {origan} d'origan, {bouillon} et 950 ml d'eau.",
+   "Cuis 12 min en remuant souvent.",
+   "Émiette {feta} de feta dessus et sers."
+  ]
+ },
+ {
+  "id": "x4_vp_tacos_lentilles",
+  "n": "Tacos de lentilles épicées, cheddar, skyr et crudités",
+  "s": "Tacos de lentilles",
+  "o": "mx",
+  "m": [
+   617,
+   33,
+   76,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "lentillesvertes": 200,
+   "oignon": 1,
+   "huile": 1,
+   "cumin": 1,
+   "paprika": 1,
+   "tomates": 1,
+   "tortilla": 8,
+   "cheddar": 100,
+   "skyr": 200,
+   "salade": 1,
+   "carotte": 2
+  },
+  "steps": [
+   "Cuis {lentillesvertes} de lentilles 20 min, égoutte.",
+   "Fais revenir {oignon} dans {huile} d'huile avec {cumin} de cumin et {paprika} de paprika, ajoute les lentilles et {tomates} de tomates, 8 min.",
+   "Garnis {tortilla} de lentilles, {cheddar} de cheddar, {skyr} de skyr, {salade} et {carotte} râpées."
+  ]
+ },
+ {
+  "id": "x4_vp_orzo_poischiches_feta",
+  "n": "Orzo aux pois chiches, feta et citron",
+  "s": "Orzo pois chiches-feta",
+  "o": "gr",
+  "pasta": true,
+  "m": [
+   550,
+   25,
+   75,
+   15
+  ],
+  "diff": 1,
+  "ing": {
+   "vermicelles": 280,
+   "poischiches": 2,
+   "oignon": 1,
+   "ail": 1,
+   "huile": 1,
+   "bouillon": 1,
+   "epinardssurg": 200,
+   "feta": 150,
+   "citron": 1,
+   "origan": 1
+  },
+  "steps": [
+   "Fais revenir {oignon} et 1 gousse d'ail dans {huile} d'huile, ajoute {vermicelles} d'orzo, {bouillon} et 750 ml d'eau.",
+   "Cuis 10 min en remuant, ajoute {poischiches} de pois chiches et {epinardssurg} d'épinards, 3 min.",
+   "Ajoute {feta} de feta, le jus de {citron} et {origan} d'origan."
+  ]
+ },
+ {
+  "id": "x4_vp_frittata_quinoa_brocoli",
+  "n": "Frittata express quinoa, brocoli et feta",
+  "s": "Frittata quinoa-brocoli",
+  "o": "it",
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   454,
+   29,
+   25,
+   25
+  ],
+  "diff": 1,
+  "ing": {
+   "quinoa": 120,
+   "brocoli": 400,
+   "oeufs": 8,
+   "feta": 120,
+   "parmesan": 40,
+   "huile": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {quinoa} de quinoa 12 min et {brocoli} de brocoli en petits bouquets 4 min.",
+   "Bats {oeufs} avec {parmesan} de parmesan, ajoute quinoa, brocoli et {feta} de feta.",
+   "Cuis dans une poêle huilée ({huile}) 10 min à couvert à feu doux. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_vp_moros_cristianos",
+  "n": "Moros y cristianos : riz aux haricots noirs, œufs au plat et avocat",
+  "s": "Moros y cristianos",
+  "o": "cu",
+  "m": [
+   609,
+   29,
+   68,
+   22
+  ],
+  "diff": 1,
+  "ing": {
+   "riz": 220,
+   "haricotsnoirs": 2,
+   "oignon": 1,
+   "poivron": 1,
+   "ail": 2,
+   "huile": 1,
+   "cumin": 1,
+   "origan": 1,
+   "bouillon": 1,
+   "oeufs": 8,
+   "avocat": 1
+  },
+  "steps": [
+   "Fais revenir {oignon}, {poivron} et 2 gousses d'ail émincés dans {huile} d'huile avec {cumin} de cumin et {origan} d'origan.",
+   "Ajoute {riz} de riz, {haricotsnoirs} de haricots noirs rincés, {bouillon} et 450 ml d'eau. Couvre et cuis 18 min.",
+   "Sers avec {oeufs} au plat et {avocat} en lamelles."
+  ]
+ },
+ {
+  "id": "x4_vp_mercimek_kofte",
+  "n": "Mercimek köfte : bouchées lentilles corail-boulgour, skyr et salade",
+  "s": "Mercimek köfte",
+  "o": "tr",
+  "m": [
+   452,
+   29,
+   62,
+   7
+  ],
+  "diff": 1,
+  "ing": {
+   "lentillescorail": 200,
+   "boulgour": 150,
+   "oignon": 1,
+   "huile": 2,
+   "tomates": 1,
+   "cumin": 1,
+   "paprika": 1,
+   "persil": 1,
+   "citron": 1,
+   "skyr": 400,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {lentillescorail} de lentilles 12 min dans 600 ml d'eau, ajoute {boulgour} de boulgour hors du feu, couvre 15 min.",
+   "Fais fondre {oignon} haché dans {huile} d'huile avec {cumin} de cumin, {paprika} de paprika et 2 c.s. de tomates ({tomates}). Mélange au boulgour avec {persil} de persil et le jus de {citron}.",
+   "Forme des bouchées allongées dans la paume, sers avec {skyr} de skyr et {salade}."
+  ]
+ },
+ {
+  "id": "x4_vp_spaghetti_haricots_citron",
+  "n": "Spaghetti aux haricots blancs, citron et parmesan, œuf mollet",
+  "s": "Spaghetti haricots-citron",
+  "o": "it",
+  "pasta": true,
+  "m": [
+   590,
+   31,
+   69,
+   17
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 320,
+   "haricotsblancs": 2,
+   "ail": 3,
+   "huile": 2,
+   "citron": 1,
+   "parmesan": 60,
+   "oeufs": 4,
+   "persil": 1
+  },
+  "steps": [
+   "Cuis {patescompletes} de spaghettis et {oeufs} 6 min.",
+   "Fais revenir 3 gousses d'ail dans {huile} d'huile, ajoute {haricotsblancs} de haricots rincés et une louche d'eau de cuisson, écrase-en la moitié.",
+   "Ajoute les pâtes, le zeste et le jus de {citron}, {parmesan} de parmesan et {persil} de persil. Pose un œuf mollet sur chaque assiette."
+  ]
+ },
+ {
+  "id": "x4_vp_tartines_ricotta_epinards_oeuf",
+  "n": "Tartines gratinées ricotta-épinards et œuf",
+  "s": "Tartines ricotta-œuf",
+  "o": "it",
+  "m": [
+   478,
+   32,
+   30,
+   24
+  ],
+  "diff": 1,
+  "ing": {
+   "pain": 8,
+   "ricotta": 250,
+   "epinardssurg": 300,
+   "ail": 1,
+   "oeufs": 8,
+   "parmesan": 50,
+   "salade": 1
+  },
+  "steps": [
+   "Cuis {epinardssurg} d'épinards 6 min avec 1 gousse d'ail, presse-les et mélange avec {ricotta} de ricotta.",
+   "Tartine sur {pain}, creuse un petit nid, casse {oeufs} dessus (un par tartine), parsème de {parmesan} de parmesan.",
+   "Enfourne 12 min à 200 °C. Sers avec {salade}."
+  ]
+ },
+ {
+  "id": "x4_vp_quinoa_mexicain",
+  "n": "Quinoa à la mexicaine en une poêle : haricots noirs, maïs et cheddar",
+  "s": "Quinoa mexicain",
+  "o": "mx",
+  "m": [
+   583,
+   32,
+   73,
+   16
+  ],
+  "diff": 1,
+  "ing": {
+   "quinoa": 220,
+   "haricotsnoirs": 2,
+   "mais": 1,
+   "oignon": 1,
+   "huile": 1,
+   "cumin": 1,
+   "paprika": 1,
+   "tomates": 1,
+   "bouillon": 1,
+   "cheddar": 100,
+   "skyr": 200
+  },
+  "steps": [
+   "Fais revenir {oignon} dans {huile} d'huile avec {cumin} de cumin et {paprika} de paprika.",
+   "Ajoute {quinoa} de quinoa rincé, {tomates} de tomates, {bouillon} et 450 ml d'eau, cuis 15 min. Ajoute {haricotsnoirs} de haricots et {mais} de maïs.",
+   "Couvre de {cheddar} de cheddar 2 min, sers avec {skyr} de skyr."
+  ]
+ },
+ {
+  "id": "x4_vp_salade_grecque_proteinee",
+  "n": "Salade grecque protéinée : pois chiches, quinoa, feta et œufs",
+  "s": "Salade grecque protéinée",
+  "o": "gr",
+  "months": [
+   6,
+   7,
+   8,
+   9
+  ],
+  "m": [
+   587,
+   28,
+   52,
+   28
+  ],
+  "diff": 1,
+  "ing": {
+   "quinoa": 150,
+   "poischiches": 2,
+   "concombre": 1,
+   "tomatefraiche": 4,
+   "olives": 60,
+   "feta": 150,
+   "oeufs": 4,
+   "huile": 3,
+   "citron": 1,
+   "origan": 1
+  },
+  "steps": [
+   "Cuis {quinoa} de quinoa 12 min, rafraîchis. Cuis {oeufs} durs 10 min.",
+   "Coupe {concombre} et {tomatefraiche} en dés, ajoute {poischiches} de pois chiches rincés, {olives} d'olives et le quinoa.",
+   "Assaisonne avec {huile} d'huile, le jus de {citron} et {origan} d'origan. Ajoute {feta} de feta et les œufs en quartiers."
+  ]
+ },
+ {
+  "id": "x4_vp_galettes_pdt_cottage",
+  "n": "Galettes de pommes de terre au cottage cheese, œufs et skyr aux herbes",
+  "s": "Galettes pommes de terre-cottage",
+  "o": "fr",
+  "m": [
+   492,
+   32,
+   46,
+   19
+  ],
+  "diff": 1,
+  "ing": {
+   "pommedeterre": 700,
+   "cottage": 300,
+   "oeufs": 6,
+   "farine": 40,
+   "oignon": 1,
+   "huile": 3,
+   "skyr": 300,
+   "persil": 1,
+   "salade": 1
+  },
+  "steps": [
+   "Râpe {pommedeterre} de pommes de terre et {oignon}, presse-les dans un torchon. Mélange avec {cottage} de cottage cheese, 2 œufs, {farine} de farine, sel et poivre.",
+   "Fais dorer des galettes 4 min de chaque côté dans {huile} d'huile. Cuis le reste de {oeufs} au plat.",
+   "Sers avec {skyr} de skyr mélangé à {persil} de persil, et {salade}."
+  ]
+ },
+ {
+  "id": "x4_vp_pates_choufleur_poischiches",
+  "n": "Pâtes au chou-fleur rôti, pois chiches et parmesan",
+  "s": "Pâtes chou-fleur-pois chiches",
+  "o": "it",
+  "pasta": true,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   560,
+   25,
+   70,
+   18
+  ],
+  "diff": 1,
+  "ing": {
+   "patescompletes": 300,
+   "choufleur": 700,
+   "poischiches": 1,
+   "huile": 3,
+   "ail": 2,
+   "piment": 0.5,
+   "parmesan": 80,
+   "citron": 1,
+   "chapelure": 30
+  },
+  "steps": [
+   "Rôtis {choufleur} de chou-fleur en petits bouquets et {poischiches} de pois chiches 25 min à 210 °C avec 2 c.s. d'huile.",
+   "Cuis {patescompletes} de pâtes. Fais dorer {chapelure} de chapelure avec 2 gousses d'ail et {piment} de piment dans le reste de {huile} d'huile.",
+   "Mélange pâtes, chou-fleur, pois chiches, {parmesan} de parmesan et le jus de {citron}, parsème de chapelure."
+  ]
  }
 ]
