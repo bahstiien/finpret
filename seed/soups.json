@@ -2065,5 +2065,1014 @@
   ],
   "box": "1 boîte par soir",
   "jj": "Grille {pain}, frotte-les avec la dernière gousse d'ail. Pose-les au fond des bols, verse la soupe bien chaude par-dessus et finis avec {parmesan} de parmesan et 1 c.s. d'huile d'olive."
+ },
+ {
+  "id": "x4_avgolemono",
+  "n": "Avgolemono : soupe grecque poulet, riz et citron",
+  "s": "Avgolemono",
+  "d": "Bouillon de poulet et riz lié à l'œuf et au citron : douce, nourrissante, prête en 30 minutes.",
+  "o": "gr",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": false,
+  "diff": 1,
+  "m": [
+   400,
+   36,
+   40,
+   9
+  ],
+  "ing": {
+   "poulet": 450,
+   "riz": 120,
+   "oignon": 1,
+   "carotte": 2,
+   "bouillon": 2,
+   "oeufs": 3,
+   "citron": 2,
+   "persil": 1
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon}, coupe {carotte} en petits dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 25,
+    "a": [
+     "Mets {poulet} de poulet entier, l'oignon, les carottes, {bouillon} et 1,6 l d'eau à frémir 15 min. Sors le poulet et effiloche-le.",
+     "Ajoute {riz} de riz au bouillon, cuis 15 min. Bats {oeufs} avec le jus de {citron}, verse une louche de bouillon chaud dessus en fouettant, puis reverse dans la soupe hors du feu. Remets le poulet."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe doucement sans faire bouillir, parsème de {persil} de persil ciselé."
+ },
+ {
+  "id": "x4_veloute_carottes_coco",
+  "n": "Velouté de carottes coco-gingembre et pois chiches grillés",
+  "s": "Velouté carottes-coco",
+  "d": "Carottes, lait de coco et gingembre mixés, avec des pois chiches croustillants pour la protéine.",
+  "o": "th",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   420,
+   14,
+   44,
+   21
+  ],
+  "ing": {
+   "carotte": 8,
+   "oignon": 1,
+   "gingembre": 1,
+   "huile": 2,
+   "curry": 1,
+   "bouillon": 1,
+   "laitcoco": 200,
+   "poischiches": 2,
+   "paprika": 1,
+   "citronvert": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Pèle et coupe {carotte} en rondelles, émince {oignon}, râpe {gingembre}. Rince et sèche {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Fais revenir l'oignon et le gingembre 3 min dans 1 c.s. d'huile avec {curry} de curry. Ajoute les carottes, {bouillon} et 1 l d'eau. Cuis 25 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec {laitcoco} de lait de coco et le jus de {citronvert}."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 2,
+    "passive": 20,
+    "wait": false,
+    "a": [
+     "Rôtis les pois chiches 20 min à 200 °C avec le reste de {huile} d'huile et {paprika} de paprika."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, pois chiches en boîte à part",
+  "jj": "Réchauffe le velouté, parsème de pois chiches grillés."
+ },
+ {
+  "id": "x4_veloute_panais_lardons",
+  "n": "Velouté de panais et pomme, lardons croustillants",
+  "s": "Velouté panais-lardons",
+  "d": "Le panais et la pomme donnent un velouté doux et sucré, les lardons le croquant.",
+  "o": "fr",
+  "p": "porc",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   410,
+   16,
+   42,
+   19
+  ],
+  "ing": {
+   "panais": 800,
+   "pomme": 1,
+   "oignon": 1,
+   "beurre": 15,
+   "bouillon": 1,
+   "creme": 100,
+   "lardons": 150,
+   "pain": 4
+  },
+  "prepMin": 6,
+  "prep": [
+   "Pèle et coupe {panais} de panais et {pomme} en cubes, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Fais fondre l'oignon dans {beurre} de beurre, ajoute panais, pomme, {bouillon} et 1 l d'eau. Cuis 25 min.",
+     "Fais dorer {lardons} de lardons à sec 5 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec {creme} de crème."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, lardons à part",
+  "jj": "Réchauffe, parsème de lardons et sers avec {pain} grillé."
+ },
+ {
+  "id": "x4_veloute_celeri_noisettes",
+  "n": "Velouté de céleri-rave, jambon cru et noisettes",
+  "s": "Velouté céleri-noisettes",
+  "d": "Velouté de céleri-rave et pommes de terre, chips de jambon cru et noisettes torréfiées.",
+  "o": "fr",
+  "p": "porc",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   390,
+   17,
+   32,
+   21
+  ],
+  "ing": {
+   "celerirave": 700,
+   "pommedeterre": 300,
+   "oignon": 1,
+   "beurre": 15,
+   "bouillon": 1,
+   "lait": 300,
+   "jambonsec": 4,
+   "noisettes": 40,
+   "pain": 4
+  },
+  "prepMin": 8,
+  "prep": [
+   "Pèle et coupe {celerirave} de céleri-rave et {pommedeterre} de pommes de terre en cubes, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Fais fondre l'oignon dans {beurre} de beurre, ajoute les légumes, {bouillon} et 900 ml d'eau. Cuis 25 min.",
+     "Fais griller {noisettes} de noisettes concassées à sec, puis {jambonsec} de jambon cru 2 min jusqu'à ce qu'il croustille."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec {lait} de lait."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, jambon et noisettes à part",
+  "jj": "Réchauffe, émiette le jambon et les noisettes dessus, sers avec {pain}."
+ },
+ {
+  "id": "x4_soupe_paysanne_lard",
+  "n": "Soupe paysanne au chou, légumes d'hiver et lardons",
+  "s": "Soupe paysanne",
+  "d": "Chou, poireau, carottes, pommes de terre et lardons : la soupe de grand-mère qui tient au ventre.",
+  "o": "fr",
+  "p": "porc",
+  "comfort": true,
+  "fridge": 4,
+  "freeze": true,
+  "diff": 1,
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   430,
+   22,
+   44,
+   18
+  ],
+  "ing": {
+   "chou": 0.5,
+   "poireau": 2,
+   "carotte": 3,
+   "pommedeterre": 500,
+   "oignon": 1,
+   "lardons": 200,
+   "bouillon": 2,
+   "herbes": 1,
+   "pain": 4,
+   "emmental": 60
+  },
+  "prepMin": 12,
+  "prep": [
+   "Émince {chou} et {poireau}, coupe {carotte} et {pommedeterre} de pommes de terre en dés, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 35,
+    "a": [
+     "Fais dorer {lardons} de lardons et l'oignon 5 min dans une grande cocotte.",
+     "Ajoute tous les légumes, {bouillon}, {herbes} d'herbes et 1,8 l d'eau. Mijote 35 min."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe, sers avec {pain} grillé et {emmental} d'emmental."
+ },
+ {
+  "id": "x4_chorba_poulet",
+  "n": "Chorba tunisienne au poulet, pois chiches et vermicelles",
+  "s": "Chorba au poulet",
+  "d": "Soupe épicée à la tomate, au poulet et aux petites pâtes, relevée de harissa et de citron.",
+  "o": "tn",
+  "p": "volaille",
+  "pasta": true,
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   430,
+   36,
+   46,
+   10
+  ],
+  "ing": {
+   "poulet": 400,
+   "oignon": 1,
+   "ail": 2,
+   "huile": 1,
+   "tomates": 1,
+   "harissa": 1,
+   "cumin": 1,
+   "poischiches": 1,
+   "bouillon": 1,
+   "vermicelles": 120,
+   "citron": 1,
+   "persil": 1
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {poulet} de poulet en petits dés, émince {oignon} et 2 gousses d'ail. Rince {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Fais revenir le poulet, l'oignon et l'ail 5 min dans {huile} d'huile avec {cumin} de cumin et {harissa} de harissa.",
+     "Ajoute {tomates} de tomates concassées, les pois chiches, {bouillon} et 1,5 l d'eau. Mijote 20 min, ajoute {vermicelles} de vermicelles 5 min."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe avec un peu d'eau, sers avec le citron ({citron}) en quartiers et {persil} de persil."
+ },
+ {
+  "id": "x4_soupe_poischiches_epinards_citron",
+  "n": "Soupe libanaise pois chiches, épinards et citron",
+  "s": "Soupe pois chiches-citron",
+  "d": "Pois chiches, épinards et cumin dans un bouillon citronné, avec une cuillère de yaourt.",
+  "o": "lb",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   380,
+   18,
+   46,
+   12
+  ],
+  "ing": {
+   "poischiches": 2,
+   "epinardssurg": 300,
+   "oignon": 1,
+   "ail": 3,
+   "huile": 2,
+   "cumin": 1,
+   "bouillon": 1,
+   "citron": 1,
+   "yaourt": 4,
+   "painpita": 4
+  },
+  "prepMin": 4,
+  "prep": [
+   "Émince {oignon} et 3 gousses d'ail, rince {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon et l'ail dans {huile} d'huile avec {cumin} de cumin, 4 min.",
+     "Ajoute les pois chiches, {epinardssurg} d'épinards, {bouillon} et 1,2 l d'eau. Mijote 20 min, écrase un tiers des pois chiches, ajoute le jus de {citron}."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe, sers avec {yaourt} de yaourt et {painpita} grillés."
+ },
+ {
+  "id": "x4_soupe_butternut_coco_crevettes",
+  "n": "Soupe de butternut au curry, coco et crevettes",
+  "s": "Soupe butternut-crevettes",
+  "d": "Velouté de butternut au lait de coco et au curry, crevettes poêlées ajoutées au service.",
+  "o": "th",
+  "p": "poisson",
+  "fridge": 3,
+  "freeze": false,
+  "diff": 1,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   400,
+   26,
+   34,
+   18
+  ],
+  "ing": {
+   "butternut": 1000,
+   "oignon": 1,
+   "gingembre": 1,
+   "huile": 1,
+   "curry": 1,
+   "bouillon": 1,
+   "laitcoco": 250,
+   "crevettes": 300,
+   "citronvert": 1,
+   "coriandre": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Pèle et coupe {butternut} de butternut en cubes, émince {oignon}, râpe {gingembre}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Fais revenir l'oignon et le gingembre dans {huile} d'huile avec {curry} de curry, ajoute la butternut, {bouillon} et 900 ml d'eau. Cuis 25 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec {laitcoco} de lait de coco et le jus de {citronvert}."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe la soupe, ajoute {crevettes} de crevettes et laisse-les cuire 3 min dedans. Parsème de {coriandre} de coriandre."
+ },
+ {
+  "id": "x4_veloute_topinambours_chevre",
+  "n": "Velouté de topinambours et tartines de chèvre",
+  "s": "Velouté topinambours",
+  "d": "Le topinambour a un goût d'artichaut et de noisette, servi avec des tartines de chèvre gratinées.",
+  "o": "fr",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "months": [
+   11,
+   12,
+   1,
+   2,
+   3
+  ],
+  "m": [
+   420,
+   18,
+   46,
+   18
+  ],
+  "ing": {
+   "topinambour": 800,
+   "pommedeterre": 200,
+   "oignon": 1,
+   "beurre": 15,
+   "bouillon": 1,
+   "lait": 200,
+   "pain": 8,
+   "chevre": 150,
+   "noix": 30
+  },
+  "prepMin": 10,
+  "prep": [
+   "Pèle {topinambour} de topinambours et {pommedeterre} de pommes de terre, coupe-les en cubes, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 25,
+    "a": [
+     "Fais fondre l'oignon dans {beurre} de beurre, ajoute les légumes, {bouillon} et 1 l d'eau. Cuis 25 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec {lait} de lait."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe. Pose {chevre} de chèvre et {noix} de noix sur {pain}, gratine 5 min au four et sers avec le velouté."
+ },
+ {
+  "id": "x4_soupe_raviolis_bouillon",
+  "n": "Soupe de raviolis ricotta-épinards au bouillon et parmesan",
+  "s": "Soupe de raviolis",
+  "d": "Des pâtes fraîches farcies cuites dans un bouillon aux légumes : la soupe la plus rapide de la semaine.",
+  "o": "it",
+  "p": "veg",
+  "pasta": true,
+  "fridge": 3,
+  "freeze": false,
+  "diff": 1,
+  "m": [
+   450,
+   21,
+   56,
+   15
+  ],
+  "ing": {
+   "carotte": 2,
+   "celeri": 1,
+   "oignon": 1,
+   "huile": 1,
+   "bouillon": 2,
+   "epinardssurg": 200,
+   "patesfraiches": 500,
+   "parmesan": 60
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {carotte}, {celeri} et {oignon} en petits dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Fais revenir les légumes 5 min dans {huile} d'huile, ajoute {bouillon}, {epinardssurg} d'épinards et 1,5 l d'eau. Mijote 20 min."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Porte le bouillon à frémissement, cuis {patesfraiches} de raviolis dedans 3 min, sers avec {parmesan} de parmesan."
+ },
+ {
+  "id": "x4_sopa_albondigas",
+  "n": "Sopa de albóndigas : soupe mexicaine aux boulettes de bœuf",
+  "s": "Sopa de albóndigas",
+  "d": "Petites boulettes de bœuf et de riz pochées dans un bouillon de tomate, carottes et pommes de terre.",
+  "o": "mx",
+  "p": "boeuf",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 2,
+  "m": [
+   450,
+   32,
+   38,
+   18
+  ],
+  "ing": {
+   "boeuf": 450,
+   "riz": 60,
+   "oeufs": 1,
+   "cumin": 1,
+   "oignon": 1,
+   "ail": 2,
+   "huile": 1,
+   "carotte": 2,
+   "pommedeterre": 300,
+   "tomates": 1,
+   "bouillon": 2,
+   "coriandre": 1,
+   "citronvert": 1
+  },
+  "prepMin": 12,
+  "prep": [
+   "Mélange {boeuf} de bœuf, {riz} de riz cru, {oeufs}, {cumin} de cumin et sel. Forme 24 petites boulettes. Émince {oignon} et 2 gousses d'ail, coupe {carotte} et {pommedeterre} de pommes de terre en dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 30,
+    "a": [
+     "Fais revenir l'oignon et l'ail dans {huile} d'huile, ajoute {tomates} de tomates, les légumes, {bouillon} et 1,6 l d'eau. Porte à frémissement.",
+     "Plonge les boulettes et cuis 30 min à petit feu."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe, sers avec {coriandre} de coriandre et le citron vert ({citronvert})."
+ },
+ {
+  "id": "x4_soupe_pdt_lard_cheddar",
+  "n": "Soupe de pommes de terre au lard et au cheddar",
+  "s": "Soupe pommes de terre-cheddar",
+  "d": "La « loaded potato soup » américaine : pommes de terre fondantes, lardons, cheddar et cébette.",
+  "o": "us",
+  "p": "porc",
+  "comfort": true,
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   460,
+   20,
+   42,
+   23
+  ],
+  "ing": {
+   "pommedeterre": 1000,
+   "oignon": 1,
+   "lardons": 150,
+   "bouillon": 1,
+   "lait": 400,
+   "cheddar": 100,
+   "cebette": 2
+  },
+  "prepMin": 6,
+  "prep": [
+   "Pèle et coupe {pommedeterre} de pommes de terre en cubes, émince {oignon}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Fais dorer {lardons} de lardons, réserves-en la moitié. Ajoute l'oignon, 3 min, puis les pommes de terre, {bouillon} et 800 ml d'eau. Cuis 25 min.",
+     "Écrase grossièrement au presse-purée et ajoute {lait} de lait."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, lardons à part",
+  "jj": "Réchauffe, ajoute {cheddar} de cheddar, les lardons et {cebette} émincées."
+ },
+ {
+  "id": "x4_hf2_chowder_crevettes_mais",
+  "n": "Chowder crémeux aux crevettes, pommes de terre et maïs",
+  "s": "Chowder crevettes-maïs",
+  "d": "La soupe épaisse américaine : pommes de terre, maïs et crevettes dans un bouillon crémeux.",
+  "o": "us",
+  "p": "poisson",
+  "fridge": 2,
+  "freeze": false,
+  "diff": 1,
+  "m": [
+   430,
+   28,
+   44,
+   15
+  ],
+  "ing": {
+   "pommedeterre": 700,
+   "carotte": 2,
+   "oignon": 1,
+   "celeri": 1,
+   "beurre": 20,
+   "farine": 20,
+   "bouillon": 1,
+   "lait": 500,
+   "mais": 1,
+   "crevettes": 350,
+   "creme": 100,
+   "persil": 1
+  },
+  "prepMin": 8,
+  "prep": [
+   "Coupe {pommedeterre} de pommes de terre et {carotte} en dés, émince {oignon} et {celeri}."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 8,
+    "passive": 20,
+    "a": [
+     "Fais fondre les légumes 5 min dans {beurre} de beurre, saupoudre de {farine} de farine.",
+     "Ajoute {bouillon}, 600 ml d'eau et {lait} de lait. Cuis 20 min, ajoute {mais} de maïs et {creme} de crème."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe à feu doux, ajoute {crevettes} de crevettes et laisse-les cuire 3 min. Parsème de {persil} de persil."
+ },
+ {
+  "id": "x4_hf2_soupe_italienne_saucisse",
+  "n": "Soupe italienne aux pâtes et à la saucisse, toasts au parmesan",
+  "s": "Soupe pâtes-saucisse",
+  "d": "Une soupe-repas tomatée avec des petites pâtes, des rondelles de saucisse et des épinards.",
+  "o": "it",
+  "p": "porc",
+  "pasta": true,
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   480,
+   24,
+   50,
+   20
+  ],
+  "ing": {
+   "saucisse": 3,
+   "oignon": 1,
+   "carotte": 2,
+   "ail": 1,
+   "huile": 1,
+   "tomates": 1,
+   "bouillon": 2,
+   "herbes": 1,
+   "vermicelles": 150,
+   "epinardssurg": 200,
+   "pain": 4,
+   "parmesan": 50
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {saucisse} en rondelles, émince {oignon}, coupe {carotte} en dés."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 20,
+    "a": [
+     "Fais dorer les saucisses, l'oignon et les carottes 5 min dans {huile} d'huile avec 1 gousse d'ail.",
+     "Ajoute {tomates} de tomates, {bouillon}, {herbes} d'herbes, {epinardssurg} d'épinards et 1,5 l d'eau. Mijote 15 min, ajoute {vermicelles} de pâtes 6 min."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe avec un peu d'eau. Gratine {pain} parsemé de {parmesan} de parmesan 5 min au four et sers à côté."
+ },
+ {
+  "id": "x4_hf2_soupe_curry_lentilles_saucisse",
+  "n": "Soupe au curry, lentilles corail, pois chiches et saucisse",
+  "s": "Soupe curry-lentilles-saucisse",
+  "d": "Lentilles corail et pois chiches au curry et au gingembre, rondelles de saucisse et épinards.",
+  "o": "in",
+  "p": "porc",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   500,
+   28,
+   46,
+   21
+  ],
+  "ing": {
+   "saucisse": 3,
+   "oignon": 1,
+   "gingembre": 1,
+   "ail": 2,
+   "huile": 1,
+   "curry": 2,
+   "lentillescorail": 150,
+   "poischiches": 1,
+   "tomates": 1,
+   "bouillon": 1,
+   "epinardssurg": 200,
+   "yaourt": 4
+  },
+  "prepMin": 5,
+  "prep": [
+   "Coupe {saucisse} en rondelles, émince {oignon}, râpe {gingembre} et 2 gousses d'ail. Rince {lentillescorail} de lentilles et {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 25,
+    "a": [
+     "Fais dorer les saucisses et l'oignon dans {huile} d'huile, ajoute l'ail, le gingembre et {curry} de curry.",
+     "Ajoute les lentilles, les pois chiches, {tomates} de tomates, {bouillon}, {epinardssurg} d'épinards et 1,3 l d'eau. Mijote 25 min."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Réchauffe avec un peu d'eau, sers avec {yaourt} de yaourt."
+ },
+ {
+  "id": "x4_hf2_soupe_dinde_choufleur_haricots",
+  "n": "Soupe de dinde, chou-fleur et haricots blancs au cumin",
+  "s": "Soupe dinde-chou-fleur",
+  "d": "Une soupe-repas épicée et douce, chips de tortilla pour croquer.",
+  "o": "mx",
+  "p": "volaille",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   420,
+   36,
+   40,
+   12
+  ],
+  "ing": {
+   "dinde": 400,
+   "oignon": 1,
+   "ail": 2,
+   "huile": 1,
+   "cumin": 1,
+   "paprika": 1,
+   "choufleur": 600,
+   "haricotsblancs": 1,
+   "tomates": 1,
+   "bouillon": 1,
+   "tortilla": 4,
+   "coriandre": 1,
+   "citronvert": 1
+  },
+  "prepMin": 6,
+  "prep": [
+   "Détaille {choufleur} de chou-fleur en petits bouquets, émince {oignon} et 2 gousses d'ail, rince {haricotsblancs} de haricots."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 6,
+    "passive": 20,
+    "a": [
+     "Fais dorer {dinde} de dinde et l'oignon dans {huile} d'huile avec l'ail, {cumin} de cumin et {paprika} de paprika.",
+     "Ajoute le chou-fleur, les haricots, {tomates} de tomates, {bouillon} et 1,3 l d'eau. Mijote 20 min."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Coupe {tortilla} en triangles et dore-les 6 min au four à 200 °C. Réchauffe la soupe, sers avec les chips, {coriandre} de coriandre et le citron vert ({citronvert})."
+ },
+ {
+  "id": "x4_vp_veloute_haricots_parmesan",
+  "n": "Velouté de haricots blancs au parmesan, œuf mollet et croûtons",
+  "s": "Velouté haricots-parmesan",
+  "d": "Un velouté crémeux sans crème, protéiné grâce aux haricots, au parmesan et à l'œuf.",
+  "o": "it",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   490,
+   31,
+   48,
+   16
+  ],
+  "ing": {
+   "haricotsblancs": 3,
+   "oignon": 1,
+   "ail": 2,
+   "huile": 1,
+   "herbes": 1,
+   "bouillon": 1,
+   "parmesan": 80,
+   "oeufs": 4,
+   "pain": 6
+  },
+  "prepMin": 3,
+  "prep": [
+   "Émince {oignon} et 2 gousses d'ail, rince {haricotsblancs} de haricots."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 4,
+    "passive": 15,
+    "a": [
+     "Fais revenir l'oignon et l'ail dans {huile} d'huile, ajoute les haricots, {herbes} d'herbes, {bouillon} et 900 ml d'eau. Cuis 15 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec la moitié de {parmesan} de parmesan."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Cuis {oeufs} 6 min, réchauffe le velouté, sers avec un œuf, le reste du parmesan et {pain} en croûtons."
+ },
+ {
+  "id": "x4_vp_sopa_negra",
+  "n": "Soupe de haricots noirs, œufs durs et fromage, chips de tortilla",
+  "s": "Soupe haricots noirs",
+  "d": "Soupe épaisse de haricots noirs au cumin, garnie d'œufs, de cheddar et de skyr.",
+  "o": "mx",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "m": [
+   550,
+   35,
+   58,
+   17
+  ],
+  "ing": {
+   "haricotsnoirs": 3,
+   "oignon": 1,
+   "ail": 2,
+   "poivron": 1,
+   "huile": 1,
+   "cumin": 2,
+   "tomates": 1,
+   "bouillon": 1,
+   "oeufs": 4,
+   "cheddar": 60,
+   "skyr": 200,
+   "tortilla": 4
+  },
+  "prepMin": 5,
+  "prep": [
+   "Émince {oignon}, {poivron} et 2 gousses d'ail, rince {haricotsnoirs} de haricots noirs."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 5,
+    "passive": 20,
+    "a": [
+     "Fais revenir les légumes dans {huile} d'huile avec {cumin} de cumin. Ajoute les haricots, {tomates} de tomates, {bouillon} et 900 ml d'eau. Cuis 20 min, mixe la moitié."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir",
+  "jj": "Cuis {oeufs} durs. Dore {tortilla} en triangles 6 min au four. Sers la soupe avec les œufs, {cheddar} de cheddar et {skyr} de skyr."
+ },
+ {
+  "id": "x4_vp_veloute_choufleur_cheddar",
+  "n": "Velouté de chou-fleur au cheddar et pois chiches grillés",
+  "s": "Velouté chou-fleur-cheddar",
+  "d": "Chou-fleur et haricots blancs mixés avec du cheddar, pois chiches croustillants dessus.",
+  "o": "gb",
+  "p": "veg",
+  "fridge": 3,
+  "freeze": true,
+  "diff": 1,
+  "months": [
+   10,
+   11,
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "m": [
+   532,
+   30,
+   53,
+   20
+  ],
+  "ing": {
+   "choufleur": 800,
+   "haricotsblancs": 2,
+   "oignon": 1,
+   "huile": 2,
+   "bouillon": 1,
+   "lait": 300,
+   "cheddar": 120,
+   "poischiches": 1,
+   "paprika": 1,
+   "pain": 4
+  },
+  "prepMin": 6,
+  "prep": [
+   "Détaille {choufleur} de chou-fleur, émince {oignon}, rince {haricotsblancs} de haricots et {poischiches} de pois chiches."
+  ],
+  "blocks": [
+   {
+    "mode": "feu",
+    "active": 4,
+    "passive": 20,
+    "a": [
+     "Fais revenir l'oignon dans 1 c.s. d'huile, ajoute chou-fleur, haricots, {bouillon} et 800 ml d'eau. Cuis 20 min."
+    ]
+   },
+   {
+    "mode": "mixeur",
+    "active": 3,
+    "passive": 0,
+    "a": [
+     "Mixe avec {lait} de lait et {cheddar} de cheddar."
+    ]
+   },
+   {
+    "mode": "four",
+    "active": 2,
+    "passive": 20,
+    "wait": false,
+    "a": [
+     "Rôtis les pois chiches 20 min à 210 °C avec le reste de {huile} d'huile et {paprika} de paprika."
+    ]
+   }
+  ],
+  "box": "1 bocal par soir, pois chiches à part",
+  "jj": "Réchauffe, parsème de pois chiches, sers avec {pain}."
  }
 ]

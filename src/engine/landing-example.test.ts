@@ -23,9 +23,10 @@ import { isRemoved, mealLabel } from "./week";
 const { seed } = validateSeed(rawSeed);
 const lib = libraryFromSeed(seed!);
 // L'exemple de semaine (recettes, courses, étapes) a été rédigé avec le catalogue d'avant l'import du 14/11/2026 :
-// il est généré sans les recettes x3_, pour ne pas réécrire la landing à chaque ajout. Les chiffres annoncés
+// il est généré sans les recettes x3_ et x4_ (ajout du 22/11/2026), pour ne pas réécrire la landing à chaque ajout. Les chiffres annoncés
 // (effectifs du catalogue, fourchette de durée) utilisent, eux, le catalogue complet.
-const notImported = <T extends { id: string }>(list: T[]) => list.filter((r) => !r.id.startsWith("x3_"));
+const notImported = <T extends { id: string }>(list: T[]) =>
+  list.filter((r) => !r.id.startsWith("x3_") && !r.id.startsWith("x4_"));
 const exampleLib = libraryFromSeed(
   validateSeed({
     ...rawSeed,
