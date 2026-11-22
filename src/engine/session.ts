@@ -1,6 +1,7 @@
 import { engineFr } from "@/i18n/engine";
 import { bankRecipe, type Env } from "./env";
-import { fill, fmtP, fmtQ, fmtRaw, snapNum } from "./format";
+import { fill, fmtP, fmtQ, fmtRaw } from "./format";
+import { ingredientChip, mentionedIngredients, scaleText, scaledQty } from "./step-details";
 import { mealPd, type PortionModel } from "./portions";
 import { pantryAfterWeek, type Totals } from "./quantities";
 import type { Equipment, Pantry, SessionLevel, WeekPlan } from "./types";
@@ -19,6 +20,10 @@ export type SessionStep = {
   where: string;
   tasks: string[];
   timer?: { label: string; minutes: number };
+  /** Étape d'un plat : nom complet, rang de l'étape dans la recette, temps de travail et de cuisson (minutes). */
+  recipe?: { name: string; part: number; parts: number; active: number; passive: number };
+  /** Ingrédients cités dans l'étape : libellé avec quantité, nom court ; `again` : déjà utilisé plus tôt dans le plat. */
+  ingredients?: { text: string; name: string; again: boolean }[];
   /** Dernière étape : proposer de ranger les plats doublés et de mettre à jour le garde-manger. */
   actions?: { bankDoubles: boolean; pantryUpdate: boolean };
 };
@@ -55,7 +60,16 @@ export function buildSession(input: SessionInput): Session {
   const mains = activeMains(env, week, pm);
   const so = activeSoup(env, week, pm);
   const items: {
-    r: { s: string; ing: Record<string, number>; prep: string[]; blocks: Block[]; jj?: string };
+    r: {
+      s: string;
+      n: string;
+      ing: Record<string, number>;
+      prep: string[];
+      blocks: Block[];
+      jj?: string;
+      sv?: { l: string; ing: Record<string, number> }[];
+      svl?: string;
+    };
     sc: number;
     blocks: Block[];
   }[] = [];
@@ -112,9 +126,7 @@ export function buildSession(input: SessionInput): Session {
     );
     for (const k in r.ing) {
       if (jjOnly.has(k) || !lib.ingredients[k]) continue;
-      let q = snapNum(lib, k, r.ing[k]! * it.sc);
-      if (lib.ingredients[k]!.u === "boite") q = Math.max(1, Math.round(q));
-      sess[k] = (sess[k] ?? 0) + q;
+      sess[k] = (sess[k] ?? 0) + scaledQty(lib, k, r.ing[k]!, it.sc);
     }
   }
   const order = [...lib.aisles.map(([k]) => k), "base"];
@@ -168,6 +180,12 @@ export function buildSession(input: SessionInput): Session {
     plan: t.where.plan,
   };
   const ptr = items.map(() => 0);
+  // Ingrédients déjà cités pour chaque plat (pour signaler ceux qui sont déjà prêts).
+  const seen = items.map(() => new Set<string>());
+  const ingKeys = items.map((it) =>
+    Object.keys(it.r.ing).filter((k) => lib.ingredients[k] && !(it.r.jj ?? "").includes(`{${k}}`)),
+  );
+  const seasonKeys = items.map((it) => Object.keys(it.r.sv?.find((o) => o.l === it.r.svl)?.ing ?? {}));
   const ready = items.map(() => 5);
   while (ptr.some((p, i) => p < items[i]!.blocks.length)) {
     let best: { i: number; b: Block; e: number; g: number; rem: number; pas: number } | null = null;
@@ -198,11 +216,26 @@ export function buildSession(input: SessionInput): Session {
     const label =
       mode === "four" ? t.where.oven(g + 1) : mode === "feu" ? t.where.burner(g + 1) : where[mode]!;
     const minutes = b.passive || 0;
+    const cited = mentionedIngredients(lib, b.a.join(" "), ingKeys[i]!, seasonKeys[i]);
+    const ingredients = ingKeys[i]!.filter((k) => cited.has(k)).map((k) => ({
+      text: ingredientChip(lib, k, scaledQty(lib, k, it.r.ing[k]!, it.sc)),
+      name: lib.ingredients[k]!.l.toLowerCase(),
+      again: seen[i]!.has(k),
+    }));
+    for (const k of cited) seen[i]!.add(k);
     steps.push({
       start: e,
       name: it.r.s,
       where: label,
-      tasks: b.a.map((x) => fill(lib, x, it.r.ing, it.sc)),
+      tasks: b.a.map((x) => fill(lib, scaleText(x, it.sc), it.r.ing, it.sc)),
+      recipe: {
+        name: it.r.n,
+        part: ptr[i]! + 1,
+        parts: it.blocks.length,
+        active: b.active,
+        passive: minutes,
+      },
+      ...(ingredients.length ? { ingredients } : {}),
       ...(minutes ? { timer: { label: it.r.s, minutes } } : {}),
     });
     ptr[i]!++;
