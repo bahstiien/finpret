@@ -292,3 +292,11 @@ h3 {
   content-visibility: auto;
   contain-intrinsic-size: auto 1000px;
 }
+
+/* Mode cuisine : pendant une session lancée, la barre d'onglets mobile laisse la place aux actions de l'étape
+   (la navigation Précédent / Suivant reste collée en bas). */
+@media (max-width: 899px) {
+  body:has([data-session-live]) .tabbar {
+    display: none;
+  }
+}

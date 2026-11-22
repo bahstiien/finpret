@@ -287,6 +287,27 @@ describe("garde-manger, totaux et session", () => {
     expect(base.steps.at(-1)!.name).toBe("Frigo et congélateur");
   });
 
+  it("chaque étape de plat rappelle la recette et les ingrédients à utiliser", () => {
+    const { e, week } = generate(6);
+    const pm = legacyPortions();
+    const s = buildSession({
+      env: e,
+      week,
+      pm,
+      pantry: {},
+      totals: totals(e, week, pm, true),
+      equipment: DEFAULT_EQUIPMENT,
+    });
+    const dish = s.steps.filter((x) => x.recipe);
+    expect(dish.length).toBeGreaterThan(0);
+    for (const x of dish) {
+      expect(x.recipe!.part).toBeGreaterThanOrEqual(1);
+      expect(x.recipe!.part).toBeLessThanOrEqual(x.recipe!.parts);
+    }
+    expect(dish.filter((x) => x.ingredients?.length).length).toBeGreaterThan(dish.length / 2);
+    expect(dish.some((x) => x.ingredients?.some((i) => i.again))).toBe(true);
+  });
+
   it("une semaine sans rien à cuisiner donne une session vide", () => {
     const { e, week } = generate(7, { light: 0 });
     let w = week;

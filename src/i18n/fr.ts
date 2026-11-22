@@ -1,4 +1,5 @@
 /** Textes de l'interface (CLAUDE.md, règle 5) : tutoiement, ton chaleureux et direct. */
+import { dur } from "@/engine/format";
 import { assoFr, subscriptionFr } from "./asso";
 import { gettingStartedFr } from "./getting-started";
 
@@ -638,7 +639,8 @@ export const fr = {
       weekend: "Le jour même",
       on: (slot: string, name: string, people: number) =>
         `${slot} : ${name}, ${people} à table. Touche pour changer qui est à table ou ne rien prévoir.`,
-      off: (slot: string) => `${slot} : rien de prévu. Touche pour choisir une recette ou le prévoir avec le batch.`,
+      off: (slot: string) =>
+        `${slot} : rien de prévu. Touche pour choisir une recette ou le prévoir avec le batch.`,
       removedCell: (slot: string) =>
         `${slot} : plat du batch retiré. Touche pour le remettre ou choisir une autre recette.`,
       weekendSet: (slot: string, name: string) => `${slot} : ${name}. Touche pour changer.`,
@@ -1145,6 +1147,14 @@ export const fr = {
     overview: "Le déroulé",
     plannedEnd: (time: string) => `fin prévue ${time}`,
     stepOf: (i: number, n: number) => `Étape ${i} sur ${n}`,
+    recipePart: (part: number, parts: number) =>
+      parts > 1 ? `étape ${part} sur ${parts} de la recette` : null,
+    work: (active: number, passive: number) =>
+      [active ? `${dur(active)} de travail` : null, passive ? `${dur(passive)} de cuisson` : null]
+        .filter(Boolean)
+        .join(" + "),
+    needs: "Il te faut",
+    alreadyOut: (names: string[]) => `Déjà préparé : ${names.join(", ")}.`,
     late: (min: number) => `${min} min de retard`,
     ahead: (min: number) => `${min} min d'avance`,
     onTime: "À l'heure",
