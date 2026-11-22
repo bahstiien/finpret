@@ -312,7 +312,7 @@ export async function setCakeAction(weekId: string, cakeId: string) {
  * semaines suivantes ; un créneau absent du plan recompose la semaine si elle n'a pas commencé.
  */
 export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "dinner") {
-  if (!day.safeParse(d).success || d > 5 || !meal.safeParse(m).success) {
+  if (!day.safeParse(d).success || !meal.safeParse(m).success) {
     return { ok: false as const, error: fr.errors.generic };
   }
   const { household } = await requireHousehold("/app");
@@ -323,6 +323,8 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
   const env = await engineEnvFor(ctx);
   const k = `${d}-${m}`;
   const inWeek = !!slotMap(env, row.plan)[k];
+  // Le week-end ne se retire ou ne se remet que lorsqu'il est préparé pendant la session (réglage du foyer).
+  if (d > 5 && !inWeek && !ctx.settings.menu.weekendBatch) return { ok: false as const, error: fr.errors.generic };
   const on = inWeek && !row.plan.removed.includes(k);
   try {
     await withSession(async (db) => {

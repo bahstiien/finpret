@@ -59,6 +59,8 @@ export type MenuSettings = {
   minVeg: number;
   /** Budget maximal de la semaine générée, en euros (coût estimé des plats, soupes et soirs simples) ; 0 ou absent = sans limite. */
   budget?: number;
+  /** Samedi et dimanche, midi et soir, préparés pendant la session de la semaine (plats de batch). */
+  weekendBatch?: boolean;
 };
 
 export const DEFAULT_MENU_SETTINGS: MenuSettings = {

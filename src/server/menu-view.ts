@@ -147,9 +147,8 @@ export function buildMenuView(
       const g = guestsText(ctx, pm, w, day, meal);
       const sc = mealPd(w, pm, day, meal) / 4;
       const own = fresh.find((it) => it.d === day && it.m === meal);
-      if (day <= 5 && !own) {
-        const s = map[key];
-        if (!s) continue;
+      const s = map[key];
+      if (s && !own) {
         const r = s.r;
         const how =
           s.kind === "simple"
@@ -222,7 +221,7 @@ export function buildMenuView(
         : dinner.how.split(/\.\s/)[0]!.replace(/\.$/, "")
       : null;
     const thaw: string[] = [];
-    if (day < 5) {
+    if (day < 7) {
       for (const meal of ["lunch", "dinner"] as const) {
         const s = map[`${day + 1}-${meal}`];
         if (!s || isRemoved(w, day + 1, meal)) continue;
@@ -237,7 +236,7 @@ export function buildMenuView(
   for (let day = 1; day <= 7; day++) {
     for (const meal of ["lunch", "dinner"] as const) {
       const key = `${day}-${meal}`;
-      if (day > 5) {
+      if (day > 5 && !map[key]) {
         const id = w.weekend?.[key];
         const r = id ? (env.mainById.get(id) ?? env.soupById.get(id) ?? env.simpleById.get(id)) : null;
         const g = guestsText(ctx, pm, w, day, meal);
@@ -387,7 +386,7 @@ export function buildMenuView(
 
   const cakeRecipe = ctx.settings.menu.cake.enabled && w.cake ? env.cakeById.get(w.cake) : null;
   const plannedMeals =
-    grid.filter((c) => c.day <= 5 && c.state === "on").length + grid.filter((c) => c.state === "set").length;
+    grid.filter((c) => c.state === "on").length + grid.filter((c) => c.state === "set").length;
 
   return {
     weekId: row.id,

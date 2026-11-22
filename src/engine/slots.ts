@@ -17,9 +17,17 @@ export type WeekSlots = {
  * @param light nombre de soirs légers (mardi, jeudi, mercredi, vendredi, lundi) ; les 2 premiers en soupe
  * @param bankCount repas tirés de la réserve (vendredi midi, jeudi midi, vendredi soir…)
  * @param skip créneaux décochés (« 3-lunch »)
+ * @param weekend samedi et dimanche préparés aussi pendant la session (plats de batch, jamais soirs légers ni réserve)
  */
-export function buildSlots(light: number, bankCount = 0, skip: readonly string[] = []): WeekSlots {
+export function buildSlots(
+  light: number,
+  bankCount = 0,
+  skip: readonly string[] = [],
+  weekend = false,
+): WeekSlots {
   const sk = (d: number, m: Meal) => skip.includes(`${d}-${m}`);
+  const batchDays = weekend ? [1, 2, 3, 4, 5, 6, 7] : [1, 2, 3, 4, 5];
+  const last = batchDays.length;
   const lightDays = [2, 4, 3, 5, 1].filter((d) => !sk(d, "dinner")).slice(0, light);
   const soupDays = light >= 2 && lightDays.length >= 2 ? lightDays.slice(0, 2).sort() : [];
   const simpleDays = lightDays.filter((d) => !soupDays.includes(d)).sort();
@@ -39,14 +47,12 @@ export function buildSlots(light: number, bankCount = 0, skip: readonly string[]
   ).filter(([d, m]) => !(m === "dinner" && lightDays.includes(d)) && !sk(d, m));
   const bankSlots = cand.slice(0, bankCount).map(([day, meal]) => ({ day, meal }));
   const isBank = (d: number, m: Meal) => bankSlots.some((s) => s.day === d && s.meal === m);
-  const mainD = [1, 2, 3, 4, 5].filter(
-    (d) => !lightDays.includes(d) && !isBank(d, "dinner") && !sk(d, "dinner"),
-  );
-  const freeL = new Set([1, 2, 3, 4, 5].filter((d) => !isBank(d, "lunch") && !sk(d, "lunch")));
+  const mainD = batchDays.filter((d) => !lightDays.includes(d) && !isBank(d, "dinner") && !sk(d, "dinner"));
+  const freeL = new Set(batchDays.filter((d) => !isBank(d, "lunch") && !sk(d, "lunch")));
   const groups: Slot[][] = [];
   // Chaque plat couvre un dîner et le déjeuner du lendemain.
   for (const d of mainD) {
-    const nxt = d < 5 ? d + 1 : 1;
+    const nxt = d < last ? d + 1 : 1;
     if (freeL.has(nxt)) {
       groups.push([
         { day: d, meal: "dinner" },
@@ -114,9 +120,9 @@ export function assignGroups(
  */
 export function plannedPortions(
   base: (day: number, meal: Meal) => number,
-  menu: { light: number; bankUse: number; skip: readonly string[] },
+  menu: { light: number; bankUse: number; skip: readonly string[]; weekendBatch?: boolean },
 ): number {
-  const { groups, soupDays, simpleDays } = buildSlots(menu.light, menu.bankUse, menu.skip);
+  const { groups, soupDays, simpleDays } = buildSlots(menu.light, menu.bankUse, menu.skip, menu.weekendBatch);
   return (
     groups.flat().reduce((n, s) => n + base(s.day, s.meal), 0) +
     [...soupDays, ...simpleDays].reduce((n, d) => n + base(d, "dinner"), 0)

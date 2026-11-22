@@ -27,7 +27,7 @@ export type SlotEntry =
   | { kind: "simple"; i: number; r: Simple }
   | { kind: "bank"; i: number; r: Resolved<Main | Soup> };
 
-/** Recette de chaque créneau du lundi au vendredi. */
+/** Recette de chaque créneau préparé pendant la session (du lundi au vendredi, et le week-end s'il en fait partie). */
 export function slotMap(env: Env, w: WeekPlan): Record<string, SlotEntry> {
   const m = monthOf(w.start);
   const map: Record<string, SlotEntry> = {};
@@ -101,11 +101,15 @@ export const ALL_SLOTS: [number, Meal][] = [1, 2, 3, 4, 5, 6, 7].flatMap((d) =>
 );
 
 /**
- * Créneau de semaine occupé par le batch (plat, soupe, soir simple, réserve) et non retiré : une recette choisie
- * à la main ne peut pas s'y ajouter.
+ * Créneau occupé par le batch (plat, soupe, soir simple, réserve ; le week-end aussi quand il est préparé pendant
+ * la session) et non retiré : une recette choisie à la main ne peut pas s'y ajouter.
  */
 export const batchBusy = (env: Env, w: WeekPlan, d: number, meal: Meal) =>
-  d <= 5 && !!slotMap(env, w)[`${d}-${meal}`] && !isRemoved(w, d, meal);
+  !!slotMap(env, w)[`${d}-${meal}`] && !isRemoved(w, d, meal);
+
+/** Le batch de la semaine couvre aussi samedi ou dimanche (option « week-end dans la session »). */
+export const batchWeekend = (w: Pick<WeekPlan, "groups">) =>
+  w.groups.some((g) => g.meals.some((m) => m.day > 5));
 
 /**
  * Recettes cuisinées le jour même (`w.weekend`) : le week-end, ou un créneau de semaine vide ou retiré où la
