@@ -221,7 +221,8 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
         header={header}
         view={view}
         canEdit={canEdit}
-        sessionMinutes={summary.sessionMinutes}
+        sessionMinutes={row.frozen?.total ?? summary.sessionMinutes}
+        frozen={!!row.frozen}
         weekendOptions={weekendOptions}
         cakeOptions={cakeOptions}
         shortcuts={shortcuts}

@@ -196,7 +196,7 @@ export type GenerateOutcome =
       /** Le budget de la semaine ne pouvait pas être tenu : la semaine la moins chère trouvée. */
       overBudget: boolean;
     }
-  | { ok: false; reason: "impossible" | "forbidden" | "locked" };
+  | { ok: false; reason: "impossible" | "forbidden" | "locked" | "frozen" };
 
 /**
  * Génère et enregistre la semaine qui commence `start` (en brouillon), en remplaçant un plan existant
@@ -213,6 +213,8 @@ export async function generateAndStore(householdId: string, start: string): Prom
   }
 
   const existing = ctx.weeks.find((w) => w.start_date === start) ?? null;
+  // Session lancée : la semaine est figée, elle n'est jamais régénérée.
+  if (existing?.frozen) return { ok: false, reason: "frozen" };
   // Une semaine dont une préparation a commencé n'est jamais régénérée en bloc (courses réelles, §14).
   if (FEATURES.realPurchases && existing && hasAnyLock(await loadLockState(existing.id)))
     return { ok: false, reason: "locked" };

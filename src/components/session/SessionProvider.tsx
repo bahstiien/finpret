@@ -4,7 +4,12 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { FEATURES } from "@/lib/features";
 import { useHouseholdEvents } from "@/lib/use-household-events";
 import { recordWeekEvent } from "@/server/actions/events";
-import { readSessionRow, runSessionCommand, type SessionCommand } from "@/server/actions/session-sync";
+import {
+  readSessionRow,
+  runSessionCommand,
+  type SessionCommand,
+  startSessionAction,
+} from "@/server/actions/session-sync";
 
 /** État partagé de la session (§8.5) : étape, tâches cochées, minuteurs, synchronisés entre appareils. */
 
@@ -92,11 +97,11 @@ export function SessionProvider({
   );
 
   const call = useCallback(
-    async (command: SessionCommand) => {
+    async (command: SessionCommand | (() => Promise<void>)) => {
       writes.current++;
       try {
         // Une écriture refusée ou perdue est rattrapée par la relecture qui suit.
-        await runSessionCommand(command).catch(() => {});
+        await (typeof command === "function" ? command() : runSessionCommand(command)).catch(() => {});
       } finally {
         writes.current--;
       }
@@ -112,7 +117,8 @@ export function SessionProvider({
     sound,
     vibration,
     start: async () => {
-      await call({ fn: "session_start", args: { p_week: weekId! } });
+      // Lancement : fige aussi la semaine (menu, portions, étapes) côté serveur.
+      await call(() => startSessionAction(weekId!));
       void recordWeekEvent("session_started", weekId!);
     },
     setStep: (step) => {

@@ -91,7 +91,8 @@ test("terminer une session : ligne de série à l'écran de réussite, « Nos pr
   const email = await signUp(page, "progres-session");
   await moveWeekIntoSessionWindow(await householdIdOf(email));
   await page.goto("/app/session");
-  await page.getByRole("button", { name: "Commencer la session" }).click();
+  await page.getByRole("button", { name: "Commencer ma session" }).click();
+  await page.getByRole("button", { name: "Commencer", exact: true }).click();
   const stepCard = page.getByTestId("session-step");
   const total = Number((await page.getByText(/^Étape 1 sur \d+$/).innerText()).split(" sur ")[1]);
   for (let i = 1; i <= total; i++) {

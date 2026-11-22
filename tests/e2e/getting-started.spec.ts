@@ -59,7 +59,8 @@ test("nouveau foyer : checklist de « 1 sur 6 » à la réussite, puis dispariti
   // Première session : niveau « Débutant » présélectionné sur la carte de démarrage.
   await expect(page.getByTestId("first-session-level").getByRole("radio", { name: "Débutant" })).toBeChecked();
   const started = page.waitForResponse((r) => r.request().method() === "POST" && r.url().includes("/app/session"));
-  await page.getByRole("button", { name: "Commencer la session" }).click();
+  await page.getByRole("button", { name: "Commencer ma session" }).click();
+  await page.getByRole("button", { name: "Commencer", exact: true }).click();
   await started;
   const stepCard = page.getByTestId("session-step");
   const total = Number((await page.getByText(/^Étape 1 sur \d+$/).innerText()).split(" sur ")[1]);

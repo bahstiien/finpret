@@ -199,7 +199,8 @@ export default async function DiscoverPage({
       recipes={[...recipes, ...cakes]}
       breakfasts={breakfasts}
       regions={[...new Set(recipes.map((r) => r.region).filter((x): x is string => !!x))]}
-      week={week && household.role !== "viewer" ? { id: week.id, start: week.start_date } : null}
+      // Semaine figée (session lancée) : plus de « Mettre au menu ».
+      week={week && !week.frozen && household.role !== "viewer" ? { id: week.id, start: week.start_date } : null}
       canEdit={household.role !== "viewer"}
       openId={params.open ?? null}
       openPlan={params.plan === "1"}

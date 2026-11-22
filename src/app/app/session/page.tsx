@@ -1,20 +1,17 @@
 import type { Metadata } from "next";
 import { TipBubble } from "@/components/getting-started/TipBubble";
-import { firstSessionInfo, isFirstSessionFor, tipForTab, tipsSeen } from "@/server/getting-started";
+import { tipForTab, tipsSeen } from "@/server/getting-started";
 import { LinkButton } from "@/components/ui/Button";
 import { EmptyState, PageHeader } from "@/components/ui/Layout";
 import { SessionScreen } from "@/components/session/SessionScreen";
-import { effectiveLevel } from "@/engine/first-session";
 import { FIRST_SESSION_TIPS } from "@/engine/getting-started";
-import { totals } from "@/engine/quantities";
-import { buildSession } from "@/engine/session";
 import { fr } from "@/i18n/fr";
 import { formatShort } from "@/lib/dates";
-import { toEquipment } from "@/lib/settings";
 import { rpcRows } from "@/server/db";
-import { loadHouseholdContext, portionModelFor } from "@/server/household-context";
+import { loadHouseholdContext } from "@/server/household-context";
+import { weekSession } from "@/server/session-plan";
 import { requireHousehold, withSession } from "@/server/session";
-import { currentAndNext, engineEnvFor } from "@/server/weeks";
+import { currentAndNext } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.nav.session };
 
@@ -39,28 +36,10 @@ export default async function SessionPage() {
     );
   }
   const tip = await tipForTab("session", { userId: user.id, householdId: household.id, timezone: ctx.timezone });
-  // Première session du foyer : « débutant » par défaut, modifiable (SPEC_PRISE_EN_MAIN §4.4.3).
-  const [first, seen] = await Promise.all([firstSessionInfo(household.id), tipsSeen(user.id)]);
-  const firstWeek = isFirstSessionFor(first, week.id);
-  const level = effectiveLevel({
-    firstSession: firstWeek,
-    override: first.override,
-    setting: ctx.settings.session.level,
-  });
-  const env = await engineEnvFor(ctx);
-  const pm = portionModelFor(ctx, week.plan.start);
-  const t = totals(env, week.plan, pm, ctx.settings.menu.cake.enabled);
-  const session = buildSession({
-    env,
-    week: { ...week.plan, pantryDone: week.pantry_done },
-    pm,
-    pantry: ctx.pantry,
-    totals: t,
-    equipment: toEquipment(ctx.settings),
-    level,
-  });
-  // Signature des étapes : si le menu change, les coches de la session repartent de zéro.
-  const sig = session.steps.map((s) => `${s.name}@${s.start}`).join("|");
+  const seen = await tipsSeen(user.id);
+  const { firstWeek, level, steps, total } = await weekSession(ctx, week);
+  // Signature des étapes : si le menu change avant le lancement, les coches repartent de zéro (figées ensuite).
+  const sig = steps.map((s) => `${s.name}@${s.start}`).join("|");
   if (household.role !== "viewer") {
     await withSession((db) => rpcRows(db, "session_ensure", { p_week: week.id, p_sig: sig })).catch(
       () => null,
@@ -73,8 +52,8 @@ export default async function SessionPage() {
       firstSession={firstWeek ? { level, seen: seen.filter((k) => (FIRST_SESSION_TIPS as readonly string[]).includes(k)) } : null}
       weekId={week.id}
       weekLabel={fr.menu.weekOf(formatShort(week.start_date))}
-      steps={session.steps}
-      total={session.total}
+      steps={steps}
+      total={total}
       plannedTime={ctx.settings.session.time}
       maxMinutes={ctx.settings.session.maxMinutes}
       doublesToBank={!week.plan.banked && (week.plan.doubles ?? []).length > 0}

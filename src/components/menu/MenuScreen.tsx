@@ -96,6 +96,7 @@ export function MenuScreen({
   header,
   view,
   canEdit,
+  frozen = false,
   sessionMinutes,
   weekendOptions,
   cakeOptions,
@@ -110,6 +111,8 @@ export function MenuScreen({
   header: { date: string; greeting: string; name: string };
   view: MenuView;
   canEdit: boolean;
+  /** Session lancée : la semaine est figée, ses boutons de modification disparaissent. */
+  frozen?: boolean;
   sessionMinutes: number;
   weekendOptions: PickerOption[];
   cakeOptions: PickerOption[];
@@ -135,6 +138,8 @@ export function MenuScreen({
   const [filter, setFilter] = useState<BoardFilter>("week");
   const [sheet, setSheet] = useState<Sheet>(null);
   const { run, pending } = useMenuAction();
+  // Semaine figée (session lancée) : plus de bouton de modification, seulement la lecture et les retours.
+  const editable = canEdit && !frozen;
   const today = inWeek ? view.days[view.todayIndex - 1] : null;
   // Alerte doublon cantine / dîner (§13) : un bandeau par jour concerné, « Changer » sur le plat du soir.
   const alerts = view.days.flatMap((d) => {
@@ -194,7 +199,7 @@ export function MenuScreen({
             <Icon name="warning" />
           </span>
           <span className="flex-1">{t.duplicateAlert(fr.days[a.day - 1]!, a.groups.join(", "))}</span>
-          {canEdit && a.dinner && (
+          {editable && a.dinner && (
             <Button
               type="button"
               variant="outline"
@@ -246,7 +251,7 @@ export function MenuScreen({
         filter={filter}
         selected={selected}
         onSelect={setSelected}
-        canEdit={canEdit}
+        canEdit={editable}
         weekId={view.weekId}
         onMove={(from) => setSheet({ kind: "move", from })}
         onGuests={(m) =>
@@ -260,7 +265,7 @@ export function MenuScreen({
       <div className="max-w-3xl">
         <PlanGrid
           view={view}
-          canEdit={canEdit}
+          canEdit={editable}
           pending={pending}
           onGuests={(c) =>
             setSheet({ kind: "guests", day: c.day, meal: c.meal, counts: c.counts, custom: c.custom, fromGrid: true })
@@ -269,7 +274,7 @@ export function MenuScreen({
           onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
           cakeLine={
             view.cake ? (
-              <CakeLine cake={view.cake} canEdit={canEdit} onChange={() => setSheet({ kind: "cake" })} />
+              <CakeLine cake={view.cake} canEdit={editable} onChange={() => setSheet({ kind: "cake" })} />
             ) : null
           }
         />
@@ -287,6 +292,7 @@ export function MenuScreen({
               dish={d}
               recipe={view.recipes.find((r) => r.recipeId === d.recipeId) ?? null}
               canEdit={canEdit}
+              editable={editable}
               pending={pending}
               onFeedback={(a) => run(() => feedbackAction(view.weekId, d.recipeId, a))}
               onDouble={() => run(() => toggleDoubleAction(view.weekId, d.index))}
@@ -307,16 +313,18 @@ export function MenuScreen({
               {t.prepareNext}
             </Button>
           )}
-          <Button
-            type="button"
-            variant="outline"
-            disabled={pending}
-            onClick={() => {
-              if (window.confirm(t.regenerateConfirm)) run(() => prepareWeekAction(view.start));
-            }}
-          >
-            {fr.menu.regenerate}
-          </Button>
+          {editable && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={pending}
+              onClick={() => {
+                if (window.confirm(t.regenerateConfirm)) run(() => prepareWeekAction(view.start));
+              }}
+            >
+              {fr.menu.regenerate}
+            </Button>
+          )}
           <LinkButton href="/settings/menu" variant="ghost">
             {t.quickSettings}
           </LinkButton>
@@ -447,8 +455,10 @@ function PlanGrid({
                       >
                         {c.state === "set" ? (
                           <Icon name="check" className="size-5" />
-                        ) : (
+                        ) : canEdit ? (
                           <Icon name="plus" className="size-5" />
+                        ) : (
+                          "–"
                         )}
                       </button>
                     </td>
@@ -555,6 +565,7 @@ function DishRow({
   dish,
   recipe,
   canEdit,
+  editable,
   pending,
   onFeedback,
   onDouble,
@@ -563,6 +574,8 @@ function DishRow({
   dish: DishCard;
   recipe: MenuView["recipes"][number] | null;
   canEdit: boolean;
+  /** Changer et Doubler : absents d'une semaine figée (les retours restent). */
+  editable: boolean;
   pending: boolean;
   onFeedback: (a: FeedbackAction) => void;
   onDouble: () => void;
@@ -679,29 +692,31 @@ function DishRow({
               <Icon name="thumbDown" className="size-5" />
             </button>
           </div>
-          <div className="ml-auto flex flex-wrap items-center gap-2">
-            {dish.canDouble && (
-              <button
+          {editable && (
+            <div className="ml-auto flex flex-wrap items-center gap-2">
+              {dish.canDouble && (
+                <button
+                  type="button"
+                  aria-pressed={dish.doubled}
+                  disabled={pending}
+                  onClick={onDouble}
+                  className="chiptg"
+                >
+                  {t.double}
+                </button>
+              )}
+              <Button
                 type="button"
-                aria-pressed={dish.doubled}
+                variant="outline"
+                size="sm"
                 disabled={pending}
-                onClick={onDouble}
-                className="chiptg"
+                onClick={onSwap}
+                aria-label={`${t.change} ${dish.name}`}
               >
-                {t.double}
-              </button>
-            )}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={pending}
-              onClick={onSwap}
-              aria-label={`${t.change} ${dish.name}`}
-            >
-              {t.change}
-            </Button>
-          </div>
+                {t.change}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </li>

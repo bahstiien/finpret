@@ -32,7 +32,8 @@ async function requireAdmin() {
 async function pendingWeek(householdId: string) {
   const ctx = await loadHouseholdContext(householdId);
   const monday = mondayOf(todayIn(ctx.timezone));
-  return ctx.weeks.find((w) => w.start_date > monday) ?? null;
+  // Une semaine figée (session lancée) ne se recompose plus.
+  return ctx.weeks.find((w) => w.start_date > monday && !w.frozen) ?? null;
 }
 
 export type SaveResult = ActionResult<{ pendingWeekStart: string | null }>;
@@ -73,6 +74,7 @@ export async function applyToPendingWeek(start: string): Promise<ActionResult> {
   const { household } = await requireHousehold("/settings");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
   const res = await generateAndStore(household.id, start);
+  if (!res.ok && res.reason === "frozen") return { ok: false, error: fr.menuActions.frozen };
   if (!res.ok && res.reason === "locked") return { ok: false, error: fr.menuActions.locked };
   if (!res.ok) return { ok: false, error: fr.menu.impossible };
   revalidatePath("/", "layout");
