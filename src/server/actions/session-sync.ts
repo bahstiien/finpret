@@ -1,13 +1,15 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { SessionRow } from "@/components/session/SessionProvider";
-import { rpc } from "@/server/db";
-import { withSession } from "@/server/session";
+import { json, rpc } from "@/server/db";
+import { loadHouseholdContext } from "@/server/household-context";
+import { requireHousehold, withSession } from "@/server/session";
+import { freezeSnapshot } from "@/server/session-plan";
 
 const week = z.uuid();
 const commandSchema = z.discriminatedUnion("fn", [
-  z.object({ fn: z.literal("session_start"), args: z.object({ p_week: week }) }),
   z.object({
     fn: z.literal("session_set_step"),
     args: z.object({ p_week: week, p_step: z.int().min(0).max(100) }),
@@ -41,6 +43,32 @@ export type SessionCommand = z.infer<typeof commandSchema>;
 export async function runSessionCommand(input: SessionCommand): Promise<void> {
   const command = commandSchema.parse(input);
   await withSession((db) => rpc(db, command.fn, command.args));
+}
+
+/**
+ * « Commencer ma session » : démarre la session et fige la semaine (menu, portions, étapes, courses du menu).
+ * Une semaine déjà figée le reste tel quel.
+ */
+export async function startSessionAction(weekId: string): Promise<void> {
+  if (!week.safeParse(weekId).success) return;
+  const { household } = await requireHousehold("/app/session");
+  if (household.role === "viewer") return;
+  const ctx = await loadHouseholdContext(household.id);
+  const row = ctx.weeks.find((w) => w.id === weekId);
+  if (!row) return;
+  const frozen = row.frozen ? null : await freezeSnapshot(ctx, row);
+  await withSession(async (db) => {
+    await rpc(db, "session_start", { p_week: weekId });
+    if (frozen) {
+      await db
+        .updateTable("weeks")
+        .set({ frozen: json(frozen) })
+        .where("id", "=", weekId)
+        .where("frozen", "is", null)
+        .execute();
+    }
+  });
+  revalidatePath("/app", "layout");
 }
 
 /** État de la session de cuisine d'une semaine, relu par l'écran de session (retour sur l'onglet). */

@@ -95,6 +95,9 @@ export function SessionScreen({
   const { run, pending } = useMenuAction();
   const wakeAcquired = useWakeLock(started);
   const [fsDone, setFsDone] = useState<string[]>([]);
+  // « Commencer ma session » : une confirmation courte, car le menu de la semaine sera figé.
+  const [confirming, setConfirming] = useState(false);
+  const [starting, setStarting] = useState(false);
   const router = useRouter();
   const [, startLevel] = useTransition();
   useEffect(() => {
@@ -137,8 +140,29 @@ export function SessionScreen({
               <p className="t-small">{fr.gettingStarted.firstSession.levelHint}</p>
             </div>
           )}
-          {canEdit ? (
-            <Button type="button" size="lg" className="self-start" onClick={() => session?.start()}>
+          {canEdit && confirming ? (
+            <div className="flex flex-col gap-3" role="group" aria-label={t.start} data-testid="session-freeze">
+              <p className="t-ui font-bold">{t.freezeConfirm}</p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  type="button"
+                  size="lg"
+                  disabled={starting}
+                  onClick={async () => {
+                    setStarting(true);
+                    await session?.start();
+                    setStarting(false);
+                  }}
+                >
+                  {t.freezeGo}
+                </Button>
+                <Button type="button" size="lg" variant="ghost" onClick={() => setConfirming(false)}>
+                  {t.freezeCancel}
+                </Button>
+              </div>
+            </div>
+          ) : canEdit ? (
+            <Button type="button" size="lg" className="self-start" onClick={() => setConfirming(true)}>
               {t.start}
             </Button>
           ) : (

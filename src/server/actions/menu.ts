@@ -76,6 +76,8 @@ async function editWeek(
   const ctx = await loadHouseholdContext(household.id);
   const row = ctx.weeks.find((w) => w.id === weekId);
   if (!row) return { ok: false, error: t.weekGone };
+  // Session lancée : le menu de la semaine est figé.
+  if (row.frozen) return { ok: false, error: t.frozen };
   const env = await engineEnvFor(ctx);
   // Préparations à identité stable : posées avant toute modification (courses réelles, lot L2).
   const basePlan = FEATURES.realPurchases
@@ -320,6 +322,7 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
   const ctx = await loadHouseholdContext(household.id);
   const row = ctx.weeks.find((w) => w.id === weekId);
   if (!row) return { ok: false as const, error: t.weekGone };
+  if (row.frozen) return { ok: false as const, error: t.frozen };
   const env = await engineEnvFor(ctx);
   const k = `${d}-${m}`;
   const inWeek = !!slotMap(env, row.plan)[k];
@@ -418,7 +421,8 @@ export async function feedbackAction(weekId: string | null, recipeId: string, ac
   if (action === "long") return { ok: true as const, data: { message: t.tooLong } };
 
   const row = weekId ? ctx.weeks.find((w) => w.id === weekId) : null;
-  if (!row) return { ok: true as const, data: { message: t.disliked } };
+  // Semaine figée : l'avis est gardé pour les prochains menus, le plat reste.
+  if (!row || row.frozen) return { ok: true as const, data: { message: t.disliked } };
   const p = row.plan;
   const gi = p.groups.findIndex((g) => g.id === recipeId);
   const si = p.simples.findIndex((s) => s.id === recipeId);
@@ -438,6 +442,7 @@ export async function prepareWeekAction(start: string) {
   if (household.role === "viewer") return { ok: false as const, error: fr.errors.forbidden };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(start)) return { ok: false as const, error: fr.errors.generic };
   const res = await generateAndStore(household.id, start);
+  if (!res.ok && res.reason === "frozen") return { ok: false as const, error: t.frozen };
   if (!res.ok && res.reason === "locked") return { ok: false as const, error: t.locked };
   if (!res.ok) return { ok: false as const, error: fr.menu.impossible };
   revalidatePath("/app", "layout");

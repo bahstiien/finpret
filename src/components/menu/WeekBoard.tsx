@@ -121,10 +121,9 @@ function MealBlock({
       {detailed && !m.removed && m.how && <p className="t-small muted">{m.how}</p>}
       <div className="flex flex-wrap gap-1.5">
         {/* Le libellé des convives peut être long (« 3 adultes et 1 enfant ») : il passe à la ligne dans la carte. */}
-        {detailed ? (
+        {detailed && canEdit ? (
           <button
             type="button"
-            disabled={!canEdit}
             onClick={() => onGuests(m)}
             className={`chiptg mono max-w-full !whitespace-normal text-left !leading-tight ${m.guestsCustom ? "tone-blue" : "tone-chip"}`}
           >

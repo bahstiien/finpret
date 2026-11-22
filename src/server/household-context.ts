@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import type { UseBy } from "@/engine/antigaspi";
+import { type FrozenWeek, portionsFromSnapshot } from "@/engine/frozen";
 import type { Member, PresenceRule } from "@/engine/portions";
 import { householdPortions } from "@/engine/portions";
 import type { BankEntry, Feedback, Pantry, Ratings, WeekPlan } from "@/engine/types";
@@ -17,6 +18,8 @@ export type WeekRow = {
   pantry_done: boolean;
   /** Version de la ligne : une modification concurrente du plan est détectée à l'écriture. */
   updated_at: string;
+  /** Semaine figée au lancement de la session (null : menu encore modifiable). */
+  frozen: FrozenWeek | null;
 };
 
 export type HouseholdContext = {
@@ -80,7 +83,7 @@ async function load(db: Db, householdId: string): Promise<HouseholdContext> {
     .execute();
   const weeks = await db
     .selectFrom("weeks")
-    .select(["id", "start_date", "status", "plan", "pasta_need", "pantry_done", "updated_at"])
+    .select(["id", "start_date", "status", "plan", "pasta_need", "pantry_done", "updated_at", "frozen"])
     .where("household_id", "=", householdId)
     .orderBy("start_date", "desc")
     .limit(8)
@@ -142,7 +145,10 @@ async function load(db: Db, householdId: string): Promise<HouseholdContext> {
   };
 }
 
+/** Portions d'une semaine : celles figées au lancement de la session, sinon celles du foyer aujourd'hui. */
 export function portionModelFor(ctx: HouseholdContext, weekStart: string) {
+  const frozen = ctx.weeks.find((w) => w.start_date === weekStart)?.frozen;
+  if (frozen) return portionsFromSnapshot(frozen.portions);
   return householdPortions({
     members: ctx.members,
     presence: ctx.presence,

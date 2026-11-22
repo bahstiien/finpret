@@ -36,6 +36,8 @@ export async function syncShoppingItems(
       ctx.settings.menu.cake.enabled,
       baseToBuy,
     );
+    // Semaine figée (session lancée) : la liste du menu ne bouge plus ; coches et ajouts à la main restent libres.
+    if (stockRow?.frozen) return { baseUsed };
 
     const menuRows = new Map(rows.filter((r) => r.source === "menu").map((r) => [r.ingredient_key!, r]));
     const wanted = items.filter((i) => !baseToBuy.includes(i.key));

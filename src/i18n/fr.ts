@@ -1145,7 +1145,10 @@ export const fr = {
       `${steps} étapes. En commençant maintenant, fin prévue vers ${end}.`,
     overMax: (max: string) =>
       `Plus longue que ta durée maximale (${max}) : retire un plat ou passe un soir en soupe.`,
-    start: "Commencer la session",
+    start: "Commencer ma session",
+    freezeConfirm: "Le menu de la semaine sera figé.",
+    freezeGo: "Commencer",
+    freezeCancel: "Annuler",
     viewerWait: "La session démarrera dès qu'une personne du foyer la lancera.",
     overview: "Le déroulé",
     plannedEnd: (time: string) => `fin prévue ${time}`,
@@ -1180,6 +1183,7 @@ export const fr = {
   menuActions: {
     conflict: "Le menu a changé sur un autre appareil. Recharge la page pour voir la version à jour.",
     locked: "Cette préparation a déjà commencé. Elle ne peut plus être remplacée.",
+    frozen: "La session est lancée : le menu de cette semaine ne change plus.",
     weekGone: "Cette semaine n'existe plus. Recharge la page.",
     weekStarted: "La semaine a commencé : génère un nouveau menu pour ajouter ce repas.",
     unknownRecipe: "Cette recette n'est pas disponible.",

@@ -675,6 +675,7 @@ export interface UserSettings {
 
 export interface Weeks {
   created_at: Generated<string>;
+  frozen: Json | null;
   household_id: string;
   id: Generated<string>;
   pantry_done: Generated<boolean>;
