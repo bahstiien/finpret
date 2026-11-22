@@ -18,6 +18,7 @@ import { loadHouseholdContext } from "@/server/household-context";
 import { flagOf } from "@/server/menu-view";
 import { requireHousehold, withSession } from "@/server/session";
 import { currentAndNext } from "@/server/weeks";
+import { recipePhoto } from "@/seo/images";
 
 export const metadata: Metadata = { title: fr.nav.discover };
 
@@ -97,6 +98,7 @@ export default async function DiscoverPage({
     kind,
     name: r.n,
     short: r.s,
+    photo: recipePhoto(r.id, r.n),
     description: "d" in r ? r.d : null,
     flag: flagOf(r.o),
     region: originOf(r.o)?.region ?? null,
@@ -117,6 +119,7 @@ export default async function DiscoverPage({
     kind: "cake",
     name: c.n,
     short: c.n,
+    photo: recipePhoto(c.id, c.n),
     description: `${c.tm} · ${c.parts}. ${c.kid}`,
     flag: null,
     region: null,

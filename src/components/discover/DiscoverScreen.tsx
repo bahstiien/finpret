@@ -21,6 +21,8 @@ import type { Flag as FlagData } from "@/server/menu-view";
 import { buttonClass } from "@/components/ui/Button";
 import { EmptyState, PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
+import { RecipeImage } from "@/components/ui/RecipeImage";
+import type { RecipePhoto } from "@/seo/images";
 import { SuggestSheet } from "./SuggestSheet";
 
 const t = fr.discover;
@@ -31,6 +33,8 @@ export type DiscoverRecipe = {
   kind: "main" | "soup" | "simple" | "cake";
   name: string;
   short: string;
+  /** Photo du plat (recettes du catalogue illustrées) ; null pour les imports et les recettes sans visuel. */
+  photo: RecipePhoto | null;
   description: string | null;
   flag: FlagData;
   region: string | null;
@@ -389,6 +393,14 @@ function RecipeCard({
       className={`card flex flex-col gap-3 ${r.excluded ? "tone-peach" : ""}`}
       data-testid={`recipe-${r.id}`}
     >
+      {r.photo && (
+        <RecipeImage
+          photo={r.photo}
+          sizes="(min-width: 900px) 45vw, 100vw"
+          decorative
+          className={`card-photo aspect-[16/10] ${r.excluded ? "opacity-60 grayscale" : ""}`}
+        />
+      )}
       <div className="flex flex-wrap items-center gap-2">
         <span className="t-kicker">{t.kinds[r.kind]}</span>
         {r.seasonal && <span className="pill tone-green">{t.inSeason}</span>}
