@@ -117,8 +117,8 @@ export default async function PrintPage({ searchParams }: { searchParams: Promis
           how: m.how,
         };
       }),
-      thaw: d.day < 5 ? d.thaw : [],
-      total: d.day <= 5 && tot[d.day]![0] > 0 ? t.totals(...tot[d.day]!) : null,
+      thaw: d.thaw,
+      total: tot[d.day]![0] > 0 ? t.totals(...tot[d.day]!) : null,
     })),
     average: t.averageText(avg.kcal, avg.protein),
     canteen: kids.map((k) => ({

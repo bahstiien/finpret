@@ -14,7 +14,7 @@ import { shuffle } from "./random";
 import { eligible, wshuffle } from "./season";
 import { assignGroups, gMax, sortMeals } from "./slots";
 import type { BankEntry, Guests, Meal, MenuSettings, WeekPlan } from "./types";
-import { batchBusy, isRemoved, WEEKEND_SLOTS } from "./week";
+import { batchBusy, batchWeekend, isRemoved, WEEKEND_SLOTS } from "./week";
 
 /**
  * Modifications d'une semaine (§8.1, §8.7) : port de swap (Changer), toggleMeal (Retirer / Remettre),
@@ -299,8 +299,10 @@ export function moveSlot(env: Env, week: WeekPlan, a: string, b: string): MoveRe
   const [db, mb] = b.split("-") as [string, Meal];
   const A = Number(da);
   const B = Number(db);
-  if (A > 5 !== B > 5) return { ok: false, reason: "weekend_boundary" };
-  if (A > 5) {
+  // Week-end préparé pendant la session : une seule période, du lundi au dimanche.
+  const fresh = (d: number) => d > 5 && !batchWeekend(week);
+  if (fresh(A) !== fresh(B)) return { ok: false, reason: "weekend_boundary" };
+  if (fresh(A)) {
     const wk = { ...(w.weekend ?? {}) };
     const x = wk[a];
     const y = wk[b];
@@ -334,7 +336,7 @@ export function moveSlot(env: Env, week: WeekPlan, a: string, b: string): MoveRe
 /** Créneaux proposés dans la feuille « Déplacer » : même période, et ceux qui ne créent pas de conflit. */
 export function moveTargets(env: Env, week: WeekPlan, from: string) {
   const day = Number(from.split("-")[0]);
-  const days = day > 5 ? [6, 7] : [1, 2, 3, 4, 5];
+  const days = batchWeekend(week) ? [1, 2, 3, 4, 5, 6, 7] : day > 5 ? [6, 7] : [1, 2, 3, 4, 5];
   return days.flatMap((d) =>
     (["lunch", "dinner"] as const).flatMap((m) => {
       const k = `${d}-${m}`;
@@ -379,7 +381,7 @@ export function suggestWeekend(env: Env, week: WeekPlan): { week: WeekPlan; adde
   let n = 0;
   for (const [d, m] of WEEKEND_SLOTS) {
     const k = `${d}-${m}`;
-    if (w.weekend[k]) continue;
+    if (w.weekend[k] || batchBusy(env, w, d, m)) continue;
     const prefer =
       d === 6 && m === "dinner"
         ? pool(env.lib.simples.filter((r) => r.comfort))

@@ -89,3 +89,35 @@ describe("grille des réglages (§7.6)", () => {
     expect(problems).toEqual([]);
   }, 30_000);
 });
+
+describe("week-end dans la session", () => {
+  it("samedi et dimanche, midi et soir, deviennent des plats de batch, congelés au-delà de leur conservation", () => {
+    const problems: string[] = [];
+    let n = 0;
+    for (let month = 1; month <= 12; month++)
+      for (let light = 0; light <= 4; light++)
+        for (const bankUse of [0, 2, 4])
+          for (const skip of [[], ["6-lunch", "7-dinner"]]) {
+            const c: Case = { month, pasta: 2, light, bankUse, skip };
+            const env = createEnv({ lib: LIB, random: seededRandom(n++) });
+            const res = generateWeek({
+              env,
+              settings: { ...DEFAULT_MENU_SETTINGS, light, bankUse, skip, weekendBatch: true },
+              start: `2027-${String(month).padStart(2, "0")}-01`,
+              previous: null,
+              history: [],
+              bank: BANK,
+            });
+            const label = `mois ${month}, légers ${light}, réserve ${bankUse}, décochés ${skip.join(",") || "aucun"}`;
+            if (!res.ok) {
+              problems.push(`${label} : échec`);
+              continue;
+            }
+            problems.push(...violations(c, res.week).map((v) => `${label} : ${v}`));
+            const covered = new Set(res.week.groups.flatMap((g) => g.meals.map((m) => `${m.day}-${m.meal}`)));
+            for (const k of ["6-lunch", "6-dinner", "7-lunch", "7-dinner"])
+              if (!skip.includes(k) && !covered.has(k)) problems.push(`${label} : ${k} non préparé`);
+          }
+    expect(problems).toEqual([]);
+  }, 30_000);
+});

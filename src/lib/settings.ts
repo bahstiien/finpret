@@ -58,6 +58,8 @@ export const menuSchema = z.object({
   skip: z.array(slotKeySchema).default([]),
   /** Week-end proposé dans la grille (option de l'onboarding). */
   weekend: z.boolean().default(false),
+  /** Repas du week-end cuisinés pendant la session de batch cooking (plats congelés ou au frigo). */
+  weekendBatch: z.boolean().default(false),
   cake: z
     .object({
       enabled: z.boolean(),
@@ -196,6 +198,7 @@ export function toMenuSettings(s: HouseholdSettings): MenuSettings {
     cake: s.menu.cake.enabled,
     minVeg: s.diet.minVeg,
     budget: s.menu.budget,
+    weekendBatch: s.menu.weekendBatch,
   };
 }
 

@@ -401,6 +401,9 @@ export const fr = {
       grid: "Repas à prévoir",
       gridHint: "Décoche les repas pris ailleurs : rien n'est cuisiné ni acheté pour eux.",
       weekend: "Proposer des idées pour le week-end",
+      weekendBatch: "Inclure le week-end dans la session",
+      weekendBatchHint:
+        "Samedi et dimanche sont cuisinés pendant ta session, puis congelés jusqu'à la veille. Prend effet au prochain menu.",
       cake: "Goûter de la semaine",
       cakeDay: "Jour du goûter",
       cakeTypes: "Types de goûter",

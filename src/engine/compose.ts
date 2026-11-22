@@ -266,7 +266,7 @@ export function compose(
   const month = monthOf(start);
   const skip = s.skip.slice();
   let bankIds = pickBank(env, bank, Math.min(s.bankUse, bankTotal(bank)));
-  const { groups, soupDays, simpleDays, bankSlots }: WeekSlots = buildSlots(s.light, bankIds.length, skip);
+  const { groups, soupDays, simpleDays, bankSlots }: WeekSlots = buildSlots(s.light, bankIds.length, skip, !!s.weekendBatch);
   bankIds = bankIds.slice(0, bankSlots.length);
   T = Math.min(T, groups.length + simpleDays.length);
   W = Math.min(W, groups.length + (soupDays.length ? 1 : 0) + simpleDays.length);

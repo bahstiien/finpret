@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 
 /** Interrupteur oui / non (zone tactile de 44 px). */
 export function Toggle({
@@ -16,15 +16,23 @@ export function Toggle({
   onChange: (value: boolean) => void;
   disabled?: boolean;
 }) {
+  // L'aide décrit l'interrupteur sans faire partie de son nom accessible.
+  const hintId = useId();
   return (
     <label className="flex min-h-11 cursor-pointer items-center justify-between gap-4">
       <span className="flex flex-col">
         <span className="font-bold">{label}</span>
-        {hint && <span className="text-sm text-muted">{hint}</span>}
+        {hint && (
+          <span id={hintId} aria-hidden="true" className="text-sm text-muted">
+            {hint}
+          </span>
+        )}
       </span>
       <input
         type="checkbox"
         role="switch"
+        aria-label={label}
+        aria-describedby={hint ? hintId : undefined}
         className="peer sr-only"
         checked={checked}
         disabled={disabled}

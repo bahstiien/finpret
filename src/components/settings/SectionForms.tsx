@@ -248,7 +248,7 @@ export function MenuForm({ initial, portions }: { initial: MenuSettingsForm; por
       </Panel>
       <Panel title={m.grid} hint={m.gridHint}>
         <SlotGrid
-          days={[1, 2, 3, 4, 5]}
+          days={v.weekendBatch ? [1, 2, 3, 4, 5, 6, 7] : [1, 2, 3, 4, 5]}
           dayLabels={fr.daysShort}
           mealLabels={fr.meals}
           isOn={(d, meal) => !v.skip.includes(slot(d, meal))}
@@ -263,10 +263,18 @@ export function MenuForm({ initial, portions }: { initial: MenuSettingsForm; por
           }
         />
         <Toggle
-          label={m.weekend}
-          checked={v.weekend}
-          onChange={(weekend) => update((d) => ({ ...d, weekend }))}
+          label={m.weekendBatch}
+          hint={m.weekendBatchHint}
+          checked={v.weekendBatch}
+          onChange={(weekendBatch) => update((d) => ({ ...d, weekendBatch }))}
         />
+        {!v.weekendBatch && (
+          <Toggle
+            label={m.weekend}
+            checked={v.weekend}
+            onChange={(weekend) => update((d) => ({ ...d, weekend }))}
+          />
+        )}
       </Panel>
       <Panel title={m.cake}>
         <Toggle

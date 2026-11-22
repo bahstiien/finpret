@@ -397,7 +397,7 @@ function PlanGrid({
   cakeLine: React.ReactNode;
 }) {
   const cell = (d: number, m: "lunch" | "dinner") => view.grid.find((c) => c.day === d && c.meal === m)!;
-  const weekendGaps = view.grid.some((c) => c.day > 5 && c.state !== "set");
+  const weekendGaps = view.grid.some((c) => c.day > 5 && c.state === "empty");
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -433,7 +433,8 @@ function PlanGrid({
               {[1, 2, 3, 4, 5, 6, 7].map((d) => {
                 const c = cell(d, m);
                 const slot = `${fr.days[d - 1]} ${fr.meals[m].toLowerCase()}`;
-                if (d > 5) {
+                // Week-end cuisiné sur place ; préparé pendant la session, il se lit comme la semaine.
+                if (d > 5 && (c.state === "set" || c.state === "empty")) {
                   return (
                     <td key={d}>
                       <button
@@ -488,10 +489,9 @@ function PlanGrid({
                             : t.grid.off(slot)
                       }
                       className={`mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
+                        // Le jour courant est signalé par l'en-tête de colonne : le jaune reste celui du « jour même ».
                         on
-                          ? d === view.todayIndex
-                            ? "tone-banane"
-                            : "tone-violet"
+                          ? "tone-violet"
                           : replace
                             ? "tone-yellow border-dashed border-violet"
                             : "tone-chip muted"
