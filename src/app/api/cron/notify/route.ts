@@ -21,11 +21,13 @@ export async function GET(request: NextRequest) {
   const at = request.nextUrl.searchParams.get("at");
   const now = at ? new Date(at) : new Date();
   if (Number.isNaN(now.getTime())) return NextResponse.json({ error: "at" }, { status: 400 });
-  const summary = await runNotifications(createNotifyDeps(request.nextUrl.origin), now);
-  const trial = await runTrialEnding(request.nextUrl.origin, now);
-  const streakPaused = await runStreakPausedNotifications(request.nextUrl.origin, now);
-  const renewal = await runRenewalNotices(request.nextUrl.origin, now);
-  const gettingStarted = await runGettingStartedMessages(request.nextUrl.origin, now);
+  // Adresse publique des liens des e-mails : deploy/cron.sh appelle http://127.0.0.1:3000, jamais l'adresse du site.
+  const base = process.env.APP_URL ?? request.nextUrl.origin;
+  const summary = await runNotifications(createNotifyDeps(base), now);
+  const trial = await runTrialEnding(base, now);
+  const streakPaused = await runStreakPausedNotifications(base, now);
+  const renewal = await runRenewalNotices(base, now);
+  const gettingStarted = await runGettingStartedMessages(base, now);
   return NextResponse.json({ ...summary, trialEnding: trial, streakPaused, renewalNotice: renewal, gettingStarted });
 }
 

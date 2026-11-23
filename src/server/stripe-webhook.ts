@@ -229,6 +229,10 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
       // Facture du paiement : sur le charge, ou ajoutée par la route (`charge_invoice`) pour un litige.
       const invoiceId = idOf(obj.invoice) ?? str(obj.charge_invoice);
       if (!invoiceId) return;
+      // Stripe envoie aussi `charge.refunded` pour un remboursement partiel : seul un remboursement total annule la part.
+      if (event.type === "charge.refunded" && obj.refunded !== true) return;
+      // Remboursement et litige d'une même facture traités en même temps : un seul passe la vérification ci-dessous.
+      await sql`select pg_advisory_xact_lock(hashtext(${`payout-refund:${invoiceId}`}))`.execute(db);
       const counted = await db
         .selectFrom("payout_lines")
         .select(["association_id", "household_id", "amount_cents"])
