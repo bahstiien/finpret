@@ -5,6 +5,8 @@
 // Le bundle est un export INTERNE (dossier okf/, ignoré par git) : il cite le magasin du relevé de prix, que le site
 // ne montre que dans /cgv. Ne pas le publier tel quel.
 //
+// Règles métier : fiches écrites à la main dans docs/okf/regles/, recopiées dans le bundle.
+//
 // Usage : pnpm okf                (écrit okf/ puis le vérifie)
 //         pnpm okf --out <dossier>
 //         pnpm okf --check        (vérifie un bundle existant sans le réécrire)
@@ -402,6 +404,12 @@ put(
   ),
 );
 
+// Fiches écrites à la main (règles métier du moteur), versionnées dans docs/okf/ et recopiées telles quelles.
+const HANDWRITTEN = resolve("docs/okf");
+for (const p of listMd(HANDWRITTEN)) {
+  put("/" + relative(HANDWRITTEN, p).split(sep).join("/"), readFileSync(p, "utf8").replace(/\r\n/g, "\n"));
+}
+
 const counts = {
   recipes: RECIPES.length,
   ingredients: Object.keys(ingredients).length,
@@ -425,6 +433,7 @@ put(
     `- ${link("Recettes", "/recettes/index")} (${counts.recipes})`,
     `- ${link("Ingrédients", "/ingredients/index")} (${counts.ingredients}, dont ${counts.priced} avec un prix de référence)`,
     `- ${link("Petits-déjeuners", "/petits-dejeuners/index")} (${counts.breakfasts})`,
+    `- ${link("Règles métier", "/regles/index")} (moteur de génération, portions, quantités)`,
     `- ${link("Journal", "/log")}`,
     "",
   ].join("\n"),

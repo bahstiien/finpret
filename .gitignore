@@ -42,4 +42,4 @@ lighthouse-report/
 .data/
 
 # Export OKF interne (pnpm okf)
-okf/
+/okf/
