@@ -1,6 +1,7 @@
 import "server-only";
 import { trialReminderDue } from "@/engine/trial";
 import { fr } from "@/i18n/fr";
+import { FEATURES } from "@/lib/features";
 import { notificationsSchema } from "@/lib/settings";
 import { todayIn } from "@/lib/dates";
 import { withAdmin } from "@/server/db";
@@ -17,8 +18,10 @@ export async function runTrialEnding(
   baseUrl: string,
   now = new Date(),
 ): Promise<{ due: number; sent: number }> {
-  const deps = createNotifyDeps(baseUrl);
   const summary = { due: 0, sent: 0 };
+  // Paiement fermé : le rappel renverrait vers des offres « Prochainement » qu'on ne peut pas choisir.
+  if (!FEATURES.onlinePayment) return summary;
+  const deps = createNotifyDeps(baseUrl);
 
   const subs = await withAdmin((db) =>
     db

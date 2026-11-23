@@ -4,7 +4,9 @@
  * jamais l'inverse. Le serveur reste l'autorité : l'interface ne sert qu'à masquer ce qui serait refusé.
  */
 
-export type Plan = "trial" | "monthly" | "yearly" | "free";
+import { FEATURES } from "@/lib/features";
+
+export type Plan ="trial" | "monthly" | "yearly" | "free";
 
 /** État d'abonnement d'un foyer (table `subscriptions`) et rattachement à une association approuvée. */
 export type HouseholdOffer = {
@@ -42,11 +44,16 @@ export const MEMBER_LIMIT: Record<Tier, number> = { free: 2, trial: 8, subscribe
 
 const SUBSCRIBED_STATUSES = new Set(["active", "trialing", "past_due"]);
 
-export function tierOf(offer: HouseholdOffer, now: Date = new Date()): Tier {
+/** `paymentOpen` : tant que le paiement en ligne est fermé, l'essai ne se périme pas (on ne peut pas s'abonner). */
+export function tierOf(
+  offer: HouseholdOffer,
+  now: Date = new Date(),
+  paymentOpen: boolean = FEATURES.onlinePayment,
+): Tier {
   if (offer.plan === "monthly" || offer.plan === "yearly") {
     return SUBSCRIBED_STATUSES.has(offer.status) ? "subscribed" : "free";
   }
-  if (offer.plan === "trial" && offer.trialEndsAt && new Date(offer.trialEndsAt) > now) return "trial";
+  if (offer.plan === "trial" && (!paymentOpen || (offer.trialEndsAt && new Date(offer.trialEndsAt) > now))) return "trial";
   return "free";
 }
 
