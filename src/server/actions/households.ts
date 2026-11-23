@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { sql } from "kysely";
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
 import { FEATURES } from "@/lib/features";
@@ -80,8 +81,12 @@ export async function createInvitation(_prev: InviteState, formData: FormData): 
   let token: string;
   let householdName: string | undefined;
   try {
+    const offer = await loadOffer(householdId);
     // Comptes du foyer : 2 en gratuit, 8 en essai ou abonné (les invitations en attente comptent).
-    const used = await withSession(async (db) => {
+    // Comptage et création dans une transaction, sous un verrou du foyer : deux invitations envoyées en même temps
+    // ne peuvent pas passer toutes les deux sous la limite.
+    const created = await withSession(async (db) => {
+      await sql`select pg_advisory_xact_lock(hashtext(${`invitations:${householdId}`}))`.execute(db);
       const [members, pending] = await Promise.all([
         db
           .selectFrom("memberships")
@@ -96,12 +101,8 @@ export async function createInvitation(_prev: InviteState, formData: FormData): 
           .where("expires_at", ">", new Date().toISOString())
           .executeTakeFirstOrThrow(),
       ]);
-      return Number(members.n) + Number(pending.n);
-    });
-    if (!can(await loadOffer(householdId), "household.members", { used })) {
-      return { error: fr.errors.members_limit };
-    }
-    ({ token, householdName } = await withSession(async (db) => {
+      const used = Number(members.n) + Number(pending.n);
+      if (!can(offer, "household.members", { used })) return null;
       const row = await db
         .insertInto("invitations")
         .values({ household_id: householdId, role: parsed.data.role, email: parsed.data.email })
@@ -111,7 +112,9 @@ export async function createInvitation(_prev: InviteState, formData: FormData): 
         ? await db.selectFrom("households").select("name").where("id", "=", householdId).executeTakeFirst()
         : undefined;
       return { token: row.token, householdName: h?.name };
-    }));
+    });
+    if (!created) return { error: fr.errors.members_limit };
+    ({ token, householdName } = created);
   } catch (e) {
     return { error: toUserMessage(e) };
   }

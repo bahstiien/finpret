@@ -155,17 +155,22 @@ export async function markPayoutPaid(formData: FormData): Promise<ActionResult> 
       .executeTakeFirst(),
   );
   if (!payout || payout.status !== "ready") return { ok: false, error: "Ce versement n'est pas à verser." };
+  let updated: { id: string } | undefined;
   try {
-    await withAdmin((db) =>
+    // Condition sur le statut dans l'écriture : un double clic ne marque (et n'annonce) le versement qu'une fois.
+    updated = await withAdmin((db) =>
       db
         .updateTable("payouts")
         .set({ status: "paid", paid_at: new Date().toISOString() })
         .where("id", "=", id.data)
-        .execute(),
+        .where("status", "=", "ready")
+        .returning("id")
+        .executeTakeFirst(),
     );
   } catch {
     return fail();
   }
+  if (!updated) return { ok: false, error: "Ce versement n'est pas à verser." };
   await audit(user.id, "payout.paid", id.data, { quarter: payout.quarter, amount: payout.amount_cents });
 
   const a = await withAdmin((db) =>

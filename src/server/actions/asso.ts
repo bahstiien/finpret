@@ -326,11 +326,16 @@ export async function importSchoolMenusPdf(_prev: MenuState, formData: FormData)
         .insertInto("school_menus")
         .values(rows)
         .onConflict((oc) =>
-          oc.columns(["school_id", "date"]).doUpdateSet((eb) => ({
-            association_id: eb.ref("excluded.association_id"),
-            main: eb.ref("excluded.main"),
-            status: eb.ref("excluded.status"),
-          })),
+          oc
+            .columns(["school_id", "date"])
+            .doUpdateSet((eb) => ({
+              association_id: eb.ref("excluded.association_id"),
+              main: eb.ref("excluded.main"),
+              status: eb.ref("excluded.status"),
+            }))
+            // Même règle que `locked`, vérifiée au moment de l'écriture : un menu publié entre-temps reste publié.
+            .where("school_menus.status", "=", "draft")
+            .where("school_menus.association_id", "=", association.id),
         )
         .execute(),
     );

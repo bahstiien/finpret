@@ -1,5 +1,6 @@
 "use server";
 
+import { sql } from "kysely";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { FriseWeek } from "@/engine/progress-view";
@@ -87,7 +88,20 @@ export async function planPauseAction(weekStart: string): Promise<ActionResult> 
   if (!monday.safeParse(weekStart).success) return { ok: false, error: fr.errors.generic };
   const { household } = await requireHousehold("/app/progress");
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
-  const r = await planPause(createProgressStore(), { householdId: household.id, weekStart });
+  // Comptage des jetons et écriture dans une transaction, sous un verrou du foyer : deux pauses demandées en même
+  // temps (deux onglets) ne prennent pas toutes les deux le dernier jeton du trimestre.
+  const events: Parameters<ReturnType<typeof createProgressStore>["track"]>[] = [];
+  const r = await withAdmin(async (db) => {
+    await sql`select pg_advisory_xact_lock(hashtext(${`pause:${household.id}`}))`.execute(db);
+    // Événements enregistrés après validation, hors de la transaction (trackEvent ouvre la sienne).
+    const store = {
+      ...createProgressStore(db),
+      track: async (...args: (typeof events)[number]) => void events.push(args),
+    };
+    return planPause(store, { householdId: household.id, weekStart });
+  });
+  const base = createProgressStore();
+  for (const args of events) await base.track(...args);
   revalidatePath("/app/progress");
   return r.ok ? { ok: true, data: undefined } : { ok: false, error: PAUSE_ERRORS[r.reason] };
 }

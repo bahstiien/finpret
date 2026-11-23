@@ -36,6 +36,17 @@ function dispatch(payload: string | undefined) {
   for (const listener of hub().listeners.get(parsed.data.h) ?? []) listener(parsed.data);
 }
 
+/**
+ * Reconnexion toutes les 2 s tant que des navigateurs écoutent : une base qui redémarre (déploiement) peut rester
+ * indisponible plus longtemps qu'une seule tentative.
+ */
+function reconnect() {
+  setTimeout(() => {
+    if (!hub().listeners.size) return;
+    connect().catch(reconnect);
+  }, 2_000);
+}
+
 /** Ouvre (ou rouvre après une coupure) la connexion d'écoute. */
 function connect(): Promise<void> {
   const state = hub();
@@ -48,8 +59,7 @@ function connect(): Promise<void> {
       if (state.client !== client) return;
       state.client = null;
       client.end().catch(() => {});
-      // Reconnexion tant que des navigateurs écoutent ; ils relisent leurs données à la reprise du flux.
-      if (state.listeners.size) setTimeout(() => void connect().catch(() => {}), 2_000);
+      reconnect();
     };
     client.on("notification", (msg) => dispatch(msg.payload));
     client.on("error", reset);
@@ -69,9 +79,16 @@ export async function subscribeHousehold(householdId: string, listener: Listener
   const set = listeners.get(householdId) ?? new Set();
   set.add(listener);
   listeners.set(householdId, set);
-  await connect();
-  return () => {
+  const unsubscribe = () => {
     set.delete(listener);
     if (!set.size) listeners.delete(householdId);
   };
+  try {
+    await connect();
+  } catch (error) {
+    // Flux refusé : l'abonné ne doit pas rester inscrit (il entretiendrait les tentatives de reconnexion).
+    unsubscribe();
+    throw error;
+  }
+  return unsubscribe;
 }
