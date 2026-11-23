@@ -30,7 +30,7 @@ export function LegalPage({ slug }: { slug: LegalSlug }) {
     <>
       <PublicHeader signup={false} />
       <main id="contenu">
-        <Container narrow className="flex flex-col gap-8 py-12 min-[900px]:py-16">
+        <Container narrow className="flex flex-col gap-8 py-12 min-[900px]:py-16 [&_p]:max-w-[70ch] [&_li]:max-w-[70ch]">
           <header className="flex flex-col gap-2">
             <h1 className="t-1">{page.title}</h1>
             {doc && <p className="t-small muted">Version du {doc.version}</p>}

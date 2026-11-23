@@ -1,4 +1,7 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import tailwind from "@tailwindcss/postcss";
+import postcss from "postcss";
 import { describe, expect, it } from "vitest";
 
 const css =
@@ -33,37 +36,27 @@ const light: Record<string, string> = {
   chip: "#FFF6D6",
 };
 
-// Mode sombre : neutres limités à la liste du skill landing-page-design (#000000, #181818, #1F1F1F, #272727, #313131, #131209).
-const dark: Record<string, string> = {
-  bg: "#181818",
-  surface: "#1F1F1F",
-  ink: "#F3F1F8",
-  muted: "#A6A2B4",
-  line: "#313131",
-  chip: "#272727",
-  nav: "#000000",
-};
-
-const DARK_NEUTRALS = ["#000000", "#181818", "#1F1F1F", "#272727", "#313131", "#131209"];
-
 describe("design tokens", () => {
   it.each(Object.entries(light))("mode clair : --%s = %s", (name, value) => {
     expect(tokenIn(":root {", name)).toBe(value);
   });
 
-  it.each(Object.entries(dark))("mode sombre forcé : --%s = %s", (name, value) => {
-    expect(tokenIn(':root[data-theme="dark"]', name)).toBe(value);
+  it("reste en thème clair quand le système est en sombre", () => {
+    expect(css).not.toMatch(/prefers-color-scheme:\s*dark|data-theme="dark"/);
   });
 
-  it.each(Object.entries(dark))("mode sombre système : --%s = %s", (name, value) => {
-    expect(tokenIn(':root:not([data-theme="light"])', name)).toBe(value);
-  });
-
-  it("garde les fonds sombres neutres dans la liste autorisée", () => {
-    for (const name of ["bg", "surface", "chip", "line", "nav"]) {
-      expect(DARK_NEUTRALS).toContain(dark[name]);
-    }
-  });
+  // Les tests ci-dessus lisent la source ; celui-ci compile et minifie comme le build de
+  // production (PR #64 : une déclaration invalide faisait disparaître tout le :root des couleurs).
+  it("garde les couleurs dans le CSS compilé et minifié", async () => {
+    const from = fileURLToPath(new URL("../../src/app/globals.css", import.meta.url));
+    const result = await postcss([tailwind({ optimize: { minify: true } })]).process(readFileSync(from, "utf8"), {
+      from,
+    });
+    const built = result.css.replace(/\s+/g, "");
+    expect(built).toMatch(/:root\{color-scheme:light;--bg:#fff8e7;/);
+    expect(built).toContain("--line:#17151f");
+    expect(built).not.toContain("--$");
+  }, 30_000);
 
   it("expose les rayons (échelle Tailwind), la courbe de mouvement et une seule police", () => {
     expect(css).toContain("--radius-card: 0.25rem"); // 4 px
