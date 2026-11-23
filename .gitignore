@@ -43,3 +43,4 @@ lighthouse-report/
 
 # Export OKF interne (pnpm okf)
 /okf/
+/changelog.json
