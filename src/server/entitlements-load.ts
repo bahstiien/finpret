@@ -41,14 +41,17 @@ export async function householdCan(
 
 /** Changements de plat (« Changer ») déjà faits pour une semaine : journalisés dans `events` (SPEC_JANVIER §4). */
 export async function swapsUsed(householdId: string, weekId: string): Promise<number> {
-  const { n } = await withAdmin((db) =>
-    db
-      .selectFrom("events")
-      .select((eb) => eb.fn.countAll<number>().as("n"))
-      .where("name", "=", "menu_swap")
-      .where("household_id", "=", householdId)
-      .where(sql`props->>'week'`, "=", weekId)
-      .executeTakeFirstOrThrow(),
-  );
+  return withAdmin((db) => countSwaps(db, householdId, weekId));
+}
+
+/** Même décompte dans une transaction existante (clé de service : `events` n'a aucun accès client). */
+export async function countSwaps(db: Db, householdId: string, weekId: string): Promise<number> {
+  const { n } = await db
+    .selectFrom("events")
+    .select((eb) => eb.fn.countAll<number>().as("n"))
+    .where("name", "=", "menu_swap")
+    .where("household_id", "=", householdId)
+    .where(sql`props->>'week'`, "=", weekId)
+    .executeTakeFirstOrThrow();
   return Number(n);
 }

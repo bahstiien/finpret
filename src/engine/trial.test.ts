@@ -24,4 +24,8 @@ describe("fin d'essai", () => {
     expect(trialReminderDue(end, TZ, new Date("2027-01-11T09:00:00Z"))).toBeNull();
     expect(trialReminderDue(end, TZ, new Date("2027-01-14T09:00:00Z"))).toBeNull();
   });
+  it("n'annonce pas « se termine aujourd'hui » pour un essai déjà fini à 10 h", () => {
+    // Fin à 8 h à Paris (07:00 UTC) : le rappel J0 de 10 h arriverait après la fin.
+    expect(trialReminderDue("2027-01-13T07:00:00Z", TZ, new Date("2027-01-13T09:00:00Z"))).toBeNull();
+  });
 });
