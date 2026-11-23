@@ -1,5 +1,7 @@
 "use server";
 
+import * as Sentry from "@sentry/nextjs";
+import { sql } from "kysely";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ASSOCIATION_COOKIE } from "@/lib/association-code";
@@ -66,9 +68,18 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
     householdId = active.id;
   } else {
     try {
-      householdId = await withSession((db) =>
-        rpc<string>(db, "create_household", { p_name: input.household.name }),
-      );
+      householdId = await withSession(async (db) => {
+        // Double clic sur « Terminer » : la seconde requête attend la première et reprend le foyer qu'elle vient de créer.
+        await sql`select pg_advisory_xact_lock(hashtext(${`create-household:${user.id}`}))`.execute(db);
+        const justCreated = await db
+          .selectFrom("households")
+          .select("id")
+          .where("created_by", "=", user.id)
+          .where("created_at", ">", sql<string>`now() - interval '1 minute'`)
+          .orderBy("created_at", "desc")
+          .executeTakeFirst();
+        return justCreated?.id ?? rpc<string>(db, "create_household", { p_name: input.household.name });
+      });
     } catch (e) {
       return { ok: false, error: toUserMessage(e) };
     }
@@ -116,8 +127,11 @@ export async function completeOnboarding(raw: OnboardingInput): Promise<Onboardi
           ? [{ member_id: members[i].id, school_id: m.schoolId, canteen_days: m.canteenDays }]
           : [],
       );
+      // Échec signalé sans bloquer la fin de l'onboarding : le foyer est déjà rattaché à l'association.
       if (links.length)
-        await withSession((db) => db.insertInto("member_schools").values(links).execute()).catch(() => null);
+        await withSession((db) => db.insertInto("member_schools").values(links).execute()).catch((e) =>
+          Sentry.captureException(e, { extra: { householdId, associationId: association.id } }),
+        );
     }
   }
   const absences = input.rhythm.absences.filter((a) => members[a.member]);
