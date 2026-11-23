@@ -145,16 +145,23 @@ describe("webhook Stripe", () => {
   it("un remboursement ajoute une ligne négative du même montant, une seule fois", async () => {
     const w = await world();
     await handle(event("invoice.paid", invoice(w, "in_6", "price_y", 3999)));
-    await handle(event("charge.refunded", { invoice: "in_6" }));
+    await handle(event("charge.refunded", { invoice: "in_6", refunded: true }));
     await handle(event("charge.dispute.created", { charge_invoice: "in_6" }));
     const lines = await payoutLines("in_6");
     expect(lines.map((l) => l.amount_cents)).toEqual([800, -800]);
     expect(lines[1]).toMatchObject({ kind: "refund", stripe_invoice_id: "in_6" });
   });
 
+  it("un remboursement partiel ne retire pas la part de l'association", async () => {
+    const w = await world();
+    await handle(event("invoice.paid", invoice(w, "in_6b", "price_y", 3999)));
+    await handle(event("charge.refunded", { invoice: "in_6b", refunded: false, amount_refunded: 100 }));
+    expect((await payoutLines("in_6b")).map((l) => l.amount_cents)).toEqual([800]);
+  });
+
   it("un remboursement sur une facture jamais comptée est sans effet", async () => {
     await world();
-    await handle(event("charge.refunded", { invoice: "in_inconnue" }));
+    await handle(event("charge.refunded", { invoice: "in_inconnue", refunded: true }));
     expect(await payoutLines("in_inconnue")).toHaveLength(0);
   });
 

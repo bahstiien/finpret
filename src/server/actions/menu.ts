@@ -98,11 +98,11 @@ async function editWeek(
   try {
     written = await withSession((db) => {
       // Écriture conditionnée à la version lue : un autre appareil qui a modifié le plan entre-temps n'est pas écrasé.
-      const update = db
+      return db
         .updateTable("weeks")
         .set({ plan: json(res.plan), pasta_need: res.plan.pastaNeed })
-        .where("id", "=", weekId);
-      return (FEATURES.realPurchases ? update.where("updated_at", "=", row.updated_at) : update)
+        .where("id", "=", weekId)
+        .where("updated_at", "=", row.updated_at)
         .returning("id")
         .execute();
     });
@@ -329,6 +329,7 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
   // Le week-end ne se retire ou ne se remet que lorsqu'il est préparé pendant la session (réglage du foyer).
   if (d > 5 && !inWeek && !ctx.settings.menu.weekendBatch) return { ok: false as const, error: fr.errors.generic };
   const on = inWeek && !row.plan.removed.includes(k);
+  let conflict = false;
   try {
     await withSession(async (db) => {
       // Structure mémorisée pour les semaines suivantes (réglage du foyer, modifiable par l'administrateur).
@@ -346,14 +347,23 @@ export async function toggleGridSlot(weekId: string, d: number, m: "lunch" | "di
         const plan = on
           ? { ...row.plan, removed: [...new Set([...row.plan.removed, k])] }
           : { ...row.plan, removed: row.plan.removed.filter((x) => x !== k) };
-        await db
+        // Écriture conditionnée à la version lue, comme editWeek : un autre appareil n'est pas écrasé.
+        const written = await db
           .updateTable("weeks")
           .set({ plan: json(plan) })
           .where("id", "=", weekId)
+          .where("updated_at", "=", row.updated_at)
+          .returning("id")
           .execute();
+        // Version dépassée : on annule aussi le réglage écrit plus haut dans la même transaction.
+        if (!written.length) {
+          conflict = true;
+          throw new Error("conflict");
+        }
       }
     });
   } catch (e) {
+    if (conflict) return { ok: false as const, error: t.conflict };
     return { ok: false as const, error: toUserMessage(e) };
   }
   if (on || inWeek) {

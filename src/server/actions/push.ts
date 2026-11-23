@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { fr } from "@/i18n/fr";
-import { json } from "@/server/db";
+import { json, withAdmin } from "@/server/db";
 import type { ActionResult } from "@/server/errors";
 import { deliver, payloadFor } from "@/server/notify";
 import { sendWebPush, subscriptionsOf, vapidConfigured } from "@/server/notify-deps";
@@ -20,9 +20,12 @@ export async function savePushSubscription(sub: unknown, userAgent: string): Pro
   const parsed = subscriptionSchema.safeParse(sub);
   if (!parsed.success) return { ok: false, error: fr.errors.generic };
   try {
+    // Un même navigateur peut changer de compte : l'ancien abonnement de cet appareil est remplacé, même s'il
+    // appartient à un autre compte (la RLS le cacherait). L'adresse push est un secret que seul ce navigateur connaît.
+    await withAdmin((db) =>
+      db.deleteFrom("push_subscriptions").where("endpoint", "=", parsed.data.endpoint).execute(),
+    );
     await withSession(async (db) => {
-      // Un même navigateur peut changer de compte : l'ancien abonnement de cet appareil est remplacé.
-      await db.deleteFrom("push_subscriptions").where("endpoint", "=", parsed.data.endpoint).execute();
       await db
         .insertInto("push_subscriptions")
         .values({
