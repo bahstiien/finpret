@@ -33,6 +33,7 @@ export const HANDLED_EVENTS = [
   "invoice.payment_failed",
   "charge.refunded",
   "charge.dispute.created",
+  "charge.dispute.closed",
 ] as const;
 
 type InvoicePaymentsClient = {
@@ -47,7 +48,10 @@ type InvoicePaymentsClient = {
  * Facture d'un charge remboursé ou contesté. Stripe a retiré `charge.invoice` (SDK 18+) : elle se retrouve par le
  * paiement (`payment_intent`, présent sur le charge comme sur le litige) dans les paiements de facture.
  */
-export async function chargeInvoiceId(stripe: InvoicePaymentsClient, charge: unknown): Promise<string | null> {
+export async function chargeInvoiceId(
+  stripe: InvoicePaymentsClient,
+  charge: unknown,
+): Promise<string | null> {
   const paymentIntent = idOf(asObj(charge).payment_intent);
   if (!paymentIntent) return null;
   const payments = await stripe.invoicePayments.list({
@@ -278,6 +282,40 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
           stripe_invoice_id: invoiceId,
           kind: r.kind,
           amount_cents: r.amount,
+        })
+        .execute();
+      return;
+    }
+    case "charge.dispute.closed": {
+      // Litige gagné : la part retirée à l'ouverture du litige revient à l'association.
+      if (obj.status !== "won") return;
+      const invoiceId = idOf(obj.invoice) ?? str(obj.charge_invoice);
+      if (!invoiceId) return;
+      await sql`select pg_advisory_xact_lock(hashtext(${`payout-refund:${invoiceId}`}))`.execute(db);
+      const refunds = await db
+        .selectFrom("payout_lines")
+        .select(["id", "association_id", "household_id", "amount_cents", "payout_id"])
+        .where("stripe_invoice_id", "=", invoiceId)
+        .where("kind", "=", "refund")
+        .execute();
+      const balance = refunds.reduce((sum, l) => sum + l.amount_cents, 0);
+      if (balance >= 0) return; // rien de retiré, ou déjà rendu
+      const unpaid = refunds.find((l) => l.amount_cents === balance && !l.payout_id);
+      if (unpaid) {
+        // Trimestre pas encore clôturé : la ligne négative disparaît simplement.
+        await db.deleteFrom("payout_lines").where("id", "=", unpaid.id).execute();
+        return;
+      }
+      // Déjà déduite d'un versement : ligne positive de compensation sur le trimestre en cours.
+      const first = refunds[0]!;
+      await db
+        .insertInto("payout_lines")
+        .values({
+          association_id: first.association_id,
+          household_id: first.household_id,
+          stripe_invoice_id: invoiceId,
+          kind: "refund",
+          amount_cents: -balance,
         })
         .execute();
       return;

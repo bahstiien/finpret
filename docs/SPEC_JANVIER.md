@@ -124,6 +124,7 @@ Fonction unique `can(household, feature)` dans `src/server/entitlements.ts`, uti
 | `invoice.paid` d'un abonnement annuel (première année ou renouvellement) | +800 centimes |
 | `invoice.paid` d'un mois d'abonnement mensuel | +50 centimes |
 | `charge.refunded` ou `charge.dispute.created` sur une facture déjà comptée | ligne négative du même montant |
+| `charge.dispute.closed` gagné | la ligne négative est retirée, ou compensée par une ligne positive si elle a déjà été versée |
 
 Clôture trimestrielle (tâche planifiée les 1er janvier, avril, juillet, octobre à 03:00 Europe/Paris) : somme par association ; ≥ 2 000 centimes → `payouts.status = 'ready'` et relevé PDF ; sinon `carried_over`.
 
@@ -165,7 +166,7 @@ Scénario: Publication des menus
 - **Essai sans carte :** géré par l'app (`subscriptions.plan = 'trial'`, `trial_ends_at`), pas par Stripe. Le client Stripe est créé au premier passage en caisse.
 - **Souscription :** action serveur `createCheckoutSession(plan)` → Stripe Checkout `mode=subscription`, `customer_email`, `client_reference_id = household_id`, `discounts` avec le coupon si `association_id` est renseigné et `plan = yearly`, `automatic_tax` désactivé (prix TTC, TVA 20 % incluse), collecte de l'adresse de facturation, URLs de retour `/app/abonnement?ok=1` et `/app/abonnement`.
 - **Portail client :** action `createPortalSession()`.
-- **Webhook :** `POST /api/stripe/webhook` (route Next.js, runtime Node, corps brut), vérification de signature avec `STRIPE_WEBHOOK_SECRET`. Insérer d'abord l'événement dans `stripe_events` (clé primaire = `event.id`) ; si l'insertion échoue pour doublon, répondre 200 sans rien faire. Événements traités : `checkout.session.completed`, `customer.subscription.created|updated|deleted`, `invoice.paid`, `invoice.payment_failed`, `charge.refunded`, `charge.dispute.created`.
+- **Webhook :** `POST /api/stripe/webhook` (route Next.js, runtime Node, corps brut), vérification de signature avec `STRIPE_WEBHOOK_SECRET`. Insérer d'abord l'événement dans `stripe_events` (clé primaire = `event.id`) ; si l'insertion échoue pour doublon, répondre 200 sans rien faire. Événements traités : `checkout.session.completed`, `customer.subscription.created|updated|deleted`, `invoice.paid`, `invoice.payment_failed`, `charge.refunded`, `charge.dispute.created`, `charge.dispute.closed`.
 - **Droits :** `subscriptions` n'est écrite que par le webhook et la création de foyer (essai). `can()` lit `subscriptions` et `households.association_id`.
 - **Échec de paiement :** relances Stripe (3 sur 7 jours) ; à `customer.subscription.deleted` → `plan = 'free'`, données conservées.
 

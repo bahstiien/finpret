@@ -29,8 +29,15 @@ export async function POST(request: Request) {
   const like = event as unknown as StripeEventLike;
   try {
     // Remboursement ou litige : la facture n'est plus sur le charge, elle se retrouve par le paiement.
-    if (event.type === "charge.refunded" || event.type === "charge.dispute.created") {
-      (like.data.object as Record<string, unknown>).charge_invoice = await chargeInvoiceId(stripe, event.data.object);
+    if (
+      event.type === "charge.refunded" ||
+      event.type === "charge.dispute.created" ||
+      event.type === "charge.dispute.closed"
+    ) {
+      (like.data.object as Record<string, unknown>).charge_invoice = await chargeInvoiceId(
+        stripe,
+        event.data.object,
+      );
     }
     const result = await withAdmin((db) =>
       handleStripeEvent(db, like, cfg, {

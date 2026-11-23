@@ -153,11 +153,49 @@ describe("webhook Stripe", () => {
     expect(lines[1]).toMatchObject({ kind: "refund", stripe_invoice_id: "in_6" });
   });
 
+  it("un litige gagné rend la part : ligne retirée si pas encore versée", async () => {
+    const w = await world();
+    await handle(event("invoice.paid", invoice(w, "in_d1", "price_y", 3999)));
+    await handle(event("charge.dispute.created", { charge_invoice: "in_d1" }));
+    await handle(event("charge.dispute.closed", { charge_invoice: "in_d1", status: "lost" }));
+    expect((await payoutLines("in_d1")).map((l) => l.amount_cents)).toEqual([800, -800]);
+    await handle(event("charge.dispute.closed", { charge_invoice: "in_d1", status: "won" }));
+    await handle(event("charge.dispute.closed", { charge_invoice: "in_d1", status: "won" }));
+    expect((await payoutLines("in_d1")).map((l) => l.amount_cents)).toEqual([800]);
+  });
+
+  it("un litige gagné après versement ajoute une ligne de compensation, une seule fois", async () => {
+    const w = await world();
+    await handle(event("invoice.paid", invoice(w, "in_d2", "price_y", 3999)));
+    await handle(event("charge.dispute.created", { charge_invoice: "in_d2" }));
+    // Trimestre clôturé et versé : la ligne négative est déjà dans un versement.
+    await db.admin(async (tx) => {
+      const { id } = await tx
+        .insertInto("payouts")
+        .values({ association_id: w.associationId!, quarter: "2099-T1", amount_cents: 0, status: "paid" })
+        .returning("id")
+        .executeTakeFirstOrThrow();
+      await tx
+        .updateTable("payout_lines")
+        .set({ payout_id: id })
+        .where("stripe_invoice_id", "=", "in_d2")
+        .execute();
+    });
+    await handle(event("charge.dispute.closed", { charge_invoice: "in_d2", status: "won" }));
+    await handle(event("charge.dispute.closed", { charge_invoice: "in_d2", status: "won" }));
+    expect((await payoutLines("in_d2")).map((l) => l.amount_cents).sort((a, b) => a - b)).toEqual([
+      -800, 800, 800,
+    ]);
+  });
+
   it("retrouve la facture d'un charge ou d'un litige par son payment_intent", async () => {
     const list = vi.fn(async () => ({ data: [{ invoice: { id: "in_pi" } }] }));
     const stripe = { invoicePayments: { list } };
     expect(await chargeInvoiceId(stripe, { id: "ch_1", payment_intent: "pi_1" })).toBe("in_pi");
-    expect(list).toHaveBeenCalledWith({ payment: { type: "payment_intent", payment_intent: "pi_1" }, limit: 1 });
+    expect(list).toHaveBeenCalledWith({
+      payment: { type: "payment_intent", payment_intent: "pi_1" },
+      limit: 1,
+    });
     expect(await chargeInvoiceId(stripe, { id: "dp_1", payment_intent: { id: "pi_2" } })).toBe("in_pi");
     expect(await chargeInvoiceId(stripe, { id: "ch_2", payment_intent: null })).toBeNull();
     const empty = { invoicePayments: { list: async () => ({ data: [] }) } };

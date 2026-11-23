@@ -7,7 +7,7 @@ export function trialDaysLeft(trialEndsAt: string | Date, timeZone: string, now:
   return dayIndex(today, end) - 1;
 }
 
-/** Rappels de fin d'essai : à J-3 et J0, à 10 h (heure du foyer), dans la fenêtre de 15 min du planificateur. */
+/** Rappels de fin d'essai : à J-3 et J0 (si l'essai court encore), à 10 h (heure du foyer), dans la fenêtre de 15 min du planificateur. */
 export const TRIAL_REMINDER_DAYS = [3, 0] as const;
 export const TRIAL_REMINDER_HOUR = 10;
 
@@ -19,6 +19,8 @@ export function trialReminderDue(
 ): number | null {
   const [hh, mm] = timeIn(timeZone, now).split(":").map(Number) as [number, number];
   if (hh !== TRIAL_REMINDER_HOUR || mm >= windowMin) return null;
+  // Essai terminé avant 10 h : « se termine aujourd'hui » arriverait après coup, on ne l'envoie pas.
+  if (new Date(trialEndsAt) <= now) return null;
   const days = trialDaysLeft(trialEndsAt, timeZone, now);
   return (TRIAL_REMINDER_DAYS as readonly number[]).includes(days) ? days : null;
 }

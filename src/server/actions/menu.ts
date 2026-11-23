@@ -27,10 +27,11 @@ import { fr } from "@/i18n/fr";
 import { todayIn } from "@/lib/dates";
 import { FEATURES } from "@/lib/features";
 import { toMenuSettings } from "@/lib/settings";
-import { json } from "@/server/db";
+import { sql } from "kysely";
+import { json, withAdmin } from "@/server/db";
 import type { Feature } from "@/server/entitlements";
-import { loadOffer, swapsUsed } from "@/server/entitlements-load";
-import { can } from "@/server/entitlements";
+import { countSwaps, loadOffer, swapsUsed } from "@/server/entitlements-load";
+import { can, FREE_SWAPS_PER_WEEK } from "@/server/entitlements";
 import { type ActionResult, toUserMessage } from "@/server/errors";
 import { trackEvent } from "@/server/events";
 import { lockedFor, loadLockState } from "@/server/allocations";
@@ -68,10 +69,13 @@ async function editWeek(
   if (household.role === "viewer") return { ok: false, error: fr.errors.forbidden };
   if (!uuid.safeParse(weekId).success) return { ok: false, error: fr.errors.generic };
   // Offre gratuite ou payante (SPEC_JANVIER §4) : décidée côté serveur.
+  // Quota gratuit de changements : revérifié au moment d'écrire (`quota`), sinon deux « Changer » simultanés le dépassent.
+  let quota = false;
   if (feature) {
+    const offer = await loadOffer(household.id);
     const used = feature === "menu.swap" ? await swapsUsed(household.id, weekId) : 0;
-    if (!can(await loadOffer(household.id), feature, { used }))
-      return { ok: false, error: fr.errors.upgrade };
+    if (!can(offer, feature, { used })) return { ok: false, error: fr.errors.upgrade };
+    quota = feature === "menu.swap" && !can(offer, feature, { used: FREE_SWAPS_PER_WEEK });
   }
   const ctx = await loadHouseholdContext(household.id);
   const row = ctx.weeks.find((w) => w.id === weekId);
@@ -94,24 +98,43 @@ async function editWeek(
     const locked = lockedFor(before, await loadLockState(weekId));
     if (touched.some((uid) => locked.has(uid))) return { ok: false, error: t.locked };
   }
-  let written: { id: string }[];
+  let written: { id: string }[] | "quota";
   try {
-    written = await withSession((db) => {
+    // Avec quota : clé de service (le décompte lit `events`), d'où le filtre explicite sur le foyer.
+    written = await (quota ? withAdmin : withSession)(async (db) => {
+      if (quota) {
+        await sql`select pg_advisory_xact_lock(hashtext(${`swaps:${weekId}`}))`.execute(db);
+        if ((await countSwaps(db, household.id, weekId)) >= FREE_SWAPS_PER_WEEK) return "quota";
+      }
       // Écriture conditionnée à la version lue : un autre appareil qui a modifié le plan entre-temps n'est pas écrasé.
-      return db
+      const rows = await db
         .updateTable("weeks")
         .set({ plan: json(res.plan), pasta_need: res.plan.pastaNeed })
         .where("id", "=", weekId)
+        .where("household_id", "=", household.id)
         .where("updated_at", "=", row.updated_at)
         .returning("id")
         .execute();
+      if (quota && rows.length) {
+        await db
+          .insertInto("events")
+          .values({
+            name: "menu_swap",
+            user_id: user.id,
+            household_id: household.id,
+            props: json({ week: weekId }),
+          })
+          .execute();
+      }
+      return rows;
     });
   } catch (e) {
     return { ok: false, error: toUserMessage(e) };
   }
+  if (written === "quota") return { ok: false, error: fr.errors.upgrade };
   if (!written.length) return { ok: false, error: t.conflict };
   await syncShoppingItems(ctx, env, { id: weekId, plan: res.plan });
-  if (feature === "menu.swap") {
+  if (feature === "menu.swap" && !quota) {
     await trackEvent("menu_swap", { userId: user.id, householdId: household.id, props: { week: weekId } });
   }
   // Prise en main (SPEC_PRISE_EN_MAIN §4.1) : « Déplacer » coche l'étape « Ajuster un repas ».
