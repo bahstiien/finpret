@@ -55,6 +55,7 @@ export function SeoFooter() {
     ["/menu-de-la-semaine/vegetarien", "Menu végétarien"],
     ["/menus", "Menus de la semaine"],
     ["/batch-cooking", "Batch cooking"],
+    ["/faq", "Questions fréquentes"],
     ["/mentions-legales", "Mentions légales"],
     ["/cgu", "CGU"],
     ["/confidentialite", "Confidentialité"],
@@ -153,10 +154,18 @@ export function PageFrame({
   );
 }
 
-export function Faq({ items }: { items: readonly { q: string; a: string }[] }) {
+export function Faq({
+  items,
+  id = "faq",
+  title = "Questions fréquentes",
+}: {
+  items: readonly { q: string; a: string }[];
+  id?: string;
+  title?: string;
+}) {
   return (
-    <section aria-labelledby="faq" className="flex flex-col gap-3">
-      <SectionHead id="faq" title="Questions fréquentes" />
+    <section aria-labelledby={id} className="flex scroll-mt-6 flex-col gap-3">
+      <SectionHead id={id} title={title} />
       {items.map((f, i) => (
         <details key={f.q} className="faq" open={i === 0}>
           <summary>

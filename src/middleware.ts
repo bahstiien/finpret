@@ -29,6 +29,6 @@ export const config = {
   matcher: [
     // Tout sauf les fichiers statiques, le service worker, le manifest, les icônes et la sonde de santé et les pages publiques SEO
     // (rendues statiquement : pas de contrôle de session à chaque requête).
-    "/((?!_next/static|_next/image|favicon.ico|sw.js|swe-worker|manifest.webmanifest|icons/|api/health$|recettes|menus|batch-cooking|og/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sw.js|swe-worker|manifest.webmanifest|icons/|api/health$|recettes|menus|batch-cooking|faq$|og/).*)",
   ],
 };

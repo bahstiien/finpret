@@ -9,6 +9,7 @@ export const PUBLIC_PATHS = [
   "/associations",
   "/associations/comment-ca-marche",
   "/mentions-legales",
+  "/faq",
   "/cgu",
   "/cgv",
   "/confidentialite",
