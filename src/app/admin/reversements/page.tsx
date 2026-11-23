@@ -5,8 +5,8 @@ import { requireAdmin } from "@/server/admin";
 import { withAdmin } from "@/server/db";
 import { PageHeader } from "@/components/ui/Layout";
 import { Card } from "@/components/ui/Card";
+import { formatCents } from "@/engine/payouts";
 
-const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const STATUS = { ready: "À verser", paid: "Versé", carried_over: "Reporté" } as const;
 
 /** Reversements trimestriels : export CSV (IBAN déchiffré), « Marquer comme payé » (relevé PDF envoyé). */
@@ -55,7 +55,7 @@ export default async function AdminPayoutsPage() {
             >
               <span>
                 <b>{a?.name ?? "?"}</b> · <span className="mono">{p.quarter}</span> ·{" "}
-                <span className="mono">{euros.format(p.amount_cents / 100)}</span> · {STATUS[p.status]}
+                <span className="mono">{formatCents(p.amount_cents)}</span> · {STATUS[p.status]}
                 {p.paid_at ? ` le ${formatShort(p.paid_at.slice(0, 10))}` : ""}
                 {a?.iban_last4 ? ` · IBAN •••• ${a.iban_last4}` : " · IBAN manquant"}
               </span>

@@ -1,3 +1,4 @@
+import { addDays } from "../lib/dates";
 import { countryLabel, type Season, SEASON_STAMP_THRESHOLD, seasonOf } from "./passport";
 
 /** Données d'affichage du passeport (SPEC_PROGRES §4.4) : calcul pur à partir du catalogue et des recettes cuisinées. */
@@ -88,8 +89,6 @@ export function buildSeasons(
 export type FriseState = "done" | "paused" | "neutral" | "missed" | "todo" | "none";
 export type FriseWeek = { weekStart: string; state: FriseState; current: boolean };
 
-const addDays = (iso: string, n: number) =>
-  new Date(Date.parse(`${iso}T12:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
 
 /**
  * Frise des `n` dernières semaines, la plus ancienne d'abord, la semaine en cours en dernier. Une semaine sans

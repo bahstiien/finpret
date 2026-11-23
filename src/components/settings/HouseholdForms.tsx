@@ -51,7 +51,8 @@ export function HouseholdDetailsForm({ initial, timezones }: { initial: Details;
           hint={t.alternatingHint}
           checked={v.alternatingFrom !== null}
           onChange={(on) =>
-            update((d) => ({ ...d, alternatingFrom: on ? new Date().toISOString().slice(0, 10) : null }))
+            // Date du jour de l'appareil (AAAA-MM-JJ) : toISOString donnerait la veille entre minuit et 1-2 h en France.
+            update((d) => ({ ...d, alternatingFrom: on ? new Date().toLocaleDateString("en-CA") : null }))
           }
         />
       )}

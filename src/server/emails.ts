@@ -22,10 +22,9 @@ import type { MessageKey } from "@/engine/getting-started-messages";
 import { type MessageVars, messagesFr } from "@/i18n/getting-started-messages";
 import { type Email, sendEmail, type SendResult } from "@/server/email";
 import type { StatementInput } from "@/server/payouts";
+import { formatCents } from "@/engine/payouts";
 
 const appUrl = () => (process.env.APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
-const euros = (cents: number) =>
-  new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(cents / 100);
 
 /** Jeton de désinscription : HMAC du compte, vérifiable sans stockage. */
 export function unsubscribeToken(
@@ -166,7 +165,7 @@ export async function sendRenewalNotice(to: string, renewalDate: string, priceCe
       `Ton abonnement Fin Prêt sera reconduit le ${renewalDate}`,
       createElement(RenewalNoticeEmail, {
         renewalDate,
-        price: euros(priceCents),
+        price: formatCents(priceCents),
         url: `${appUrl()}/settings/subscription`,
       }),
     ),
@@ -227,7 +226,7 @@ export async function sendStatement(
       createElement(StatementEmail, {
         name: input.associationName,
         quarter: input.quarter,
-        amount: euros(input.amountCents),
+        amount: formatCents(input.amountCents),
         paid,
       }),
       pdf ? { attachments: [{ filename: `releve-${input.quarter}.pdf`, content: pdf }] } : {},

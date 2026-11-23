@@ -139,6 +139,18 @@ describe("clôture trimestrielle", () => {
     });
   });
 
+  it("le trimestre se termine à minuit heure de Paris", async () => {
+    // 1er avril 2027 à 01:30 à Paris (été, UTC+2) = 31 mars 23:30 UTC : appartient au deuxième trimestre.
+    await addLines(
+      line(11, A, "yearly", 800, "2027-03-31T21:30:00Z"),
+      line(12, A, "yearly", 800, "2027-03-31T23:30:00Z"),
+    );
+    await close("2027-T1");
+    const rows = await lines();
+    expect(rows.find((l) => l.id === id(11))?.payout_id).not.toBeNull();
+    expect(rows.find((l) => l.id === id(12))?.payout_id).toBeNull();
+  });
+
   it("un remboursement vient en déduction du total", async () => {
     await addLines(line(10, A, "refund", -800, "2027-03-20T10:00:00Z"));
     await close("2027-T1");

@@ -7,6 +7,7 @@ import { rpc } from "@/server/db";
 import { withSession } from "@/server/session";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/Layout";
+import { formatCents } from "@/engine/payouts";
 
 const t = fr.asso.dashboard;
 
@@ -20,8 +21,6 @@ type Stats = {
   paid_total_cents: number;
 };
 
-const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
-
 /** Tableau de bord : agrégats uniquement, tout compteur inférieur à 5 est affiché « moins de 5 » (D13). */
 export default async function AssoDashboardPage() {
   const association = await requireManager();
@@ -32,8 +31,8 @@ export default async function AssoDashboardPage() {
     { label: t.households, value: count(stats.households) },
     { label: t.monthly, value: count(stats.monthly) },
     { label: t.yearly, value: count(stats.yearly) },
-    { label: t.quarter, value: euros.format((stats.current_quarter_cents ?? 0) / 100) },
-    { label: t.paid, value: euros.format((stats.paid_total_cents ?? 0) / 100) },
+    { label: t.quarter, value: formatCents(stats.current_quarter_cents ?? 0) },
+    { label: t.paid, value: formatCents(stats.paid_total_cents ?? 0) },
   ];
   return (
     <>

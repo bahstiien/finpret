@@ -4,7 +4,7 @@ import {
   closeWeek,
   computeStreak,
   isInSessionWindow,
-  quarterOf,
+  quarterIndex,
   type StreakWeek,
 } from "./streak";
 
@@ -94,7 +94,7 @@ describe("streak", () => {
     const h = [week("2027-03-01", "paused"), week("2027-03-15", "paused")];
     expect(computeStreak(h, cur({ weekStart: "2027-03-22" }), []).pausesLeftThisQuarter).toBe(0);
     expect(computeStreak(h, cur({ weekStart: "2027-04-05" }), []).pausesLeftThisQuarter).toBe(2);
-    expect(quarterOf("2027-04-05")).toBe(quarterOf("2027-06-28"));
+    expect(quarterIndex("2027-04-05")).toBe(quarterIndex("2027-06-28"));
   });
 
   it("un palier déjà célébré n'est pas recélébré", () => {
