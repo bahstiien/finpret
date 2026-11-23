@@ -1,5 +1,6 @@
 "use server";
 
+import * as Sentry from "@sentry/nextjs";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -272,8 +273,9 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
     return { ok: false, error: fr.settings.data.confirmMismatch };
   }
   let orphans: string[];
+  let adminOf: string[];
   try {
-    orphans = await withSession(async (db) => {
+    ({ orphans, adminOf } = await withSession(async (db) => {
       const memberships = await db
         .selectFrom("memberships")
         .select(["household_id", "role"])
@@ -290,8 +292,9 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
           .executeTakeFirstOrThrow();
         if (Number(n) <= 1) ids.push(m.household_id);
       }
-      return ids;
-    });
+      const admin = memberships.filter((m) => m.role === "admin").map((m) => m.household_id);
+      return { orphans: ids, adminOf: admin };
+    }));
   } catch (e) {
     return { ok: false, error: toUserMessage(e) };
   }
@@ -310,6 +313,26 @@ export async function deleteAccount(formData: FormData): Promise<ActionResult> {
     await deleteUser(user.id);
   } catch {
     return { ok: false, error: fr.errors.generic };
+  }
+  // Deux administrateurs qui suppriment leur compte en même temps se voient chacun encore : relu après la
+  // suppression, un foyer resté sans administrateur est résilié et supprimé par la dernière des deux requêtes.
+  for (const householdId of adminOf.filter((id) => !orphans.includes(id))) {
+    try {
+      const { n } = await withAdmin((db) =>
+        db
+          .selectFrom("memberships")
+          .select((eb) => eb.fn.countAll<number>().as("n"))
+          .where("household_id", "=", householdId)
+          .where("role", "=", "admin")
+          .executeTakeFirstOrThrow(),
+      );
+      if (Number(n) > 0) continue;
+      if (!(await cancelSubscriptionsOf(householdId))) throw new Error("résiliation Stripe impossible");
+      await withAdmin((db) => db.deleteFrom("households").where("id", "=", householdId).execute());
+    } catch (e) {
+      // Le compte est déjà supprimé : on signale le foyer à reprendre à la main sans bloquer la personne.
+      Sentry.captureException(e, { extra: { householdId, step: "foyer sans administrateur" } });
+    }
   }
   const jar = await cookies();
   for (const c of jar.getAll()) if (c.name.includes("better-auth")) jar.delete(c.name);

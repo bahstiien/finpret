@@ -1,5 +1,6 @@
 "use server";
 
+import { sql } from "kysely";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -177,14 +178,17 @@ export async function revokeAdmin(formData: FormData): Promise<ActionResult> {
   const id = uuid.safeParse(formData.get("userId"));
   if (!id.success) return fail();
   if (id.data === user.id) return fail("Tu ne peux pas retirer tes propres droits.");
-  const owners = await withAdmin((db) =>
-    db.selectFrom("admins").select("user_id").where("role", "=", "owner").execute(),
-  );
-  if (owners.length === 1 && owners[0]?.user_id === id.data) return fail("Il doit rester un administrateur complet.");
-  await withAdmin(async (db) => {
+  // Vérification et retrait sous un même verrou : deux propriétaires qui se retirent l'un l'autre en même temps
+  // ne peuvent pas laisser le back-office sans propriétaire.
+  const revoked = await withAdmin(async (db) => {
+    await sql`select pg_advisory_xact_lock(hashtext('admins:owners'))`.execute(db);
+    const owners = await db.selectFrom("admins").select("user_id").where("role", "=", "owner").execute();
+    if (owners.length === 1 && owners[0]?.user_id === id.data) return false;
     await db.deleteFrom("admins").where("user_id", "=", id.data).execute();
     await db.deleteFrom("auth.admin_totp").where("user_id", "=", id.data).execute();
+    return true;
   });
+  if (!revoked) return fail("Il doit rester un administrateur complet.");
   await audit(user.id, "admin.revoke", id.data);
   return ok("/admin/admins");
 }

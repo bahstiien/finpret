@@ -1,13 +1,10 @@
+import { addDays } from "../lib/dates";
 import type { CookKind } from "./passport";
 import type { WeekPlan } from "./types";
 
 /** Recettes « cuisinées » d'une semaine (SPEC_PROGRES §4.3) et repas couverts par le batch. TypeScript pur. */
 
 export type PlannedCook = { recipeId: string; kind: CookKind; cookedOn: string };
-
-const DAY_MS = 86_400_000;
-const addDays = (iso: string, n: number) =>
-  new Date(Date.parse(`${iso}T12:00:00Z`) + n * DAY_MS).toISOString().slice(0, 10);
 
 const removed = (plan: Pick<WeekPlan, "removed">, day: number, meal: "lunch" | "dinner") =>
   plan.removed.includes(`${day}-${meal}`);

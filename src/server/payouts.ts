@@ -1,4 +1,5 @@
 import "server-only";
+import { sql } from "kysely";
 import { decidePayout, quarterBounds } from "@/engine/payouts";
 import type { Db } from "@/server/db";
 
@@ -44,7 +45,8 @@ export async function closeQuarter(db: Db, quarter: string, deps: ClosingDeps): 
     .selectFrom("payout_lines")
     .select(["id", "association_id", "kind", "amount_cents", "created_at"])
     .where("payout_id", "is", null)
-    .where("created_at", "<", end)
+    // Fin du trimestre à minuit heure de Paris, pas en UTC (la base tourne en UTC, voir db.ts).
+    .where("created_at", "<", sql<string>`(${end}::date)::timestamp at time zone 'Europe/Paris'`)
     .execute();
   const byAssociation = new Map<string, Line[]>();
   for (const l of lines)

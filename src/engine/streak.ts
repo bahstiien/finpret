@@ -1,4 +1,5 @@
 /** Série de semaines fin prêtes (SPEC_PROGRES §3). TypeScript pur : aucun import React ni accès à la base. */
+import { addDays, isoWeekday, todayIn } from "../lib/dates";
 
 export type WeekOutcome = "done" | "paused" | "neutral" | "missed";
 
@@ -30,24 +31,19 @@ export function nextMilestoneAfter(n: number): number {
   return (Math.floor(n / 52) + 1) * 52;
 }
 
-/** Identifiant de trimestre civil (année × 4 + index) d'une date ISO `YYYY-MM-DD`. */
-export function quarterOf(isoDate: string): number {
+/**
+ * Numéro de trimestre civil (année × 4 + index) d'une date ISO `YYYY-MM-DD`, pour comparer deux dates.
+ * À ne pas confondre avec `quarterOf` de payouts.ts, qui renvoie le libellé « 2027-T1 ».
+ */
+export function quarterIndex(isoDate: string): number {
   const [y = 0, m = 1] = isoDate.split("-").map(Number);
   return y * 4 + Math.floor((m - 1) / 3);
 }
 
 export function pausesUsedInQuarter(history: StreakWeek[], weekStart: string): number {
-  const q = quarterOf(weekStart);
-  return history.filter((w) => w.outcome === "paused" && quarterOf(w.weekStart) === q).length;
+  const q = quarterIndex(weekStart);
+  return history.filter((w) => w.outcome === "paused" && quarterIndex(w.weekStart) === q).length;
 }
-
-const addDays = (iso: string, days: number): string => {
-  const d = new Date(`${iso}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-};
-
-const isoWeekday = (iso: string) => ((new Date(`${iso}T12:00:00Z`).getUTCDay() + 6) % 7) + 1;
 
 /**
  * Lundi de la semaine dont la fenêtre de session contient `today` : du lundi au mercredi, la semaine en cours ;
@@ -59,14 +55,7 @@ export function activeWeekStart(today: string): string {
 }
 
 /** Date locale (`YYYY-MM-DD`) d'un instant dans un fuseau IANA. */
-export function localDate(instant: Date, timeZone: string): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(instant);
-}
+export const localDate = (instant: Date, timeZone: string): string => todayIn(timeZone, instant);
 
 /** Fenêtre de session : du jeudi précédent 00:00 au mercredi 23:59 locaux (§3.1). */
 export function isInSessionWindow(doneAt: Date, weekStart: string, timeZone: string): boolean {

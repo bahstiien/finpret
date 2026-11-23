@@ -12,6 +12,11 @@ export const MIN_PAYOUT_CENTS = 2000;
 
 export type LineKind = "yearly" | "monthly" | "refund";
 
+const EUROS = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
+
+/** Montant en centimes affiché en euros : 2400 → « 24,00 € ». */
+export const formatCents = (cents: number) => EUROS.format(cents / 100);
+
 /** Montants propres à une association (centimes) ; null = barème standard. */
 export type Rates = { yearly?: number | null; monthly?: number | null };
 
