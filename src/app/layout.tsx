@@ -30,15 +30,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FFF8E7",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FFF8E7" },
+    { media: "(prefers-color-scheme: dark)", color: "#181818" },
+  ],
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
+const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${archivo.variable} ${grotesk.variable} ${spaceMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Thème choisi sur cet appareil (§11), appliqué avant l'affichage pour éviter un flash. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-dvh">
         {children}
         <NewVersionGuard text={fr.errors.newVersion.text} reload={fr.errors.newVersion.reload} />

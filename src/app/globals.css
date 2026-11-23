@@ -6,6 +6,17 @@
 /* Primitives néo-brutalistes de la maquette v2.1 (.btn, .card, .pill, .input, .seg, .stamp…). */
 @import "../styles/neo.css" layer(components);
 
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
