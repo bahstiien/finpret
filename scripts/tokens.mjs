@@ -14,22 +14,10 @@ const vars = (set, pad) =>
 
 const css = `/* Fichier généré par \`pnpm tokens\` depuis design-system/tokens.json : ne pas modifier à la main. */
 
-/* Le thème suit le système ; data-theme="light" | "dark" sur <html> force un choix manuel. */
+/* Thème clair uniquement (DESIGN.md), même quand le système est en sombre. */
 :root {
   color-scheme: light;
 ${vars(color.light, "  ")}
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-${vars(color.dark, "    ")}
-  }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-${vars(color.dark, "  ")}
 }
 
 /* Rayons (échelle Tailwind) et courbe de mouvement : utilitaires rounded-card, rounded-sheet, rounded-pill, ease-base. */
