@@ -41,13 +41,13 @@ export function PublicFooter() {
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {links.map(([href, label]) => (
               <li key={href}>
-                <Link href={href} className="lnk t-small inline-flex min-h-11 items-center">
+                <Link href={href} className="lnk t-small">
                   {label}
                 </Link>
               </li>
             ))}
             <li>
-              <a href={`mailto:${f.contact}`} className="lnk t-small inline-flex min-h-11 items-center">
+              <a href={`mailto:${f.contact}`} className="lnk t-small">
                 {f.contact}
               </a>
             </li>

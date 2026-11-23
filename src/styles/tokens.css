@@ -1,6 +1,6 @@
 /* Fichier généré par `pnpm tokens` depuis design-system/tokens.json : ne pas modifier à la main. */
 
-/* Thème clair uniquement (DESIGN.md), même quand le système est en sombre. */
+/* Le thème suit le système ; data-theme="light" | "dark" sur <html> force un choix manuel. */
 :root {
   color-scheme: light;
   --bg: #fff8e7;
@@ -42,6 +42,56 @@
   --on-kit-offer: #17151f;
   --kit-annot: #e5007e;
   --on-kit-annot: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #181818;
+    --surface: #1f1f1f;
+    --ink: #f3f1f8;
+    --muted: #a6a2b4;
+    --line: #313131;
+    --blue-soft: #1d2b44;
+    --blue-ink: #a9c8f5;
+    --pink-soft: #3a1d29;
+    --pink-ink: #f5a3bb;
+    --yellow-soft: #352d14;
+    --peach-ink: #f5a582;
+    --chip: #272727;
+    --violet-soft: #2a2345;
+    --violet-strong: #c4b5fd;
+    --nav: #000000;
+    --on-nav: #f3f1f8;
+    --green-soft: #183324;
+    --green-ink: #86efac;
+    --green-strong: #4ade80;
+    --cream-ink: #ffd86b;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #181818;
+  --surface: #1f1f1f;
+  --ink: #f3f1f8;
+  --muted: #a6a2b4;
+  --line: #313131;
+  --blue-soft: #1d2b44;
+  --blue-ink: #a9c8f5;
+  --pink-soft: #3a1d29;
+  --pink-ink: #f5a3bb;
+  --yellow-soft: #352d14;
+  --peach-ink: #f5a582;
+  --chip: #272727;
+  --violet-soft: #2a2345;
+  --violet-strong: #c4b5fd;
+  --nav: #000000;
+  --on-nav: #f3f1f8;
+  --green-soft: #183324;
+  --green-ink: #86efac;
+  --green-strong: #4ade80;
+  --cream-ink: #ffd86b;
 }
 
 /* Rayons (échelle Tailwind) et courbe de mouvement : utilitaires rounded-card, rounded-sheet, rounded-pill, ease-base. */

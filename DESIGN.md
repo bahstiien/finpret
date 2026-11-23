@@ -116,7 +116,7 @@ Toutes les couleurs viennent des jetons, jamais écrites en dur.
 
 ## Themes
 
-Le design system est en **thème clair uniquement**. L'app reste claire même quand l'appareil est réglé en sombre : `tokens.json` n'a plus de bloc `color.dark`, `tokens.css` ne réagit pas à `prefers-color-scheme` et les réglages ne proposent plus de choix de thème. Un nouveau jeton n'a pas de valeur sombre.
+Le design system est dessiné en **thème clair**. Mais `tokens.json` garde un bloc `color.dark` hérité de l'ancien design, et `tokens.css` l'applique dès que le système est en sombre (ou avec `data-theme="dark"`) : `bg`, `surface`, `ink`, `muted`, `line`, `chip` et `nav` basculent, alors que les aplats (`yellow`, `peach`, `banane`, `blue`, `pink`, `green`, `violet`) et `on-fill` gardent leur valeur claire. Ce bloc reste à retirer ou à redessiner ; un nouveau jeton n'a pas de valeur sombre.
 
 Conséquence tant que ce bloc existe : sur un aplat, le texte secondaire ne prend jamais `muted` (gris clair en sombre, 2,3:1 sur `yellow`). Il prend `on-fill` atténué (`opacity-75`), qui garde au moins 5:1 dans les deux thèmes. Tout écran se vérifie aussi en sombre.
 

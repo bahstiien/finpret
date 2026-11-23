@@ -29,7 +29,7 @@ export function Simulator() {
       <div className="grid gap-6 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
           <span className="t-label">
-            {t.families} : <span className="mono">{families}</span>
+            {t.families} : <output className="mono">{families}</output>
           </span>
           <input
             type="range"
@@ -46,7 +46,7 @@ export function Simulator() {
         </label>
         <label className="flex flex-col gap-2">
           <span className="t-label">
-            {t.share} : <span className="mono">{share} %</span>
+            {t.share} : <output className="mono">{share} %</output>
           </span>
           <input
             type="range"
