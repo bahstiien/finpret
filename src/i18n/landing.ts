@@ -368,6 +368,7 @@ export const landingV2 = {
   },
   faq: {
     title: "Questions",
+    more: "Toutes les questions fréquentes",
     items: [
       {
         q: "Qu'est-ce que le batch cooking ?",
@@ -428,6 +429,7 @@ export const landingV2 = {
       { href: "/recettes", label: "Recettes" },
       { href: "/menus", label: "Menus de la semaine" },
       { href: "/batch-cooking", label: "Guides batch cooking" },
+      { href: "/faq", label: "Questions fréquentes" },
     ],
     legalLinks: [
       { href: "/cgu", label: "CGU" },

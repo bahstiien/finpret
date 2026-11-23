@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { fr } from "@/i18n/fr";
+import { PUBLIC_PATHS } from "@/app/sitemap";
+import { faqFr } from "@/i18n/faq";
 import { landingV2 } from "@/i18n/landing";
 import { DESCRIPTION_MAX, TITLE_MAX } from "./meta";
 import { homeJsonLd } from "./jsonld";
@@ -27,6 +29,16 @@ describe("accueil", () => {
   });
 
   it("le pied de page lie les pages publiques du catalogue", () => {
-    expect(landingV2.footer.explore.map((l) => l.href)).toEqual(["/recettes", "/menus", "/batch-cooking"]);
+    expect(landingV2.footer.explore.map((l) => l.href)).toEqual(["/recettes", "/menus", "/batch-cooking", "/faq"]);
+  });
+
+  it("la FAQ a des sections et des questions uniques, et reprend celles de l'accueil", () => {
+    const questions = faqFr.sections.flatMap((x) => x.items.map((f) => f.q));
+    expect(new Set(questions).size).toBe(questions.length);
+    expect(new Set(faqFr.sections.map((x) => x.id)).size).toBe(faqFr.sections.length);
+    expect(questions).toEqual(expect.arrayContaining(landingV2.faq.items.map((f) => f.q)));
+    expect(PUBLIC_PATHS).toContain("/faq");
+    expect(faqFr.metaTitle.length).toBeLessThanOrEqual(TITLE_MAX);
+    expect(faqFr.metaDescription.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
   });
 });

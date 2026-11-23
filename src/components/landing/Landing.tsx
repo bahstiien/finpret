@@ -454,6 +454,10 @@ export function Faq() {
             <div className="faq-body">{f.a}</div>
           </details>
         ))}
+        <Link href="/faq" className="btn btn--outline self-start">
+          {t.faq.more}
+          <Icon name="arrow" className="ic" />
+        </Link>
       </div>
     </section>
   );
