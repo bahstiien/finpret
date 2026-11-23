@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { handleStripeEvent, type StripeEventLike } from "@/server/stripe-webhook";
+import { chargeInvoiceId, handleStripeEvent, type StripeEventLike } from "@/server/stripe-webhook";
 import { createTestDb, type TestDb } from "./pglite-db";
 
 vi.mock("@/server/events", () => ({ trackEvent: vi.fn(async () => {}) }));
@@ -145,11 +145,23 @@ describe("webhook Stripe", () => {
   it("un remboursement ajoute une ligne négative du même montant, une seule fois", async () => {
     const w = await world();
     await handle(event("invoice.paid", invoice(w, "in_6", "price_y", 3999)));
-    await handle(event("charge.refunded", { invoice: "in_6", refunded: true }));
+    // Forme actuelle : pas de `invoice` sur le charge, la route ajoute `charge_invoice` (chargeInvoiceId).
+    await handle(event("charge.refunded", { charge_invoice: "in_6", refunded: true }));
     await handle(event("charge.dispute.created", { charge_invoice: "in_6" }));
     const lines = await payoutLines("in_6");
     expect(lines.map((l) => l.amount_cents)).toEqual([800, -800]);
     expect(lines[1]).toMatchObject({ kind: "refund", stripe_invoice_id: "in_6" });
+  });
+
+  it("retrouve la facture d'un charge ou d'un litige par son payment_intent", async () => {
+    const list = vi.fn(async () => ({ data: [{ invoice: { id: "in_pi" } }] }));
+    const stripe = { invoicePayments: { list } };
+    expect(await chargeInvoiceId(stripe, { id: "ch_1", payment_intent: "pi_1" })).toBe("in_pi");
+    expect(list).toHaveBeenCalledWith({ payment: { type: "payment_intent", payment_intent: "pi_1" }, limit: 1 });
+    expect(await chargeInvoiceId(stripe, { id: "dp_1", payment_intent: { id: "pi_2" } })).toBe("in_pi");
+    expect(await chargeInvoiceId(stripe, { id: "ch_2", payment_intent: null })).toBeNull();
+    const empty = { invoicePayments: { list: async () => ({ data: [] }) } };
+    expect(await chargeInvoiceId(empty, { payment_intent: "pi_3" })).toBeNull();
   });
 
   it("un remboursement partiel ne retire pas la part de l'association", async () => {

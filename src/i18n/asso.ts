@@ -170,6 +170,7 @@ export const assoFr = {
 export const subscriptionFr = {
   title: "Abonnement",
   trial: (date: string) => `Essai gratuit jusqu'au ${date}`,
+  trialExtended: "Essai gratuit prolongé jusqu'à l'ouverture des abonnements.",
   trialExpired: "Ton essai est terminé : tu gardes les courses, la session et Découvrir.",
   free: "Offre gratuite",
   subscribed: (plan: string, date: string) => `Abonnement ${plan} actif · prochain renouvellement le ${date}`,

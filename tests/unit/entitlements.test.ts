@@ -1,4 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// Les cas ci-dessous décrivent l'offre avec le paiement ouvert ; le cas « paiement fermé » est testé à part.
+vi.mock("@/lib/features", async (orig) => {
+  const mod = await orig<typeof import("@/lib/features")>();
+  return { FEATURES: { ...mod.FEATURES, onlinePayment: true } };
+});
 import {
   can,
   type Feature,
@@ -36,6 +42,11 @@ describe("tierOf", () => {
   });
   it("un essai échu devient gratuit sans basculement", () => {
     expect(tierOf(expired, NOW)).toBe("free");
+  });
+  it("tant que le paiement est fermé, un essai échu reste un essai", () => {
+    expect(tierOf(expired, NOW, false)).toBe("trial");
+    expect(tierOf(free, NOW, false)).toBe("free");
+    expect(tierOf({ ...monthly, status: "canceled" }, NOW, false)).toBe("free");
   });
   it("un abonnement impayé reste actif pendant les relances, puis devient gratuit", () => {
     expect(tierOf({ ...monthly, status: "past_due" }, NOW)).toBe("subscribed");

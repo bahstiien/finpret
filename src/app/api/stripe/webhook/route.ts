@@ -4,7 +4,7 @@ import { alertWebhookFailure } from "@/server/alerts";
 import { withAdmin } from "@/server/db";
 import { sendPaymentFailed } from "@/server/emails";
 import { stripeClient, stripeConfig } from "@/server/stripe";
-import { handleStripeEvent, type StripeEventLike } from "@/server/stripe-webhook";
+import { chargeInvoiceId, handleStripeEvent, type StripeEventLike } from "@/server/stripe-webhook";
 import { emailOf } from "@/server/users";
 
 export const dynamic = "force-dynamic";
@@ -28,16 +28,9 @@ export async function POST(request: Request) {
 
   const like = event as unknown as StripeEventLike;
   try {
-    // Litige : la facture se retrouve par le paiement (le litige ne la porte pas).
-    if (event.type === "charge.dispute.created") {
-      const charge = (event.data.object as { charge?: string }).charge;
-      if (charge) {
-        const full = (await stripe.charges.retrieve(charge)) as unknown as {
-          invoice?: string | { id: string } | null;
-        };
-        const invoice = typeof full.invoice === "string" ? full.invoice : full.invoice?.id;
-        (like.data.object as Record<string, unknown>).charge_invoice = invoice ?? null;
-      }
+    // Remboursement ou litige : la facture n'est plus sur le charge, elle se retrouve par le paiement.
+    if (event.type === "charge.refunded" || event.type === "charge.dispute.created") {
+      (like.data.object as Record<string, unknown>).charge_invoice = await chargeInvoiceId(stripe, event.data.object);
     }
     const result = await withAdmin((db) =>
       handleStripeEvent(db, like, cfg, {

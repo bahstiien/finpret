@@ -79,8 +79,10 @@ export default async function SubscriptionPage({
     ? details?.cancelsOn
       ? t.subscribedEnding(t.plans[offer.plan as "monthly" | "yearly"], day(details.cancelsOn))
       : t.subscribed(t.plans[offer.plan as "monthly" | "yearly"], day(renewal))
-    : tier === "trial" && offer.trialEndsAt
+    : tier === "trial" && offer.trialEndsAt && new Date(offer.trialEndsAt) > new Date()
       ? t.trial(day(new Date(offer.trialEndsAt).toISOString()))
+      : tier === "trial"
+        ? t.trialExtended
       : offer.plan === "trial"
         ? t.trialExpired
         : t.free;

@@ -35,6 +35,28 @@ export const HANDLED_EVENTS = [
   "charge.dispute.created",
 ] as const;
 
+type InvoicePaymentsClient = {
+  invoicePayments: {
+    list(params: { payment: { type: "payment_intent"; payment_intent: string }; limit: number }): Promise<{
+      data: { invoice: string | { id: string } }[];
+    }>;
+  };
+};
+
+/**
+ * Facture d'un charge remboursé ou contesté. Stripe a retiré `charge.invoice` (SDK 18+) : elle se retrouve par le
+ * paiement (`payment_intent`, présent sur le charge comme sur le litige) dans les paiements de facture.
+ */
+export async function chargeInvoiceId(stripe: InvoicePaymentsClient, charge: unknown): Promise<string | null> {
+  const paymentIntent = idOf(asObj(charge).payment_intent);
+  if (!paymentIntent) return null;
+  const payments = await stripe.invoicePayments.list({
+    payment: { type: "payment_intent", payment_intent: paymentIntent },
+    limit: 1,
+  });
+  return idOf(payments.data[0]?.invoice);
+}
+
 /** Prix d'une facture : `lines.data[0].price.id` (ancienne forme) ou `pricing.price_details.price` (récente). */
 export function invoicePriceId(invoice: Obj): string | null {
   const line = asObj(
@@ -226,7 +248,7 @@ async function process(db: Db, event: StripeEventLike, cfg: StripeConfig, hooks:
     }
     case "charge.refunded":
     case "charge.dispute.created": {
-      // Facture du paiement : sur le charge, ou ajoutée par la route (`charge_invoice`) pour un litige.
+      // Facture du paiement : ajoutée par la route (`charge_invoice`), ou sur le charge avec une ancienne version d'API.
       const invoiceId = idOf(obj.invoice) ?? str(obj.charge_invoice);
       if (!invoiceId) return;
       // Stripe envoie aussi `charge.refunded` pour un remboursement partiel : seul un remboursement total annule la part.
