@@ -23,6 +23,7 @@
     "icons": "node scripts/icons.mjs",
     "icons:check": "node scripts/icons.mjs --check",
     "seed": "tsx scripts/seed.ts",
+    "okf": "tsx scripts/okf-export.ts",
     "backfill:progress": "tsx scripts/backfill-progress.ts",
     "test:db:lite": "node scripts/test-db-lite.mjs",
     "audit:lighthouse": "node scripts/lighthouse.mjs",
