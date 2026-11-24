@@ -56,6 +56,11 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    /* Barres de défilement aux couleurs Néo (héritées par tous les conteneurs) : pouce encre, rail crème. */
+    scrollbar-color: var(--ink) var(--chip);
+  }
+  * {
+    scrollbar-width: thin;
   }
   body {
     background: var(--bg);
@@ -118,6 +123,21 @@
   /* Sur un aplat violet, le contour violet disparaît : on passe au jaune de la marque. */
   .on-violet :focus-visible {
     outline-color: var(--banana);
+  }
+}
+
+/* Safari (sans scrollbar-color) : même rendu par les pseudo-éléments WebKit, pouce carré sans arrondi. */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--chip);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ink);
+    border: 3px solid var(--chip);
   }
 }
 
