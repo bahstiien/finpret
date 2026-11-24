@@ -103,7 +103,7 @@ function DayCard({
       className={`nb tone-surface flex w-full flex-col ${selected ? "outline-3 outline-offset-3 outline-violet" : ""}`}
     >
       <header className={today ? "tone-banane" : weekend ? "tone-menu" : "tone-dark"}>
-        <h3 className="t-kicker">
+        <h2 className="t-kicker">
           {/* Toute la bande d'en-tête est la cible (44 px de haut au moins). */}
           <button
             type="button"
@@ -114,7 +114,7 @@ function DayCard({
           >
             {label}
           </button>
-        </h3>
+        </h2>
       </header>
       {meals.length === 0 && !(selected && cake) && (
         <p className="t-small muted border-t-[length:var(--bw)] border-line p-3">

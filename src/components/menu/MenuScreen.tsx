@@ -556,7 +556,11 @@ function PlanGrid({
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="t-2">
-          {t.grid.title} · <span data-testid="summary-meals">{view.plannedMeals}</span> {t.board.mealsUnit}
+          {t.grid.title} ·{" "}
+          <span data-testid="summary-meals" className="mono">
+            {view.plannedMeals}
+          </span>{" "}
+          {t.board.mealsUnit}
         </h2>
         <span className="t-small flex gap-3">
           <span className="flex items-center gap-1.5">
