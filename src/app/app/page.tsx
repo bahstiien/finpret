@@ -240,7 +240,8 @@ export default async function MenuPage({
         childFactor={pm.childFactor}
         canteen={canteen}
         initialMode={initialMode}
-        hideBanner={tileVisible || !!checklistData}
+        // Checklist réduite d'office (foyer de plus de 21 jours) : le bandeau de session reste visible.
+        hideBanner={tileVisible || (!!checklistData && !checklistData.autoCollapsed)}
         topSlot={
           (checklistData || prep) && (
             <>

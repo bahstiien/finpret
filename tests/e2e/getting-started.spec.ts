@@ -225,6 +225,8 @@ test("la veille de la session : Tile et Sheet de préparation", async ({ page })
   // Plus tard : la Tile disparaît pour la journée.
   await tile.getByRole("button", { name: "Plus tard" }).click();
   await expect(tile).toBeHidden();
+  // Une seule carte d'action : la checklist reprend la place de la Tile.
+  await expect(page.getByTestId("checklist")).toBeVisible();
 });
 
 test("hors veille : pas de Tile", async ({ page }) => {

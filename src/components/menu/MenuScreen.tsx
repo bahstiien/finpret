@@ -471,9 +471,10 @@ function MoreMenu({
     <div
       ref={box}
       className="relative"
-      // Tab au-delà de la dernière action : la liste se referme.
+      // Tab au-delà de la dernière action : la liste se referme. Pas sur un relatedTarget vide : Safari ne donne pas
+      // le focus à un bouton cliqué, et fermer là ferait perdre le clic sur l'action.
       onBlur={(e) => {
-        if (!box.current?.contains(e.relatedTarget as Node | null)) setOpen(false);
+        if (e.relatedTarget && !box.current?.contains(e.relatedTarget as Node)) setOpen(false);
       }}
     >
       <button
