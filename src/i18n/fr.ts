@@ -667,6 +667,8 @@ export const fr = {
     dishCount: (n: number) => `${n} plat${n > 1 ? "s" : ""}`,
     ingredients: "Ingrédients",
     equipment: "Matériel",
+    facts: { for: "Pour", cost: "Coût", difficulty: "Difficulté" },
+    goodToKnow: "Bon à savoir",
     steps: "Étapes",
     openRecipe: (name: string) => `Voir la recette : ${name}`,
     openRecipeLead: "Voir la recette : ",

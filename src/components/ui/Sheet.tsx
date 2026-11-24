@@ -12,11 +12,14 @@ export function Sheet({
   open,
   onClose,
   title,
+  wide = false,
   children,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
+  /** Contenu riche (fiche recette) : la feuille s'élargit dès 1024 px. */
+  wide?: boolean;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -34,25 +37,20 @@ export function Sheet({
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className="sheet m-0 mt-auto max-h-[90dvh] w-full max-w-none overflow-y-auto text-ink backdrop:bg-nav sm:m-auto sm:max-w-lg"
+      className={`sheet m-0 mt-auto max-h-[90dvh] w-full max-w-none overflow-y-auto text-ink backdrop:bg-nav sm:m-auto sm:max-w-lg ${wide ? "lg:max-w-4xl" : ""}`}
     >
       {open && (
         <>
-        <span className="sheet-handle" aria-hidden="true" />
-        <div className="flex flex-col gap-4 pt-2 pb-4">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="t-2">{title}</h2>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={fr.common.close}
-              className="iconbtn"
-            >
-              <Icon name="close" />
-            </button>
+          <span className="sheet-handle" aria-hidden="true" />
+          <div className="flex flex-col gap-4 pt-2 pb-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="t-2">{title}</h2>
+              <button type="button" onClick={onClose} aria-label={fr.common.close} className="iconbtn">
+                <Icon name="close" />
+              </button>
+            </div>
+            {children}
           </div>
-          {children}
-        </div>
         </>
       )}
     </dialog>
