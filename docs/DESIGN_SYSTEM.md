@@ -30,7 +30,7 @@ Néo-brutalisme : aplats francs, bordures noires épaisses, ombres dures, rien d
 - **Z-index** : `--z-timers` 25, `--z-nav` 30, `--z-coach` 40, `--z-sheet` 60.
 
 ## Thème
-Le design system est en **thème clair uniquement**. Le code garde pour l'instant les valeurs du thème sombre dans `tokens.json` (`color.dark`) : à retirer ou à redessiner (question ouverte, voir le récapitulatif de la mise à niveau). Les nouveaux jetons n'ont pas de valeur sombre.
+Le design system est en **thème clair uniquement**. L'ancien thème sombre (`color.dark`) a été retiré : l'app reste claire même quand l'appareil est en sombre. Les nouveaux jetons n'ont pas de valeur sombre.
 
 ## Composants
 

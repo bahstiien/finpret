@@ -488,13 +488,13 @@ export function SiteFooter() {
           <Logo />
           <nav aria-label={f.nav} className="flex flex-wrap gap-x-5 gap-y-2">
             {f.explore.map((l) => (
-              <Link key={l.href} href={l.href} className="lnk t-small">
+              <Link key={l.href} href={l.href} className="lnk t-small inline-flex min-h-11 items-center">
                 {l.label}
               </Link>
             ))}
             {f.links.map((l) =>
               FEATURES.associations ? (
-                <Link key={l.href} href={l.href} className="lnk t-small">
+                <Link key={l.href} href={l.href} className="lnk t-small inline-flex min-h-11 items-center">
                   {l.label}
                 </Link>
               ) : (
@@ -509,7 +509,7 @@ export function SiteFooter() {
           <p className="mono t-small font-bold">finpret.app</p>
           <nav aria-label={f.legal} className="flex flex-wrap gap-x-4 gap-y-2">
             {f.legalLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="lnk t-small">
+              <Link key={l.href} href={l.href} className="lnk t-small inline-flex min-h-11 items-center">
                 {l.label}
               </Link>
             ))}
