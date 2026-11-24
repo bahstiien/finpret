@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { ChipToggle } from "@/components/ui/Controls";
-import { Difficulty } from "@/components/ui/Extras";
+import { Difficulty, Sticker } from "@/components/ui/Extras";
+import { Pill } from "@/components/ui/Pill";
 import { RecipeImage } from "@/components/ui/RecipeImage";
 import { FormMessage } from "@/components/ui/Field";
 import { Sheet } from "@/components/ui/Sheet";
@@ -259,7 +260,10 @@ export function RecipePickerSheet({
   const chosen = options.find((o) => o.id === choice);
   const filters =
     mode === "weekend"
-      ? (["ideas", "comfort", "quick", "pasta", "favorites", "all"] as const).map((f) => ({ key: f, label: t.picker.filters[f] }))
+      ? (["ideas", "comfort", "quick", "pasta", "favorites", "all"] as const).map((f) => ({
+          key: f,
+          label: t.picker.filters[f],
+        }))
       : [
           { key: "seasonal", label: t.picker.filters.seasonal },
           ...Object.entries(fr.settings.menu.cakeTypeLabels).map(([k, label]) => ({
@@ -302,12 +306,7 @@ export function RecipePickerSheet({
           </ChipToggle>
         ))}
       </div>
-      <Button
-        type="button"
-        variant="outline"
-        disabled={filtered.length === 0}
-        onClick={pickRandom}
-      >
+      <Button type="button" variant="outline" disabled={filtered.length === 0} onClick={pickRandom}>
         {t.picker.randomCount(filtered.length)}
       </Button>
       <fieldset className="flex max-h-[40dvh] flex-col gap-2 overflow-y-auto p-1">
@@ -379,86 +378,188 @@ export function RecipeSheet({
   // Classes écrites en entier : Tailwind ne voit pas une classe construite à l'exécution.
   const chip = (on: boolean, tone: "green" | "peach") =>
     `chiptg ${on ? (tone === "green" ? "[background:var(--green)]" : "[background:var(--peach)]") : ""}`;
+  // « Riz : 210 g » → nom à gauche, quantité en Space Mono à droite.
+  const split = (line: string) => {
+    const i = line.lastIndexOf(" : ");
+    return i < 0 ? [line, ""] : [line.slice(0, i), line.slice(i + 3)];
+  };
+  const level = r.difficulty >= 1 && r.difficulty <= 4 ? (r.difficulty as 1 | 2 | 3 | 4) : null;
+  const facts = [
+    { label: ts.facts.for, value: <span className="mono">{r.portions}</span> },
+    ...(r.cost ? [{ label: ts.facts.cost, value: <span className="mono">{r.cost}</span> }] : []),
+    ...(level
+      ? [
+          {
+            label: ts.facts.difficulty,
+            value: (
+              <span className="flex items-center gap-2">
+                <span>{fr.menuView.difficulty.levels[level - 1]}</span>
+                <Difficulty level={level} />
+              </span>
+            ),
+          },
+        ]
+      : []),
+  ];
   return (
-    <Sheet open onClose={onClose} title={r.name}>
-      <div className="flex flex-col gap-4" data-testid="recipe-sheet">
-        {r.photo && <RecipeImage photo={r.photo} sizes="(min-width: 640px) 512px, 100vw" decorative className="nb-flat aspect-[16/10]" />}
-        <div className="flex flex-col gap-1">
-          {/* Le nom est déjà le titre de la feuille : ici le type de plat et l'origine. */}
-          <p className="t-kicker">
-            <Flag flag={r.flag} />
-            {r.title}
-          </p>
-          <p className="t-small flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="mono">{r.portions}</span>
-            {r.cost && <span className="mono muted">{r.cost}</span>}
-            {r.difficulty >= 1 && r.difficulty <= 4 && <Difficulty level={r.difficulty as 1 | 2 | 3 | 4} />}
-          </p>
+    <Sheet open onClose={onClose} title={r.name} wide>
+      <div
+        className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start lg:gap-8"
+        data-testid="recipe-sheet"
+      >
+        {/* Colonne de gauche, fixe au défilement sur grand écran : ce qu'il faut avoir sous la main. */}
+        <div className="flex flex-col gap-5 lg:sticky lg:top-0">
+          {r.photo && (
+            <div className="relative">
+              <RecipeImage
+                photo={r.photo}
+                sizes="(min-width: 1024px) 340px, 100vw"
+                decorative
+                className="nb aspect-[4/3]"
+              />
+              {/* Le nom est déjà le titre de la feuille : l'étiquette dit le type de plat et l'origine. */}
+              <Sticker tone="banane" className="absolute -bottom-3 left-3">
+                <Flag flag={r.flag} />
+                {r.title}
+              </Sticker>
+            </div>
+          )}
+          {!r.photo && (
+            <p className="t-kicker">
+              <Flag flag={r.flag} />
+              {r.title}
+            </p>
+          )}
+          {/* Fiche d'identité en lignes : libellé à gauche, valeur à droite, comme les ingrédients. */}
+          <dl className="nb-flat flex flex-col divide-y-[length:var(--bw)] divide-line">
+            {facts.map((x) => (
+              <div key={x.label} className="flex min-h-11 items-center justify-between gap-4 px-3 py-2">
+                <dt className="t-label">{x.label}</dt>
+                <dd className="t-small text-right font-bold">{x.value}</dd>
+              </div>
+            ))}
+          </dl>
+          {r.ingredients.length > 0 && (
+            <section className="nb-sm tone-chip flex flex-col gap-3 p-4">
+              <h3 className="t-3">{ts.ingredients}</h3>
+              <ul className="flex flex-col">
+                {r.ingredients.map((line) => {
+                  const [name, qty] = split(line);
+                  return (
+                    <li
+                      key={line}
+                      className="flex items-baseline justify-between gap-4 border-b border-line py-2 last:border-0"
+                    >
+                      <span>{name}</span>
+                      <span className="mono shrink-0 text-right font-bold">{qty}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
+          {r.equipment.length > 0 && (
+            <section className="flex flex-col gap-2" data-testid="recipe-equipment">
+              <h3 className="t-3">{ts.equipment}</h3>
+              <ul className="flex flex-wrap gap-2">
+                {r.equipment.map((x) => (
+                  <li key={x}>
+                    <Pill>{x}</Pill>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
-        {r.description && <p className="muted">{r.description}</p>}
-        {r.ingredients.length > 0 && (
-          <section className="flex flex-col gap-2">
-            <h3 className="t-3">{ts.ingredients}</h3>
-            <ul className="list-disc pl-4">
-              {r.ingredients.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-        {r.equipment.length > 0 && (
-          <section className="flex flex-col gap-2" data-testid="recipe-equipment">
-            <h3 className="t-3">{ts.equipment}</h3>
-            <ul className="list-disc pl-4">
-              {r.equipment.map((x) => (
-                <li key={x} className="first-letter:uppercase">
-                  {x}
+
+        {/* Colonne de droite : la recette se lit de haut en bas. */}
+        <div className="flex flex-col gap-6">
+          {r.description && <p className="t-body max-w-[60ch]">{r.description}</p>}
+          <section className="flex flex-col gap-4">
+            <h3 className="t-3">{ts.steps}</h3>
+            <ol className="flex flex-col gap-4">
+              {r.steps.map((x, j) => (
+                <li key={j} className="grid grid-cols-[2.25rem_minmax(0,1fr)] items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="nb-sm tone-violet mono grid size-9 place-items-center text-base font-bold"
+                  >
+                    {j + 1}
+                  </span>
+                  <p className="max-w-[60ch] pt-1.5">{x}</p>
                 </li>
               ))}
-            </ul>
+            </ol>
           </section>
-        )}
-        <section className="flex flex-col gap-2">
-          <h3 className="t-3">{ts.steps}</h3>
-          <ol className="flex list-decimal flex-col gap-2 pl-4">
-            {r.steps.map((x, j) => (
-              <li key={j}>{x}</li>
-            ))}
-          </ol>
-        </section>
-        {r.notes.map((n) => (
-          <p key={n} className="t-small muted">
-            {n}
-          </p>
-        ))}
-        {onFeedback && (
-          <section className="flex flex-col gap-2" role="group" aria-label={ts.feedbackHint}>
-            <h3 className="t-3">{ts.feedbackTitle}</h3>
-            <div className="flex flex-wrap items-center gap-2">
-              <button type="button" aria-pressed={f.rating === 1} aria-label={ts.like(r.name)} disabled={pending} onClick={() => onFeedback("redo")} className={chip(f.rating === 1, "green")}>
-                <Icon name="thumbUp" className="size-5" />
-                {ts.likeShort}
-              </button>
-              <button type="button" aria-pressed={f.kids} aria-label={ts.kids(r.name)} disabled={pending} onClick={() => onFeedback("kids")} className={chip(f.kids, "green")}>
-                {ts.kidsShort}
-              </button>
-              <button type="button" aria-pressed={f.long} aria-label={ts.tooLong(r.name)} disabled={pending} onClick={() => onFeedback("long")} className={chip(f.long, "peach")}>
-                {ts.tooLongShort}
-              </button>
-              <button
-                type="button"
-                aria-pressed={f.rating === -1}
-                aria-label={ts.dislike(r.name)}
-                disabled={pending}
-                onClick={() => onFeedback("refuse")}
-                className={`iconbtn ${f.rating === -1 ? "[background:var(--peach)]" : ""}`}
-              >
-                <Icon name="thumbDown" className="size-5" />
-              </button>
+          {r.notes.length > 0 && (
+            <aside className="callout tone-blue" aria-label={ts.goodToKnow}>
+              <span className="callout-ic">
+                <Icon name="snow" />
+              </span>
+              <div className="flex flex-col gap-1">
+                <p className="t-ui">{ts.goodToKnow}</p>
+                {r.notes.map((n) => (
+                  <p key={n} className="t-small">
+                    {n}
+                  </p>
+                ))}
+              </div>
+            </aside>
+          )}
+          {onFeedback && (
+            <section className="flex flex-col gap-2" role="group" aria-label={ts.feedbackHint}>
+              <h3 className="t-3">{ts.feedbackTitle}</h3>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  aria-pressed={f.rating === 1}
+                  aria-label={ts.like(r.name)}
+                  disabled={pending}
+                  onClick={() => onFeedback("redo")}
+                  className={chip(f.rating === 1, "green")}
+                >
+                  <Icon name="thumbUp" className="size-5" />
+                  {ts.likeShort}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={f.kids}
+                  aria-label={ts.kids(r.name)}
+                  disabled={pending}
+                  onClick={() => onFeedback("kids")}
+                  className={chip(f.kids, "green")}
+                >
+                  {ts.kidsShort}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={f.long}
+                  aria-label={ts.tooLong(r.name)}
+                  disabled={pending}
+                  onClick={() => onFeedback("long")}
+                  className={chip(f.long, "peach")}
+                >
+                  {ts.tooLongShort}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={f.rating === -1}
+                  aria-label={ts.dislike(r.name)}
+                  disabled={pending}
+                  onClick={() => onFeedback("refuse")}
+                  className={`iconbtn ${f.rating === -1 ? "[background:var(--peach)]" : ""}`}
+                >
+                  <Icon name="thumbDown" className="size-5" />
+                </button>
+              </div>
+            </section>
+          )}
+          {actions && (
+            <div className="flex flex-wrap items-center gap-2 border-t-[length:var(--bw)] border-line pt-4">
+              {actions}
             </div>
-          </section>
-        )}
-        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+          )}
+        </div>
       </div>
     </Sheet>
   );
