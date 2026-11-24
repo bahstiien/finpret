@@ -30,6 +30,8 @@ WORKDIR /app
 COPY --from=build --chown=node:node /app/.next-build/standalone ./
 COPY --from=build --chown=node:node /app/.next-build/static ./.next-build/static
 COPY --from=build --chown=node:node /app/public ./public
+# Changelog des déploiements, écrit par le workflow Deploy avant le build (lu par /admin/changelog).
+COPY --from=build --chown=node:node /app/changelog.json ./changelog.json
 # Migrations jouées par le service `migrate` (deploy/docker-compose.yml) avant chaque démarrage : `pg` est déjà
 # dans les dépendances du serveur autonome.
 COPY --from=build --chown=node:node /app/scripts/migrate.mjs ./scripts/migrate.mjs

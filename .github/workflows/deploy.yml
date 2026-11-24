@@ -39,10 +39,17 @@ jobs:
     permissions:
       contents: read
       packages: write
+      actions: read
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # historique complet pour le changelog
+      - name: Changelog des déploiements (/admin/changelog)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/changelog.mjs
       - name: Étiquette de l'image
         id: tag
         run: |
