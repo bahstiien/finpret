@@ -95,8 +95,8 @@ test("menus de la cantine importés d'un PDF, validés, puis alerte doublon dans
   await expect(card.getByText("5 menus validés.")).toBeVisible();
   await expect(card.getByTestId("canteen-pending")).toHaveCount(0);
 
-  // Programme du jour : la cantine de Léo, et l'alerte quand le dîner a la même base.
-  await page.goto("/app");
+  // Programme du jour (vue « Cette semaine ») : la cantine de Léo, et l'alerte quand le dîner a la même base.
+  await page.goto("/app?vue=semaine");
   let alerted = false;
   for (let i = 0; i < 5 && !alerted; i++) {
     // Bouton du jour dans la frise (« lundi 26 », « mardi 27, aujourd'hui »).

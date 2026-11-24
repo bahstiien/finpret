@@ -1,147 +1,76 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Difficulty } from "@/components/ui/Extras";
 import { Icon } from "@/components/ui/Icon";
 import { Pill } from "@/components/ui/Pill";
 import { RecipeImage } from "@/components/ui/RecipeImage";
 import { fr } from "@/i18n/fr";
-import { toggleMealAction } from "@/server/actions/menu";
 import type { MealView, MenuView } from "@/server/menu-view";
 import { Flag } from "./Flag";
-import { useMenuAction } from "./useMenuAction";
 
 const t = fr.menuScreen;
 
-export type BoardFilter = "week" | "lunch" | "dinner" | "weekend";
-
-/** Ce que chaque carte-jour sait faire (programme du jour intégré au carrousel, §8.1). */
-type DayActions = {
-  canEdit: boolean;
-  weekId: string;
-  onMove: (from: string) => void;
-  onGuests: (m: MealView) => void;
-};
-
-/** Repas d'une carte-jour ; `detailed` : carte du jour sélectionné, qui porte le programme (consigne, actions). */
+/**
+ * Repas d'une carte-jour, en lecture : toucher la carte ouvre la recette (ingrédients, matériel, étapes).
+ * Seul le nom du plat est un bouton, étiré sur toute la carte : l'étiquette et la consigne du jour restent du texte
+ * lu normalement par les lecteurs d'écran. `detailed` : carte du jour sélectionné, qui porte la consigne.
+ */
 function MealBlock({
   meal: m,
   detailed,
-  canEdit,
-  weekId,
-  onMove,
-  onGuests,
-}: { meal: MealView; detailed: boolean } & DayActions) {
-  const [open, setOpen] = useState(false);
-  const { run, pending } = useMenuAction();
-  const item =
-    "t-ui min-h-11 w-full border-[length:var(--bw)] border-transparent px-3 text-left hover:border-line hover:bg-chip";
+  priority = false,
+  onOpen,
+}: {
+  meal: MealView;
+  detailed: boolean;
+  /** Première photo visible au chargement : chargée tout de suite (LCP mobile). */
+  priority?: boolean;
+  onOpen?: (recipeId: string) => void;
+}) {
+  const open = onOpen && !m.removed;
+  const name = (
+    <>
+      <Flag flag={m.flag} />
+      {m.name}
+    </>
+  );
   return (
     <div
       data-testid={`meal-${m.key}`}
-      className={`flex flex-col gap-2 border-t-[length:var(--bw)] border-line p-3 ${m.removed ? "tone-yellow border-dashed border-violet" : ""}`}
+      className={`relative flex flex-col gap-2 border-t-[length:var(--bw)] border-line p-3 ${m.removed ? "tone-yellow border-dashed border-violet" : open ? "hover:bg-chip" : ""}`}
     >
       {m.photo && (
         <RecipeImage
           photo={m.photo}
           sizes="(min-width: 900px) 280px, 80vw"
           decorative
+          priority={priority}
           className={`-mx-3 -mt-3 mb-1 aspect-[16/10] border-b-[length:var(--bw)] border-line ${m.removed ? "opacity-40 grayscale" : ""}`}
         />
       )}
-      <div className="flex items-start justify-between gap-2">
-        <span className="t-label">
-          {m.removed ? `${m.label.split(" · ")[0]} · ${t.removedLabel}` : m.label}
-        </span>
-        {detailed && canEdit && m.kind !== "weekend" && (
-          <div className="relative -mt-1 -mr-1 shrink-0">
-            <button
-              type="button"
-              aria-haspopup="menu"
-              aria-expanded={open}
-              aria-label={t.actionsFor(m.name)}
-              onClick={() => setOpen(!open)}
-              className="iconbtn"
-            >
-              <Icon name="more" />
-            </button>
-            {open && (
-              <ul role="menu" className="nb absolute top-12 right-0 z-30 flex w-52 flex-col gap-1 bg-surface p-2">
-                {!m.removed && (
-                  <li role="none">
-                    <button
-                      role="menuitem"
-                      type="button"
-                      className={item}
-                      onClick={() => {
-                        setOpen(false);
-                        onMove(m.key);
-                      }}
-                    >
-                      {t.menu.move}
-                    </button>
-                  </li>
-                )}
-                <li role="none">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    className={item}
-                    onClick={() => {
-                      setOpen(false);
-                      onGuests(m);
-                    }}
-                  >
-                    {t.menu.guests}
-                  </button>
-                </li>
-                <li role="none">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    disabled={pending}
-                    className={item}
-                    onClick={() => {
-                      setOpen(false);
-                      run(() => toggleMealAction(weekId, m.day, m.meal));
-                    }}
-                  >
-                    {m.removed ? t.menu.restore : t.menu.remove}
-                  </button>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
-      <p className={`t-3 ${m.removed ? "line-through" : ""}`}>
-        <Flag flag={m.flag} />
-        {m.name}
-      </p>
+      <span className="t-label">
+        {m.removed ? `${m.label.split(" · ")[0]} · ${t.removedLabel}` : m.label}
+      </span>
+      {open ? (
+        <button
+          type="button"
+          aria-label={t.openRecipe(m.name)}
+          onClick={() => onOpen(m.recipeId)}
+          // Le ::after couvre la carte : toute la carte reste cliquable, le focus encadre la carte.
+          className="t-3 cursor-pointer text-left after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:[outline:3px_solid_var(--focus)] focus-visible:after:[outline-offset:-3px]"
+        >
+          {name}
+        </button>
+      ) : (
+        <span className={`t-3 ${m.removed ? "line-through" : ""}`}>{name}</span>
+      )}
       {detailed && !m.removed && m.how && <p className="t-small muted">{m.how}</p>}
-      <div className="flex flex-wrap gap-1.5">
-        {/* Le libellé des convives peut être long (« 3 adultes et 1 enfant ») : il passe à la ligne dans la carte. */}
-        {detailed && canEdit ? (
-          <button
-            type="button"
-            onClick={() => onGuests(m)}
-            className={`chiptg mono max-w-full !whitespace-normal text-left !leading-tight ${m.guestsCustom ? "tone-blue" : "tone-chip"}`}
-          >
-            <Icon name="users" />
-            {m.guests}
-          </button>
-        ) : (
+      {/* Convives affichés seulement s'ils changent de l'habitude. */}
+      {m.guestsCustom && (
+        <span className="flex">
           <Pill className="mono max-w-full !whitespace-normal !leading-tight">{m.guests}</Pill>
-        )}
-        {m.favorite && <Pill tone="banane">{t.badges.favorite}</Pill>}
-        {m.kind === "simple" && <Pill>{t.badges.simple}</Pill>}
-        {m.kind === "bank" && <Pill tone="blue">{t.badges.freezer}</Pill>}
-        {m.difficulty >= 1 && m.difficulty <= 4 && (
-          <Pill className="mono">
-            {m.difficulty}/4 <Difficulty level={m.difficulty as 1 | 2 | 3 | 4} />
-          </Pill>
-        )}
-      </div>
+        </span>
+      )}
     </div>
   );
 }
@@ -150,44 +79,42 @@ function DayCard({
   day,
   today,
   selected,
-  filter,
+  lead,
   cake,
   extra,
   onSelect,
-  ...actions
+  onOpen,
 }: {
   day: MenuView["days"][number];
   today: boolean;
   selected: boolean;
-  filter: BoardFilter;
+  /** Carte affichée en premier au chargement : sa première photo est prioritaire. */
+  lead: boolean;
   cake: MenuView["cake"];
   extra?: React.ReactNode;
   onSelect: () => void;
-} & DayActions) {
+  onOpen: (recipeId: string) => void;
+}) {
   const weekend = day.day > 5;
-  const meals = day.meals.filter((m) => filter === "week" || filter === "weekend" || m.meal === filter);
+  const meals = day.meals;
   const label = `${fr.daysAbbr[day.day - 1]} ${Number(day.iso.slice(8))}${today ? ` · ${t.today}` : ""}`;
   return (
     <article
       className={`nb tone-surface flex w-full flex-col ${selected ? "outline-3 outline-offset-3 outline-violet" : ""}`}
     >
-      <header
-        className={`flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 px-3 py-2.5 ${today ? "tone-banane" : weekend ? "tone-menu" : "tone-dark"}`}
-      >
-        <h3 className="t-kicker">
+      <header className={today ? "tone-banane" : weekend ? "tone-menu" : "tone-dark"}>
+        <h2 className="t-kicker">
+          {/* Toute la bande d'en-tête est la cible (44 px de haut au moins). */}
           <button
             type="button"
             onClick={onSelect}
             aria-pressed={selected}
             aria-label={`${fr.days[day.day - 1]} ${Number(day.iso.slice(8))}${today ? `, ${t.today}` : ""}`}
-            className="cursor-pointer uppercase underline-offset-4 hover:underline"
+            className="flex min-h-11 w-full cursor-pointer items-center px-3 uppercase underline-offset-4 hover:underline"
           >
             {label}
           </button>
-        </h3>
-        <span className="t-kicker whitespace-nowrap">
-          {weekend && meals.length === 0 ? t.board.onSite : t.board.meals(meals.length)}
-        </span>
+        </h2>
       </header>
       {meals.length === 0 && !(selected && cake) && (
         <p className="t-small muted border-t-[length:var(--bw)] border-line p-3">
@@ -195,7 +122,13 @@ function DayCard({
         </p>
       )}
       {meals.map((m) => (
-        <MealBlock key={m.key} meal={m} detailed={selected} {...actions} />
+        <MealBlock
+          key={m.key}
+          meal={m}
+          detailed={selected}
+          priority={lead && m === meals.find((x) => x.photo)}
+          onOpen={onOpen}
+        />
       ))}
       {selected && cake && (
         <div className="flex flex-col gap-1 border-t-[length:var(--bw)] border-line p-3">
@@ -209,7 +142,10 @@ function DayCard({
       {selected && (day.thaw.length > 0 || extra) && (
         <div className="mt-auto flex flex-col gap-3 border-t-[length:var(--bw)] border-line p-3">
           {day.thaw.length > 0 && (
-            <p className="nb-sm tone-yellow t-small flex items-center gap-2 px-3 py-2" data-testid="thaw-reminder">
+            <p
+              className="nb-sm tone-yellow t-small flex items-center gap-2 px-3 py-2"
+              data-testid="thaw-reminder"
+            >
               <Icon name="snow" className="size-5 shrink-0" />
               <span>
                 <b>{today ? t.thawTonight : t.thawEve}</b> {t.thaw(day.thaw)}
@@ -224,27 +160,28 @@ function DayCard({
 }
 
 /**
- * Semaine en carrousel de cartes-jours : les sept jours défilent à l'horizontale (week-end compris), filtre
- * Semaine / Midis / Soirs / Week-end. Seule la carte du jour sélectionné (aujourd'hui par défaut) porte le
- * programme : consignes, actions •••, convives modifiables, goûter, décongélation et cantine.
+ * Semaine en carrousel de cartes-jours, en lecture (vue « Cette semaine ») : les sept jours défilent à l'horizontale.
+ * Seule la carte du jour sélectionné (aujourd'hui par défaut) porte le programme : consigne, goûter, décongélation
+ * et cantine. Toucher un repas ouvre sa recette.
  */
 export function WeekBoard({
   view,
-  filter,
   selected,
   onSelect,
   extraFor,
-  ...actions
+  onOpen,
 }: {
   view: MenuView;
-  filter: BoardFilter;
   selected: number;
   onSelect: (day: number) => void;
   /** Blocs ajoutés en bas d'une carte-jour (menu de la cantine). */
   extraFor?: (day: MenuView["days"][number]) => React.ReactNode;
-} & DayActions) {
+  onOpen: (recipeId: string) => void;
+}) {
   const track = useRef<HTMLDivElement>(null);
-  const days = filter === "weekend" ? view.days.filter((d) => d.day > 5) : view.days;
+  const days = view.days;
+  // Jour affiché au chargement (le carrousel s'y cale) : sa première photo est la plus grande image visible.
+  const [leadDay] = useState(selected);
   const [edges, setEdges] = useState({ start: true, end: false });
 
   const updateEdges = useCallback(() => {
@@ -258,11 +195,13 @@ export function WeekBoard({
     const el = track.current;
     const card = el?.querySelector<HTMLElement>(`[data-day="${selected}"]`);
     if (el && card) {
-      const hidden = card.offsetLeft < el.scrollLeft || card.offsetLeft + card.offsetWidth > el.scrollLeft + el.clientWidth;
+      const hidden =
+        card.offsetLeft < el.scrollLeft ||
+        card.offsetLeft + card.offsetWidth > el.scrollLeft + el.clientWidth;
       if (hidden) el.scrollTo({ left: card.offsetLeft - 4, behavior: "smooth" });
     }
     updateEdges();
-  }, [selected, filter, updateEdges]);
+  }, [selected, updateEdges]);
 
   // Une page à la fois : autant de jours qu'il en tient à l'écran (le magnétisme cale la bande sur une carte).
   const step = (dir: 1 | -1) => {
@@ -306,11 +245,11 @@ export function WeekBoard({
               day={d}
               today={d.day === view.todayIndex}
               selected={selected === d.day}
-              filter={filter}
+              lead={d.day === leadDay}
               cake={view.cake && view.cake.day === d.day ? view.cake : null}
               extra={extraFor?.(d)}
               onSelect={() => onSelect(d.day)}
-              {...actions}
+              onOpen={onOpen}
             />
           </div>
         ))}

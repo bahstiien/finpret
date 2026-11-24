@@ -139,12 +139,13 @@ test("un tampon vide mène à Découvrir filtré par pays, avec « Mettre au men
   await expect(page.getByRole("button", { name: "Mettre au menu" }).first()).toBeVisible();
 });
 
-test("masquer la série retire la tuile ; réafficher restitue l'historique", async ({ page }) => {
+// La série ne s'affiche plus sur l'onglet Menu (allègement de /app) : elle vit dans « Nos progrès ».
+test("masquer la série puis la réafficher restitue l'historique", async ({ page }) => {
   await signUp(page, "progres-hide");
   const household = await householdId(page);
   await seedStreak(household, 3);
   await page.goto("/app");
-  await expect(page.getByTestId("streak-tile")).toContainText("3 semaines");
+  await expect(page.getByTestId("streak-tile")).toHaveCount(0);
 
   await page.goto("/settings/profile");
   // La case est masquée (interrupteur dessiné) : on clique son libellé, comme un utilisateur.
@@ -152,8 +153,6 @@ test("masquer la série retire la tuile ; réafficher restitue l'historique", as
   await page.getByText("Afficher la série et le passeport").click();
   await expect(toggle).not.toBeChecked();
   await expect(page.getByText(/Enregistré/)).toBeVisible();
-  await page.goto("/app");
-  await expect(page.getByTestId("streak-tile")).toHaveCount(0);
   // La page reste accessible depuis le profil : le calcul a continué.
   await page.goto("/app/progress?from=profile");
   await expect(page.getByTestId("streak-current")).toContainText("3 semaines");
@@ -162,8 +161,8 @@ test("masquer la série retire la tuile ; réafficher restitue l'historique", as
   await page.getByText("Afficher la série et le passeport").click();
   await expect(page.getByLabel("Afficher la série et le passeport")).toBeChecked();
   await expect(page.getByText(/Enregistré/)).toBeVisible();
-  await page.goto("/app");
-  await expect(page.getByTestId("streak-tile")).toContainText("3 semaines");
+  await page.goto("/app/progress");
+  await expect(page.getByTestId("streak-current")).toContainText("3 semaines");
 });
 
 test("carte de palier : l'image se génère, légère, sans prénom ni nom de foyer", async ({ page }) => {

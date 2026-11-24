@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { type CanteenEntry, MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
+import { type CanteenEntry, type MenuMode, MenuScreen, type PickerOption } from "@/components/menu/MenuScreen";
 import { canteenDays, duplicateGroups } from "@/engine/canteen";
 import { isRemoved, slotMap } from "@/engine/week";
-import { loadProgressView } from "@/server/progress-view";
 import { NoWeek } from "@/components/menu/NoWeek";
 import { eligible } from "@/engine/season";
 import { monthOf } from "@/engine/compose";
@@ -25,8 +24,15 @@ import { currentAndNext, engineEnvFor, summarize } from "@/server/weeks";
 
 export const metadata: Metadata = { title: fr.nav.menu };
 
-/** Onglet Menu (§8.1). `?week=next` affiche la semaine suivante déjà préparée. */
-export default async function MenuPage({ searchParams }: { searchParams: Promise<{ week?: string; prep?: string }> }) {
+/**
+ * Onglet Menu (§8.1). `?week=next` affiche la semaine suivante déjà préparée ; `?vue=organiser` ouvre la grille et
+ * les plats, `?vue=semaine` le carrousel du jour (par défaut : le carrousel quand la semaine a commencé).
+ */
+export default async function MenuPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ week?: string; prep?: string; vue?: string }>;
+}) {
   const { user: authUser, household } = await requireHousehold("/app");
   const [ctx, profile, user, params] = await Promise.all([
     loadHouseholdContext(household.id),
@@ -154,8 +160,6 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
     }
   }
 
-  const progress = await loadProgressView(household.id, authUser.id, { passport: false });
-
   // Prise en main (SPEC_PRISE_EN_MAIN §4.1, §4.2) : checklist du foyer et bulle de l'onglet, décidées côté serveur.
   const [checklist, tip] = await Promise.all([
     syncChecklist(household.id, { isAdmin: household.role === "admin" }),
@@ -210,14 +214,21 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
           isAdmin: checklist.isAdmin,
           sessionStarted: checklist.state.steps.start_session.done,
           prepareNextStart: isCurrent && !next && canPrepareNext(today) ? nextStart : null,
-          // Une seule carte d'aide développée : la checklist se réduit quand la Tile est affichée.
-          forceCollapsed: !!prep && !prep.tileDismissed,
         }
       : null;
+  // Une seule carte d'action : la Tile de la veille, sinon la checklist, sinon le bandeau de session.
+  // La Tile reste montée même masquée : elle porte la Sheet ouverte par `?prep=1`.
+  const tileVisible = !!prep && !prep.tileDismissed;
+  const initialMode: MenuMode =
+    params.vue === "organiser"
+      ? "prep"
+      : params.vue === "semaine" || (view.todayIndex >= 1 && view.todayIndex <= 7)
+        ? "eat"
+        : "prep";
   return (
     <>
       <MenuScreen
-        streak={progress.visible ? progress.streak : null}
+        key={`${row.id}:${params.vue ?? ""}`}
         header={header}
         view={view}
         canEdit={canEdit}
@@ -228,10 +239,13 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
         shortcuts={shortcuts}
         childFactor={pm.childFactor}
         canteen={canteen}
+        initialMode={initialMode}
+        // Checklist réduite d'office (foyer de plus de 21 jours) : le bandeau de session reste visible.
+        hideBanner={tileVisible || (!!checklistData && !checklistData.autoCollapsed)}
         topSlot={
           (checklistData || prep) && (
             <>
-              {checklistData && <ChecklistCard key="checklist" data={checklistData} />}
+              {checklistData && !tileVisible && <ChecklistCard key="checklist" data={checklistData} />}
               {prep && <PrepTile key="prep" data={prep} />}
             </>
           )

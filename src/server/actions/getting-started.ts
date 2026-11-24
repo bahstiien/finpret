@@ -113,4 +113,6 @@ export async function dismissPrepTileAction(date: string): Promise<void> {
   if (!parsed.success) return;
   const { user } = await context();
   await addSeen(user.id, `prep_tile:${parsed.data}`);
+  // La Tile occupait la place de la checklist ou du bandeau de session : la page les réaffiche.
+  revalidatePath("/app", "layout");
 }

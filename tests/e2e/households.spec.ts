@@ -30,7 +30,9 @@ test("premier menu après l'onboarding (§5)", async ({ page }) => {
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.getByTestId("week-title")).toContainText("Semaine du");
   await expect(page.getByTestId("summary-meals")).toHaveText("10");
-  await expect(page.getByTestId("week-summary")).toContainText("repas en");
+  // Nouveau foyer : la checklist tient lieu de carte d'action (le bandeau de session revient après).
+  await expect(page.getByTestId("checklist")).toBeVisible();
+  await expect(page.getByTestId("week-summary")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /^Changer / }).first()).toBeVisible();
   await expect(page.getByTestId("dishes").getByRole("listitem")).toHaveCount(5); // 4 plats et la soupe
 });
@@ -69,7 +71,9 @@ test("connexion par lien magique, invitation et adhésion ; le paramétrage rest
   await expect(guest).toHaveURL(/\/app$/);
   await expect(guest.getByTestId("week-title")).toContainText("Semaine du");
   if (FEATURES.viewerRole) await expect(guest.getByRole("button", { name: /^Changer / })).toHaveCount(0); // lecture seule
-  await expect(guest.getByTestId("summary-meals")).toHaveText("10");
+  // Lecture seule : vue « Cette semaine », sans grille ni compteur ; sinon la semaine pas commencée s'organise.
+  if (FEATURES.viewerRole) await expect(guest.getByTestId("week-board")).toBeVisible();
+  else await expect(guest.getByTestId("summary-meals")).toHaveText("10");
 
   // 4. L'invitation a servi : elle n'est plus en attente et le lien est refusé.
   await admin.reload();

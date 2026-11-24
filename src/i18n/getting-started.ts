@@ -54,7 +54,7 @@ export const gettingStartedFr = {
     ok: "Compris",
     close: "Fermer le conseil",
     region: "Conseil",
-    menu: "Touche un jour pour voir ses repas. Si un plat ne te tente pas, le bouton ••• te laisse le changer.",
+    menu: "Touche un plat pour voir sa recette. Si un plat ne te tente pas, « Organiser » te laisse le changer.",
     shopping:
       "Ta liste est rangée par rayon. Coche en magasin : ceux qui partagent le foyer voient la liste se mettre à jour en direct.",
     stock: "Note ici ce que tu as déjà : la liste de courses n'achète que ce qui manque. Ajuste les quantités avec − et +.",

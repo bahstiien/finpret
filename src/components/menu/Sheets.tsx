@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { ChipToggle } from "@/components/ui/Controls";
+import { Difficulty } from "@/components/ui/Extras";
+import { RecipeImage } from "@/components/ui/RecipeImage";
 import { FormMessage } from "@/components/ui/Field";
 import { Sheet } from "@/components/ui/Sheet";
 import { fmtP } from "@/engine/format";
@@ -15,7 +17,8 @@ import {
   setGuestsAction,
   setWeekendAction,
 } from "@/server/actions/menu";
-import type { MenuView } from "@/server/menu-view";
+import type { FeedbackAction } from "@/engine/feedback";
+import type { MenuView, RecipeDetail } from "@/server/menu-view";
 import { Flag } from "./Flag";
 import type { PickerOption } from "./MenuScreen";
 import { useMenuAction } from "./useMenuAction";
@@ -34,6 +37,7 @@ export function GuestsSheet({
   initial,
   custom,
   onRemove,
+  onMove,
   shortcuts,
   childFactor,
   onClose,
@@ -45,6 +49,8 @@ export function GuestsSheet({
   custom: boolean;
   /** Depuis la grille « Repas à prévoir » : retire le repas du créneau. */
   onRemove?: () => void;
+  /** Depuis la grille, plat du batch : ouvre « Déplacer ». */
+  onMove?: () => void;
   shortcuts: { family: { a: number; c: number }; adults: { a: number; c: number } };
   childFactor: number;
   onClose: () => void;
@@ -108,6 +114,11 @@ export function GuestsSheet({
       >
         {t.guests.confirm(fmtP(parts))}
       </Button>
+      {onMove && (
+        <Button type="button" variant="outline" disabled={pending} onClick={onMove}>
+          {fr.menuScreen.moveMeal}
+        </Button>
+      )}
       {onRemove && (
         <Button type="button" variant="outline" disabled={pending} onClick={onRemove}>
           {t.guests.removeSlot}
@@ -340,6 +351,114 @@ export function RecipePickerSheet({
             {t.picker.clear}
           </Button>
         )}
+      </div>
+    </Sheet>
+  );
+}
+
+const ts = fr.menuScreen;
+
+/**
+ * Fiche d'un plat, ouverte en touchant sa carte : ingrédients aux quantités de la semaine, matériel, étapes.
+ * `feedback` : seulement pour un plat déjà mangé ; `actions` : Doubler / Changer quand la semaine s'organise.
+ */
+export function RecipeSheet({
+  recipe: r,
+  onFeedback,
+  pending,
+  actions,
+  onClose,
+}: {
+  recipe: RecipeDetail;
+  onFeedback?: (a: FeedbackAction) => void;
+  pending: boolean;
+  actions?: React.ReactNode;
+  onClose: () => void;
+}) {
+  const f = r.feedback;
+  // Classes écrites en entier : Tailwind ne voit pas une classe construite à l'exécution.
+  const chip = (on: boolean, tone: "green" | "peach") =>
+    `chiptg ${on ? (tone === "green" ? "[background:var(--green)]" : "[background:var(--peach)]") : ""}`;
+  return (
+    <Sheet open onClose={onClose} title={r.name}>
+      <div className="flex flex-col gap-4" data-testid="recipe-sheet">
+        {r.photo && <RecipeImage photo={r.photo} sizes="(min-width: 640px) 512px, 100vw" decorative className="nb-flat aspect-[16/10]" />}
+        <div className="flex flex-col gap-1">
+          {/* Le nom est déjà le titre de la feuille : ici le type de plat et l'origine. */}
+          <p className="t-kicker">
+            <Flag flag={r.flag} />
+            {r.title}
+          </p>
+          <p className="t-small flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="mono">{r.portions}</span>
+            {r.cost && <span className="mono muted">{r.cost}</span>}
+            {r.difficulty >= 1 && r.difficulty <= 4 && <Difficulty level={r.difficulty as 1 | 2 | 3 | 4} />}
+          </p>
+        </div>
+        {r.description && <p className="muted">{r.description}</p>}
+        {r.ingredients.length > 0 && (
+          <section className="flex flex-col gap-2">
+            <h3 className="t-3">{ts.ingredients}</h3>
+            <ul className="list-disc pl-4">
+              {r.ingredients.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {r.equipment.length > 0 && (
+          <section className="flex flex-col gap-2" data-testid="recipe-equipment">
+            <h3 className="t-3">{ts.equipment}</h3>
+            <ul className="list-disc pl-4">
+              {r.equipment.map((x) => (
+                <li key={x} className="first-letter:uppercase">
+                  {x}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        <section className="flex flex-col gap-2">
+          <h3 className="t-3">{ts.steps}</h3>
+          <ol className="flex list-decimal flex-col gap-2 pl-4">
+            {r.steps.map((x, j) => (
+              <li key={j}>{x}</li>
+            ))}
+          </ol>
+        </section>
+        {r.notes.map((n) => (
+          <p key={n} className="t-small muted">
+            {n}
+          </p>
+        ))}
+        {onFeedback && (
+          <section className="flex flex-col gap-2" role="group" aria-label={ts.feedbackHint}>
+            <h3 className="t-3">{ts.feedbackTitle}</h3>
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" aria-pressed={f.rating === 1} aria-label={ts.like(r.name)} disabled={pending} onClick={() => onFeedback("redo")} className={chip(f.rating === 1, "green")}>
+                <Icon name="thumbUp" className="size-5" />
+                {ts.likeShort}
+              </button>
+              <button type="button" aria-pressed={f.kids} aria-label={ts.kids(r.name)} disabled={pending} onClick={() => onFeedback("kids")} className={chip(f.kids, "green")}>
+                {ts.kidsShort}
+              </button>
+              <button type="button" aria-pressed={f.long} aria-label={ts.tooLong(r.name)} disabled={pending} onClick={() => onFeedback("long")} className={chip(f.long, "peach")}>
+                {ts.tooLongShort}
+              </button>
+              <button
+                type="button"
+                aria-pressed={f.rating === -1}
+                aria-label={ts.dislike(r.name)}
+                disabled={pending}
+                onClick={() => onFeedback("refuse")}
+                className={`iconbtn ${f.rating === -1 ? "[background:var(--peach)]" : ""}`}
+              >
+                <Icon name="thumbDown" className="size-5" />
+              </button>
+            </div>
+          </section>
+        )}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </Sheet>
   );

@@ -25,12 +25,10 @@ export type ChecklistCardData = {
   sessionStarted: boolean;
   /** Début de la semaine suivante si elle peut être préparée maintenant. */
   prepareNextStart: string | null;
-  /** Une autre carte d'aide est affichée (Tile de la veille) : la checklist se réduit à son en-tête. */
-  forceCollapsed: boolean;
 };
 
 const HREF: Partial<Record<StepKey, string>> = {
-  adjust_meal: "/app#plats",
+  adjust_meal: "/app?vue=organiser#plats",
   invite: "/settings/household",
   shop: "/app/shopping",
   start_session: "/app/session",
@@ -51,7 +49,7 @@ export function ChecklistCard({ data }: { data: ChecklistCardData }) {
       /* stockage indisponible */
     }
   }, []);
-  const collapsed = data.forceCollapsed || (stored ?? data.autoCollapsed);
+  const collapsed = stored ?? data.autoCollapsed;
   const toggle = () => {
     const next = !collapsed;
     setStored(next);

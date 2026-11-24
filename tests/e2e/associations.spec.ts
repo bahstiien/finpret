@@ -134,7 +134,7 @@ test("inscription par code : foyer rattaché, essai de 30 jours, enfant relié, 
         status: "published",
       })
       .execute();
-    await page.goto("/app");
+    await page.goto("/app?vue=semaine");
     await page.getByRole("button", { name: /^lundi \d+(, aujourd.hui)?$/ }).click();
     await expect(page.getByTestId("canteen-today")).toContainText("Cantine de Léa");
     await expect(page.getByTestId("canteen-today")).toContainText("Poulet rôti, Haricots verts");
