@@ -669,6 +669,7 @@ export const fr = {
     equipment: "Matériel",
     steps: "Étapes",
     openRecipe: (name: string) => `Voir la recette : ${name}`,
+    openRecipeLead: "Voir la recette : ",
     feedbackTitle: "Alors, c'était bon ?",
     moveMeal: "Déplacer ce repas",
     prepareNext: "Préparer la semaine suivante",

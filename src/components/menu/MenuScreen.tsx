@@ -72,7 +72,6 @@ function CanteenBlock({ entry, current }: { entry: CanteenEntry; current: boolea
   );
 }
 
-
 type Sheet =
   | {
       kind: "guests";
@@ -153,7 +152,9 @@ export function MenuScreen({
   const tonightName = today?.meals.find((m) => m.meal === "dinner" && !m.removed)?.name;
   // Retours : seulement pour un plat déjà servi (jusqu'à aujourd'hui inclus).
   const eaten = (recipeId: string) =>
-    view.days.some((d) => d.day <= view.todayIndex && d.meals.some((m) => m.recipeId === recipeId && !m.removed));
+    view.days.some(
+      (d) => d.day <= view.todayIndex && d.meals.some((m) => m.recipeId === recipeId && !m.removed),
+    );
   const recipeOf = (id: string) => view.recipes.find((r) => r.recipeId === id) ?? null;
   const open = (recipeId: string) => {
     if (recipeOf(recipeId)) setSheet({ kind: "recipe", recipeId });
@@ -167,10 +168,15 @@ export function MenuScreen({
     />
   );
   const openRecipe = sheet?.kind === "recipe" ? recipeOf(sheet.recipeId) : null;
-  const openDish = openRecipe && mode === "prep" ? view.dishes.find((d) => d.recipeId === openRecipe.recipeId) : undefined;
+  const openDish =
+    openRecipe && mode === "prep" ? view.dishes.find((d) => d.recipeId === openRecipe.recipeId) : undefined;
   const banner =
     weeks.canPrepareNext && canEdit ? (
-      <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4" data-testid="next-week">
+      <Card
+        tone="peach"
+        className="flex flex-wrap items-center justify-between gap-4"
+        data-testid="next-week"
+      >
         <div className="flex flex-col gap-1.5">
           <p className="t-kicker">{t.nextBanner.kicker}</p>
           <p className="t-2">{t.nextBanner.title}</p>
@@ -185,7 +191,11 @@ export function MenuScreen({
         </Button>
       </Card>
     ) : (
-      <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4" data-testid="week-summary">
+      <Card
+        tone="peach"
+        className="flex flex-wrap items-center justify-between gap-4"
+        data-testid="week-summary"
+      >
         <div className="flex flex-col gap-1.5">
           <p className="t-kicker">{t.sessionBanner.kicker}</p>
           <p className="t-2">{t.sessionBanner.title(dur(sessionMinutes))}</p>
@@ -289,7 +299,9 @@ export function MenuScreen({
           onSelect={setSelected}
           onOpen={open}
           extraFor={(d) =>
-            (canteen[d.iso] ?? []).map((c) => <CanteenBlock key={c.name} entry={c} current={d.day === selected} />)
+            (canteen[d.iso] ?? []).map((c) => (
+              <CanteenBlock key={c.name} entry={c} current={d.day === selected} />
+            ))
           }
         />
       ) : (
@@ -300,7 +312,14 @@ export function MenuScreen({
               canEdit={editable}
               pending={pending}
               onGuests={(c) =>
-                setSheet({ kind: "guests", day: c.day, meal: c.meal, counts: c.counts, custom: c.custom, fromGrid: true })
+                setSheet({
+                  kind: "guests",
+                  day: c.day,
+                  meal: c.meal,
+                  counts: c.counts,
+                  custom: c.custom,
+                  fromGrid: true,
+                })
               }
               onWeekend={(key, batch) => setSheet({ kind: "weekend", key, batch })}
               onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
@@ -313,7 +332,10 @@ export function MenuScreen({
           </div>
 
           <section id="plats" className="flex scroll-mt-4 flex-col gap-4">
-            <SectionHeader title={t.dishes} aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>} />
+            <SectionHeader
+              title={t.dishes}
+              aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>}
+            />
             <ul className="flex flex-col gap-3" data-testid="dishes">
               {view.dishes.map((d) => (
                 <DishRow
@@ -350,12 +372,18 @@ export function MenuScreen({
           custom={sheet.custom}
           onRemove={
             sheet.fromGrid
-              ? () => run(() => toggleGridSlot(view.weekId, sheet.day, sheet.meal), () => setSheet(null))
+              ? () =>
+                  run(
+                    () => toggleGridSlot(view.weekId, sheet.day, sheet.meal),
+                    () => setSheet(null),
+                  )
               : undefined
           }
           onMove={
             sheet.fromGrid &&
-            view.days[sheet.day - 1]?.meals.some((m) => m.meal === sheet.meal && !m.removed && m.kind !== "weekend")
+            view.days[sheet.day - 1]?.meals.some(
+              (m) => m.meal === sheet.meal && !m.removed && m.kind !== "weekend",
+            )
               ? () => setSheet({ kind: "move", from: `${sheet.day}-${sheet.meal}` })
               : undefined
           }
@@ -380,7 +408,10 @@ export function MenuScreen({
                   label: sheet.batch === "add" ? fr.sheets.picker.addBatch : fr.sheets.picker.restoreBatch,
                   onPick: () => {
                     const [d, m] = sheet.key.split("-") as [string, "lunch" | "dinner"];
-                    run(() => toggleGridSlot(view.weekId, Number(d), m), () => setSheet(null));
+                    run(
+                      () => toggleGridSlot(view.weekId, Number(d), m),
+                      () => setSheet(null),
+                    );
                   },
                 }
               : undefined
@@ -402,7 +433,10 @@ export function MenuScreen({
   );
 }
 
-/** Actions rares de l'en-tête : imprimer, régénérer la semaine, réglages du menu. */
+/**
+ * Actions rares de l'en-tête : imprimer, régénérer la semaine, réglages du menu. Simple liste dépliante (pas de
+ * rôle `menu`, qui imposerait la navigation aux flèches) : Tab parcourt les actions, Échap referme.
+ */
 function MoreMenu({
   printHref,
   onRegenerate,
@@ -414,10 +448,16 @@ function MoreMenu({
 }) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!open) return;
     const close = (e: Event) => {
-      if (e instanceof KeyboardEvent ? e.key === "Escape" : !box.current?.contains(e.target as Node)) setOpen(false);
+      if (e instanceof KeyboardEvent) {
+        if (e.key !== "Escape") return;
+        setOpen(false);
+        // Le focus était peut-être dans la liste, qui disparaît : il revient sur le bouton.
+        trigger.current?.focus();
+      } else if (!box.current?.contains(e.target as Node)) setOpen(false);
     };
     document.addEventListener("pointerdown", close);
     document.addEventListener("keydown", close);
@@ -428,29 +468,39 @@ function MoreMenu({
   }, [open]);
   const item = "t-ui flex min-h-11 w-full items-center gap-2 whitespace-nowrap px-3 text-left hover:bg-chip";
   return (
-    <div ref={box} className="relative">
+    <div
+      ref={box}
+      className="relative"
+      // Tab au-delà de la dernière action : la liste se referme.
+      onBlur={(e) => {
+        if (!box.current?.contains(e.relatedTarget as Node | null)) setOpen(false);
+      }}
+    >
       <button
+        ref={trigger}
         type="button"
         className="iconbtn"
-        aria-haspopup="menu"
         aria-expanded={open}
+        aria-controls="menu-more"
         aria-label={t.more}
         onClick={() => setOpen(!open)}
       >
         <Icon name="more" />
       </button>
       {open && (
-        <ul role="menu" className="nb absolute top-12 right-0 z-30 flex w-max flex-col gap-1 bg-surface p-2">
-          <li role="none">
-            <Link role="menuitem" href={printHref} className={item}>
+        <ul
+          id="menu-more"
+          className="nb absolute top-12 right-0 z-30 flex w-max flex-col gap-1 bg-surface p-2"
+        >
+          <li>
+            <Link href={printHref} className={item}>
               <Icon name="print" className="size-5" />
               {t.print}
             </Link>
           </li>
           {onRegenerate && (
-            <li role="none">
+            <li>
               <button
-                role="menuitem"
                 type="button"
                 className={item}
                 onClick={() => {
@@ -464,8 +514,8 @@ function MoreMenu({
             </li>
           )}
           {settings && (
-            <li role="none">
-              <Link role="menuitem" href="/settings/menu" className={item}>
+            <li>
+              <Link href="/settings/menu" className={item}>
                 <Icon name="sliders" className="size-5" />
                 {t.quickSettings}
               </Link>
@@ -497,6 +547,11 @@ function PlanGrid({
 }) {
   const cell = (d: number, m: "lunch" | "dinner") => view.grid.find((c) => c.day === d && c.meal === m)!;
   const weekendGaps = view.grid.some((c) => c.day > 5 && c.state === "empty");
+  // Placement : écrit en entier pour Tailwind. Position d'un élément : ligne `d` (0 = en-têtes) et colonne `col` sur mobile, transposées dès 560 px.
+  const pos =
+    "[grid-row:var(--mr)] [grid-column:var(--mc)] min-[560px]:[grid-row:var(--dr)] min-[560px]:[grid-column:var(--dc)]";
+  const at = (d: number, col: number) =>
+    ({ "--mr": d + 1, "--mc": col, "--dr": col, "--dc": d + 1 }) as React.CSSProperties;
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -514,107 +569,114 @@ function PlanGrid({
           </span>
         </span>
       </div>
-      <table className="w-full border-separate border-spacing-1">
-        <thead>
-          <tr>
-            <th />
-            {[1, 2, 3, 4, 5, 6, 7].map((d) => (
-              <th key={d} scope="col" className={`t-label ${d === view.todayIndex ? "tone-banane" : ""}`}>
-                {fr.daysShort[d - 1]}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {(["lunch", "dinner"] as const).map((m) => (
-            <tr key={m}>
-              <th scope="row" className="t-label pr-1 text-left">
-                {fr.meals[m]}
-              </th>
-              {[1, 2, 3, 4, 5, 6, 7].map((d) => {
-                const c = cell(d, m);
-                const slot = `${fr.days[d - 1]} ${fr.meals[m].toLowerCase()}`;
-                // Week-end cuisiné sur place ; préparé pendant la session, il se lit comme la semaine.
-                if (d > 5 && (c.state === "set" || c.state === "empty")) {
-                  return (
-                    <td key={d}>
-                      <button
-                        type="button"
-                        disabled={!canEdit}
-                        onClick={() => onWeekend(`${d}-${m}`)}
-                        aria-label={c.name ? t.grid.weekendSet(slot, c.name) : t.grid.weekendEmpty(slot)}
-                        className={`grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
-                          c.state === "set" ? "tone-banane" : "tone-surface border-dashed"
-                        }`}
-                      >
-                        {c.state === "set" ? (
-                          <Icon name="check" className="size-5" />
-                        ) : canEdit ? (
-                          <Icon name="plus" className="size-5" />
-                        ) : (
-                          "–"
-                        )}
-                      </button>
-                    </td>
-                  );
+      {/*
+        Grille des repas : 7 colonnes (jours) dès 560 px ; en dessous, une ligne par jour et deux colonnes (midi, soir),
+        pour garder des cases d'au moins 44 px. Chaque case porte son créneau dans son nom accessible.
+      */}
+      <div
+        role="group"
+        aria-label={t.grid.title}
+        className="grid grid-cols-[auto_1fr_1fr] gap-1 min-[560px]:grid-cols-[auto_repeat(7,1fr)]"
+      >
+        {(["lunch", "dinner"] as const).map((m, i) => (
+          <span
+            key={m}
+            aria-hidden="true"
+            style={at(0, i + 2)}
+            className={`${pos} t-label self-end text-center min-[560px]:self-center min-[560px]:pr-1 min-[560px]:text-left`}
+          >
+            {fr.meals[m]}
+          </span>
+        ))}
+        {[1, 2, 3, 4, 5, 6, 7].flatMap((d) => [
+          <span
+            key={d}
+            aria-hidden="true"
+            style={at(d, 1)}
+            className={`${pos} t-label grid place-items-center px-2 ${d === view.todayIndex ? "tone-banane" : ""}`}
+          >
+            {fr.daysAbbr[d - 1]}
+          </span>,
+          ...(["lunch", "dinner"] as const).map((m) => {
+            const c = cell(d, m);
+            const slot = `${fr.days[d - 1]} ${fr.meals[m].toLowerCase()}`;
+            // Week-end cuisiné sur place ; préparé pendant la session, il se lit comme la semaine.
+            if (d > 5 && (c.state === "set" || c.state === "empty")) {
+              return (
+                <button
+                  key={`${d}-${m}`}
+                  style={at(d, m === "lunch" ? 2 : 3)}
+                  type="button"
+                  disabled={!canEdit}
+                  onClick={() => onWeekend(`${d}-${m}`)}
+                  aria-label={c.name ? t.grid.weekendSet(slot, c.name) : t.grid.weekendEmpty(slot)}
+                  className={`${pos} grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
+                    c.state === "set" ? "tone-banane" : "tone-surface border-dashed"
+                  }`}
+                >
+                  {c.state === "set" ? (
+                    <Icon name="check" className="size-5" />
+                  ) : canEdit ? (
+                    <Icon name="plus" className="size-5" />
+                  ) : (
+                    "–"
+                  )}
+                </button>
+              );
+            }
+            const on = c.state === "on";
+            const replace = c.state === "removed";
+            if (c.state === "set") {
+              return (
+                <button
+                  key={`${d}-${m}`}
+                  style={at(d, m === "lunch" ? 2 : 3)}
+                  type="button"
+                  disabled={!canEdit}
+                  aria-haspopup="dialog"
+                  onClick={() => onWeekend(`${d}-${m}`)}
+                  aria-label={t.grid.weekendSet(slot, c.name ?? "")}
+                  className={`${pos} grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line tone-banane`}
+                >
+                  <Icon name="check" className="size-5" />
+                </button>
+              );
+            }
+            return (
+              <button
+                key={`${d}-${m}`}
+                style={at(d, m === "lunch" ? 2 : 3)}
+                type="button"
+                disabled={!canEdit || pending}
+                aria-pressed={on}
+                aria-haspopup="dialog"
+                onClick={() => (on ? onGuests(c) : onWeekend(`${d}-${m}`, replace ? "restore" : "add"))}
+                aria-label={
+                  on
+                    ? t.grid.on(slot, c.name ?? "", c.counts.a + c.counts.c)
+                    : replace
+                      ? t.grid.removedCell(slot)
+                      : t.grid.off(slot)
                 }
-                const on = c.state === "on";
-                const replace = c.state === "removed";
-                if (c.state === "set") {
-                  return (
-                    <td key={d}>
-                      <button
-                        type="button"
-                        disabled={!canEdit}
-                        aria-haspopup="dialog"
-                        onClick={() => onWeekend(`${d}-${m}`)}
-                        aria-label={t.grid.weekendSet(slot, c.name ?? "")}
-                        className="grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line tone-banane"
-                      >
-                        <Icon name="check" className="size-5" />
-                      </button>
-                    </td>
-                  );
-                }
-                return (
-                  <td key={d}>
-                    <button
-                      type="button"
-                      disabled={!canEdit || pending}
-                      aria-pressed={on}
-                      aria-haspopup="dialog"
-                      onClick={() => (on ? onGuests(c) : onWeekend(`${d}-${m}`, replace ? "restore" : "add"))}
-                      aria-label={
-                        on
-                          ? t.grid.on(slot, c.name ?? "", c.counts.a + c.counts.c)
-                          : replace
-                            ? t.grid.removedCell(slot)
-                            : t.grid.off(slot)
-                      }
-                      className={`mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
-                        // Le jour courant est signalé par l'en-tête de colonne : le jaune reste celui du « jour même ».
-                        on
-                          ? "tone-violet"
-                          : replace
-                            ? "tone-yellow border-dashed border-violet"
-                            : "tone-chip muted"
-                      }`}
-                    >
-                      {on ? (
-                        <span className={`text-base font-bold ${c.custom ? "underline decoration-2 underline-offset-4" : ""}`}>
-                          {c.counts.a + c.counts.c}
-                        </span>
-                      ) : (
-                        "–"
-                      )}
-                    </button>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                className={`${pos} mono grid h-11 w-full place-items-center rounded-r1 border-[length:var(--bw)] border-line ${
+                  // Le jour courant est signalé par l'en-tête de colonne : le jaune reste celui du « jour même ».
+                  on ? "tone-violet" : replace ? "tone-yellow border-dashed border-violet" : "tone-chip muted"
+                }`}
+              >
+                {on ? (
+                  <span
+                    className={`text-base font-bold ${c.custom ? "underline decoration-2 underline-offset-4" : ""}`}
+                  >
+                    {c.counts.a + c.counts.c}
+                  </span>
+                ) : (
+                  "–"
+                )}
+              </button>
+            );
+          }),
+        ])}
+      </div>
       {canEdit && weekendGaps && (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="t-small muted flex-1">{t.weekend.lead}</p>
@@ -654,10 +716,20 @@ function CakeLine({
 }
 
 /** Un plat de la semaine : photo et nom ouvrent sa recette ; Doubler et Changer restent à portée. */
-function DishRow({ dish, onOpen, actions }: { dish: DishCard; onOpen?: () => void; actions: React.ReactNode }) {
+function DishRow({
+  dish,
+  onOpen,
+  actions,
+}: {
+  dish: DishCard;
+  onOpen?: () => void;
+  actions: React.ReactNode;
+}) {
   const head = (
     <>
-      {dish.photo && <RecipeImage photo={dish.photo} sizes="96px" decorative className="nb-flat w-20 shrink-0" />}
+      {dish.photo && (
+        <RecipeImage photo={dish.photo} sizes="96px" decorative className="nb-flat w-20 shrink-0" />
+      )}
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <b className="t-3">
           <Flag flag={dish.flag} />
@@ -673,9 +745,9 @@ function DishRow({ dish, onOpen, actions }: { dish: DishCard; onOpen?: () => voi
         <button
           type="button"
           onClick={onOpen}
-          aria-label={t.openRecipe(dish.name)}
           className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 text-left"
         >
+          <span className="sr-only">{t.openRecipeLead}</span>
           {head}
           <Icon name="chevronRight" className="shrink-0" />
         </button>
@@ -702,7 +774,13 @@ function DishActions({
   return (
     <span className="ml-auto flex flex-wrap items-center gap-2">
       {dish.canDouble && (
-        <button type="button" aria-pressed={dish.doubled} disabled={pending} onClick={onDouble} className="chiptg">
+        <button
+          type="button"
+          aria-pressed={dish.doubled}
+          disabled={pending}
+          onClick={onDouble}
+          className="chiptg"
+        >
           {t.double}
         </button>
       )}

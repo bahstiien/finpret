@@ -14,7 +14,7 @@ test("la vue imprimable tient sur une page A4", async ({ page }) => {
 
   await page.goto("/app");
   await page.getByRole("button", { name: "Plus d'actions" }).click();
-  await page.getByRole("menuitem", { name: "Imprimer la semaine" }).click();
+  await page.getByRole("link", { name: "Imprimer la semaine" }).click();
   await expect(page).toHaveURL(/\/app\/print\?week=/);
   const sheet = page.getByTestId("print-sheet");
   await expect(sheet).toContainText("Menu de la semaine du");

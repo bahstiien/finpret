@@ -22,7 +22,7 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
   // Générer un nouveau menu (menu ••• de l'en-tête).
   page.once("dialog", (d) => d.accept());
   await page.getByRole("button", { name: "Plus d'actions" }).click();
-  await page.getByRole("menuitem", { name: "Générer un nouveau menu" }).click();
+  await page.getByRole("button", { name: "Générer un nouveau menu" }).click();
   await expect(toast).toContainText("Nouveau menu prêt");
 
   // Toucher un plat ouvre sa fiche : ingrédients, matériel, étapes.
