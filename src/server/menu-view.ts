@@ -2,6 +2,7 @@ import "server-only";
 import { portionCost } from "@/engine/cost";
 import type { Env } from "@/engine/env";
 import { fill, fmtP, fmtQ } from "@/engine/format";
+import { equipmentOf } from "@/engine/equipment";
 import { originOf } from "@/engine/origins";
 import { guestsOf, mealPd, type PortionModel } from "@/engine/portions";
 import type { Meal, WeekPlan } from "@/engine/types";
@@ -47,9 +48,6 @@ export type DishCard = {
   flag: Flag;
   photo: RecipePhoto | null;
   detail: string;
-  rating: 1 | -1 | null;
-  kids: boolean;
-  long: boolean;
   doubled: boolean;
   canDouble: boolean;
 };
@@ -65,10 +63,13 @@ export type RecipeDetail = {
   cost: string | null;
   description: string | null;
   ingredients: string[];
+  /** Plaques, four, poêle… : modes de cuisson puis ustensiles nommés dans les étapes. */
+  equipment: string[];
   steps: string[];
   notes: string[];
   /** 1 (très facile) à 4 (technique). */
   difficulty: number;
+  feedback: { rating: 1 | -1 | null; kids: boolean; long: boolean };
 };
 
 export type GridCell = {
@@ -260,7 +261,7 @@ export function buildMenuView(
   const mains = activeMains(env, w, pm);
   const so = activeSoup(env, w, pm);
   const rating = (id: string) => (env.ratings[id] ?? null) as 1 | -1 | null;
-  const flags = (id: string) => ({ kids: !!env.feedback[id]?.kids, long: !!env.feedback[id]?.long });
+  const feedback = (id: string) => ({ rating: rating(id), kids: !!env.feedback[id]?.kids, long: !!env.feedback[id]?.long });
   const dishes: DishCard[] = [
     ...mains.map((x) => ({
       kind: "main" as const,
@@ -270,8 +271,6 @@ export function buildMenuView(
       photo: recipePhoto(x.r.id, x.r.s),
       flag: flagOf(x.r.o),
       detail: t.portions(fmtP(x.cookP), x.doubled),
-      rating: rating(x.r.id),
-      ...flags(x.r.id),
       doubled: x.doubled,
       canDouble: x.r.freeze && ctx.settings.equipment.freezer,
     })),
@@ -285,8 +284,6 @@ export function buildMenuView(
             photo: recipePhoto(so.r.id, so.r.s),
             flag: flagOf(so.r.o),
             detail: t.soup,
-            rating: rating(so.r.id),
-            ...flags(so.r.id),
             doubled: false,
             canDouble: false,
           },
@@ -300,8 +297,6 @@ export function buildMenuView(
       photo: recipePhoto(s.r.id, s.r.s),
       flag: flagOf(s.r.o),
       detail: t.simpleOn(fr.days[s.day - 1]!),
-      rating: rating(s.r.id),
-      ...flags(s.r.id),
       doubled: false,
       canDouble: false,
     })),
@@ -316,8 +311,6 @@ export function buildMenuView(
         photo: recipePhoto(r.id, r.s),
         flag: flagOf(r.o),
         detail: t.bankOn(`${fr.days[b.day - 1]} ${fr.meals[b.meal].toLowerCase()}`),
-        rating: rating(b.id),
-        ...flags(b.id),
         doubled: false,
         canDouble: false,
       }];
@@ -344,9 +337,11 @@ export function buildMenuView(
       cost: costOf(r.ing),
       description: r.d,
       ingredients: ingLines(r.ing, x.cookP / 4),
+      equipment: equipmentOf(r.blocks.map((b) => b.mode), [...r.prep, ...r.blocks.flatMap((b) => b.a), r.jj]),
       steps: [...r.prep, ...r.blocks.flatMap((b) => b.a)].map((s) => fill(lib, s, r.ing, x.cookP / 4)),
       notes: [t.keeps(r.fridge, r.freeze), ...(r.jj ? [t.dayJ(fill(lib, r.jj, r.ing, 2 / 4))] : [])],
       difficulty: r.diff,
+      feedback: feedback(r.id),
     });
   }
   if (so && so.P) {
@@ -361,9 +356,11 @@ export function buildMenuView(
       cost: costOf(r.ing),
       description: r.d,
       ingredients: ingLines(r.ing, so.P / 4),
+      equipment: equipmentOf(r.blocks.map((b) => b.mode), [...r.prep, ...r.blocks.flatMap((b) => b.a), r.jj]),
       steps: [...r.prep, ...r.blocks.flatMap((b) => b.a)].map((s) => fill(lib, s, r.ing, so.P / 4)),
       notes: [t.keeps(r.fridge, r.freeze)],
       difficulty: r.diff,
+      feedback: feedback(r.id),
     });
   }
   for (const s of activeSimples(env, w).filter((x) => x.on)) {
@@ -378,9 +375,56 @@ export function buildMenuView(
       cost: costOf(s.r.ing),
       description: t.simpleLead,
       ingredients: ingLines(s.r.ing, sc),
+      equipment: equipmentOf([], s.r.steps),
       steps: s.r.steps.map((x) => fill(lib, x, s.r.ing, sc)),
       notes: [],
       difficulty: s.r.diff,
+      feedback: feedback(s.r.id),
+    });
+  }
+  // Congélateur : déjà cuisiné, seule la remise en température compte.
+  for (const b of w.bank ?? []) {
+    const r = env.mainById.get(b.id) ?? env.soupById.get(b.id);
+    if (!r || recipes.some((x) => x.recipeId === r.id)) continue;
+    const reheat = r.jj ? fill(lib, r.jj, r.ing, mealPd(w, pm, b.day, b.meal) / 4) : t.reheat;
+    recipes.push({
+      recipeId: r.id,
+      title: t.recipeKinds.bank,
+      name: r.n,
+      photo: recipePhoto(r.id, r.n),
+      flag: flagOf(r.o),
+      portions: `${fr.days[b.day - 1]} ${fr.meals[b.meal].toLowerCase()}`,
+      cost: null,
+      description: r.d,
+      ingredients: [],
+      equipment: equipmentOf([], [reheat]),
+      steps: [t.fromFreezer + reheat],
+      notes: [],
+      difficulty: r.diff,
+      feedback: feedback(r.id),
+    });
+  }
+  // Week-end : cuisiné le jour même, recette complète aux quantités du créneau.
+  for (const x of fresh) {
+    if (recipes.some((y) => y.recipeId === x.id)) continue;
+    const sc = mealPd(w, pm, x.d, x.m) / 4;
+    const r = x.r;
+    const raw = "steps" in r ? r.steps : [...r.prep, ...r.blocks.flatMap((b) => b.a), ...(r.jj ? [r.jj] : [])];
+    recipes.push({
+      recipeId: x.id,
+      title: t.recipeKinds.weekend,
+      name: r.n,
+      photo: recipePhoto(r.id, r.n),
+      flag: flagOf(r.o),
+      portions: `${fr.days[x.d - 1]} ${fr.meals[x.m].toLowerCase()}`,
+      cost: costOf(r.ing),
+      description: "d" in r ? r.d : null,
+      ingredients: ingLines(r.ing, sc),
+      equipment: equipmentOf("blocks" in r ? r.blocks.map((b) => b.mode) : [], raw),
+      steps: raw.map((s) => fill(lib, s, r.ing, sc)),
+      notes: [],
+      difficulty: r.diff,
+      feedback: feedback(x.id),
     });
   }
 

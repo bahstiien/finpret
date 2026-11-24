@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { useEffect, useRef, useState } from "react";
+import { Button, LinkButton } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
+import { SectionHeader } from "@/components/ui/Layout";
 import { RecipeImage } from "@/components/ui/RecipeImage";
 import { dur } from "@/engine/format";
 import { fr } from "@/i18n/fr";
@@ -16,20 +18,13 @@ import {
   toggleDoubleAction,
   toggleGridSlot,
 } from "@/server/actions/menu";
-import type { FeedbackAction } from "@/engine/feedback";
 import type { DishCard, MenuView } from "@/server/menu-view";
-import type { StreakState } from "@/engine/streak";
-import { SeriesBanner } from "./SeriesBanner";
-import { WeekBoard, type BoardFilter } from "./WeekBoard";
+import { WeekBoard } from "./WeekBoard";
 import { Flag } from "./Flag";
-import { GuestsSheet, MoveSheet, RecipePickerSheet } from "./Sheets";
+import { GuestsSheet, MoveSheet, RecipePickerSheet, RecipeSheet } from "./Sheets";
 import { useMenuAction } from "./useMenuAction";
-import { Card } from "@/components/ui/Card";
-import { LinkButton } from "@/components/ui/Button";
-import { SectionHeader } from "@/components/ui/Layout";
 
 const t = fr.menuScreen;
-const tv = fr.menuView;
 
 export type PickerOption = {
   id: string;
@@ -77,6 +72,7 @@ function CanteenBlock({ entry, current }: { entry: CanteenEntry; current: boolea
   );
 }
 
+
 type Sheet =
   | {
       kind: "guests";
@@ -84,13 +80,17 @@ type Sheet =
       meal: "lunch" | "dinner";
       counts: { a: number; c: number };
       custom: boolean;
-      /** Ouverte depuis la grille : propose aussi « Ne rien prévoir ». */
+      /** Ouverte depuis la grille : propose aussi « Déplacer » et « Ne rien prévoir ». */
       fromGrid?: boolean;
     }
   | { kind: "move"; from: string }
   | { kind: "weekend"; key: string; batch?: "add" | "restore" }
   | { kind: "cake" }
+  | { kind: "recipe"; recipeId: string }
   | null;
+
+/** « Cette semaine » : lecture du jour (carrousel) ; « Organiser » : grille des repas et plats à changer. */
+export type MenuMode = "eat" | "prep";
 
 export function MenuScreen({
   header,
@@ -104,8 +104,9 @@ export function MenuScreen({
   childFactor,
   weeks,
   canteen = {},
-  streak,
+  initialMode,
   topSlot,
+  hideBanner = false,
   dayTip,
 }: {
   header: { date: string; greeting: string; name: string };
@@ -127,19 +128,20 @@ export function MenuScreen({
   };
   /** Cantine des enfants par date (§13), avec les bases en commun avec le dîner. */
   canteen?: Record<string, CanteenEntry[]>;
-  /** Série fin prête (Progrès), si le foyer la montre. */
-  streak?: Pick<StreakState, "current" | "currentWeek"> | null;
-  /** Prise en main : checklist sous l'en-tête, et bulle ancrée sur le bandeau des jours. */
+  initialMode: MenuMode;
+  /** Carte d'aide de la prise en main ; `hideBanner` : elle prend la place du bandeau (une seule carte d'action). */
   topSlot?: React.ReactNode;
+  hideBanner?: boolean;
   dayTip?: React.ReactNode;
 }) {
   const inWeek = view.todayIndex >= 1 && view.todayIndex <= 7;
   const [selected, setSelected] = useState(inWeek ? view.todayIndex : 1);
-  const [filter, setFilter] = useState<BoardFilter>("week");
   const [sheet, setSheet] = useState<Sheet>(null);
   const { run, pending } = useMenuAction();
   // Semaine figée (session lancée) : plus de bouton de modification, seulement la lecture et les retours.
   const editable = canEdit && !frozen;
+  const [chosen, setMode] = useState<MenuMode>(initialMode);
+  const mode: MenuMode = editable ? chosen : "eat";
   const today = inWeek ? view.days[view.todayIndex - 1] : null;
   // Alerte doublon cantine / dîner (§13) : un bandeau par jour concerné, « Changer » sur le plat du soir.
   const alerts = view.days.flatMap((d) => {
@@ -149,6 +151,50 @@ export function MenuScreen({
     return [{ day: d.day, groups, dinner: dinner && dinner.kind !== "weekend" ? dinner : null }];
   });
   const tonightName = today?.meals.find((m) => m.meal === "dinner" && !m.removed)?.name;
+  // Retours : seulement pour un plat déjà servi (jusqu'à aujourd'hui inclus).
+  const eaten = (recipeId: string) =>
+    view.days.some((d) => d.day <= view.todayIndex && d.meals.some((m) => m.recipeId === recipeId && !m.removed));
+  const recipeOf = (id: string) => view.recipes.find((r) => r.recipeId === id) ?? null;
+  const open = (recipeId: string) => {
+    if (recipeOf(recipeId)) setSheet({ kind: "recipe", recipeId });
+  };
+  const dishActions = (d: DishCard, after?: () => void) => (
+    <DishActions
+      dish={d}
+      pending={pending}
+      onDouble={() => run(() => toggleDoubleAction(view.weekId, d.index))}
+      onSwap={() => run(() => swapDish(view.weekId, d.kind, d.index), after)}
+    />
+  );
+  const openRecipe = sheet?.kind === "recipe" ? recipeOf(sheet.recipeId) : null;
+  const openDish = openRecipe && mode === "prep" ? view.dishes.find((d) => d.recipeId === openRecipe.recipeId) : undefined;
+  const banner =
+    weeks.canPrepareNext && canEdit ? (
+      <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4" data-testid="next-week">
+        <div className="flex flex-col gap-1.5">
+          <p className="t-kicker">{t.nextBanner.kicker}</p>
+          <p className="t-2">{t.nextBanner.title}</p>
+        </div>
+        <Button
+          type="button"
+          size="lg"
+          disabled={pending}
+          onClick={() => run(() => prepareWeekAction(weeks.nextStart))}
+        >
+          {t.prepareNext}
+        </Button>
+      </Card>
+    ) : (
+      <Card tone="peach" className="flex flex-wrap items-center justify-between gap-4" data-testid="week-summary">
+        <div className="flex flex-col gap-1.5">
+          <p className="t-kicker">{t.sessionBanner.kicker}</p>
+          <p className="t-2">{t.sessionBanner.title(dur(sessionMinutes))}</p>
+        </div>
+        <LinkButton href="/app/session" size="lg">
+          {t.sessionBanner.go}
+        </LinkButton>
+      </Card>
+    );
 
   return (
     <>
@@ -180,13 +226,22 @@ export function MenuScreen({
               {t.currentWeek}
             </LinkButton>
           )}
-          <Link href={`/app/print?week=${view.start}`} aria-label={t.print} className="iconbtn">
-            <Icon name="print" />
-          </Link>
+          <MoreMenu
+            printHref={`/app/print?week=${view.start}`}
+            onRegenerate={
+              editable
+                ? () => {
+                    if (window.confirm(t.regenerateConfirm)) run(() => prepareWeekAction(view.start));
+                  }
+                : null
+            }
+            settings={canEdit}
+          />
         </div>
       </div>
 
       {topSlot}
+      {!hideBanner && banner}
 
       {alerts.map((a) => (
         <div
@@ -215,122 +270,77 @@ export function MenuScreen({
         </div>
       ))}
 
-      <Card
-        tone="peach"
-        className="flex flex-wrap items-center justify-between gap-4"
-        data-testid="week-summary"
-      >
-        <div className="flex flex-col gap-1.5">
-          <p className="t-kicker">{t.sessionBanner.kicker}</p>
-          <p className="t-2">{t.sessionBanner.title(view.plannedMeals, dur(sessionMinutes))}</p>
-        </div>
-        <LinkButton href="/app/session" size="lg">
-          {t.sessionBanner.go}
-        </LinkButton>
-      </Card>
-
-      {streak && <SeriesBanner streak={streak} />}
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="seg" role="group" aria-label={t.filter.label}>
-          {(["week", "lunch", "dinner", "weekend"] as const).map((f) => (
-            <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)}>
-              {t.filter[f]}
+      {editable && (
+        <div className="seg self-start" role="group" aria-label={t.mode.label} data-testid="menu-mode">
+          {(["eat", "prep"] as const).map((m) => (
+            <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)}>
+              {t.mode[m]}
             </button>
           ))}
         </div>
-        <p className="t-kicker muted">
-          <span data-testid="summary-meals">{view.plannedMeals}</span> {t.board.mealsUnit}
-        </p>
-      </div>
+      )}
 
       {dayTip}
 
-      <WeekBoard
-        view={view}
-        filter={filter}
-        selected={selected}
-        onSelect={setSelected}
-        canEdit={editable}
-        weekId={view.weekId}
-        onMove={(from) => setSheet({ kind: "move", from })}
-        onGuests={(m) =>
-          setSheet({ kind: "guests", day: m.day, meal: m.meal, counts: m.counts, custom: m.guestsCustom })
-        }
-        extraFor={(d) =>
-          (canteen[d.iso] ?? []).map((c) => <CanteenBlock key={c.name} entry={c} current={d.day === selected} />)
-        }
-      />
-
-      <div className="max-w-3xl">
-        <PlanGrid
+      {mode === "eat" ? (
+        <WeekBoard
           view={view}
-          canEdit={editable}
-          pending={pending}
-          onGuests={(c) =>
-            setSheet({ kind: "guests", day: c.day, meal: c.meal, counts: c.counts, custom: c.custom, fromGrid: true })
-          }
-          onWeekend={(key, batch) => setSheet({ kind: "weekend", key, batch })}
-          onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
-          cakeLine={
-            view.cake ? (
-              <CakeLine cake={view.cake} canEdit={editable} onChange={() => setSheet({ kind: "cake" })} />
-            ) : null
+          selected={selected}
+          onSelect={setSelected}
+          onOpen={open}
+          extraFor={(d) =>
+            (canteen[d.iso] ?? []).map((c) => <CanteenBlock key={c.name} entry={c} current={d.day === selected} />)
           }
         />
-      </div>
-
-      <section id="plats" className="flex scroll-mt-4 flex-col gap-4">
-        <SectionHeader
-          title={t.dishes}
-          aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>}
-        />
-        <ul className="flex flex-col gap-3" data-testid="dishes">
-          {view.dishes.map((d) => (
-            <DishRow
-              key={`${d.kind}-${d.index}`}
-              dish={d}
-              recipe={view.recipes.find((r) => r.recipeId === d.recipeId) ?? null}
-              canEdit={canEdit}
-              editable={editable}
+      ) : (
+        <>
+          <div className="max-w-3xl">
+            <PlanGrid
+              view={view}
+              canEdit={editable}
               pending={pending}
-              onFeedback={(a) => run(() => feedbackAction(view.weekId, d.recipeId, a))}
-              onDouble={() => run(() => toggleDoubleAction(view.weekId, d.index))}
-              onSwap={() => run(() => swapDish(view.weekId, d.kind, d.index))}
+              onGuests={(c) =>
+                setSheet({ kind: "guests", day: c.day, meal: c.meal, counts: c.counts, custom: c.custom, fromGrid: true })
+              }
+              onWeekend={(key, batch) => setSheet({ kind: "weekend", key, batch })}
+              onSuggest={() => run(() => suggestWeekendAction(view.weekId))}
+              cakeLine={
+                view.cake ? (
+                  <CakeLine cake={view.cake} canEdit={editable} onChange={() => setSheet({ kind: "cake" })} />
+                ) : null
+              }
             />
-          ))}
-        </ul>
-      </section>
+          </div>
 
-      {canEdit && (
-        <section className="flex flex-wrap gap-3">
-          {weeks.canPrepareNext && (
-            <Button
-              type="button"
-              disabled={pending}
-              onClick={() => run(() => prepareWeekAction(weeks.nextStart))}
-            >
-              {t.prepareNext}
-            </Button>
-          )}
-          {editable && (
-            <Button
-              type="button"
-              variant="outline"
-              disabled={pending}
-              onClick={() => {
-                if (window.confirm(t.regenerateConfirm)) run(() => prepareWeekAction(view.start));
-              }}
-            >
-              {fr.menu.regenerate}
-            </Button>
-          )}
-          <LinkButton href="/settings/menu" variant="ghost">
-            {t.quickSettings}
-          </LinkButton>
-        </section>
+          <section id="plats" className="flex scroll-mt-4 flex-col gap-4">
+            <SectionHeader title={t.dishes} aside={<span className="mono">{t.dishCount(view.dishes.length)}</span>} />
+            <ul className="flex flex-col gap-3" data-testid="dishes">
+              {view.dishes.map((d) => (
+                <DishRow
+                  key={`${d.kind}-${d.index}`}
+                  dish={d}
+                  onOpen={recipeOf(d.recipeId) ? () => open(d.recipeId) : undefined}
+                  actions={dishActions(d)}
+                />
+              ))}
+            </ul>
+          </section>
+        </>
       )}
 
+      {openRecipe && (
+        <RecipeSheet
+          recipe={openRecipe}
+          pending={pending}
+          onFeedback={
+            canEdit && eaten(openRecipe.recipeId)
+              ? (a) => run(() => feedbackAction(view.weekId, openRecipe.recipeId, a))
+              : undefined
+          }
+          actions={openDish && editable ? dishActions(openDish, () => setSheet(null)) : undefined}
+          onClose={() => setSheet(null)}
+        />
+      )}
       {sheet?.kind === "guests" && (
         <GuestsSheet
           weekId={view.weekId}
@@ -341,6 +351,12 @@ export function MenuScreen({
           onRemove={
             sheet.fromGrid
               ? () => run(() => toggleGridSlot(view.weekId, sheet.day, sheet.meal), () => setSheet(null))
+              : undefined
+          }
+          onMove={
+            sheet.fromGrid &&
+            view.days[sheet.day - 1]?.meals.some((m) => m.meal === sheet.meal && !m.removed && m.kind !== "weekend")
+              ? () => setSheet({ kind: "move", from: `${sheet.day}-${sheet.meal}` })
               : undefined
           }
           shortcuts={shortcuts}
@@ -386,6 +402,81 @@ export function MenuScreen({
   );
 }
 
+/** Actions rares de l'en-tête : imprimer, régénérer la semaine, réglages du menu. */
+function MoreMenu({
+  printHref,
+  onRegenerate,
+  settings,
+}: {
+  printHref: string;
+  onRegenerate: (() => void) | null;
+  settings: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: Event) => {
+      if (e instanceof KeyboardEvent ? e.key === "Escape" : !box.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("pointerdown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [open]);
+  const item = "t-ui flex min-h-11 w-full items-center gap-2 whitespace-nowrap px-3 text-left hover:bg-chip";
+  return (
+    <div ref={box} className="relative">
+      <button
+        type="button"
+        className="iconbtn"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={t.more}
+        onClick={() => setOpen(!open)}
+      >
+        <Icon name="more" />
+      </button>
+      {open && (
+        <ul role="menu" className="nb absolute top-12 right-0 z-30 flex w-max flex-col gap-1 bg-surface p-2">
+          <li role="none">
+            <Link role="menuitem" href={printHref} className={item}>
+              <Icon name="print" className="size-5" />
+              {t.print}
+            </Link>
+          </li>
+          {onRegenerate && (
+            <li role="none">
+              <button
+                role="menuitem"
+                type="button"
+                className={item}
+                onClick={() => {
+                  setOpen(false);
+                  onRegenerate();
+                }}
+              >
+                <Icon name="sparkle" className="size-5" />
+                {fr.menu.regenerate}
+              </button>
+            </li>
+          )}
+          {settings && (
+            <li role="none">
+              <Link role="menuitem" href="/settings/menu" className={item}>
+                <Icon name="sliders" className="size-5" />
+                {t.quickSettings}
+              </Link>
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function PlanGrid({
   view,
   canEdit,
@@ -409,7 +500,9 @@ function PlanGrid({
   return (
     <Card padding="cozy" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="t-2">{t.grid.title}</h2>
+        <h2 className="t-2">
+          {t.grid.title} · <span data-testid="summary-meals">{view.plannedMeals}</span> {t.board.mealsUnit}
+        </h2>
         <span className="t-small flex gap-3">
           <span className="flex items-center gap-1.5">
             <span className="size-3 border-[length:var(--bw)] border-line bg-violet" aria-hidden="true" />{" "}
@@ -560,165 +653,69 @@ function CakeLine({
   );
 }
 
-/** Un plat de la semaine : la ligne s'ouvre sur sa recette, les retours et « Changer » restent visibles. */
-function DishRow({
-  dish,
-  recipe,
-  canEdit,
-  editable,
-  pending,
-  onFeedback,
-  onDouble,
-  onSwap,
-}: {
-  dish: DishCard;
-  recipe: MenuView["recipes"][number] | null;
-  canEdit: boolean;
-  /** Changer et Doubler : absents d'une semaine figée (les retours restent). */
-  editable: boolean;
-  pending: boolean;
-  onFeedback: (a: FeedbackAction) => void;
-  onDouble: () => void;
-  onSwap: () => void;
-}) {
+/** Un plat de la semaine : photo et nom ouvrent sa recette ; Doubler et Changer restent à portée. */
+function DishRow({ dish, onOpen, actions }: { dish: DishCard; onOpen?: () => void; actions: React.ReactNode }) {
   const head = (
     <>
-      {dish.photo && (
-        <RecipeImage photo={dish.photo} sizes="96px" decorative className="nb-flat w-24 shrink-0" />
-      )}
+      {dish.photo && <RecipeImage photo={dish.photo} sizes="96px" decorative className="nb-flat w-20 shrink-0" />}
       <span className="flex min-w-0 flex-1 flex-col gap-1">
-        {recipe && <span className="t-kicker">{recipe.title}</span>}
         <b className="t-3">
           <Flag flag={dish.flag} />
           {dish.name}
         </b>
-        <span className="t-small flex flex-wrap items-center gap-x-3 gap-y-1 font-normal">
-          <span className="mono">{dish.detail}</span>
-          {recipe?.cost && (
-            <span className="mono muted" data-testid="recipe-cost">
-              {recipe.cost}
-            </span>
-          )}
-          {recipe && (
-            <span
-              className="diff"
-              role="img"
-              aria-label={`${tv.difficulty.label(recipe.difficulty)} : ${tv.difficulty.levels[recipe.difficulty - 1]}`}
-            >
-              {[1, 2, 3, 4].map((n) => (
-                <span key={n} aria-hidden="true" className={n <= recipe.difficulty ? "on" : ""} />
-              ))}
-            </span>
-          )}
-        </span>
+        <span className="t-small mono">{dish.detail}</span>
       </span>
     </>
   );
   return (
-    <li className="faq recipe-zoom">
-      {recipe ? (
-        <details>
-          <summary>
-            {head}
-            <Icon name="chevronDown" />
-          </summary>
-          <div className="faq-body flex flex-col gap-3">
-            <p className="t-3">{recipe.name}</p>
-            {recipe.description && <p className="muted">{recipe.description}</p>}
-            <h3 className="t-3">{t.ingredients}</h3>
-            <ul className="list-disc pl-4">
-              {recipe.ingredients.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
-            <h3 className="t-3">{t.steps}</h3>
-            <ol className="list-decimal pl-4">
-              {recipe.steps.map((x, j) => (
-                <li key={j}>{x}</li>
-              ))}
-            </ol>
-            {recipe.notes.map((n) => (
-              <p key={n} className="t-small muted">
-                {n}
-              </p>
-            ))}
-          </div>
-        </details>
+    <li className="nb tone-surface flex flex-wrap items-center gap-3 p-3">
+      {onOpen ? (
+        <button
+          type="button"
+          onClick={onOpen}
+          aria-label={t.openRecipe(dish.name)}
+          className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 text-left"
+        >
+          {head}
+          <Icon name="chevronRight" className="shrink-0" />
+        </button>
       ) : (
-        <div className="flex items-center gap-4 px-4 py-3">{head}</div>
+        <span className="flex min-w-0 flex-1 items-center gap-4">{head}</span>
       )}
-      {canEdit && (
-        <div className="flex flex-wrap items-center gap-2 border-t-[length:var(--bw)] border-line px-4 py-3">
-          <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t.feedbackHint}>
-            <button
-              type="button"
-              aria-pressed={dish.rating === 1}
-              aria-label={t.like(dish.name)}
-              disabled={pending}
-              onClick={() => onFeedback("redo")}
-              className={`chiptg ${dish.rating === 1 ? "[background:var(--green)]" : ""}`}
-            >
-              <Icon name="thumbUp" className="size-5" />
-              {t.likeShort}
-            </button>
-            <button
-              type="button"
-              aria-pressed={dish.kids}
-              aria-label={t.kids(dish.name)}
-              disabled={pending}
-              onClick={() => onFeedback("kids")}
-              className={`chiptg ${dish.kids ? "[background:var(--green)]" : ""}`}
-            >
-              {t.kidsShort}
-            </button>
-            <button
-              type="button"
-              aria-pressed={dish.long}
-              aria-label={t.tooLong(dish.name)}
-              disabled={pending}
-              onClick={() => onFeedback("long")}
-              className={`chiptg ${dish.long ? "[background:var(--peach)]" : ""}`}
-            >
-              {t.tooLongShort}
-            </button>
-            <button
-              type="button"
-              aria-pressed={dish.rating === -1}
-              aria-label={t.dislike(dish.name)}
-              disabled={pending}
-              onClick={() => onFeedback("refuse")}
-              className={`iconbtn ${dish.rating === -1 ? "[background:var(--peach)]" : ""}`}
-            >
-              <Icon name="thumbDown" className="size-5" />
-            </button>
-          </div>
-          {editable && (
-            <div className="ml-auto flex flex-wrap items-center gap-2">
-              {dish.canDouble && (
-                <button
-                  type="button"
-                  aria-pressed={dish.doubled}
-                  disabled={pending}
-                  onClick={onDouble}
-                  className="chiptg"
-                >
-                  {t.double}
-                </button>
-              )}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={pending}
-                onClick={onSwap}
-                aria-label={`${t.change} ${dish.name}`}
-              >
-                {t.change}
-              </Button>
-            </div>
-          )}
-        </div>
-      )}
+      {actions}
     </li>
+  );
+}
+
+/** Doubler (pour le congélateur) et Changer : absents d'une semaine figée, l'appelant ne les rend pas. */
+function DishActions({
+  dish,
+  pending,
+  onDouble,
+  onSwap,
+}: {
+  dish: DishCard;
+  pending: boolean;
+  onDouble: () => void;
+  onSwap: () => void;
+}) {
+  return (
+    <span className="ml-auto flex flex-wrap items-center gap-2">
+      {dish.canDouble && (
+        <button type="button" aria-pressed={dish.doubled} disabled={pending} onClick={onDouble} className="chiptg">
+          {t.double}
+        </button>
+      )}
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={pending}
+        onClick={onSwap}
+        aria-label={`${t.change} ${dish.name}`}
+      >
+        {t.change}
+      </Button>
+    </span>
   );
 }

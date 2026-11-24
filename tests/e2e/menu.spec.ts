@@ -16,13 +16,26 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
   await page.getByRole("link", { name: "Ouvrir ma semaine" }).click();
   await expect(page.getByTestId("summary-meals")).toHaveText("10");
 
-  // Générer un nouveau menu.
+  // Semaine pas encore commencée : la vue « Organiser » (grille et plats) s'ouvre d'office.
+  await expect(page.getByTestId("menu-mode").getByRole("button", { name: "Organiser" })).toHaveAttribute("aria-pressed", "true");
+
+  // Générer un nouveau menu (menu ••• de l'en-tête).
   page.once("dialog", (d) => d.accept());
-  await page.getByRole("button", { name: "Générer un nouveau menu" }).click();
+  await page.getByRole("button", { name: "Plus d'actions" }).click();
+  await page.getByRole("menuitem", { name: "Générer un nouveau menu" }).click();
   await expect(toast).toContainText("Nouveau menu prêt");
 
-  // Changer le premier plat.
+  // Toucher un plat ouvre sa fiche : ingrédients, matériel, étapes.
   const firstDish = page.getByTestId("dishes").getByRole("listitem").first();
+  await firstDish.getByRole("button", { name: /^Voir la recette/ }).click();
+  const recipe = page.getByTestId("recipe-sheet");
+  await expect(recipe.getByRole("heading", { name: "Ingrédients" })).toBeVisible();
+  await expect(recipe.getByRole("heading", { name: "Étapes" })).toBeVisible();
+  // Pas de retours sur un plat pas encore mangé.
+  await expect(recipe.getByRole("button", { name: /^À refaire/ })).toHaveCount(0);
+  await page.keyboard.press("Escape");
+
+  // Changer le premier plat.
   const before = await firstDish.locator("b").innerText();
   await firstDish.getByRole("button", { name: /^Changer / }).click();
   await expect(toast).toContainText("remplacé par");
@@ -34,21 +47,19 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
       .filter({ hasText: before.replace(/^[A-Z]{2}/, "") }),
   ).toHaveCount(0);
 
-  // Retirer puis remettre le dîner du lundi (le programme affiche le lundi avant le début de la semaine).
-  await page.getByRole("button", { name: /^lundi \d+/ }).click();
-  const mondayDinner = page.getByTestId("meal-1-dinner");
-  await mondayDinner.getByRole("button", { name: /^Actions pour/ }).click();
-  await page.getByRole("menuitem", { name: "Retirer" }).click();
-  await expect(toast).toContainText("Repas retiré");
+  // Retirer puis remettre le dîner du lundi depuis la grille.
+  await page.getByRole("button", { name: /^lundi soir : .+à table/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Ne rien prévoir" }).click();
+  await expect(toast).toContainText("Rien de prévu lundi soir");
   await expect(page.getByTestId("summary-meals")).toHaveText("9");
-  await mondayDinner.getByRole("button", { name: /^Actions pour/ }).click();
-  await page.getByRole("menuitem", { name: "Remettre" }).click();
-  await expect(toast).toContainText("Repas remis");
+  await page.getByRole("button", { name: /^lundi soir : plat du batch retiré/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Remettre le plat du batch" }).click();
+  await expect(toast).toContainText("Repas de nouveau prévu lundi soir");
   await expect(page.getByTestId("summary-meals")).toHaveText("10");
 
   // Déplacer le dîner du lundi vers un créneau autorisé.
-  await mondayDinner.getByRole("button", { name: /^Actions pour/ }).click();
-  await page.getByRole("menuitem", { name: "Déplacer" }).click();
+  await page.getByRole("button", { name: /^lundi soir : .+à table/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Déplacer ce repas" }).click();
   const moveSheet = page.getByRole("dialog");
   await expect(moveSheet.getByRole("radio").first()).toBeVisible();
   await moveSheet.getByRole("radio", { disabled: false }).first().check();
@@ -56,15 +67,19 @@ test("écran Menu : générer, changer, retirer, déplacer, convives, week-end",
   await expect(toast).toContainText("Repas échangés");
 
   // Qui est à table ? Un adulte de plus au déjeuner du lundi.
-  await page
-    .getByTestId("meal-1-lunch")
-    .getByRole("button", { name: /adulte|famille/ })
-    .click();
+  await page.getByRole("button", { name: /^lundi midi : .+à table/ }).click();
   const guests = page.getByRole("dialog");
   await guests.getByRole("button", { name: "Adultes : plus" }).click();
   await guests.getByRole("button", { name: /^Valider · 3 parts$/ }).click();
   await expect(toast).toContainText("Convives enregistrés");
-  await expect(page.getByTestId("meal-1-lunch").getByRole("button", { name: "3 adultes" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^lundi midi : .+, 3 à table/ })).toBeVisible();
+
+  // « Cette semaine » : le carrousel en lecture, une carte de repas ouvre la même fiche.
+  await page.getByTestId("menu-mode").getByRole("button", { name: "Cette semaine" }).click();
+  await page.getByTestId("meal-1-dinner").click();
+  await expect(page.getByTestId("recipe-sheet").getByRole("heading", { name: "Étapes" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.getByTestId("menu-mode").getByRole("button", { name: "Organiser" }).click();
 
   // Week-end : suggestions, puis choix d'une recette à la main pour le samedi soir.
   await page.getByRole("button", { name: "Suggérer des idées" }).click();

@@ -24,9 +24,12 @@ test("session complète, minuteurs persistants, état partagé entre appareils",
 
   // Session lancée : le menu de la semaine est figé, lisible mais sans boutons de modification.
   await page.goto("/app");
-  await expect(page.getByTestId("dishes")).toBeVisible();
+  await expect(page.getByTestId("week-board")).toBeVisible();
+  await expect(page.getByTestId("menu-mode")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /^Changer/ })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Générer un nouveau menu" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Plus d'actions" }).click();
+  await expect(page.getByRole("menuitem", { name: "Générer un nouveau menu" })).toHaveCount(0);
+  await page.keyboard.press("Escape");
   await page.goto("/app/session");
   await expect(stepCard).toBeVisible();
   const total = Number((await page.getByText(/^Étape 1 sur \d+$/).innerText()).split(" sur ")[1]);

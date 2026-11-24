@@ -1,3 +1,4 @@
+import { MODE_LABEL, MODE_ORDER } from "@/engine/equipment";
 import { num } from "@/engine/format";
 import { portionForAge } from "@/engine/portions";
 import {
@@ -108,18 +109,6 @@ export type ExampleView = {
   /** Goûter à faire avec les enfants (seed : tâche d'enfant renseignée) pour les foyers avec enfants. */
   snack: RecipeView | null;
 };
-
-const MODE_LABEL: Record<string, string> = {
-  feu: "plaques de cuisson",
-  four: "four",
-  airfryer: "airfryer",
-  micro: "micro-ondes",
-  blender: "blender chauffant",
-  mixeur: "mixeur plongeant",
-  robot: "robot de cuisine",
-  plan: "plan de travail",
-};
-const MODE_ORDER = ["feu", "four", "airfryer", "micro", "blender", "mixeur", "robot"];
 
 export const portionLabel = (n: number) => num(Math.round(n * 100) / 100);
 

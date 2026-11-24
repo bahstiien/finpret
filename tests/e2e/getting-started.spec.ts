@@ -199,8 +199,8 @@ test("la veille de la session : Tile et Sheet de préparation", async ({ page })
   await page.goto("/app");
   const tile = page.getByTestId("prep-tile");
   await expect(tile).toContainText("Demain, ta première session");
-  // La checklist se réduit à son en-tête tant que la Tile est affichée.
-  await expect(page.getByRole("button", { name: "Développer la carte" })).toBeVisible();
+  // Une seule carte d'action : la checklist s'efface tant que la Tile est affichée.
+  await expect(page.getByTestId("checklist")).toHaveCount(0);
   await tile.getByRole("button", { name: "Préparer ma session" }).click();
   const sheet = page.getByRole("dialog", { name: "Demain, ta première session" });
   await expect(sheet.getByTestId("prep-boxes-count")).toContainText(/boîtes? à prévoir : \d+ pour le frigo, \d+ pour le congélateur/);
@@ -268,6 +268,8 @@ test("accessibilité : Tile et Sheet de préparation, en clair et en sombre", as
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();
-    expect(violations.map((v) => `Tile (${scheme}) · ${v.id}`)).toEqual([]);
+    expect(
+      violations.map((v) => `Tile (${scheme}) · ${v.id} : ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`),
+    ).toEqual([]);
   }
 });
