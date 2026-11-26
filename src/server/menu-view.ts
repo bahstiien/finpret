@@ -7,7 +7,7 @@ import { equipmentOf } from "@/engine/equipment";
 import { originOf } from "@/engine/origins";
 import { guestsOf, mealPd, type PortionModel } from "@/engine/portions";
 import type { Meal, WeekPlan } from "@/engine/types";
-import { activeMains, activeSimples, activeSoup, isRemoved, slotMap, weekendItems } from "@/engine/week";
+import { activeCake, activeMains, activeSimples, activeSoup, isRemoved, slotMap, weekendItems } from "@/engine/week";
 import { fr } from "@/i18n/fr";
 import { addDays, dayIndex, isoWeekday } from "@/lib/dates";
 import { recipePhoto, type RecipePhoto } from "@/seo/images";
@@ -448,7 +448,7 @@ export function buildMenuView(
     });
   }
 
-  const cakeRecipe = ctx.settings.menu.cake.enabled && w.cake ? env.cakeById.get(w.cake) : null;
+  const cakeRecipe = activeCake(env, w, ctx.settings.menu.cake.enabled);
   const plannedMeals =
     grid.filter((c) => c.state === "on").length + grid.filter((c) => c.state === "set").length;
 

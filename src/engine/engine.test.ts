@@ -416,3 +416,17 @@ describe("recette choisie sur un créneau de semaine", () => {
     expect(canBatch(e, week, "5-dinner", r.id)).toBe(false);
   });
 });
+
+describe("semaine enregistrée après un changement de régime", () => {
+  it("reste lisible si une de ses recettes est désormais exclue, mais on ne peut plus la choisir", () => {
+    const { week } = generate(4);
+    const banned = Object.keys(LIB.mains.find((m) => m.id === week.groups[0]!.id)!.ing)[0]!;
+    const e = env(4, { diet: { diet: "omnivore", allergens: [], refused: [banned] } });
+    expect(e.mainById.has(week.groups[0]!.id)).toBe(true);
+    expect(e.allowed.has(week.groups[0]!.id)).toBe(false);
+    expect(() => slotMap(e, week)).not.toThrow();
+    const free = (r: { ing: Record<string, number> }) => !(banned in r.ing);
+    const swapIn = LIB.mains.find((m) => !free(m) && !week.groups.some((g) => g.id === m.id))!;
+    expect(replaceDish(e, week, "main", 1, swapIn.id)).toEqual({ ok: false, reason: "wrong_kind" });
+  });
+});

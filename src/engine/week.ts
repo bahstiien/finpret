@@ -86,7 +86,7 @@ export const activeSimples = (env: Env, w: WeekPlan) =>
   });
 
 export const activeCake = (env: Env, w: WeekPlan, cakeOn: boolean): Cake | null =>
-  cakeOn && w.cake ? (env.cakeById.get(w.cake) ?? null) : null;
+  cakeOn && w.cake && env.allowed.has(w.cake) ? (env.cakeById.get(w.cake) ?? null) : null;
 
 export const WEEKEND_SLOTS: [number, Meal][] = [
   [6, "lunch"],

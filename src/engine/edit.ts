@@ -195,7 +195,7 @@ export function replaceDish(
   const target = kind === "soup" ? w.soup : kind === "simple" ? w.simples[idx] : w.groups[idx];
   if (!target) return { ok: false, reason: "unknown_dish" };
   const lib = kind === "soup" ? env.soupById : kind === "simple" ? env.simpleById : env.mainById;
-  if (!lib.has(recipeId)) return { ok: false, reason: "wrong_kind" };
+  if (!lib.has(recipeId) || !env.allowed.has(recipeId)) return { ok: false, reason: "wrong_kind" };
   const old = target.id;
   if (old === recipeId || [...weekRecipeIds(w), ...Object.values(w.weekend ?? {})].includes(recipeId)) {
     return { ok: false, reason: "already_planned" };
