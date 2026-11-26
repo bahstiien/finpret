@@ -13,6 +13,7 @@ import { formatShort } from "@/lib/dates";
 import {
   prepareWeekAction,
   feedbackAction,
+  setFreshAction,
   suggestWeekendAction,
   swapDish,
   toggleDoubleAction,
@@ -25,6 +26,7 @@ import { GuestsSheet, MoveSheet, RecipePickerSheet, RecipeSheet } from "./Sheets
 import { useMenuAction } from "./useMenuAction";
 
 const t = fr.menuScreen;
+type SwapKind = Exclude<DishCard["kind"], "weekend">;
 
 export type PickerOption = {
   id: string;
@@ -164,7 +166,12 @@ export function MenuScreen({
       dish={d}
       pending={pending}
       onDouble={() => run(() => toggleDoubleAction(view.weekId, d.index))}
-      onSwap={() => run(() => swapDish(view.weekId, d.kind, d.index), after)}
+      onFresh={() => d.fresh && run(() => setFreshAction(view.weekId, d.fresh!.keys, !d.fresh!.on), after)}
+      onSwap={() =>
+        d.kind === "weekend"
+          ? setSheet({ kind: "weekend", key: d.fresh!.keys[0]! })
+          : run(() => swapDish(view.weekId, d.kind as SwapKind, d.index), after)
+      }
     />
   );
   const openRecipe = sheet?.kind === "recipe" ? recipeOf(sheet.recipeId) : null;
@@ -271,7 +278,7 @@ export function MenuScreen({
               size="sm"
               disabled={pending}
               onClick={() =>
-                run(() => swapDish(view.weekId, a.dinner!.kind as DishCard["kind"], a.dinner!.index))
+                run(() => swapDish(view.weekId, a.dinner!.kind as SwapKind, a.dinner!.index))
               }
             >
               {t.change}
@@ -769,15 +776,29 @@ function DishActions({
   dish,
   pending,
   onDouble,
+  onFresh,
   onSwap,
 }: {
   dish: DishCard;
   pending: boolean;
   onDouble: () => void;
+  onFresh: () => void;
   onSwap: () => void;
 }) {
   return (
     <span className="ml-auto flex flex-wrap items-center gap-2">
+      {dish.fresh?.canToggle && (
+        <button
+          type="button"
+          aria-pressed={dish.fresh.on}
+          aria-label={t.freshLabel(dish.name)}
+          disabled={pending}
+          onClick={onFresh}
+          className="chiptg"
+        >
+          {t.fresh}
+        </button>
+      )}
       {dish.canDouble && (
         <button
           type="button"

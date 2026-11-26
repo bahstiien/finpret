@@ -108,3 +108,43 @@ test.describe("mobile", () => {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 });
+
+test("plat choisi sur un créneau de semaine : dans la session par défaut, bascule « le jour même »", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "parcours joué sur le projet desktop");
+  test.setTimeout(120_000);
+  const toast = page.getByTestId("toast");
+  await page.goto("/login");
+  await signInFromLoginPage(page, uniqueEmail("jour-meme"));
+  await completeOnboarding(page, "Jour");
+  await page.getByRole("link", { name: "Ouvrir ma semaine" }).click();
+
+  // Retirer le dîner du lundi puis y choisir un plat (un soir simple, lui, reste cuisiné le jour même).
+  await page.getByRole("button", { name: /^lundi soir : .+à table/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Ne rien prévoir" }).click();
+  await expect(toast).toContainText("Rien de prévu lundi soir");
+  await page.getByRole("button", { name: /^lundi soir : plat du batch retiré/ }).click();
+  const picker = page.getByRole("dialog");
+  await picker.getByRole("button", { name: "Toutes" }).click();
+  await picker.getByRole("searchbox").fill("Chili de dinde et patate douce");
+  await picker.getByRole("radio").first().check();
+  await picker.getByRole("button", { name: /^Mettre .+ lundi soir$/ }).click();
+  await expect(toast).toContainText(/ prévu lundi soir\.$/);
+
+  // Le plat rejoint la session : il est dans « Plats de la semaine », hors « le jour même ».
+  const name = (await toast.innerText()).replace(/ prévu lundi soir\.$/, "").trim();
+  const row = page.getByTestId("dishes").getByRole("listitem").filter({ hasText: name });
+  await expect(row.getByRole("button", { name: /le jour même/ })).toHaveAttribute("aria-pressed", "false");
+
+  await row.getByRole("button", { name: /le jour même/ }).click();
+  await expect(toast).toContainText("cuisiné le jour même");
+  const freshRow = page.getByTestId("dishes").getByRole("listitem").filter({ hasText: "Le jour même, lundi soir" });
+  await expect(freshRow.getByRole("button", { name: /le jour même/ })).toHaveAttribute("aria-pressed", "true");
+
+  await freshRow.getByRole("button", { name: /le jour même/ }).click();
+  await expect(toast).toContainText("préparé pendant la session");
+  await expect(page.getByTestId("dishes").getByText("Le jour même, lundi soir")).toHaveCount(0);
+  await expect(row.getByRole("button", { name: /le jour même/ })).toHaveAttribute("aria-pressed", "false");
+});

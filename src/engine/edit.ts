@@ -361,7 +361,56 @@ export function setWeekend(env: Env, week: WeekPlan, k: string, id: string | nul
   if (id) wk[k] = id;
   else delete wk[k];
   w.weekend = wk;
+  // Un plat choisi sur un créneau de la session rejoint le batch par défaut ; « le jour même » reste un choix.
+  if (id && canBatch(env, w, k, id)) toBatch(env, w, k, id);
   return { week: w, pastaClash: !!id && pastaClash(env, w), busy: false };
+}
+
+/**
+ * Créneau préparé pendant la session (semaine, ou week-end inclus) et plat qui tient jusque-là (frigo ou
+ * congélateur) : la recette peut aller au batch.
+ */
+export function canBatch(env: Env, w: WeekPlan, k: string, id: string) {
+  const r = env.mainById.get(id);
+  const d = Number(k.split("-")[0]);
+  return !!r && (d <= 5 || batchWeekend(w)) && (r.freeze || d <= r.fridge);
+}
+
+/** Passe la recette du jour même d'un créneau dans le batch : le plat d'origine du créneau le lui cède. */
+function toBatch(env: Env, w: WeekPlan, k: string, id: string) {
+  const [ds, meal] = k.split("-") as [string, Meal];
+  const e = slotEntity(env, w, k);
+  if (!(e?.type === "main" && e.g.id === id)) {
+    if (e?.type === "main") e.g.meals.splice(e.i, 1);
+    else if (e?.type === "soup") w.soup!.days.splice(e.i, 1);
+    else if (e?.type === "simple") w.simples = w.simples.filter((s) => s !== e.s);
+    else if (e?.type === "bank") w.bank = (w.bank ?? []).filter((b) => b !== e.b);
+    w.groups.push({ meals: [{ day: Number(ds), meal }], id });
+  }
+  w.removed = w.removed.filter((x) => x !== k);
+  delete w.weekend![k];
+}
+
+/**
+ * Bascule « le jour même » depuis la liste des plats : `fresh` sort les créneaux du batch (la recette y est
+ * cuisinée le jour même), sinon ils y reviennent. Les créneaux qui ne s'y prêtent pas sont ignorés.
+ */
+export function setFresh(env: Env, week: WeekPlan, keys: string[], fresh: boolean) {
+  const w = clone(week);
+  w.weekend = { ...(w.weekend ?? {}) };
+  for (const k of keys) {
+    const [ds, meal] = k.split("-") as [string, Meal];
+    if (fresh) {
+      const e = slotEntity(env, w, k);
+      if (e?.type !== "main" || isRemoved(w, Number(ds), meal)) continue;
+      w.removed = [...w.removed, k];
+      w.weekend[k] = e.g.id;
+    } else {
+      const id = w.weekend[k];
+      if (id && canBatch(env, w, k, id)) toBatch(env, w, k, id);
+    }
+  }
+  return w;
 }
 
 /** « Suggérer des idées » pour les créneaux vides du week-end (cuisinés le jour même). */

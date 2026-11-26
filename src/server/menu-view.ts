@@ -1,5 +1,6 @@
 import "server-only";
 import { portionCost } from "@/engine/cost";
+import { canBatch } from "@/engine/edit";
 import type { Env } from "@/engine/env";
 import { fill, fmtP, fmtQ } from "@/engine/format";
 import { equipmentOf } from "@/engine/equipment";
@@ -41,7 +42,7 @@ export type MealView = {
 export type DayView = { day: number; iso: string; meals: MealView[]; tonight: string | null; thaw: string[] };
 
 export type DishCard = {
-  kind: "main" | "soup" | "simple" | "bank";
+  kind: "main" | "soup" | "simple" | "bank" | "weekend";
   index: number;
   recipeId: string;
   name: string;
@@ -50,6 +51,8 @@ export type DishCard = {
   detail: string;
   doubled: boolean;
   canDouble: boolean;
+  /** Mode « le jour même » : état, créneaux concernés et bascule possible ; null pour soupe, soir simple, réserve. */
+  fresh: { on: boolean; keys: string[]; canToggle: boolean } | null;
 };
 
 export type RecipeDetail = {
@@ -263,7 +266,8 @@ export function buildMenuView(
   const rating = (id: string) => (env.ratings[id] ?? null) as 1 | -1 | null;
   const feedback = (id: string) => ({ rating: rating(id), kids: !!env.feedback[id]?.kids, long: !!env.feedback[id]?.long });
   const dishes: DishCard[] = [
-    ...mains.map((x) => ({
+    // Un plat dont tous les repas sont retirés ou passés au jour même n'est plus cuisiné pendant la session.
+    ...mains.filter((x) => x.meals.length).map((x) => ({
       kind: "main" as const,
       index: x.i,
       recipeId: x.r.id,
@@ -273,6 +277,7 @@ export function buildMenuView(
       detail: t.portions(fmtP(x.cookP), x.doubled),
       doubled: x.doubled,
       canDouble: x.r.freeze && ctx.settings.equipment.freezer,
+      fresh: { on: false, keys: x.meals.map((m) => `${m.day}-${m.meal}`), canToggle: true },
     })),
     ...(so
       ? [
@@ -286,6 +291,7 @@ export function buildMenuView(
             detail: t.soup,
             doubled: false,
             canDouble: false,
+            fresh: null,
           },
         ]
       : []),
@@ -299,6 +305,7 @@ export function buildMenuView(
       detail: t.simpleOn(fr.days[s.day - 1]!),
       doubled: false,
       canDouble: false,
+      fresh: null,
     })),
     ...(w.bank ?? []).flatMap((b, i) => {
       const r = env.mainById.get(b.id) ?? env.soupById.get(b.id);
@@ -313,8 +320,21 @@ export function buildMenuView(
         detail: t.bankOn(`${fr.days[b.day - 1]} ${fr.meals[b.meal].toLowerCase()}`),
         doubled: false,
         canDouble: false,
+        fresh: null,
       }];
     }),
+    ...fresh.map((x) => ({
+      kind: "weekend" as const,
+      index: 0,
+      recipeId: x.id,
+      name: x.r.s,
+      photo: recipePhoto(x.r.id, x.r.s),
+      flag: flagOf(x.r.o),
+      detail: t.freshOn(`${fr.days[x.d - 1]} ${fr.meals[x.m].toLowerCase()}`),
+      doubled: false,
+      canDouble: false,
+      fresh: { on: true, keys: [x.k], canToggle: canBatch(env, w, x.k, x.id) },
+    })),
   ];
 
   const recipes: RecipeDetail[] = [];

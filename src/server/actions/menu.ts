@@ -6,6 +6,7 @@ import {
   moveSlot,
   moveTargets,
   replaceDish,
+  setFresh,
   setGuests,
   setWeekend,
   suggestWeekend,
@@ -291,6 +292,22 @@ export async function setWeekendAction(weekId: string, key: string, recipeId: st
       ? t.weekendSet(shortOf(env, recipeId), slotLabel(key)) + (res.pastaClash ? ` ${t.pastaWarning}` : "")
       : t.weekendCleared(slotLabel(key));
     return { plan: res.week, message };
+  });
+}
+
+/** Bascule d'un plat entre la session de batch et « le jour même » (créneaux `1-lunch`…). */
+export async function setFreshAction(weekId: string, keys: string[], fresh: boolean) {
+  const parsed = z
+    .array(z.string().regex(/^[1-7]-(lunch|dinner)$/))
+    .min(1)
+    .max(14)
+    .safeParse(keys);
+  if (!parsed.success || typeof fresh !== "boolean") return { ok: false as const, error: fr.errors.generic };
+  return editWeek(weekId, ({ env, plan }) => {
+    const next = setFresh(env, plan, parsed.data, fresh);
+    const k = parsed.data[0]!;
+    const id = (fresh ? slotMap(env, plan)[k]?.r.id : plan.weekend?.[k]) ?? "";
+    return { plan: next, message: (fresh ? t.toFresh : t.toBatch)(shortOf(env, id)) };
   });
 }
 
