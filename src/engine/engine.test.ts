@@ -2,7 +2,17 @@ import { describe, expect, it } from "vitest";
 import { LIB } from "../../tests/legacy/fixtures";
 import { recipeAllergens } from "./catalog/derive";
 import { addsPastaClash, generateWeek, pastaClash, pastaCount } from "./compose";
-import { moveSlot, moveTargets, replaceDish, setGuests, setWeekend, swap, toggleMeal } from "./edit";
+import {
+  canBatch,
+  moveSlot,
+  moveTargets,
+  replaceDish,
+  setFresh,
+  setGuests,
+  setWeekend,
+  swap,
+  toggleMeal,
+} from "./edit";
 import { createEnv } from "./env";
 import { fill, fmtQ, packBuy, shopQ, snapNum } from "./format";
 import { dailyAverages } from "./nutrition";
@@ -350,15 +360,19 @@ describe("remplacer un plat prévu par une recette choisie (Découvrir)", () => 
   });
 });
 
-describe("recette choisie sur un créneau de semaine (cuisinée le jour même)", () => {
-  it("refuse un créneau occupé par le batch, accepte un créneau retiré, puis le batch reprend la main", () => {
+describe("recette choisie sur un créneau de semaine", () => {
+  const setup = () => {
     const { e, week } = generate(3);
     const map = slotMap(e, week);
     const key = Object.keys(map).find((k) => Number(k.split("-")[0]) <= 5)!;
     const [ds, meal] = key.split("-") as [string, "lunch" | "dinner"];
-    const day = Number(ds);
     const used = new Set(Object.values(map).map((s) => s.r.id));
-    const pick = [...e.mainById.keys()].find((id) => !used.has(id))!;
+    return { e, week, key, day: Number(ds), meal, used };
+  };
+
+  it("un soir simple refuse un créneau occupé, se cuisine le jour même sur un créneau retiré, puis le batch reprend la main", () => {
+    const { e, week, key, day, meal, used } = setup();
+    const pick = [...e.simpleById.keys()].find((id) => !used.has(id))!;
 
     expect(setWeekend(e, week, key, pick).busy).toBe(true);
 
@@ -370,5 +384,35 @@ describe("recette choisie sur un créneau de semaine (cuisinée le jour même)",
     // Le plat du batch remis sur ce créneau : la recette choisie n'est plus comptée (pas de double repas).
     const restored = toggleMeal(res.week, day, meal);
     expect(weekendItems(e, restored).some((x) => x.k === key)).toBe(false);
+  });
+
+  it("un plat rejoint le batch par défaut, et bascule vers le jour même puis revient", () => {
+    const { e, week, key, day, meal, used } = setup();
+    const removed = toggleMeal(week, day, meal);
+    const pick = [...e.mainById.keys()].find((id) => !used.has(id) && canBatch(e, removed, key, id))!;
+
+    const batch = setWeekend(e, removed, key, pick).week;
+    expect(slotMap(e, batch)[key]!.r.id).toBe(pick);
+    expect(batch.removed).not.toContain(key);
+    expect(batch.groups).toHaveLength(week.groups.length + 1);
+    expect(weekendItems(e, batch).some((x) => x.k === key)).toBe(false);
+    // Le plat d'origine a cédé son créneau : chaque repas reste servi une seule fois.
+    expect(batch.groups.filter((g) => g.meals.some((m) => `${m.day}-${m.meal}` === key))).toHaveLength(1);
+
+    const fresh = setFresh(e, batch, [key], true);
+    expect(weekendItems(e, fresh).map((x) => [x.k, x.id])).toContainEqual([key, pick]);
+    expect(fresh.removed).toContain(key);
+
+    const back = setFresh(e, fresh, [key], false);
+    expect(back.groups).toEqual(batch.groups);
+    expect(back.removed).not.toContain(key);
+    expect(weekendItems(e, back).some((x) => x.k === key)).toBe(false);
+  });
+
+  it("un plat qui ne tient pas jusqu'au jour prévu reste cuisiné le jour même", () => {
+    const { e, week } = generate(3);
+    const r = [...e.mainById.values()].find((x) => !x.freeze && x.fridge < 5);
+    if (!r) return;
+    expect(canBatch(e, week, "5-dinner", r.id)).toBe(false);
   });
 });
